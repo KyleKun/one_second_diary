@@ -1,9 +1,12 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:one_second_diary/main.dart';
 import 'dart:io' as io;
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:flutter_ffmpeg/flutter_ffmpeg.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -12,11 +15,11 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   CameraController cameraController;
-  //TODO: handle permissions acceptance
-  bool acceptedPermissions = true;
   Future<void> initializeCameraController;
-
+  int videoCount = 1;
   String appPath = '';
+
+  final FlutterFFmpeg _flutterFFmpeg = new FlutterFFmpeg();
 
   @override
   void initState() {
@@ -29,16 +32,7 @@ class _HomePageState extends State<HomePage> {
     );
     initializeCameraController = cameraController.initialize();
 
-    requestAllPermissions();
-  }
-
-  void requestAllPermissions() async {
-    if (await requestPermission(Permission.storage)) {
-      print('Aceitou permissão storage');
-    }
-    if (await requestPermission(Permission.camera)) {
-      print('Aceitou permissão camera');
-    }
+    requestPermission(Permission.camera);
   }
 
   @override
@@ -60,18 +54,17 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  //call this method from init state to create folder if the folder does not exist
   void createFolder() async {
     try {
       io.Directory directory;
       directory = await getExternalStorageDirectory();
-      print('First directory path: ' + directory.path);
+      //print('First directory path: ' + directory.path);
 
       String newPath = '';
 
       List<String> folders = directory.path.split('/');
-      for (int x = 1; x < folders.length; x++) {
-        String folder = folders[x];
+      for (int i = 1; i < folders.length; i++) {
+        String folder = folders[i];
         if (folder != "Android") {
           newPath += "/" + folder;
         } else {
@@ -82,7 +75,9 @@ class _HomePageState extends State<HomePage> {
       newPath = newPath + "/OneSecondDiary";
       directory = io.Directory(newPath);
 
-      appPath = newPath;
+      setState(() {
+        appPath = newPath;
+      });
 
       if (!await directory.exists()) {
         print("Directory does not exist");
@@ -91,6 +86,19 @@ class _HomePageState extends State<HomePage> {
         print('Final Directory path: ' + directory.path);
       } else {
         print("Directory already exists");
+        List<io.FileSystemEntity> _files;
+        _files = directory.listSync(recursive: true, followLinks: false);
+        print(_files);
+        List<int> allFiles = [];
+        for (int i = 0; i < _files.length; i++) {
+          String temp = _files[i].toString().split('.').first;
+          temp = temp.split('/').last;
+          allFiles.add(int.parse(temp));
+        }
+        allFiles.sort();
+        setState(() {
+          videoCount = allFiles.last + 1;
+        });
       }
     } catch (e) {
       print('$e');
@@ -154,37 +162,43 @@ class _HomePageState extends State<HomePage> {
                 RaisedButton(
                   child: Text('Gravar'),
                   onPressed: () async {
-                    if (acceptedPermissions) {
+                    try {
+                      await initializeCameraController;
+                      await requestPermission(Permission.storage);
                       createFolder();
-                      print('Open Camera');
-                      try {
-                        await initializeCameraController;
-
-                        // TODO: need to fix, not literal string
-                        String videoPath =
-                            '/storage/emulated/0/OneSecondDiary' + '/video.mp4';
-                        print('Started Video Recording');
+                      print('Started Video Recording');
+                      setState(() {
+                        customStartVideoRecording();
+                      });
+                      // Probably will need adjustments in the future
+                      Future.delayed(Duration(milliseconds: 2 * 1000), () {
                         setState(() {
-                          customStartVideoRecording();
-                        });
-
-                        Future.delayed(Duration(seconds: 1), () {
-                          setState(() {
-                            customStopVideoRecording().then((file) {
-                              if (file != null) {
-                                print('Video recorded to ${file.path}');
-                                file.saveTo(videoPath);
-                              }
-                            });
+                          customStopVideoRecording().then((file) {
+                            if (file != null) {
+                              print('Video recorded to ${file.path}');
+                              // var arguments = [
+                              //   "-i",
+                              //   file.path,
+                              //   "-vf",
+                              //   "drawtext=",
+                              //   "file2.mp4"
+                              // ];
+                              // _flutterFFmpeg
+                              //     .executeWithArguments(arguments)
+                              //     .then((rc) => print(
+                              //         "FFmpeg process exited with rc $rc"));
+                              //'/storage/emulated/0/OneSecondDiary' + '/video.mp4';
+                              file.saveTo(appPath + '/$videoCount.mp4');
+                              setState(() {
+                                videoCount++;
+                              });
+                            }
                           });
-                          print('Stopped Video Recording');
                         });
-                      } catch (e) {
-                        print('$e');
-                      }
-                    } else {
-                      // Dialog showing the user that the permission needs to be granted
-                      print('Rejeitou permissions');
+                        print('Stopped Video Recording');
+                      });
+                    } catch (e) {
+                      print('$e');
                     }
                   },
                 ),

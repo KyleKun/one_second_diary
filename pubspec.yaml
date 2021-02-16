@@ -27,9 +27,9 @@ dependencies:
   camera:
   path_provider:
   video_player:
-  giffy_dialog:
+  rflutter_alert:
   hive:
-  flutter_ffmpeg:
+  flutter_ffmpeg: ^0.3.1
   permission_handler:
 
 dev_dependencies:
