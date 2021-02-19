@@ -1,7 +1,7 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-
-import 'home_page.dart';
+import 'package:one_second_diary/home_screen.dart';
+import 'package:one_second_diary/intro_screen.dart';
 
 List<CameraDescription> cameras;
 Future<void> main() async {
@@ -16,13 +16,14 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'One Second Diary',
       theme: ThemeData(
         fontFamily: 'Magic',
-        primarySwatch: Colors.blue,
+        primaryColor: Color(0xffff6366),
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: HomePage(),
+      home: IntroScreen(),
     );
   }
 }

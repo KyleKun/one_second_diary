@@ -1,25 +1,31 @@
+import 'dart:io';
+import 'package:tapioca/tapioca.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:one_second_diary/main.dart';
+import 'package:one_second_diary/utils.dart';
 import 'dart:io' as io;
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:flutter_ffmpeg/flutter_ffmpeg.dart';
 
-class HomePage extends StatefulWidget {
+class CoreTemp extends StatefulWidget {
   @override
-  _HomePageState createState() => _HomePageState();
+  _CoreTempState createState() => _CoreTempState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _CoreTempState extends State<CoreTemp> {
   CameraController cameraController;
   Future<void> initializeCameraController;
   int videoCount = 1;
   String appPath = '';
 
   final FlutterFFmpeg _flutterFFmpeg = new FlutterFFmpeg();
+  final tapiocaBalls = [
+    TapiocaBall.textOverlay("text", 100, 10, 100, Colors.red),
+  ];
 
   @override
   void initState() {
@@ -176,21 +182,29 @@ class _HomePageState extends State<HomePage> {
                           customStopVideoRecording().then((file) {
                             if (file != null) {
                               print('Video recorded to ${file.path}');
-                              // var arguments = [
-                              //   "-i",
-                              //   file.path,
-                              //   "-vf",
-                              //   "drawtext=",
-                              //   "file2.mp4"
-                              // ];
-                              // _flutterFFmpeg
-                              //     .executeWithArguments(arguments)
-                              //     .then((rc) => print(
-                              //         "FFmpeg process exited with rc $rc"));
-                              //'/storage/emulated/0/OneSecondDiary' + '/video.mp4';
                               file.saveTo(appPath + '/$videoCount.mp4');
-                              setState(() {
-                                videoCount++;
+
+                              String testFirst = appPath + '/3.mp4';
+
+                              String testFinal = appPath + '/10.mp4';
+                              String glueFinal = appPath + '/300.mp4';
+                              //String font = appPath + '/0.ttf';
+
+                              sleep(new Duration(seconds: 5));
+                              final cup = Cup(Content(testFirst), tapiocaBalls);
+                              cup.suckUp(testFinal).then((_) {
+                                print("finish processing");
+                              });
+                              final String glue = appPath + '/0.txt';
+                              _flutterFFmpeg
+                                  .execute(
+                                      '-f concat -safe 0 -i $glue -c copy $glueFinal')
+                                  .then((result) {
+                                if (result == 0) {
+                                  print('success');
+                                } else {
+                                  print('faillllllllllll');
+                                }
                               });
                             }
                           });

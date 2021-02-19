@@ -26,11 +26,16 @@ dependencies:
   get:
   camera:
   path_provider:
-  video_player:
+  better_player:
   rflutter_alert:
   hive:
   flutter_ffmpeg: ^0.3.1
   permission_handler:
+  tapioca:
+  gallery_saver:
+  salomon_bottom_bar:
+  video_editor:
+  introduction_screen:
 
 dev_dependencies:
   flutter_test:
@@ -40,9 +45,10 @@ flutter:
 
   uses-material-design: true
 
-  # assets:
-  #   - images/a_dot_burr.jpeg
-  #   - images/a_dot_ham.jpeg
+  assets:
+    - assets/
+    - assets/fonts/
+    - assets/images/
 
   fonts:
     - family: Magic
