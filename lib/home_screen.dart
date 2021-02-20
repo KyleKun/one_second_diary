@@ -116,13 +116,13 @@ class _HomePageState extends State<HomePage> {
   Widget _getScreen() {
     switch (_activeIndex) {
       case 0:
-        return Container(child: Center(child: AddNewScreenNew()));
+        return Container(child: Center(child: AddNewRecordingPage()));
       case 1:
         return Container(child: Center(child: CreateMovieScreen()));
       case 2:
         return Container(child: Center(child: SettingScreen()));
       default:
-        return Container(child: Center(child: AddNewScreenNew()));
+        return Container(child: Center(child: AddNewRecordingPage()));
     }
   }
 }
