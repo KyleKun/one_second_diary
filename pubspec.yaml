@@ -36,6 +36,9 @@ dependencies:
   salomon_bottom_bar:
   video_editor:
   introduction_screen:
+  flip_card:
+  avatar_glow:
+  shimmer:
 
 dev_dependencies:
   flutter_test:

@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:avatar_glow/avatar_glow.dart';
+import 'package:get/get.dart';
+import 'package:one_second_diary/recording_screen.dart';
 
 class AddNewScreen extends StatefulWidget {
   @override
@@ -33,32 +36,69 @@ class _AddNewScreenState extends State<AddNewScreen> {
             ),
             child: Text(
               recordedToday
-                  ? 'Good job! See ya tomorrow ;)'
-                  : 'Waiting today\'s recording...',
+                  ? 'Amazing!\nSee you tomorrow!'
+                  : 'Waiting for your\nrecording...',
               style: TextStyle(fontSize: 22.0),
               textAlign: TextAlign.center,
             ),
           ),
-          SizedBox(
-            width: MediaQuery.of(context).size.width * 0.4,
-            height: MediaQuery.of(context).size.width * 0.15,
-            child: RaisedButton(
-              elevation: 5.0,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(80.0)),
-              color: recordedToday ? Colors.orangeAccent : Colors.greenAccent,
-              onPressed: () {
-                setState(() {
-                  //TODO: push record screen
-                  recordedToday = !recordedToday;
-                });
-              },
-              child: Text(
-                recordedToday ? 'Edit' : 'Record',
-                style: TextStyle(color: Colors.white, fontSize: 22.0),
-              ),
-            ),
-          ),
+          recordedToday
+              ? SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.4,
+                  height: MediaQuery.of(context).size.width * 0.15,
+                  child: RaisedButton(
+                    elevation: 5.0,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(80.0)),
+                    color: Color(0xff7D7ABC),
+                    onPressed: () {
+                      setState(() {
+                        //TODO: push edit screen
+                        recordedToday = !recordedToday;
+                      });
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Spacer(flex: 2),
+                        Icon(
+                          Icons.edit,
+                          color: Colors.white,
+                        ),
+                        Spacer(flex: 1),
+                        Text(
+                          'Edit',
+                          style: TextStyle(color: Colors.white, fontSize: 22.0),
+                        ),
+                        Spacer(flex: 2)
+                      ],
+                    ),
+                  ),
+                )
+              : AvatarGlow(
+                  glowColor: Color(0xff7AC74F),
+                  endRadius: 60.0,
+                  child: SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.4,
+                    height: MediaQuery.of(context).size.width * 0.2,
+                    child: RaisedButton(
+                        elevation: 8.0,
+                        shape: CircleBorder(),
+                        color: Color(0xff7AC74F),
+                        onPressed: () {
+                          setState(() {
+                            //TODO: push record screen
+                            recordedToday = !recordedToday;
+                            Get.to(RecordingScreen());
+                          });
+                        },
+                        child: Icon(
+                          Icons.photo_camera,
+                          color: Colors.white,
+                          size: 36.0,
+                        )),
+                  ),
+                ),
         ],
       ),
     );

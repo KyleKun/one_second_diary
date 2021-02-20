@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:one_second_diary/add_new_screen.dart';
+import 'package:one_second_diary/settings_screen.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 
 import 'create_movie_screen.dart';
@@ -73,19 +74,19 @@ class _HomeScreenState extends State<HomeScreen> {
           items: [
             SalomonBottomBarItem(
               icon: Icon(Icons.add_a_photo_outlined, size: 28.0),
-              title: Text("Add new", style: TextStyle(fontFamily: 'Magic')),
+              title: Text("Record", style: TextStyle(fontFamily: 'Magic')),
               selectedColor: Color(0xffff6366),
             ),
             SalomonBottomBarItem(
               icon: Icon(Icons.movie_filter_outlined, size: 28.0),
               title:
                   Text("Create movie", style: TextStyle(fontFamily: 'Magic')),
-              selectedColor: Color(0xffff6366),
+              selectedColor: Color(0xff454ADE),
             ),
             SalomonBottomBarItem(
               icon: Icon(Icons.settings_outlined, size: 28.0),
               title: Text("Settings", style: TextStyle(fontFamily: 'Magic')),
-              selectedColor: Color(0xffff6366),
+              selectedColor: Colors.black,
             ),
           ],
         ),
@@ -101,7 +102,7 @@ class _HomeScreenState extends State<HomeScreen> {
       case 1:
         return Container(child: Center(child: CreateMovieScreen()));
       case 2:
-        return Container(child: Text('Config'));
+        return Container(child: Center(child: SettingScreen()));
       default:
         return Container(child: Center(child: AddNewScreen()));
     }
