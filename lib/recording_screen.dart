@@ -1,31 +1,35 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:one_second_diary/home_screen.dart';
+import 'package:one_second_diary/routes/app_pages.dart';
+import 'package:one_second_diary/utils/shared_preferences_util.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-import 'main.dart';
-import 'utils.dart';
+import 'controllers/day_controller.dart';
+import 'utils/utils.dart';
 
-class RecordingScreen extends StatefulWidget {
+class RecordingPage extends StatefulWidget {
   @override
-  _RecordingScreenState createState() => _RecordingScreenState();
+  _RecordingPageState createState() => _RecordingPageState();
 }
 
-class _RecordingScreenState extends State<RecordingScreen>
+class _RecordingPageState extends State<RecordingPage>
     with WidgetsBindingObserver, TickerProviderStateMixin {
   CameraController _controller;
   List<CameraDescription> _availableCameras;
+  final DayController dayController = Get.find();
 
   @override
   void initState() {
     super.initState();
-    Utils.requestPermission(Permission.camera);
     _getAvailableCameras();
   }
 
   // get available cameras
   Future<void> _getAvailableCameras() async {
     WidgetsFlutterBinding.ensureInitialized();
+    await Utils.requestPermission(Permission.camera);
     _availableCameras = await availableCameras();
     _initCamera(_availableCameras.first);
   }
@@ -126,6 +130,9 @@ class _RecordingScreenState extends State<RecordingScreen>
                     shape: CircleBorder(),
                     color: Colors.white,
                     onPressed: () {
+                      //TODO: only after saving video on its confirmation screen
+                      StorageUtil.putBool('dailyEntry', true);
+                      dayController.updateDaily();
                       print('start recording');
                     },
                   ),
@@ -171,7 +178,7 @@ class _RecordingScreenState extends State<RecordingScreen>
                       ),
                     ),
                     onTap: () {
-                      Navigator.pop(context);
+                      Get.offAllNamed(Routes.HOME);
                       print('go back');
                     }),
               ),

@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 import 'package:one_second_diary/home_screen.dart';
+import 'package:one_second_diary/utils/shared_preferences_util.dart';
 
-class IntroScreen extends StatefulWidget {
+class IntroPage extends StatefulWidget {
   @override
-  _IntroScreenState createState() => _IntroScreenState();
+  _IntroPageState createState() => _IntroPageState();
 }
 
-class _IntroScreenState extends State<IntroScreen> {
+class _IntroPageState extends State<IntroPage> {
   final introKey = GlobalKey<IntroductionScreenState>();
 
   void _onIntroEnd(context) {
+    StorageUtil.putBool('showIntro', false);
     Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (_) => HomeScreen()),
+      MaterialPageRoute(builder: (_) => HomePage()),
     );
   }
 

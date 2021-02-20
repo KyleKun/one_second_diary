@@ -1,22 +1,40 @@
 import 'package:flutter/material.dart';
 import 'package:one_second_diary/add_new_screen.dart';
 import 'package:one_second_diary/settings_screen.dart';
+import 'package:one_second_diary/utils/shared_preferences_util.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
-
+import 'utils/utils.dart';
 import 'create_movie_screen.dart';
 
-class HomeScreen extends StatefulWidget {
+class HomePage extends StatefulWidget {
   @override
-  _HomeScreenState createState() => _HomeScreenState();
+  _HomePageState createState() => _HomePageState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomePageState extends State<HomePage> {
   int _activeIndex = 0;
 
   // Bottom bar nav properties
   static const double height = 75.0;
   static const double borderRadius = 25.0;
   static const double blurRadius = 15.0;
+
+  @override
+  void initState() {
+    final String today = Utils.getToday();
+    if (today != StorageUtil.getString('today')) {
+      StorageUtil.putString('today', today);
+      StorageUtil.putBool('dailyEntry', false);
+    } else {
+      print('today is not yesterday lol');
+    }
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
 
   void _onTap(int index) {
     setState(() {
@@ -98,13 +116,13 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _getScreen() {
     switch (_activeIndex) {
       case 0:
-        return Container(child: Center(child: AddNewScreen()));
+        return Container(child: Center(child: AddNewScreenNew()));
       case 1:
         return Container(child: Center(child: CreateMovieScreen()));
       case 2:
         return Container(child: Center(child: SettingScreen()));
       default:
-        return Container(child: Center(child: AddNewScreen()));
+        return Container(child: Center(child: AddNewScreenNew()));
     }
   }
 }

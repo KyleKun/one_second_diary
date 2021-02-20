@@ -28,7 +28,7 @@ dependencies:
   path_provider:
   better_player:
   rflutter_alert:
-  hive:
+  shared_preferences:
   flutter_ffmpeg: ^0.3.1
   permission_handler:
   tapioca:
