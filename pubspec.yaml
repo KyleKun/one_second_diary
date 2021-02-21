@@ -39,6 +39,8 @@ dependencies:
   flip_card:
   avatar_glow:
   shimmer:
+  url_launcher:
+  rive:
 
 dev_dependencies:
   flutter_test:

@@ -79,7 +79,7 @@ class AddNewRecordingPage extends GetView<DayController> {
                         shape: CircleBorder(),
                         color: Color(0xff7AC74F),
                         onPressed: () {
-                          Get.to(RecordingPage());
+                          Get.toNamed('/recording');
                         },
                         child: Icon(
                           Icons.photo_camera,

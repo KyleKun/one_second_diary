@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:one_second_diary/add_new_screen.dart';
 import 'package:one_second_diary/settings_screen.dart';
 import 'package:one_second_diary/utils/shared_preferences_util.dart';
@@ -43,34 +44,43 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _showInfo() {
-    showDialog(
+    showAboutDialog(
+      applicationIcon: FlutterLogo(),
+      applicationName: 'One Second Diary',
+      applicationVersion: 'Version: 1.0',
+      applicationLegalese: 'Copyright © Caio Pedroso, 2021',
       context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text("About"),
-          content: Text("Developed by Caio Pedroso."),
-          actions: <Widget>[
-            TextButton(
-              child: new Text("Ok"),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
     );
+  }
+
+  void popupAction(String option) {
+    if (option == 'Donate') {
+      Get.toNamed("/donation");
+    }
+    if (option == 'About') {
+      _showInfo();
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    final List<String> options = ['Donate', 'About'];
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: Text('One Second Diary'),
         actions: [
-          IconButton(
-            icon: Icon(Icons.info_outline_rounded),
-            onPressed: () => _showInfo(),
+          PopupMenuButton<String>(
+            color: Colors.white,
+            onSelected: popupAction,
+            itemBuilder: (BuildContext context) {
+              return options.map((String option) {
+                return PopupMenuItem<String>(
+                  value: option,
+                  child: Text(option),
+                );
+              }).toList();
+            },
           ),
         ],
       ),
