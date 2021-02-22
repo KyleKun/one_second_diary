@@ -1,22 +1,32 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:one_second_diary/core_temp.dart';
 import 'package:one_second_diary/home_screen.dart';
 import 'package:one_second_diary/intro_screen.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import 'bindings/home_binding.dart';
 import 'lang/translation_service.dart';
 import 'routes/app_pages.dart';
 import 'utils/shared_preferences_util.dart';
-import 'utils/utils.dart';
 
 List<CameraDescription> cameras;
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  //! PROD APP
   await StorageUtil.getInstance();
 
-  runApp(MyApp());
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
+      .then((_) {
+    runApp(MyApp());
+  });
+
+  // //! TEST AREA
+  // cameras = await availableCameras();
+  // runApp(MaterialApp(home: CoreTemp()));
 }
 
 class MyApp extends StatelessWidget {

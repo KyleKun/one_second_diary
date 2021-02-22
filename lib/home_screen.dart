@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:one_second_diary/add_new_screen.dart';
+import 'package:one_second_diary/main.dart';
+import 'package:one_second_diary/routes/app_pages.dart';
 import 'package:one_second_diary/settings_screen.dart';
 import 'package:one_second_diary/utils/shared_preferences_util.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 import 'utils/utils.dart';
 import 'create_movie_screen.dart';
@@ -22,19 +27,29 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
+    _getStoragePermission();
+
     final String today = Utils.getToday();
+
     if (today != StorageUtil.getString('today')) {
       StorageUtil.putString('today', today);
       StorageUtil.putBool('dailyEntry', false);
     } else {
       print('today is not yesterday lol');
     }
+    //TODO: remove, only for testing
+    StorageUtil.putBool('dailyEntry', false);
+
     super.initState();
   }
 
   @override
   void dispose() {
     super.dispose();
+  }
+
+  void _getStoragePermission() async {
+    await Utils.requestPermission(Permission.storage);
   }
 
   void _onTap(int index) {
@@ -55,7 +70,7 @@ class _HomePageState extends State<HomePage> {
 
   void popupAction(String option) {
     if (option == 'Donate') {
-      Get.toNamed("/donation");
+      Get.toNamed(Routes.DONATION);
     }
     if (option == 'About') {
       _showInfo();

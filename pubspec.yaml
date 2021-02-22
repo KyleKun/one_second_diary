@@ -41,6 +41,7 @@ dependencies:
   shimmer:
   url_launcher:
   rive:
+  native_device_orientation:
 
 dev_dependencies:
   flutter_test:

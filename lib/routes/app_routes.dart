@@ -5,4 +5,5 @@ abstract class Routes {
   static const HOME = '/home';
   static const RECORDING = '/recording';
   static const DONATION = '/donation';
+  static const SAVE_VIDEO = '/save_video';
 }

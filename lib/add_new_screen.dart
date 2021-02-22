@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:get/get.dart';
-import 'package:one_second_diary/recording_screen.dart';
-import 'package:one_second_diary/utils/shared_preferences_util.dart';
-
+import 'package:one_second_diary/routes/app_pages.dart';
 import 'controllers/day_controller.dart';
-import 'utils/utils.dart';
 
 class AddNewRecordingPage extends GetView<DayController> {
   @override
@@ -79,7 +76,7 @@ class AddNewRecordingPage extends GetView<DayController> {
                         shape: CircleBorder(),
                         color: Color(0xff7AC74F),
                         onPressed: () {
-                          Get.toNamed('/recording');
+                          Get.toNamed(Routes.RECORDING);
                         },
                         child: Icon(
                           Icons.photo_camera,

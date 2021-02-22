@@ -24,7 +24,7 @@ class _CoreTempState extends State<CoreTemp> {
 
   final FlutterFFmpeg _flutterFFmpeg = new FlutterFFmpeg();
   final tapiocaBalls = [
-    TapiocaBall.textOverlay("text", 100, 10, 100, Colors.red),
+    TapiocaBall.textOverlay("21/02/2021", 1020, 20, 40, Colors.black),
   ];
 
   @override
@@ -184,7 +184,7 @@ class _CoreTempState extends State<CoreTemp> {
                               print('Video recorded to ${file.path}');
                               file.saveTo(appPath + '/$videoCount.mp4');
 
-                              String testFirst = appPath + '/3.mp4';
+                              String testFirst = appPath + '/1.mp4';
 
                               String testFinal = appPath + '/10.mp4';
                               String glueFinal = appPath + '/300.mp4';
@@ -195,17 +195,17 @@ class _CoreTempState extends State<CoreTemp> {
                               cup.suckUp(testFinal).then((_) {
                                 print("finish processing");
                               });
-                              final String glue = appPath + '/0.txt';
-                              _flutterFFmpeg
-                                  .execute(
-                                      '-f concat -safe 0 -i $glue -c copy $glueFinal')
-                                  .then((result) {
-                                if (result == 0) {
-                                  print('success');
-                                } else {
-                                  print('faillllllllllll');
-                                }
-                              });
+                              // final String glue = appPath + '/0.txt';
+                              // _flutterFFmpeg
+                              //     .execute(
+                              //         '-f concat -safe 0 -i $glue -c copy $glueFinal')
+                              //     .then((result) {
+                              //   if (result == 0) {
+                              //     print('success');
+                              //   } else {
+                              //     print('faillllllllllll');
+                              //   }
+                              // });
                             }
                           });
                         });

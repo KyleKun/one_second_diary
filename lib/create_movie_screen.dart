@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flip_card/flip_card.dart';
+import 'package:one_second_diary/utils/shared_preferences_util.dart';
 import 'package:shimmer/shimmer.dart';
 
 class CreateMovieScreen extends StatefulWidget {
@@ -8,9 +9,9 @@ class CreateMovieScreen extends StatefulWidget {
 }
 
 class _CreateMovieScreenState extends State<CreateMovieScreen> {
-  //TODO: replace by the actual variable from hive
-  int numberOfVideos = 1207;
-  int totalEstimatedTime = 1;
+  int numberOfVideos = StorageUtil.getInt('videoCount') ?? 0;
+  //TODO: fix
+  int totalEstimatedTime = StorageUtil.getInt('videoCount') ?? 0 ~/ 60;
 
   @override
   Widget build(BuildContext context) {

@@ -29,7 +29,7 @@ subprojects {
 }
 
 ext {
-    flutterFFmpegPackage  = 'full'
+    flutterFFmpegPackage  = 'video-lts'
 }
 
 

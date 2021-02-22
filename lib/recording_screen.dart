@@ -1,13 +1,19 @@
+import 'dart:async';
+import 'dart:io' as io;
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:one_second_diary/ffmpeg_api_wrapper.dart';
 import 'package:one_second_diary/home_screen.dart';
 import 'package:one_second_diary/routes/app_pages.dart';
 import 'package:one_second_diary/utils/shared_preferences_util.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
-
+import 'package:tapioca/tapioca.dart';
 import 'controllers/day_controller.dart';
 import 'utils/utils.dart';
+import 'package:native_device_orientation/native_device_orientation.dart';
 
 class RecordingPage extends StatefulWidget {
   @override
@@ -18,12 +24,152 @@ class _RecordingPageState extends State<RecordingPage>
     with WidgetsBindingObserver, TickerProviderStateMixin {
   CameraController _controller;
   List<CameraDescription> _availableCameras;
-  final DayController dayController = Get.find();
+
+  final tapiocaBalls = [
+    TapiocaBall.textOverlay("21/02/2021", 100, 10, 100, Colors.red),
+  ];
+
+  bool _isRecording;
+  double _recordingProgress;
+  String _appPath;
+  bool _shouldRotateVideo;
 
   @override
   void initState() {
     super.initState();
+    _isRecording = false;
+    _recordingProgress = 0.0;
+    _shouldRotateVideo = false;
+    _createFolder();
     _getAvailableCameras();
+    _appPath = StorageUtil.getString('appPath');
+  }
+
+  void _createFolder() async {
+    try {
+      io.Directory directory;
+      directory = await getExternalStorageDirectory();
+      //print('First directory path: ' + directory.path);
+
+      String appPath = '';
+
+      List<String> folders = directory.path.split('/');
+      for (int i = 1; i < folders.length; i++) {
+        String folder = folders[i];
+        if (folder != "Android") {
+          appPath += "/" + folder;
+        } else {
+          break;
+        }
+      }
+
+      appPath = appPath + "/OneSecondDiary";
+      directory = io.Directory(appPath);
+
+      StorageUtil.putString('appPath', appPath + '/');
+      print('APP PATH\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n' +
+          StorageUtil.getString('appPath') +
+          '\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\\n');
+
+      if (!await directory.exists()) {
+        print("Directory does not exist");
+        await directory.create(recursive: true);
+        print("Directory created");
+        print('Final Directory path: ' + directory.path);
+      } else {
+        print("Directory already exists");
+        //TODO: move to a better place
+        List<io.FileSystemEntity> _files;
+        _files = directory.listSync(recursive: true, followLinks: false);
+        print(_files);
+        List<String> allFiles = [];
+        for (int i = 0; i < _files.length; i++) {
+          String temp = _files[i].toString().split('.').first;
+          temp = temp.split('/').last;
+          allFiles.add(temp);
+        }
+        allFiles.sort();
+        StorageUtil.putInt('videoCount', allFiles.length);
+      }
+    } catch (e) {
+      print('$e');
+    }
+  }
+
+  void _updateRecordingProgress() {
+    setState(() {
+      _isRecording = true;
+    });
+    const oneSec = const Duration(milliseconds: 20);
+    new Timer.periodic(oneSec, (Timer t) async {
+      setState(() {
+        _recordingProgress += 0.01;
+        // we "finish" downloading here
+        if (_recordingProgress.toStringAsFixed(1) == '1.2') {
+          _isRecording = false;
+          t.cancel();
+          _recordingProgress = 0.0;
+
+          print('start recording');
+
+          stopVideoRecording().then((file) {
+            if (file != null) {
+              // Crops a little part of the string so ffmpeg will not complain about overriding the file
+              // String rotatedVideoPath =
+              //     file.path.substring(0, file.path.length - 5);
+
+              // rotatedVideoPath = rotatedVideoPath += '.mp4';
+
+              String finalPath = _appPath + Utils.getToday() + '.mp4';
+
+              print('Video recorded to ${file.path}');
+
+              //  await executeFFmpeg(
+              //       '-i ${file.path} -c copy -metadata:s:v:0 rotate=45 $finalPath');
+              if (io.File(finalPath).existsSync()) {
+                finalPath =
+                    _appPath + 'DUPLICATED_DAY_' + Utils.getToday() + '.mp4';
+              }
+
+              var testPath = '/storage/emulated/0/OneSecondDiary/22-2-2021.mp4';
+
+              file.saveTo(testPath);
+
+              if (_shouldRotateVideo) {
+                io.sleep(Duration(seconds: 3));
+                rotateVideo(testPath);
+                testPath = testPath.replaceAll('.mp4', '-processed.mp4');
+              }
+
+              // io.sleep(new Duration(seconds: 5));
+
+              // final cup = Cup(
+              //     Content('/storage/emulated/0/OneSecondDiary/22-2-2021.mp4'),
+              //     tapiocaBalls);
+
+              // String editedPath = '/storage/emulated/0/OneSecondDiary/cup.mp4';
+
+              // cup.suckUp(editedPath).then((_) {
+              //   print("finishProcessing");
+              // });
+
+              Get.offNamed(
+                Routes.SAVE_VIDEO,
+                arguments: testPath,
+              );
+            } else {
+              print('could not record video');
+            }
+          });
+        }
+      });
+    });
+  }
+
+  void rotateVideo(String videoPath) {
+    String finalPath = videoPath.replaceAll('.mp4', '-processed.mp4');
+    executeFFmpeg(
+        '-i $videoPath -c copy -metadata:s:v:0 rotate=180 $finalPath');
   }
 
   // get available cameras
@@ -38,13 +184,31 @@ class _RecordingPageState extends State<RecordingPage>
   Future<void> _initCamera(CameraDescription description) async {
     _controller =
         CameraController(description, ResolutionPreset.max, enableAudio: false);
-
+    _controller.addListener(() {
+      if (mounted) {
+        setState(() {});
+      }
+    });
     try {
       await _controller.initialize();
-      // to notify the widgets that camera has been initialized and now camera preview can be done
-      setState(() {});
+      await _controller.lockCaptureOrientation(DeviceOrientation.landscapeLeft);
     } catch (e) {
       print(e);
+    }
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    // App state changed before we got the chance to initialize.
+    if (_controller == null || !_controller.value.isInitialized) {
+      return;
+    }
+    if (state == AppLifecycleState.inactive) {
+      _controller?.dispose();
+    } else if (state == AppLifecycleState.resumed) {
+      if (_controller != null) {
+        _handleCameraLens(_controller.description, false);
+      }
     }
   }
 
@@ -54,22 +218,34 @@ class _RecordingPageState extends State<RecordingPage>
     super.dispose();
   }
 
-  void _toggleCameraLens() {
-    // get current lens direction (front / rear)
-    final lensDirection = _controller.description.lensDirection;
-    CameraDescription newDescription;
-    if (lensDirection == CameraLensDirection.front) {
-      newDescription = _availableCameras.firstWhere((description) =>
-          description.lensDirection == CameraLensDirection.back);
-    } else {
-      newDescription = _availableCameras.firstWhere((description) =>
-          description.lensDirection == CameraLensDirection.front);
+  void _handleCameraLens(var desc, bool toggle) async {
+    final lensDirection = desc.lensDirection;
+
+    if (_controller != null) {
+      await _controller.dispose();
     }
 
-    if (newDescription != null) {
-      _initCamera(newDescription);
+    if (toggle) {
+      CameraDescription newDescription;
+      if (lensDirection == CameraLensDirection.front) {
+        newDescription = _availableCameras.firstWhere((description) =>
+            description.lensDirection == CameraLensDirection.back);
+      } else {
+        newDescription = _availableCameras.firstWhere((description) =>
+            description.lensDirection == CameraLensDirection.front);
+      }
+
+      if (newDescription != null) {
+        _initCamera(newDescription);
+      } else {
+        print('Asked camera not available');
+      }
     } else {
-      print('Asked camera not available');
+      if (desc != null) {
+        _initCamera(desc);
+      } else {
+        print('Asked camera not available');
+      }
     }
   }
 
@@ -105,86 +281,195 @@ class _RecordingPageState extends State<RecordingPage>
     }
   }
 
+  int _turnsDeviceOrientation(BuildContext context) {
+    //
+    NativeDeviceOrientation orientation =
+        NativeDeviceOrientationReader.orientation(context);
+    //
+    int turns;
+    switch (orientation) {
+      case NativeDeviceOrientation.landscapeLeft:
+        print('\n<\n<\n<\n<\n<\n<\n<\n<\nLAND LEFT\n<\n<\n<\n<\n<\n<\n<\n<\n');
+        turns = -1;
+        break;
+      case NativeDeviceOrientation.landscapeRight:
+        print('\n>\n>\n>\n>\n>\n>\n>\n>\nLAND RIGHT\n>\n>\n>\n>\n>\n>\n>\n>\n');
+        turns = -1;
+        break;
+      default:
+        turns = 0;
+        break;
+    }
+
+    return turns;
+  }
+
+  BoxDecoration _screenBorderDecoration() {
+    if (_isRecording) {
+      return BoxDecoration(
+        color: Colors.black,
+        border: Border.all(
+          color: Colors.red,
+          style: BorderStyle.solid,
+          width: 3,
+        ),
+      );
+    } else {
+      return BoxDecoration(
+        color: Colors.black,
+      );
+    }
+  }
+
+  Widget rotateWarning() {
+    return Column(
+      children: [
+        Text('Rotate your device'),
+        Icon(Icons.rotate_left, size: 48.0),
+      ],
+    );
+  }
+
+  Widget _addCameraScreen(BuildContext context) {
+    //
+    return RotatedBox(
+      quarterTurns: _turnsDeviceOrientation(context),
+      child: Container(
+        decoration: _screenBorderDecoration(),
+        child: Center(child: CameraPreview(_controller)),
+      ),
+
+      // child: RotatedBox(
+      //
+      //   child: Center(
+      //     child: ClipRect(
+      //       child: AspectRatio(
+      //         aspectRatio: _controller.value.aspectRatio,
+      //         child: CameraPreview(_controller),
+      //       ),
+      //     ),
+      //   ),
+      // ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
     return Scaffold(
-      body: SafeArea(
-        child: Container(
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height,
-          child: Stack(
-            fit: StackFit.expand,
-            children: [
-              Center(
-                child: _controller != null
-                    ? CameraPreview(_controller)
-                    : CircularProgressIndicator(),
-              ),
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: Container(
-                  width: MediaQuery.of(context).size.width * 0.2,
-                  height: MediaQuery.of(context).size.height * 0.2,
-                  child: RaisedButton(
-                    elevation: 8.0,
-                    shape: CircleBorder(),
-                    color: Colors.white,
-                    onPressed: () {
-                      //TODO: only after saving video on its confirmation screen
-                      StorageUtil.putBool('dailyEntry', true);
-                      dayController.updateDaily();
-                      print('start recording');
-                    },
-                  ),
-                ),
-              ),
-              Positioned(
-                right: 15.0,
-                bottom: 15.0,
-                child: GestureDetector(
+      body: NativeDeviceOrientationReader(
+        useSensor: true,
+        builder: (BuildContext context) {
+          NativeDeviceOrientation orientation =
+              NativeDeviceOrientationReader.orientation(context);
+
+          return SafeArea(
+            child: Container(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height,
+              child: Stack(
+                fit: StackFit.expand,
+                children: [
+                  _controller != null &&
+                          !(orientation ==
+                                  NativeDeviceOrientation.portraitDown ||
+                              orientation == NativeDeviceOrientation.portraitUp)
+                      ? _addCameraScreen(context)
+                      : rotateWarning(),
+                  Align(
+                    alignment: Alignment.bottomCenter,
                     child: Container(
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Colors.black,
-                      ),
-                      width: MediaQuery.of(context).size.width * 0.12,
-                      height: MediaQuery.of(context).size.height * 0.12,
-                      child: Icon(
-                        Icons.swap_vert,
-                        color: Colors.white,
-                      ),
-                    ),
-                    onTap: () {
-                      print('change camera');
-                      _toggleCameraLens();
-                    }),
-              ),
-              Positioned(
-                left: 15.0,
-                bottom: 15.0,
-                child: GestureDetector(
-                    child: Container(
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Colors.red,
-                      ),
-                      width: MediaQuery.of(context).size.width * 0.12,
-                      height: MediaQuery.of(context).size.height * 0.12,
-                      child: Center(
-                        child: Icon(
-                          Icons.close,
-                          color: Colors.white,
+                      width: MediaQuery.of(context).size.width * 0.2,
+                      height: MediaQuery.of(context).size.height * 0.2,
+                      child: RaisedButton(
+                        child: Stack(
+                          children: [
+                            Center(
+                              child: Icon(
+                                Icons.circle,
+                                color: Colors.red,
+                                size: 32.0,
+                              ),
+                            ),
+                            Center(
+                              child: CircularProgressIndicator(
+                                value: _recordingProgress,
+                                valueColor:
+                                    AlwaysStoppedAnimation<Color>(Colors.green),
+                              ),
+                            ),
+                          ],
                         ),
+                        elevation: 8.0,
+                        shape: CircleBorder(),
+                        color: Colors.white,
+                        onPressed: () {
+                          if (!_isRecording) {
+                            setState(() {
+                              startVideoRecording();
+                              if (orientation ==
+                                  NativeDeviceOrientation.landscapeRight) {
+                                _shouldRotateVideo = true;
+                              }
+                            });
+
+                            _updateRecordingProgress();
+                          }
+                        },
                       ),
                     ),
-                    onTap: () {
-                      Get.offAllNamed(Routes.HOME);
-                      print('go back');
-                    }),
+                  ),
+                  Positioned(
+                    right: 15.0,
+                    bottom: 15.0,
+                    child: GestureDetector(
+                        child: Container(
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.green,
+                          ),
+                          width: MediaQuery.of(context).size.width * 0.12,
+                          height: MediaQuery.of(context).size.height * 0.12,
+                          child: Icon(
+                            Icons.swap_vert,
+                            color: Colors.white,
+                          ),
+                        ),
+                        onTap: () {
+                          print('change camera');
+                          print(_controller.description.sensorOrientation);
+
+                          _handleCameraLens(_controller.description, true);
+                        }),
+                  ),
+                  Positioned(
+                    left: 15.0,
+                    bottom: 15.0,
+                    child: GestureDetector(
+                        child: Container(
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.red,
+                          ),
+                          width: MediaQuery.of(context).size.width * 0.12,
+                          height: MediaQuery.of(context).size.height * 0.12,
+                          child: Center(
+                            child: Icon(
+                              Icons.close,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                        onTap: () {
+                          Get.offAllNamed(Routes.HOME);
+                          print('go back');
+                        }),
+                  ),
+                ],
               ),
-            ],
-          ),
-        ),
+            ),
+          );
+        },
       ),
     );
   }
