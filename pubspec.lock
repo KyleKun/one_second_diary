@@ -155,7 +155,7 @@ packages:
       name: flutter_widget_from_html_core
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.5.2"
+    version: "0.5.2+1"
   gallery_saver:
     dependency: "direct main"
     description:
@@ -177,13 +177,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.2.0"
-  helpers:
-    dependency: transitive
-    description:
-      name: helpers
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.3"
   html:
     dependency: transitive
     description:
@@ -532,15 +525,8 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.0-nullsafety.3"
-  video_editor:
-    dependency: "direct main"
-    description:
-      name: video_editor
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.3+1"
   video_player:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: video_player
       url: "https://pub.dartlang.org"
@@ -560,13 +546,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.1.4+1"
-  video_thumbnail:
-    dependency: transitive
-    description:
-      name: video_thumbnail
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.2.5+1"
   visibility_detector:
     dependency: transitive
     description:

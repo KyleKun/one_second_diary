@@ -34,7 +34,6 @@ dependencies:
   tapioca:
   gallery_saver:
   salomon_bottom_bar:
-  video_editor:
   introduction_screen:
   flip_card:
   avatar_glow:
@@ -42,6 +41,7 @@ dependencies:
   url_launcher:
   rive:
   native_device_orientation:
+  video_player:
 
 dev_dependencies:
   flutter_test:

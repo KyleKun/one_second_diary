@@ -25,26 +25,25 @@ class _RecordingPageState extends State<RecordingPage>
   CameraController _controller;
   List<CameraDescription> _availableCameras;
 
-  final tapiocaBalls = [
-    TapiocaBall.textOverlay("21/02/2021", 100, 10, 100, Colors.red),
-  ];
+  // final tapiocaBalls = [
+  //   TapiocaBall.textOverlay("21/02/2021", 100, 10, 100, Colors.red),
+  // ];
 
   bool _isRecording;
   double _recordingProgress;
-  String _appPath;
-  bool _shouldRotateVideo;
+  // String _appPath;
 
   @override
   void initState() {
     super.initState();
     _isRecording = false;
     _recordingProgress = 0.0;
-    _shouldRotateVideo = false;
     _createFolder();
     _getAvailableCameras();
-    _appPath = StorageUtil.getString('appPath');
+    // _appPath = StorageUtil.getString('appPath');
   }
 
+  //TODO: probably should move elsewhere
   void _createFolder() async {
     try {
       io.Directory directory;
@@ -110,7 +109,7 @@ class _RecordingPageState extends State<RecordingPage>
           t.cancel();
           _recordingProgress = 0.0;
 
-          print('start recording');
+          print('stop recording');
 
           stopVideoRecording().then((file) {
             if (file != null) {
@@ -120,26 +119,20 @@ class _RecordingPageState extends State<RecordingPage>
 
               // rotatedVideoPath = rotatedVideoPath += '.mp4';
 
-              String finalPath = _appPath + Utils.getToday() + '.mp4';
+              //String finalPath = _appPath + Utils.getToday() + '.mp4';
 
               print('Video recorded to ${file.path}');
 
               //  await executeFFmpeg(
               //       '-i ${file.path} -c copy -metadata:s:v:0 rotate=45 $finalPath');
-              if (io.File(finalPath).existsSync()) {
-                finalPath =
-                    _appPath + 'DUPLICATED_DAY_' + Utils.getToday() + '.mp4';
-              }
+              // if (io.File(finalPath).existsSync()) {
+              //   finalPath =
+              //       _appPath + 'DUPLICATED_DAY_' + Utils.getToday() + '.mp4';
+              // }
 
-              var testPath = '/storage/emulated/0/OneSecondDiary/22-2-2021.mp4';
+              // var testPath = '/storage/emulated/0/OneSecondDiary/22-2-2021.mp4';
 
-              file.saveTo(testPath);
-
-              if (_shouldRotateVideo) {
-                io.sleep(Duration(seconds: 3));
-                rotateVideo(testPath);
-                testPath = testPath.replaceAll('.mp4', '-processed.mp4');
-              }
+              // file.saveTo(testPath);
 
               // io.sleep(new Duration(seconds: 5));
 
@@ -155,7 +148,7 @@ class _RecordingPageState extends State<RecordingPage>
 
               Get.offNamed(
                 Routes.SAVE_VIDEO,
-                arguments: testPath,
+                arguments: file.path,
               );
             } else {
               print('could not record video');
@@ -166,11 +159,10 @@ class _RecordingPageState extends State<RecordingPage>
     });
   }
 
-  void rotateVideo(String videoPath) {
-    String finalPath = videoPath.replaceAll('.mp4', '-processed.mp4');
-    executeFFmpeg(
-        '-i $videoPath -c copy -metadata:s:v:0 rotate=180 $finalPath');
-  }
+  // void rotateVideo(String videoPath) {
+  //   String finalPath = videoPath.replaceAll('.mp4', '-processed.mp4');
+  //   executeFFmpeg('-i $videoPath -c copy -metadata:s:v:0 rotate=90 $finalPath');
+  // }
 
   // get available cameras
   Future<void> _getAvailableCameras() async {
@@ -182,8 +174,8 @@ class _RecordingPageState extends State<RecordingPage>
 
   // init camera
   Future<void> _initCamera(CameraDescription description) async {
-    _controller =
-        CameraController(description, ResolutionPreset.max, enableAudio: false);
+    _controller = CameraController(description, ResolutionPreset.veryHigh,
+        enableAudio: false);
     _controller.addListener(() {
       if (mounted) {
         setState(() {});
@@ -215,6 +207,7 @@ class _RecordingPageState extends State<RecordingPage>
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
+    _controller.dispose();
     super.dispose();
   }
 
@@ -281,28 +274,28 @@ class _RecordingPageState extends State<RecordingPage>
     }
   }
 
-  int _turnsDeviceOrientation(BuildContext context) {
-    //
-    NativeDeviceOrientation orientation =
-        NativeDeviceOrientationReader.orientation(context);
-    //
-    int turns;
-    switch (orientation) {
-      case NativeDeviceOrientation.landscapeLeft:
-        print('\n<\n<\n<\n<\n<\n<\n<\n<\nLAND LEFT\n<\n<\n<\n<\n<\n<\n<\n<\n');
-        turns = -1;
-        break;
-      case NativeDeviceOrientation.landscapeRight:
-        print('\n>\n>\n>\n>\n>\n>\n>\n>\nLAND RIGHT\n>\n>\n>\n>\n>\n>\n>\n>\n');
-        turns = -1;
-        break;
-      default:
-        turns = 0;
-        break;
-    }
+  // int _turnsDeviceOrientation(BuildContext context) {
+  //   //
+  //   NativeDeviceOrientation orientation =
+  //       NativeDeviceOrientationReader.orientation(context);
+  //   //
+  //   int turns;
+  //   switch (orientation) {
+  //     case NativeDeviceOrientation.landscapeLeft:
+  //       print('\n<\n<\n<\n<\n<\n<\n<\n<\nLAND LEFT\n<\n<\n<\n<\n<\n<\n<\n<\n');
+  //       turns = -1;
+  //       break;
+  //     case NativeDeviceOrientation.landscapeRight:
+  //       print('\n>\n>\n>\n>\n>\n>\n>\n>\nLAND RIGHT\n>\n>\n>\n>\n>\n>\n>\n>\n');
+  //       turns = -1;
+  //       break;
+  //     default:
+  //       turns = 0;
+  //       break;
+  //   }
 
-    return turns;
-  }
+  //   return turns;
+  // }
 
   BoxDecoration _screenBorderDecoration() {
     if (_isRecording) {
@@ -323,9 +316,11 @@ class _RecordingPageState extends State<RecordingPage>
 
   Widget rotateWarning() {
     return Column(
+      mainAxisSize: MainAxisSize.max,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text('Rotate your device'),
-        Icon(Icons.rotate_left, size: 48.0),
+        Text('Rotate your device to the left'),
+        Icon(Icons.rotate_left, size: 56.0),
       ],
     );
   }
@@ -333,7 +328,7 @@ class _RecordingPageState extends State<RecordingPage>
   Widget _addCameraScreen(BuildContext context) {
     //
     return RotatedBox(
-      quarterTurns: _turnsDeviceOrientation(context),
+      quarterTurns: -1, //_turnsDeviceOrientation(context),
       child: Container(
         decoration: _screenBorderDecoration(),
         child: Center(child: CameraPreview(_controller)),
@@ -371,9 +366,8 @@ class _RecordingPageState extends State<RecordingPage>
                 fit: StackFit.expand,
                 children: [
                   _controller != null &&
-                          !(orientation ==
-                                  NativeDeviceOrientation.portraitDown ||
-                              orientation == NativeDeviceOrientation.portraitUp)
+                          !(orientation !=
+                              NativeDeviceOrientation.landscapeLeft)
                       ? _addCameraScreen(context)
                       : rotateWarning(),
                   Align(
@@ -407,10 +401,6 @@ class _RecordingPageState extends State<RecordingPage>
                           if (!_isRecording) {
                             setState(() {
                               startVideoRecording();
-                              if (orientation ==
-                                  NativeDeviceOrientation.landscapeRight) {
-                                _shouldRotateVideo = true;
-                              }
                             });
 
                             _updateRecordingProgress();
@@ -437,8 +427,6 @@ class _RecordingPageState extends State<RecordingPage>
                         ),
                         onTap: () {
                           print('change camera');
-                          print(_controller.description.sensorOrientation);
-
                           _handleCameraLens(_controller.description, true);
                         }),
                   ),
