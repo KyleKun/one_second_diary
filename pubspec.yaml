@@ -26,7 +26,6 @@ dependencies:
   get:
   camera:
   path_provider:
-  better_player:
   rflutter_alert:
   shared_preferences:
   flutter_ffmpeg: ^0.3.1

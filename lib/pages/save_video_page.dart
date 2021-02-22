@@ -1,7 +1,4 @@
-import 'dart:async';
 import 'dart:io';
-
-import 'package:better_player/better_player.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:one_second_diary/controllers/day_controller.dart';
