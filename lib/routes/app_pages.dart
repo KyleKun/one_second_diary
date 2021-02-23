@@ -1,10 +1,10 @@
 import 'package:get/get.dart';
 import 'package:one_second_diary/bindings/home_binding.dart';
-import 'package:one_second_diary/intro_screen.dart';
-import 'package:one_second_diary/pages/donation_page.dart';
-import 'package:one_second_diary/pages/save_video_page.dart';
-import 'package:one_second_diary/recording_screen.dart';
-import '../home_screen.dart';
+import 'package:one_second_diary/pages/intro/intro_page.dart';
+import 'package:one_second_diary/pages/donation/donation_page.dart';
+import 'package:one_second_diary/pages/save_video/save_video_page.dart';
+import 'package:one_second_diary/pages/recording/recording_page.dart';
+import 'package:one_second_diary/pages/home/base/home_page.dart';
 part './app_routes.dart';
 
 class AppPages {

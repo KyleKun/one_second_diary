@@ -34,9 +34,7 @@ dependencies:
   gallery_saver:
   salomon_bottom_bar:
   introduction_screen:
-  flip_card:
   avatar_glow:
-  shimmer:
   url_launcher:
   rive:
   native_device_orientation:

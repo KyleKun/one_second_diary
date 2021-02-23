@@ -4,15 +4,11 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:one_second_diary/ffmpeg_api_wrapper.dart';
-import 'package:one_second_diary/home_screen.dart';
 import 'package:one_second_diary/routes/app_pages.dart';
 import 'package:one_second_diary/utils/shared_preferences_util.dart';
+import 'package:one_second_diary/utils/utils.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:tapioca/tapioca.dart';
-import 'controllers/day_controller.dart';
-import 'utils/utils.dart';
 import 'package:native_device_orientation/native_device_orientation.dart';
 
 class RecordingPage extends StatefulWidget {

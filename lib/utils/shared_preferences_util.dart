@@ -6,7 +6,6 @@ class StorageUtil {
 
   static Future<StorageUtil> getInstance() async {
     if (_storageUtil == null) {
-      // keep local instance till it is fully initialized.
       var secureStorage = StorageUtil._();
       await secureStorage._init();
       _storageUtil = secureStorage;

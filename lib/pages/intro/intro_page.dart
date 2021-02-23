@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:introduction_screen/introduction_screen.dart';
-import 'package:one_second_diary/home_screen.dart';
+import 'package:one_second_diary/pages/home/base/home_page.dart';
 import 'package:one_second_diary/utils/shared_preferences_util.dart';
 
 class IntroPage extends StatefulWidget {
@@ -13,6 +13,7 @@ class _IntroPageState extends State<IntroPage> {
 
   void _onIntroEnd(context) {
     StorageUtil.putBool('showIntro', false);
+    StorageUtil.putBool('dailyEntry', false);
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(builder: (_) => HomePage()),
     );

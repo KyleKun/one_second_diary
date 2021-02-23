@@ -3,10 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:one_second_diary/core_temp.dart';
-import 'package:one_second_diary/home_screen.dart';
-import 'package:one_second_diary/intro_screen.dart';
-import 'package:permission_handler/permission_handler.dart';
-
+import 'package:one_second_diary/utils/theme.dart';
 import 'bindings/home_binding.dart';
 import 'lang/translation_service.dart';
 import 'routes/app_pages.dart';
@@ -42,13 +39,9 @@ class MyApp extends StatelessWidget {
           : Routes.INTRO,
       debugShowCheckedModeBanner: false,
       title: 'One Second Diary',
-      themeMode: ThemeMode.light,
-      theme: ThemeData(
-        appBarTheme: AppBarTheme(color: Color(0xffff6366)),
-        fontFamily: 'Magic',
-        primaryColor: Color(0xffff6366),
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
+      themeMode: ThemeService().theme,
+      theme: Themes.light,
+      darkTheme: Themes.dark,
     );
   }
 }
