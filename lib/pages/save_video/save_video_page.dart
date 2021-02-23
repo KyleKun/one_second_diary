@@ -121,6 +121,7 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
                 onPressed: () {
                   StorageUtil.putBool('dailyEntry', true);
                   dayController.updateDaily();
+                  dayController.updateVideoCount();
 
                   new Alert(
                     context: context,

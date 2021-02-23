@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:avatar_glow/avatar_glow.dart';
 import 'package:get/get.dart';
 import 'package:one_second_diary/controllers/day_controller.dart';
-import 'package:one_second_diary/routes/app_pages.dart';
+import 'package:one_second_diary/pages/home/daily_entry/widgets/emoji_widget.dart';
+
+import 'widgets/edit_daily_button.dart';
+import 'widgets/record_daily_button.dart';
 
 class AddNewRecordingPage extends GetView<DayController> {
   @override
@@ -10,84 +12,32 @@ class AddNewRecordingPage extends GetView<DayController> {
     return Container(
       width: MediaQuery.of(context).size.width * 0.8,
       height: MediaQuery.of(context).size.height * 0.7,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            width: MediaQuery.of(context).size.width * 0.5,
-            height: MediaQuery.of(context).size.height * 0.5,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              image: DecorationImage(
-                fit: BoxFit.contain,
-                image: AssetImage(
-                  controller.daily.value
-                      ? 'assets/images/confirmed.png'
-                      : 'assets/images/waiting.png',
-                ),
-              ),
-            ),
-            child: Text(
-              //TODO: Check if this is really updating on daily check
-              controller.daily.value
-                  ? 'Amazing!\nSee you tomorrow!'
-                  : 'Waiting for your\nrecording...',
-              style: TextStyle(fontSize: 22.0),
-              textAlign: TextAlign.center,
-            ),
-          ),
-          controller.daily.value
-              ? SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.4,
-                  height: MediaQuery.of(context).size.width * 0.15,
-                  child: RaisedButton(
-                    elevation: 5.0,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(80.0)),
-                    color: Color(0xff7D7ABC),
-                    onPressed: () {
-                      //StorageUtil.putString('today', 'aaaa');
-                    },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Spacer(flex: 2),
-                        Icon(
-                          Icons.edit,
-                          color: Colors.white,
-                        ),
-                        Spacer(flex: 1),
-                        Text(
-                          'Edit',
-                          style: TextStyle(color: Colors.white, fontSize: 22.0),
-                        ),
-                        Spacer(flex: 2)
-                      ],
-                    ),
-                  ),
-                )
-              : AvatarGlow(
-                  glowColor: Color(0xff7AC74F),
-                  endRadius: 60.0,
-                  child: SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.4,
-                    height: MediaQuery.of(context).size.width * 0.2,
-                    child: RaisedButton(
-                        elevation: 8.0,
-                        shape: CircleBorder(),
-                        color: Color(0xff7AC74F),
-                        onPressed: () {
-                          Get.toNamed(Routes.RECORDING);
-                        },
-                        child: Icon(
-                          Icons.photo_camera,
-                          color: Colors.white,
-                          size: 36.0,
-                        )),
-                  ),
-                ),
-        ],
+      //TODO: needs testing
+      child: Obx(
+        () => Container(
+          child: controller.daily.value ? _dailyComplete() : _dailyIncomplete(),
+        ),
       ),
+    );
+  }
+
+  Widget _dailyComplete() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        EmojiWidget(complete: true),
+        EditDailyButton(),
+      ],
+    );
+  }
+
+  Widget _dailyIncomplete() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        EmojiWidget(complete: false),
+        RecordDailyButton(),
+      ],
     );
   }
 }

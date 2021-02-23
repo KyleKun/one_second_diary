@@ -1,15 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:one_second_diary/controllers/day_controller.dart';
 import 'package:one_second_diary/utils/constants.dart';
-import 'package:one_second_diary/utils/shared_preferences_util.dart';
 
-class CreateMoviePage extends StatefulWidget {
-  @override
-  _CreateMoviePageState createState() => _CreateMoviePageState();
-}
-
-class _CreateMoviePageState extends State<CreateMoviePage> {
-  int numberOfVideos = StorageUtil.getInt('videoCount') ?? 0;
-
+class CreateMoviePage extends GetView<DayController> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -32,9 +26,12 @@ class _CreateMoviePageState extends State<CreateMoviePage> {
               child: Stack(
                 children: [
                   Center(
-                    child: Text(
-                      '$numberOfVideos days.',
-                      style: TextStyle(color: Colors.white, fontSize: 36.0),
+                    //TODO: fix, value going back to 0 after hot restart
+                    child: Obx(
+                      () => Text(
+                        '${controller.videoCount} days.',
+                        style: TextStyle(color: Colors.white, fontSize: 36.0),
+                      ),
                     ),
                   ),
                   Positioned(

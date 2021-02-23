@@ -14,9 +14,15 @@ class DayController extends GetxController {
   }
 
   var daily = StorageUtil.getBool('dailyEntry').obs;
+  var videoCount = StorageUtil.getInt('videoCount').obs ?? 0.obs;
 
   void updateDaily() {
-    daily = StorageUtil.getBool('dailyEntry').obs;
+    daily.value = StorageUtil.getBool('dailyEntry');
+    update();
+  }
+
+  void updateVideoCount() {
+    videoCount.value += 1;
     update();
   }
 
