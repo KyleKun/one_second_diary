@@ -2,12 +2,13 @@ import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:one_second_diary/routes/app_pages.dart';
+import 'package:one_second_diary/utils/constants.dart';
 
 class RecordDailyButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AvatarGlow(
-      glowColor: Color(0xff7AC74F),
+      glowColor: AppColors.green,
       endRadius: 60.0,
       child: SizedBox(
         width: MediaQuery.of(context).size.width * 0.4,
@@ -15,7 +16,7 @@ class RecordDailyButton extends StatelessWidget {
         child: RaisedButton(
           elevation: 8.0,
           shape: CircleBorder(),
-          color: Color(0xff7AC74F),
+          color: AppColors.green,
           onPressed: () {
             Get.toNamed(Routes.RECORDING);
           },

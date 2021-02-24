@@ -8,7 +8,6 @@ import 'dart:io' as io;
 class StorageController extends GetxController {
   @override
   void onInit() {
-    print('started storage controller');
     _getStoragePermission();
     _createFolder();
 
@@ -23,7 +22,6 @@ class StorageController extends GetxController {
     try {
       io.Directory directory;
       directory = await getExternalStorageDirectory();
-      //print('First directory path: ' + directory.path);
 
       String appPath = '';
 
@@ -45,15 +43,14 @@ class StorageController extends GetxController {
       Utils().logInfo('APP PATH: $appPath');
 
       if (!await directory.exists()) {
-        print("Directory does not exist");
         await directory.create(recursive: true);
-        print("Directory created");
-        print('Final Directory path: ' + directory.path);
+        Utils().logInfo("Directory created");
+        Utils().logInfo('Final Directory path: ' + directory.path);
       } else {
-        print("Directory already exists");
+        Utils().logInfo("Directory already exists");
       }
     } catch (e) {
-      print('$e');
+      Utils().logError('$e');
     }
   }
 }

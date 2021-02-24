@@ -34,10 +34,14 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     final List<String> options = ['Donate', 'About'];
     return AppBar(
       automaticallyImplyLeading: false,
-      title: Text('One Second Diary'),
+      title: Text(
+        'One Second Diary',
+        style: TextStyle(
+          fontFamily: 'Magic',
+        ),
+      ),
       actions: [
         PopupMenuButton<String>(
-          color: Colors.white,
           onSelected: popupAction,
           itemBuilder: (BuildContext context) {
             return options.map((String option) {

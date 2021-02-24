@@ -1,19 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:introduction_screen/introduction_screen.dart';
-import 'package:one_second_diary/pages/home/base/home_page.dart';
 import 'package:one_second_diary/routes/app_pages.dart';
+import 'package:one_second_diary/utils/constants.dart';
 import 'package:one_second_diary/utils/shared_preferences_util.dart';
 
-class IntroPage extends StatefulWidget {
-  @override
-  _IntroPageState createState() => _IntroPageState();
-}
-
-class _IntroPageState extends State<IntroPage> {
+class IntroPage extends StatelessWidget {
   final introKey = GlobalKey<IntroductionScreenState>();
 
-  void _onIntroEnd(context) async {
+  void _onIntroEnd() async {
     await StorageUtil.putBool('showIntro', false);
     await StorageUtil.putBool('dailyEntry', false);
     await StorageUtil.putInt('videoCount', 0);
@@ -62,8 +57,7 @@ class _IntroPageState extends State<IntroPage> {
           decoration: pageDecoration,
         ),
       ],
-      onDone: () => _onIntroEnd(context),
-      //onSkip: () => _onIntroEnd(context), // You can override onSkip callback
+      onDone: () => _onIntroEnd(),
       showSkipButton: true,
       skipFlex: 0,
       nextFlex: 0,
@@ -72,8 +66,8 @@ class _IntroPageState extends State<IntroPage> {
       done: const Text('Done', style: TextStyle(fontWeight: FontWeight.w600)),
       dotsDecorator: const DotsDecorator(
         size: Size(10.0, 10.0),
-        activeColor: Color(0xffff6366),
-        color: Color(0xFFBDBDBD),
+        activeColor: AppColors.mainColor,
+        color: AppColors.rose,
         activeSize: Size(22.0, 10.0),
         activeShape: RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(25.0)),

@@ -7,12 +7,16 @@ class Utils {
     printer: PrettyPrinter(),
   );
 
-  void logInfo(String info) {
+  void logInfo(dynamic info) {
     logger.i(info);
   }
 
-  void logWarning(String warning) {
+  void logWarning(dynamic warning) {
     logger.w(warning);
+  }
+
+  void logError(dynamic warning) {
+    logger.e(warning);
   }
 
   static String getToday() {

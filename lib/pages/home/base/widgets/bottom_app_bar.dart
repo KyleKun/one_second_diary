@@ -5,35 +5,21 @@ import 'package:one_second_diary/utils/constants.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 
 SalomonBottomBarItem _bottomBarItem({
-  IconData icon,
-  String title,
-  Color color,
+  @required IconData icon,
+  @required String title,
+  @required Color color,
 }) {
   return SalomonBottomBarItem(
     icon: Icon(icon, size: 28.0),
     title: Text(title, style: TextStyle(fontFamily: 'Magic')),
-    selectedColor: color ?? AppColors.mainColor,
+    selectedColor: color,
   );
 }
 
 class CustomBottomAppBar extends GetView<BottomAppBarIndexController> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: Constants.bottomAppBarHeight,
-      decoration: BoxDecoration(
-        color: Colors.grey[100],
-        borderRadius: BorderRadius.only(
-          topRight: Radius.circular(Constants.bottomAppBarBorderRadius),
-          topLeft: Radius.circular(Constants.bottomAppBarBorderRadius),
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black26,
-            blurRadius: Constants.bottomAppBarBlurRadius,
-          ),
-        ],
-      ),
+    return BottomAppBar(
       child: Obx(
         () => SalomonBottomBar(
           currentIndex: controller.activeIndex.value,
@@ -42,15 +28,17 @@ class CustomBottomAppBar extends GetView<BottomAppBarIndexController> {
             _bottomBarItem(
               icon: Icons.add_a_photo_outlined,
               title: "Record",
+              color: AppColors.green,
             ),
             _bottomBarItem(
-                icon: Icons.movie_filter_outlined,
-                title: "Create movie",
-                color: Colors.amber[700]),
+              icon: Icons.movie_filter_outlined,
+              title: "Create movie",
+              color: AppColors.mainColor,
+            ),
             _bottomBarItem(
               icon: Icons.settings_outlined,
               title: "Settings",
-              color: Colors.blue,
+              color: AppColors.purple,
             ),
           ],
         ),

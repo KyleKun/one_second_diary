@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:one_second_diary/utils/constants.dart';
 
 class EditDailyButton extends StatelessWidget {
   @override
@@ -11,7 +12,7 @@ class EditDailyButton extends StatelessWidget {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(80.0),
         ),
-        color: Color(0xff7D7ABC),
+        color: AppColors.purple,
         onPressed: () {
           //StorageUtil.putString('today', 'aaaa');
         },

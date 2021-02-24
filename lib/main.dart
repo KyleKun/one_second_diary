@@ -4,10 +4,10 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:one_second_diary/core_temp.dart';
 import 'package:one_second_diary/utils/theme.dart';
-import 'bindings/home_binding.dart';
 import 'lang/translation_service.dart';
 import 'routes/app_pages.dart';
 import 'utils/shared_preferences_util.dart';
+import 'package:device_preview/device_preview.dart';
 
 List<CameraDescription> cameras;
 Future<void> main() async {
@@ -18,7 +18,12 @@ Future<void> main() async {
 
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
       .then((_) {
-    runApp(MyApp());
+    runApp(
+      DevicePreview(
+        enabled: true,
+        builder: (context) => MyApp(),
+      ),
+    );
   });
 
   // //! TEST AREA

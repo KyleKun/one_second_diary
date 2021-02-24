@@ -5,7 +5,6 @@ import 'package:one_second_diary/utils/utils.dart';
 class DailyEntryController extends GetxController {
   @override
   void onInit() {
-    print('started day controller');
     _checkTodayEntry();
 
     super.onInit();
@@ -28,7 +27,7 @@ class DailyEntryController extends GetxController {
       dailyEntry.value = false;
       dailyEntry.refresh();
     } else {
-      print('DailyEntry was already done!');
+      Utils().logInfo('DailyEntry was already done!');
     }
   }
 }

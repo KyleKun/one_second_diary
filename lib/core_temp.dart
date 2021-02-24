@@ -144,6 +144,11 @@ class _CoreTempState extends State<CoreTemp> {
     }
   }
 
+  // void rotateVideo(String videoPath) {
+  //   String finalPath = videoPath.replaceAll('.mp4', '-processed.mp4');
+  //   executeFFmpeg('-i $videoPath -c copy -metadata:s:v:0 rotate=90 $finalPath');
+  // }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<void>(
@@ -196,6 +201,7 @@ class _CoreTempState extends State<CoreTemp> {
                               cup.suckUp(testFinal).then((_) {
                                 print("finish processing");
                               });
+
                               // final String glue = appPath + '/0.txt';
                               // _flutterFFmpeg
                               //     .execute(

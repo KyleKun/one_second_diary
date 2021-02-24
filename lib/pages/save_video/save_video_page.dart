@@ -1,11 +1,8 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:one_second_diary/controllers/daily_entry_controller.dart';
-import 'package:one_second_diary/controllers/video_count_controller.dart';
+import 'package:one_second_diary/pages/save_video/widgets/save_button.dart';
 import 'package:one_second_diary/routes/app_pages.dart';
-import 'package:one_second_diary/utils/shared_preferences_util.dart';
-import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:video_player/video_player.dart';
 
 class SaveVideoPage extends StatefulWidget {
@@ -17,9 +14,6 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
   String _tempVideoPath;
   double _opacity = 1.0;
   var _videoController;
-
-  final DailyEntryController dayController = Get.find();
-  final VideoCountController videoCountController = Get.find();
 
   @override
   void initState() {
@@ -43,10 +37,6 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
       });
   }
 
-  Widget viewer() {
-    return VideoPlayer(_videoController);
-  }
-
   void videoPlay() async {
     if (!_videoController.value.isPlaying) {
       await _videoController.play();
@@ -59,6 +49,30 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
         _opacity = 1.0;
       });
     }
+  }
+
+  Widget _dailyVideoPlayer() {
+    return GestureDetector(
+      onTap: () => videoPlay(),
+      child: AspectRatio(
+        aspectRatio: 16 / 9,
+        child: Stack(
+          children: [
+            VideoPlayer(_videoController),
+            Center(
+              child: Opacity(
+                opacity: _opacity,
+                child: Icon(
+                  Icons.play_arrow,
+                  size: 56.0,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   @override
@@ -86,71 +100,11 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
         body: Column(
           children: [
             _videoController.value.initialized
-                ? GestureDetector(
-                    onTap: () => videoPlay(),
-                    child: AspectRatio(
-                      aspectRatio: 16 / 9,
-                      child: Stack(
-                        children: [
-                          viewer(),
-                          Center(
-                            child: Opacity(
-                              opacity: _opacity,
-                              child: Icon(
-                                Icons.play_arrow,
-                                size: 56.0,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  )
+                ? _dailyVideoPlayer()
                 : Center(child: CircularProgressIndicator()),
-            SizedBox(
-              width: MediaQuery.of(context).size.width * 0.45,
-              height: MediaQuery.of(context).size.width * 0.18,
-              child: RaisedButton(
-                color: Colors.green,
-                child: Text(
-                  'Save',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 22.0,
-                  ),
-                ),
-                onPressed: () {
-                  dayController.updateDaily();
-                  videoCountController.updateVideoCount();
-
-                  //TODO: remove package, use Flutter's dialog
-                  new Alert(
-                    context: context,
-                    type: AlertType.success,
-                    title: "Saved Successfully",
-                    desc: "Yay, your daily entry was saved!",
-                    style: AlertStyle(
-                      animationType: AnimationType.fromTop,
-                      isOverlayTapDismiss: false,
-                      overlayColor: Colors.black26,
-                      backgroundColor: Colors.grey[100],
-                    ),
-                    buttons: [
-                      DialogButton(
-                        radius: BorderRadius.circular(90),
-                        color: Colors.green,
-                        child: Text('Ok'),
-                        width: 60,
-                        onPressed: () {
-                          Get.offAllNamed(Routes.HOME);
-                        },
-                      ),
-                    ],
-                  ).show();
-                },
-              ),
-            ),
+            Spacer(),
+            SaveButton(),
+            Spacer(flex: 2),
           ],
         ),
       ),
