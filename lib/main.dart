@@ -33,7 +33,6 @@ class MyApp extends StatelessWidget {
       fallbackLocale: TranslationService.fallbackLocale,
       translations: TranslationService(),
       getPages: AppPages.pages,
-      initialBinding: HomeBinding(),
       initialRoute: StorageUtil.getBool('showIntro') == false
           ? Routes.HOME
           : Routes.INTRO,

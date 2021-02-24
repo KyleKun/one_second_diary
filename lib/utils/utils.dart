@@ -1,7 +1,20 @@
 import 'package:permission_handler/permission_handler.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:logger/logger.dart';
 
 class Utils {
+  final logger = Logger(
+    printer: PrettyPrinter(),
+  );
+
+  void logInfo(String info) {
+    logger.i(info);
+  }
+
+  void logWarning(String warning) {
+    logger.w(warning);
+  }
+
   static String getToday() {
     var now = new DateTime.now();
     return "${now.year}-${now.month}-${now.day}";

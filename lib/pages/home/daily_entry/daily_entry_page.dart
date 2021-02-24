@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:one_second_diary/controllers/day_controller.dart';
+import 'package:one_second_diary/controllers/daily_entry_controller.dart';
 import 'package:one_second_diary/pages/home/daily_entry/widgets/emoji_widget.dart';
 
 import 'widgets/edit_daily_button.dart';
 import 'widgets/record_daily_button.dart';
 
-class AddNewRecordingPage extends GetView<DayController> {
+class AddNewRecordingPage extends GetView<DailyEntryController> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -15,7 +15,9 @@ class AddNewRecordingPage extends GetView<DayController> {
       //TODO: needs testing
       child: Obx(
         () => Container(
-          child: controller.daily.value ? _dailyComplete() : _dailyIncomplete(),
+          child: controller.dailyEntry.value
+              ? _dailyComplete()
+              : _dailyIncomplete(),
         ),
       ),
     );

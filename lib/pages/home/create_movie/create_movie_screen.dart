@@ -1,9 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:one_second_diary/controllers/day_controller.dart';
+import 'package:one_second_diary/controllers/video_count_controller.dart';
 import 'package:one_second_diary/utils/constants.dart';
+import 'package:one_second_diary/utils/shared_preferences_util.dart';
+import 'package:one_second_diary/utils/utils.dart';
+import 'dart:io' as io;
 
-class CreateMoviePage extends GetView<DayController> {
+class CreateMoviePage extends GetView<VideoCountController> {
+  //TODO: implement
+  List<String> _getAllVideosFromStorage() {
+    final directory = io.Directory(StorageUtil.getString('appPath'));
+
+    List<io.FileSystemEntity> _files;
+
+    _files = directory.listSync(recursive: true, followLinks: false);
+
+    Utils().logInfo('All videos: ' + _files.toString());
+    List<String> allFiles = [];
+    for (int i = 0; i < _files.length; i++) {
+      String temp = _files[i].toString().split('.').first;
+      temp = temp.split('/').last;
+      allFiles.add(temp);
+    }
+    // TODO: sort by date
+    return allFiles;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(

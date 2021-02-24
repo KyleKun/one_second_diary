@@ -39,6 +39,7 @@ dependencies:
   rive:
   native_device_orientation:
   video_player:
+  logger:
 
 dev_dependencies:
   flutter_test:

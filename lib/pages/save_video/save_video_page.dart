@@ -1,7 +1,8 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:one_second_diary/controllers/day_controller.dart';
+import 'package:one_second_diary/controllers/daily_entry_controller.dart';
+import 'package:one_second_diary/controllers/video_count_controller.dart';
 import 'package:one_second_diary/routes/app_pages.dart';
 import 'package:one_second_diary/utils/shared_preferences_util.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
@@ -17,7 +18,8 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
   double _opacity = 1.0;
   var _videoController;
 
-  final DayController dayController = Get.find();
+  final DailyEntryController dayController = Get.find();
+  final VideoCountController videoCountController = Get.find();
 
   @override
   void initState() {
@@ -119,10 +121,10 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
                   ),
                 ),
                 onPressed: () {
-                  StorageUtil.putBool('dailyEntry', true);
                   dayController.updateDaily();
-                  dayController.updateVideoCount();
+                  videoCountController.updateVideoCount();
 
+                  //TODO: remove package, use Flutter's dialog
                   new Alert(
                     context: context,
                     type: AlertType.success,

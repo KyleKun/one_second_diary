@@ -10,7 +10,7 @@ class Themes {
     primaryColor: Color(0xffff6366),
   );
   static final dark = ThemeData.dark().copyWith(
-    textTheme: ThemeData.light().textTheme.apply(
+    textTheme: ThemeData.dark().textTheme.apply(
           fontFamily: 'Magic',
         ),
   );

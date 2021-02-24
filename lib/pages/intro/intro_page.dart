@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 import 'package:one_second_diary/pages/home/base/home_page.dart';
+import 'package:one_second_diary/routes/app_pages.dart';
 import 'package:one_second_diary/utils/shared_preferences_util.dart';
 
 class IntroPage extends StatefulWidget {
@@ -11,12 +13,11 @@ class IntroPage extends StatefulWidget {
 class _IntroPageState extends State<IntroPage> {
   final introKey = GlobalKey<IntroductionScreenState>();
 
-  void _onIntroEnd(context) {
-    StorageUtil.putBool('showIntro', false);
-    StorageUtil.putBool('dailyEntry', false);
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (_) => HomePage()),
-    );
+  void _onIntroEnd(context) async {
+    await StorageUtil.putBool('showIntro', false);
+    await StorageUtil.putBool('dailyEntry', false);
+    await StorageUtil.putInt('videoCount', 0);
+    Get.offNamed(Routes.HOME);
   }
 
   Widget _buildImage(String assetName) {
