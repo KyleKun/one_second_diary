@@ -5,8 +5,8 @@ class VideoCountController extends GetxController {
   final videoCount = StorageUtil.getInt('videoCount').obs;
 
   void updateVideoCount() {
-    StorageUtil.putInt('videoCount', videoCount.value + 1);
     videoCount.value++;
     videoCount.refresh();
+    StorageUtil.putInt('videoCount', videoCount.value);
   }
 }
