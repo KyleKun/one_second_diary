@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:one_second_diary/routes/app_pages.dart';
 import 'package:one_second_diary/utils/constants.dart';
 
 class EditDailyButton extends StatelessWidget {
@@ -14,7 +16,7 @@ class EditDailyButton extends StatelessWidget {
         ),
         color: AppColors.purple,
         onPressed: () {
-          //StorageUtil.putString('today', 'aaaa');
+          Get.toNamed(Routes.RECORDING);
         },
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,

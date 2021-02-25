@@ -8,6 +8,7 @@ import 'lang/translation_service.dart';
 import 'routes/app_pages.dart';
 import 'utils/shared_preferences_util.dart';
 import 'package:device_preview/device_preview.dart';
+import 'dart:ui' as ui;
 
 List<CameraDescription> cameras;
 Future<void> main() async {
@@ -35,6 +36,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
+      locale: TranslationService.locale,
       fallbackLocale: TranslationService.fallbackLocale,
       translations: TranslationService(),
       getPages: AppPages.pages,

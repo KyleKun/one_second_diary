@@ -70,7 +70,7 @@ class _RecordingPageState extends State<RecordingPage>
     try {
       await _cameraController.initialize();
       await _cameraController
-          .lockCaptureOrientation(DeviceOrientation.landscapeLeft);
+          .lockCaptureOrientation(DeviceOrientation.landscapeRight);
     } catch (e) {
       Utils().logError(e);
     }
@@ -203,7 +203,7 @@ class _RecordingPageState extends State<RecordingPage>
   Widget _addCameraScreen(BuildContext context) {
     //
     return RotatedBox(
-      quarterTurns: -1, //_turnsDeviceOrientation(context),
+      quarterTurns: 1, //_turnsDeviceOrientation(context),
       child: Container(
         decoration: _screenBorderDecoration(),
         child: Center(child: CameraPreview(_cameraController)),

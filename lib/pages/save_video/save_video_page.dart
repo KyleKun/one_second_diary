@@ -103,7 +103,7 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
                 ? _dailyVideoPlayer()
                 : Center(child: CircularProgressIndicator()),
             Spacer(),
-            SaveButton(),
+            SaveButton(videoPath: _tempVideoPath),
             Spacer(flex: 2),
           ],
         ),

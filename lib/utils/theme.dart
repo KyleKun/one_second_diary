@@ -10,11 +10,13 @@ class Themes {
           fontFamily: 'Magic',
         ),
     primaryColor: AppColors.mainColor,
+    accentColor: AppColors.mainColor,
   );
   static final dark = ThemeData.dark().copyWith(
     textTheme: ThemeData.dark().textTheme.apply(
           fontFamily: 'Magic',
         ),
+    accentColor: AppColors.mainColor,
   );
 }
 
