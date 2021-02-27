@@ -25,6 +25,7 @@ class _RecordingPageState extends State<RecordingPage>
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _isRecording = false;
     _recordingProgress = 0.0;
     _getAvailableCameras();
@@ -43,7 +44,8 @@ class _RecordingPageState extends State<RecordingPage>
     if (_cameraController == null || !_cameraController.value.isInitialized) {
       return;
     }
-    if (state == AppLifecycleState.inactive) {
+    if (state == AppLifecycleState.inactive ||
+        state == AppLifecycleState.paused) {
       _cameraController?.dispose();
     } else if (state == AppLifecycleState.resumed) {
       if (_cameraController != null) {

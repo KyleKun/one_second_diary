@@ -1,4 +1,3 @@
-import 'package:flutter_ffmpeg/log_level.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -26,12 +25,25 @@ class Utils {
 
   static String getToday({bool isBr = false}) {
     var now = new DateTime.now();
+
+    // Adding a leading zero on Days and Months <= 9
+    final String day = now.day <= 9 ? "0${now.day}" : "${now.day}";
+    final String month = now.month <= 9 ? "0${now.month}" : "${now.month}";
+    final String year = "${now.year}";
+
     // Brazilian pattern
     if (isBr) {
-      return "${now.day}-${now.month}-${now.year}";
+      return "$day-$month-$year";
     } else {
-      return "${now.year}-${now.month}-${now.day}";
+      return "$year-$month-$day";
     }
+  }
+
+  static List<DateTime> orderDates(List<DateTime> dates) {
+    dates.sort((a, b) {
+      return a.compareTo(b);
+    });
+    return dates;
   }
 
   static void launchUrl(String url) async {
@@ -59,15 +71,88 @@ class Utils {
   }
 
   static bool checkFileExists(String filePath) {
+    // var time = Stopwatch()..start();
     if (io.File(filePath).existsSync()) {
+      // time.stop();
+      // Utils().logInfo(time.elapsed);
       return true;
     } else {
+      // time.stop();
+      // Utils().logInfo(time.elapsed);
       return false;
     }
   }
 
   static void deleteFile(String filePath) {
     io.File(filePath).deleteSync(recursive: true);
+  }
+
+  static Future<String> writeTxt(List<String> files) async {
+    final io.Directory directory = await getApplicationDocumentsDirectory();
+    final String txtPath = '${directory.path}/videos.txt';
+    final String appPath = StorageUtil.getString('appPath');
+
+    // Delete old txt files
+    if (checkFileExists(txtPath)) deleteFile(txtPath);
+
+    final io.File file = io.File(txtPath);
+
+    for (int i = 0; i < files.length; i++) {
+      // file model accepted by ffmpeg to be written
+      String ffString = "file '$appPath${files[i]}'\r\n";
+
+      // Not adding a new line at the end
+      if (i == files.length - 1) ffString = "file '$appPath${files[i]}'";
+
+      // Appending it to the txt
+      await file.writeAsString(ffString, mode: io.FileMode.append);
+    }
+
+    // final _data = await file.readAsString();
+    // Utils().logWarning(_data);
+
+    return txtPath;
+  }
+
+  static List<String> getAllVideosFromStorage() {
+    final directory = io.Directory(StorageUtil.getString('appPath'));
+
+    List<io.FileSystemEntity> _files;
+
+    _files = directory.listSync(recursive: true, followLinks: false);
+    List<String> allFiles = [];
+
+    // Getting video names
+    for (int i = 0; i < _files.length; i++) {
+      String temp = _files[i].toString().split('.').first;
+      temp = temp.split('/').last;
+      allFiles.add(temp);
+    }
+
+    // Converting to Date in order to sort
+    List<DateTime> allDates = [];
+    for (int i = 0; i < allFiles.length; i++) {
+      allDates.add(DateTime.parse(allFiles[i]));
+    }
+
+    List<DateTime> orderedDates = Utils.orderDates(allDates);
+
+    // Converting back to string
+    List<String> allVideos = [];
+    for (int i = 0; i < orderedDates.length; i++) {
+      // Adding a leading zero on Days and Months <= 9
+      String day = orderedDates[i].day <= 9
+          ? "0${orderedDates[i].day}"
+          : "${orderedDates[i].day}";
+      String month = orderedDates[i].month <= 9
+          ? "0${orderedDates[i].month}"
+          : "${orderedDates[i].month}";
+      String year = "${orderedDates[i].year}";
+
+      allVideos.add('$year-$month-$day.mp4');
+    }
+
+    return allVideos;
   }
 
   static void createFolder() async {

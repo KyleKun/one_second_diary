@@ -22,13 +22,11 @@ dependencies:
   flutter:
     sdk: flutter
 
-  cupertino_icons: ^1.0.0
   get:
   camera:
   path_provider:
-  rflutter_alert:
   shared_preferences:
-  flutter_ffmpeg: ^0.3.1
+  flutter_ffmpeg: 
   permission_handler:
   tapioca:
   gallery_saver:

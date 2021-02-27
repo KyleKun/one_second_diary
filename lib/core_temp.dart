@@ -8,7 +8,6 @@ import 'package:one_second_diary/utils/utils.dart';
 import 'dart:io' as io;
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:flutter_ffmpeg/flutter_ffmpeg.dart';
 
 //! TESTING PURPOSES ONLY

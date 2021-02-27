@@ -19,6 +19,7 @@ class SaveButton extends StatelessWidget {
   final String videoPath;
 
   // Properties to edit the video with current date
+  // TODO: Get locale based on language selected
   final String today =
       Utils.getToday(isBr: Get.deviceLocale.countryCode == 'BR');
   final int x = 1660;
@@ -68,9 +69,10 @@ class SaveButton extends StatelessWidget {
         (_) {
           Utils().logInfo('Finished editing');
 
-          // Updates the controllers: dailyEntry = true, videoCount += 1
+          dayController.updateDaily();
+
+          // Updates the controller: videoCount += 1
           if (!isEdit) {
-            dayController.updateDaily();
             videoCountController.updateVideoCount();
           }
 

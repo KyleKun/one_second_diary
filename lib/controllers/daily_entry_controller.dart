@@ -21,26 +21,17 @@ class DailyEntryController extends GetxController {
   void _checkTodayEntry() {
     final String today = Utils.getToday();
 
-    final String todayVideoPath =
-        StorageUtil.getString('appPath') + today + '.mp4';
-
-    // Checking by file
-    if (Utils.checkFileExists(todayVideoPath)) {
-      Utils().logInfo('File found, DailyEntry was done!');
-      if (!dailyEntry.value) updateDaily();
+    // Checking by date
+    if (today != StorageUtil.getString('today')) {
+      Utils().logInfo('New Day, DailyEntry was NOT done!');
+      StorageUtil.putString('today', today);
+      StorageUtil.putBool('dailyEntry', false);
+      dailyEntry.value = false;
+      dailyEntry.refresh();
     } else {
-      // Checking by date
-      if (today != StorageUtil.getString('today')) {
-        Utils().logInfo('New Day, DailyEntry was NOT done!');
-        StorageUtil.putString('today', today);
-        StorageUtil.putBool('dailyEntry', false);
-        dailyEntry.value = false;
-        dailyEntry.refresh();
-      } else {
-        dailyEntry.value
-            ? Utils().logInfo('DailyEntry was already done!')
-            : Utils().logInfo('DailyEntry was NOT done!');
-      }
+      dailyEntry.value
+          ? Utils().logInfo('DailyEntry was already done!')
+          : Utils().logInfo('DailyEntry was NOT done!');
     }
   }
 }
