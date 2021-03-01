@@ -9,7 +9,7 @@ class DonateButton extends StatelessWidget {
       width: MediaQuery.of(context).size.width * 0.45,
       height: MediaQuery.of(context).size.width * 0.18,
       child: RaisedButton(
-        color: AppColors.green,
+        color: AppColors.mainColor,
         child: Text(
           'Donate',
           style: TextStyle(

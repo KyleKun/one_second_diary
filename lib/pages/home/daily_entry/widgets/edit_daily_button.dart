@@ -16,7 +16,22 @@ class EditDailyButton extends StatelessWidget {
         ),
         color: AppColors.purple,
         onPressed: () {
-          Get.toNamed(Routes.RECORDING);
+          showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: Text('Edit video?'),
+              content: Center(
+                  child: Text(
+                      'Your previous recording will be deleted, do you want to continue?')),
+              actions: <Widget>[
+                RaisedButton(
+                  child: Text('Yes'),
+                  onPressed: () => Get.toNamed(Routes.RECORDING),
+                ),
+                RaisedButton(child: Text('No'), onPressed: () => Get.back()),
+              ],
+            ),
+          );
         },
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,

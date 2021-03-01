@@ -37,7 +37,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       // TODO: option to select language in the settings
-      locale: TranslationService.locale,
+      locale: Get.deviceLocale,
       fallbackLocale: TranslationService.fallbackLocale,
       translations: TranslationService(),
       getPages: AppPages.pages,

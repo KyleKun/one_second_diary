@@ -4,7 +4,7 @@ import 'package:one_second_diary/utils/constants.dart';
 import 'package:one_second_diary/utils/theme.dart';
 
 class SwitchThemeComponent extends StatelessWidget {
-  final String title = 'Dark Mode';
+  final String title = 'appTitle'.tr;
   @override
   Widget build(BuildContext context) {
     return Column(

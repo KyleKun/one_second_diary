@@ -1,15 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import 'en_US.dart';
-import 'pt_BR.dart';
+import 'en.dart';
+import 'es.dart';
+import 'pt.dart';
+import 'ru.dart';
+
+class LanguageModel {
+  LanguageModel(
+    this.language,
+    this.symbol,
+  );
+
+  String language;
+  String symbol;
+}
 
 class TranslationService extends Translations {
-  static final locale = Get.deviceLocale;
   static final fallbackLocale = Locale('en', 'US');
+
+  static final List<LanguageModel> languages = [
+    LanguageModel("English", "en"),
+    LanguageModel("Português", "pt"),
+    LanguageModel("Español", "es"),
+    LanguageModel("русский", "ru"),
+  ];
+
   @override
   Map<String, Map<String, String>> get keys => {
-        'en_US': en_US,
-        'pt_BR': pt_BR,
+        'en': en,
+        'pt': pt,
+        'es': es,
+        'ru': ru,
       };
 }
