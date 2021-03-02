@@ -1,3 +1,4 @@
 const Map<String, String> pt = {
-  'appTitle': 'BRBRBR',
+  'darkMode': 'Modo Escuro',
+  'language': 'Idioma',
 };

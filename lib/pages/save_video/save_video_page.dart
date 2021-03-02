@@ -85,10 +85,15 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
             title: Text('Discard this video?'),
             actions: <Widget>[
               RaisedButton(
+                color: Colors.green,
                 child: Text('Yes'),
                 onPressed: () => Get.offNamed(Routes.RECORDING),
               ),
-              RaisedButton(child: Text('No'), onPressed: () => Get.back()),
+              RaisedButton(
+                color: Colors.red,
+                child: Text('No'),
+                onPressed: () => Get.back(),
+              ),
             ],
           ),
         );
@@ -102,9 +107,9 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
             _videoController.value.initialized
                 ? _dailyVideoPlayer()
                 : Center(child: CircularProgressIndicator()),
-            Spacer(),
-            SaveButton(videoPath: _tempVideoPath),
             Spacer(flex: 2),
+            SaveButton(videoPath: _tempVideoPath),
+            Spacer(),
           ],
         ),
       ),

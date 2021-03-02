@@ -9,7 +9,7 @@ import 'package:one_second_diary/utils/shared_preferences_util.dart';
 class CreateMovieButton extends StatelessWidget {
   void _createMovie() async {
     final allVideos = Utils.getAllVideosFromStorage();
-    Utils().logInfo('Creating movie with the following files: $allVideos');
+    // Utils().logInfo('Creating movie with the following files: $allVideos');
 
     // Creating txt that will be used with ffmpeg
     String txtPath = await Utils.writeTxt(allVideos);
@@ -19,15 +19,16 @@ class CreateMovieButton extends StatelessWidget {
 
     await executeFFmpeg(
         '-f concat -safe 0 -i $txtPath -map 0 -c copy $outputPath');
-    Utils().logInfo('Cache video saved at: $outputPath');
+    // Utils().logInfo('Cache video saved at: $outputPath');
 
     GallerySaver.saveVideo(outputPath, albumName: 'OSD-Movies').then((_) {
       Utils.deleteFile(outputPath);
-      Utils().logInfo('Video saved in gallery in the folder OSD-Movies!');
+      // Utils().logInfo('Video saved in gallery in the folder OSD-Movies!');
       showDialog(
         context: Get.context,
         builder: (context) => AlertDialog(
-          title: Text('Video saved in gallery in OSD-Movies folder!'),
+          title: Text('Movie created!'),
+          content: Text('Video saved in gallery in OSD-Movies folder!'),
           actions: <Widget>[
             RaisedButton(
               color: AppColors.green,
@@ -44,19 +45,22 @@ class CreateMovieButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: MediaQuery.of(context).size.width * 0.4,
-      height: MediaQuery.of(context).size.width * 0.15,
+      height: MediaQuery.of(context).size.height * 0.08,
       child: RaisedButton(
         elevation: 5.0,
         shape:
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(80.0)),
         color: AppColors.mainColor,
         onPressed: () {
-          // TODO: prevent double click
+          // TODO: prevent double click and show loading
           _createMovie();
         },
         child: Text(
           'Create',
-          style: TextStyle(color: Colors.white, fontSize: 22.0),
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: MediaQuery.of(context).size.width * 0.05,
+          ),
         ),
       ),
     );

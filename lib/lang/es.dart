@@ -1,3 +1,4 @@
 const Map<String, String> es = {
-  'appTitle': 'MeGustasTu',
+  'darkMode': 'Espanol TODO',
+  'language': 'Espanol TODO',
 };

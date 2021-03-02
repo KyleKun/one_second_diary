@@ -8,7 +8,7 @@ class EditDailyButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: MediaQuery.of(context).size.width * 0.4,
-      height: MediaQuery.of(context).size.width * 0.15,
+      height: MediaQuery.of(context).size.height * 0.08,
       child: RaisedButton(
         elevation: 5.0,
         shape: RoundedRectangleBorder(
@@ -20,33 +20,42 @@ class EditDailyButton extends StatelessWidget {
             context: context,
             builder: (context) => AlertDialog(
               title: Text('Edit video?'),
-              content: Center(
-                  child: Text(
-                      'Your previous recording will be deleted, do you want to continue?')),
+              content: Text(
+                  'Your previous recording will be deleted, do you want to continue?'),
               actions: <Widget>[
                 RaisedButton(
+                  color: Colors.green,
                   child: Text('Yes'),
-                  onPressed: () => Get.toNamed(Routes.RECORDING),
+                  onPressed: () {
+                    // Closing popup before going to recording page
+                    Get.back();
+                    Get.toNamed(Routes.RECORDING);
+                  },
                 ),
-                RaisedButton(child: Text('No'), onPressed: () => Get.back()),
+                RaisedButton(
+                  color: Colors.red,
+                  child: Text('No'),
+                  onPressed: () => Get.back(),
+                ),
               ],
             ),
           );
         },
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            Spacer(flex: 2),
             Icon(
               Icons.edit,
+              size: MediaQuery.of(context).size.width * 0.07,
               color: Colors.white,
             ),
-            Spacer(flex: 1),
             Text(
               'Edit',
-              style: TextStyle(color: Colors.white, fontSize: 22.0),
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: MediaQuery.of(context).size.width * 0.06,
+              ),
             ),
-            Spacer(flex: 2)
           ],
         ),
       ),

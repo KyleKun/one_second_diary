@@ -6,26 +6,17 @@ import 'package:one_second_diary/pages/home/daily_entry/widgets/emoji_widget.dar
 import 'widgets/edit_daily_button.dart';
 import 'widgets/record_daily_button.dart';
 
-class AddNewRecordingPage extends GetView<DailyEntryController> {
+class DailyEntryPage extends GetView<DailyEntryController> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: MediaQuery.of(context).size.width * 0.8,
-      height: MediaQuery.of(context).size.height * 0.7,
-      //TODO: needs testing
-      child: Obx(
-        () => Container(
-          child: controller.dailyEntry.value
-              ? _dailyComplete()
-              : _dailyIncomplete(),
-        ),
-      ),
+    return Obx(
+      () => controller.dailyEntry.value ? _dailyComplete() : _dailyIncomplete(),
     );
   }
 
   Widget _dailyComplete() {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
         EmojiWidget(complete: true),
         EditDailyButton(),
@@ -35,7 +26,7 @@ class AddNewRecordingPage extends GetView<DailyEntryController> {
 
   Widget _dailyIncomplete() {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
         EmojiWidget(complete: false),
         RecordDailyButton(),

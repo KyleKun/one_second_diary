@@ -33,7 +33,7 @@ class SaveButton extends StatelessWidget {
     bool isEdit = false;
 
     try {
-      Utils().logInfo('Saving video...');
+      // Utils().logInfo('Saving video...');
 
       // Creates the folder if it is not created yet
       Utils.createFolder();
@@ -59,15 +59,15 @@ class SaveButton extends StatelessWidget {
       // Check if video already exists and delete it if so (Edit daily feature)
       if (Utils.checkFileExists(finalPath)) {
         isEdit = true;
-        Utils().logWarning('File already exists!');
+        // Utils().logWarning('File already exists!');
         Utils.deleteFile(finalPath);
-        Utils().logWarning('Old file deleted!');
+        // Utils().logWarning('Old file deleted!');
       }
 
       // Editing video
       await cup.suckUp(finalPath).then(
         (_) {
-          Utils().logInfo('Finished editing');
+          // Utils().logInfo('Finished editing');
 
           dayController.updateDaily();
 
@@ -83,7 +83,7 @@ class SaveButton extends StatelessWidget {
               title: Text('Video saved!'),
               actions: <Widget>[
                 RaisedButton(
-                  color: AppColors.green,
+                  color: Colors.green,
                   child: Text('Ok'),
                   onPressed: () => Get.offAllNamed(Routes.HOME),
                 ),
@@ -93,9 +93,9 @@ class SaveButton extends StatelessWidget {
         },
       );
 
-      Utils().logInfo('Video saved!');
+      // Utils().logInfo('Video saved!');
     } catch (e) {
-      Utils().logError('$e');
+      // Utils().logError('$e');
     }
   }
 
@@ -106,7 +106,7 @@ class SaveButton extends StatelessWidget {
 
     return SizedBox(
       width: MediaQuery.of(context).size.width * 0.45,
-      height: MediaQuery.of(context).size.width * 0.18,
+      height: MediaQuery.of(context).size.height * 0.1,
       child: RaisedButton(
         elevation: 5.0,
         shape:
@@ -116,7 +116,7 @@ class SaveButton extends StatelessWidget {
           'Save',
           style: TextStyle(
             color: Colors.white,
-            fontSize: 22.0,
+            fontSize: MediaQuery.of(context).size.width * 0.06,
           ),
         ),
         onPressed: () {

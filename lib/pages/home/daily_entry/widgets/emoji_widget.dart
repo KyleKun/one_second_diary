@@ -7,27 +7,23 @@ class EmojiWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: MediaQuery.of(context).size.width * 0.5,
-      height: MediaQuery.of(context).size.height * 0.5,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        image: DecorationImage(
-          fit: BoxFit.contain,
-          image: AssetImage(
-            complete
-                ? 'assets/images/confirmed.png'
-                : 'assets/images/waiting.png',
-          ),
+    return Column(
+      children: [
+        Text(
+          complete
+              ? 'Amazing!\nSee you tomorrow!'
+              : 'Waiting for\nyour recording...',
+          style: TextStyle(fontSize: MediaQuery.of(context).size.width * 0.065),
+          textAlign: TextAlign.center,
         ),
-      ),
-      child: Text(
-        complete
-            ? 'Amazing!\nSee you tomorrow!'
-            : 'Waiting for\nyour recording...',
-        style: TextStyle(fontSize: 22.0),
-        textAlign: TextAlign.center,
-      ),
+        SizedBox(height: MediaQuery.of(context).size.height * 0.05),
+        Image.asset(
+          complete
+              ? 'assets/images/confirmed.png'
+              : 'assets/images/waiting.png',
+          width: MediaQuery.of(context).size.width * 0.5,
+        ),
+      ],
     );
   }
 }

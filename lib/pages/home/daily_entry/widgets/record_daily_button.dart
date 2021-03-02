@@ -9,10 +9,10 @@ class RecordDailyButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return AvatarGlow(
       glowColor: AppColors.green,
-      endRadius: 60.0,
+      endRadius: MediaQuery.of(context).size.height * 0.08,
       child: SizedBox(
         width: MediaQuery.of(context).size.width * 0.4,
-        height: MediaQuery.of(context).size.width * 0.2,
+        height: MediaQuery.of(context).size.height * 0.1,
         child: RaisedButton(
           elevation: 8.0,
           shape: CircleBorder(),
@@ -23,7 +23,7 @@ class RecordDailyButton extends StatelessWidget {
           child: Icon(
             Icons.photo_camera,
             color: Colors.white,
-            size: 36.0,
+            size: MediaQuery.of(context).size.width * 0.1,
           ),
         ),
       ),

@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:one_second_diary/lang/translation_service.dart';
 import 'package:one_second_diary/utils/shared_preferences_util.dart';
 
+// TODO: fix
 class LanguageController extends GetxController {
   @override
   void onInit() {

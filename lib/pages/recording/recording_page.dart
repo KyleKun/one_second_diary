@@ -74,7 +74,7 @@ class _RecordingPageState extends State<RecordingPage>
       await _cameraController
           .lockCaptureOrientation(DeviceOrientation.landscapeRight);
     } catch (e) {
-      Utils().logError(e);
+      // Utils().logError(e);
     }
   }
 
@@ -98,13 +98,13 @@ class _RecordingPageState extends State<RecordingPage>
       if (newDescription != null) {
         _initCamera(newDescription);
       } else {
-        Utils().logWarning('Asked camera not available');
+        // Utils().logWarning('Asked camera not available');
       }
     } else {
       if (desc != null) {
         _initCamera(desc);
       } else {
-        Utils().logWarning('Asked camera not available');
+        // Utils().logWarning('Asked camera not available');
       }
     }
   }
@@ -123,19 +123,30 @@ class _RecordingPageState extends State<RecordingPage>
           _recordingProgress = 0.0;
           stopVideoRecording().then((file) {
             if (file != null) {
-              Utils().logInfo('Video recorded to ${file.path}');
-
-              // if (io.File(finalPath).existsSync()) {
-              //   finalPath =
-              //       _appPath + 'DUPLICATED_DAY_' + Utils.getToday() + '.mp4';
-              // }
+              // Utils().logInfo('Video recorded to ${file.path}');
 
               Get.offNamed(
                 Routes.SAVE_VIDEO,
                 arguments: file.path,
               );
             } else {
-              Utils().logError('Could not record video!');
+              showDialog(
+                context: Get.context,
+                builder: (context) => AlertDialog(
+                  title: Text('Error recording video!'),
+                  content: Text(
+                    'Please, close the app and try again, if the problem persists contact the developer',
+                  ),
+                  actions: <Widget>[
+                    RaisedButton(
+                      color: Colors.green,
+                      child: Text('Ok'),
+                      onPressed: () => Get.back(),
+                    ),
+                  ],
+                ),
+              );
+              // Utils().logError('Could not record video!');
             }
           });
         }
@@ -145,7 +156,7 @@ class _RecordingPageState extends State<RecordingPage>
 
   Future<void> startVideoRecording() async {
     if (!_cameraController.value.isInitialized) {
-      Utils().logWarning('Controller is not initialized');
+      // Utils().logWarning('Controller is not initialized');
       return;
     }
 
@@ -156,7 +167,7 @@ class _RecordingPageState extends State<RecordingPage>
     try {
       await _cameraController.startVideoRecording();
     } on CameraException catch (e) {
-      Utils().logError(e);
+      // Utils().logError(e);
       return;
     }
   }
@@ -169,7 +180,7 @@ class _RecordingPageState extends State<RecordingPage>
     try {
       return _cameraController.stopVideoRecording();
     } on CameraException catch (e) {
-      Utils().logError(e);
+      // Utils().logError(e);
       return null;
     }
   }
@@ -196,8 +207,11 @@ class _RecordingPageState extends State<RecordingPage>
       mainAxisSize: MainAxisSize.max,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text('Rotate your device to the left'),
-        Icon(Icons.rotate_left, size: 56.0),
+        Text(
+          'Rotate your device to the left',
+          style: TextStyle(fontSize: MediaQuery.of(context).size.width * 0.05),
+        ),
+        Icon(Icons.rotate_left, size: MediaQuery.of(context).size.width * 0.2),
       ],
     );
   }
@@ -227,103 +241,106 @@ class _RecordingPageState extends State<RecordingPage>
             child: Container(
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height,
-              child: Stack(
-                fit: StackFit.expand,
-                children: [
-                  _cameraController != null &&
-                          !(orientation !=
-                              NativeDeviceOrientation.landscapeLeft)
-                      ? _addCameraScreen(context)
-                      : rotateWarning(),
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Container(
-                      width: MediaQuery.of(context).size.width * 0.2,
-                      height: MediaQuery.of(context).size.height * 0.2,
-                      child: RaisedButton(
-                        child: Stack(
-                          children: [
-                            Center(
-                              child: Icon(
-                                Icons.circle,
-                                color: Colors.red,
-                                size: 32.0,
+              child: _cameraController != null &&
+                      !(orientation != NativeDeviceOrientation.landscapeLeft)
+                  ? Stack(
+                      fit: StackFit.expand,
+                      children: [
+                        _addCameraScreen(context),
+                        Align(
+                          alignment: Alignment.bottomCenter,
+                          child: Container(
+                            width: MediaQuery.of(context).size.width * 0.2,
+                            height: MediaQuery.of(context).size.height * 0.2,
+                            child: RaisedButton(
+                              child: Stack(
+                                children: [
+                                  Center(
+                                    child: Icon(
+                                      Icons.circle,
+                                      color: Colors.red,
+                                      size: MediaQuery.of(context).size.width *
+                                          0.1,
+                                    ),
+                                  ),
+                                  Center(
+                                    child: CircularProgressIndicator(
+                                      value: _recordingProgress,
+                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                          Colors.green),
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ),
-                            Center(
-                              child: CircularProgressIndicator(
-                                value: _recordingProgress,
-                                valueColor:
-                                    AlwaysStoppedAnimation<Color>(Colors.green),
-                              ),
-                            ),
-                          ],
-                        ),
-                        elevation: 8.0,
-                        shape: CircleBorder(),
-                        color: Colors.white,
-                        onPressed: () {
-                          if (!_isRecording) {
-                            setState(() {
-                              startVideoRecording();
-                            });
+                              elevation: 8.0,
+                              shape: CircleBorder(),
+                              color: Colors.white,
+                              onPressed: () {
+                                if (!_isRecording) {
+                                  setState(() {
+                                    startVideoRecording();
+                                  });
 
-                            _updateRecordingProgress();
-                          }
-                        },
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                    right: 15.0,
-                    bottom: 15.0,
-                    child: GestureDetector(
-                      child: Container(
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.green,
-                        ),
-                        width: MediaQuery.of(context).size.width * 0.12,
-                        height: MediaQuery.of(context).size.height * 0.12,
-                        child: Icon(
-                          Icons.swap_vert,
-                          color: Colors.white,
-                        ),
-                      ),
-                      onTap: () {
-                        Utils().logInfo('Changed camera');
-                        _handleCameraLens(
-                          desc: _cameraController.description,
-                          toggle: true,
-                        );
-                      },
-                    ),
-                  ),
-                  Positioned(
-                    left: 15.0,
-                    bottom: 15.0,
-                    child: GestureDetector(
-                      child: Container(
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.red,
-                        ),
-                        width: MediaQuery.of(context).size.width * 0.12,
-                        height: MediaQuery.of(context).size.height * 0.12,
-                        child: Center(
-                          child: Icon(
-                            Icons.close,
-                            color: Colors.white,
+                                  _updateRecordingProgress();
+                                }
+                              },
+                            ),
                           ),
                         ),
-                      ),
-                      onTap: () {
-                        Get.offAllNamed(Routes.HOME);
-                      },
-                    ),
-                  ),
-                ],
-              ),
+                        Positioned(
+                          right: 15.0,
+                          bottom: 15.0,
+                          child: GestureDetector(
+                            child: Container(
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Colors.green,
+                              ),
+                              width: MediaQuery.of(context).size.width * 0.12,
+                              height: MediaQuery.of(context).size.height * 0.12,
+                              child: Icon(
+                                Icons.swap_vert,
+                                color: Colors.white,
+                                size: MediaQuery.of(context).size.width * 0.06,
+                              ),
+                            ),
+                            onTap: () {
+                              // Utils().logInfo('Changed camera');
+                              _handleCameraLens(
+                                desc: _cameraController.description,
+                                toggle: true,
+                              );
+                            },
+                          ),
+                        ),
+                        Positioned(
+                          left: 15.0,
+                          bottom: 15.0,
+                          child: GestureDetector(
+                            child: Container(
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Colors.red,
+                              ),
+                              width: MediaQuery.of(context).size.width * 0.12,
+                              height: MediaQuery.of(context).size.height * 0.12,
+                              child: Center(
+                                child: Icon(
+                                  Icons.close,
+                                  color: Colors.white,
+                                  size:
+                                      MediaQuery.of(context).size.width * 0.06,
+                                ),
+                              ),
+                            ),
+                            onTap: () {
+                              Get.offAllNamed(Routes.HOME);
+                            },
+                          ),
+                        ),
+                      ],
+                    )
+                  : rotateWarning(),
             ),
           );
         },

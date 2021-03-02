@@ -14,7 +14,7 @@ class DonateButton extends StatelessWidget {
           'Donate',
           style: TextStyle(
             color: Colors.white,
-            fontSize: 22.0,
+            fontSize: MediaQuery.of(context).size.width * 0.06,
           ),
         ),
         onPressed: () => Utils.launchUrl(Constants.donationUrl),

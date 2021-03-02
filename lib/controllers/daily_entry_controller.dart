@@ -15,7 +15,7 @@ class DailyEntryController extends GetxController {
     StorageUtil.putBool('dailyEntry', true);
     dailyEntry.value = true;
     dailyEntry.refresh();
-    Utils().logInfo('DailyEntry set to TRUE!');
+    // Utils().logInfo('DailyEntry set to TRUE!');
   }
 
   void _checkTodayEntry() {
@@ -23,15 +23,15 @@ class DailyEntryController extends GetxController {
 
     // Checking by date
     if (today != StorageUtil.getString('today')) {
-      Utils().logInfo('New Day, DailyEntry was NOT done!');
+      // Utils().logInfo('New Day, DailyEntry was NOT done!');
       StorageUtil.putString('today', today);
       StorageUtil.putBool('dailyEntry', false);
       dailyEntry.value = false;
       dailyEntry.refresh();
     } else {
-      dailyEntry.value
-          ? Utils().logInfo('DailyEntry was already done!')
-          : Utils().logInfo('DailyEntry was NOT done!');
+      // dailyEntry.value
+      //     ? Utils().logInfo('DailyEntry was already done!')
+      //     : Utils().logInfo('DailyEntry was NOT done!');
     }
   }
 }

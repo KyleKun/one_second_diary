@@ -1,3 +1,4 @@
 const Map<String, String> ru = {
-  'appTitle': 'blblbl',
+  'darkMode': 'Blblblbl dark',
+  'language': 'Blblblbl',
 };

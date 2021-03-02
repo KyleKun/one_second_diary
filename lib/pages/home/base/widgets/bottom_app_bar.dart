@@ -10,7 +10,7 @@ SalomonBottomBarItem _bottomBarItem({
   @required Color color,
 }) {
   return SalomonBottomBarItem(
-    icon: Icon(icon, size: 28.0),
+    icon: Icon(icon, size: MediaQuery.of(Get.context).size.width * 0.08),
     title: Text(title, style: TextStyle(fontFamily: 'Magic')),
     selectedColor: color,
   );

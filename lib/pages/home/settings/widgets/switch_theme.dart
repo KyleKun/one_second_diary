@@ -4,7 +4,7 @@ import 'package:one_second_diary/utils/constants.dart';
 import 'package:one_second_diary/utils/theme.dart';
 
 class SwitchThemeComponent extends StatelessWidget {
-  final String title = 'appTitle'.tr;
+  final String title = 'darkMode'.tr;
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -14,7 +14,12 @@ class SwitchThemeComponent extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(title),
+              Text(
+                title,
+                style: TextStyle(
+                  fontSize: MediaQuery.of(context).size.width * 0.045,
+                ),
+              ),
               ValueBuilder<bool>(
                 initialValue: ThemeService().isDarkTheme(),
                 builder: (isChecked, updateFn) => Switch(

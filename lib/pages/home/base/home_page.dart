@@ -13,20 +13,26 @@ class HomePage extends GetView<BottomAppBarIndexController> {
     return Scaffold(
       appBar: CustomAppBar(),
       bottomNavigationBar: CustomBottomAppBar(),
-      body: Obx(() => _getSelectedPage(controller.activeIndex.value)),
+      body: Container(
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height,
+        child: Center(
+          child: Obx(() => _getSelectedPage(controller.activeIndex.value)),
+        ),
+      ),
     );
   }
 
   Widget _getSelectedPage(int index) {
     switch (index) {
       case 0:
-        return Container(child: Center(child: AddNewRecordingPage()));
+        return DailyEntryPage();
       case 1:
-        return Container(child: Center(child: CreateMoviePage()));
+        return CreateMoviePage();
       case 2:
-        return Container(child: Center(child: SettingPage()));
+        return SettingPage();
       default:
-        return Container(child: Center(child: AddNewRecordingPage()));
+        return DailyEntryPage();
     }
   }
 }
