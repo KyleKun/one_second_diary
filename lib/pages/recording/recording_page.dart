@@ -3,7 +3,9 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:one_second_diary/controllers/resolution_controller.dart';
 import 'package:one_second_diary/routes/app_pages.dart';
+import 'package:one_second_diary/utils/constants.dart';
 import 'package:one_second_diary/utils/utils.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:native_device_orientation/native_device_orientation.dart';
@@ -15,40 +17,42 @@ class RecordingPage extends StatefulWidget {
 
 class _RecordingPageState extends State<RecordingPage>
     with WidgetsBindingObserver, TickerProviderStateMixin {
-  CameraController _cameraController;
-  List<CameraDescription> _availableCameras;
+  late CameraController _cameraController;
+  late List<CameraDescription> _availableCameras;
 
-  bool _isRecording;
-  double _recordingProgress;
-  // String _appPath;
+  late bool _isRecording;
+  late double _recordingProgress;
+
+  late ResolutionController _resolutionController;
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addObserver(this);
+    WidgetsBinding.instance!.addObserver(this);
     _isRecording = false;
     _recordingProgress = 0.0;
+    _resolutionController = Get.find<ResolutionController>();
     _getAvailableCameras();
     // _appPath = StorageUtil.getString('appPath');
   }
 
   @override
   void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
+    WidgetsBinding.instance!.removeObserver(this);
     _cameraController.dispose();
     super.dispose();
   }
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (_cameraController == null || !_cameraController.value.isInitialized) {
+    if (!_cameraController.value.isInitialized) {
       return;
     }
     if (state == AppLifecycleState.inactive ||
         state == AppLifecycleState.paused) {
-      _cameraController?.dispose();
+      _cameraController.dispose();
     } else if (state == AppLifecycleState.resumed) {
-      if (_cameraController != null) {
+      if (_cameraController.value.isInitialized) {
         _handleCameraLens(desc: _cameraController.description, toggle: false);
       }
     }
@@ -62,8 +66,14 @@ class _RecordingPageState extends State<RecordingPage>
   }
 
   Future<void> _initCamera(CameraDescription description) async {
-    _cameraController = CameraController(description, ResolutionPreset.veryHigh,
-        enableAudio: false);
+    ResolutionPreset _resolution = _resolutionController.isHighRes.value
+        ? ResolutionPreset.veryHigh
+        : ResolutionPreset.high;
+    _cameraController = CameraController(
+      description,
+      _resolution,
+      enableAudio: false,
+    );
     _cameraController.addListener(() {
       if (mounted) {
         setState(() {});
@@ -78,10 +88,10 @@ class _RecordingPageState extends State<RecordingPage>
     }
   }
 
-  void _handleCameraLens({var desc, bool toggle}) async {
+  void _handleCameraLens({var desc, required bool toggle}) async {
     final lensDirection = desc.lensDirection;
 
-    if (_cameraController != null) {
+    if (_cameraController.value.isInitialized) {
       await _cameraController.dispose();
     }
 
@@ -95,11 +105,7 @@ class _RecordingPageState extends State<RecordingPage>
             description.lensDirection == CameraLensDirection.front);
       }
 
-      if (newDescription != null) {
-        _initCamera(newDescription);
-      } else {
-        // Utils().logWarning('Asked camera not available');
-      }
+      _initCamera(newDescription);
     } else {
       if (desc != null) {
         _initCamera(desc);
@@ -121,34 +127,34 @@ class _RecordingPageState extends State<RecordingPage>
           _isRecording = false;
           t.cancel();
           _recordingProgress = 0.0;
-          stopVideoRecording().then((file) {
-            if (file != null) {
+
+          try {
+            stopVideoRecording().then((file) {
               // Utils().logInfo('Video recorded to ${file.path}');
 
               Get.offNamed(
                 Routes.SAVE_VIDEO,
                 arguments: file.path,
               );
-            } else {
-              showDialog(
-                context: Get.context,
-                builder: (context) => AlertDialog(
-                  title: Text('Error recording video!'),
-                  content: Text(
-                    'Please, close the app and try again, if the problem persists contact the developer',
-                  ),
-                  actions: <Widget>[
-                    RaisedButton(
-                      color: Colors.green,
-                      child: Text('Ok'),
-                      onPressed: () => Get.back(),
-                    ),
-                  ],
+            });
+          } catch (e) {
+            showDialog(
+              context: Get.context,
+              builder: (context) => AlertDialog(
+                title: Text('Error recording video!'),
+                content: Text(
+                  'Please, close the app and try again, if the problem persists contact the developer',
                 ),
-              );
-              // Utils().logError('Could not record video!');
-            }
-          });
+                actions: <Widget>[
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(primary: Colors.green),
+                    child: Text('Ok'),
+                    onPressed: () => Get.back(),
+                  ),
+                ],
+              ),
+            );
+          }
         }
       });
     });
@@ -167,22 +173,13 @@ class _RecordingPageState extends State<RecordingPage>
     try {
       await _cameraController.startVideoRecording();
     } on CameraException catch (e) {
-      // Utils().logError(e);
+      print('$e');
       return;
     }
   }
 
   Future<XFile> stopVideoRecording() async {
-    if (!_cameraController.value.isRecordingVideo) {
-      return null;
-    }
-
-    try {
-      return _cameraController.stopVideoRecording();
-    } on CameraException catch (e) {
-      // Utils().logError(e);
-      return null;
-    }
+    return await _cameraController.stopVideoRecording();
   }
 
   BoxDecoration _screenBorderDecoration() {
@@ -217,7 +214,6 @@ class _RecordingPageState extends State<RecordingPage>
   }
 
   Widget _addCameraScreen(BuildContext context) {
-    //
     return RotatedBox(
       quarterTurns: 1, //_turnsDeviceOrientation(context),
       child: Container(
@@ -241,7 +237,7 @@ class _RecordingPageState extends State<RecordingPage>
             child: Container(
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height,
-              child: _cameraController != null &&
+              child: _cameraController.value.isInitialized &&
                       !(orientation != NativeDeviceOrientation.landscapeLeft)
                   ? Stack(
                       fit: StackFit.expand,
@@ -252,7 +248,7 @@ class _RecordingPageState extends State<RecordingPage>
                           child: Container(
                             width: MediaQuery.of(context).size.width * 0.2,
                             height: MediaQuery.of(context).size.height * 0.2,
-                            child: RaisedButton(
+                            child: ElevatedButton(
                               child: Stack(
                                 children: [
                                   Center(
@@ -272,9 +268,11 @@ class _RecordingPageState extends State<RecordingPage>
                                   ),
                                 ],
                               ),
-                              elevation: 8.0,
-                              shape: CircleBorder(),
-                              color: Colors.white,
+                              style: ElevatedButton.styleFrom(
+                                primary: Colors.white,
+                                elevation: 8.0,
+                                shape: CircleBorder(),
+                              ),
                               onPressed: () {
                                 if (!_isRecording) {
                                   setState(() {

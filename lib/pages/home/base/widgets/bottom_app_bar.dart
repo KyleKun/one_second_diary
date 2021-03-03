@@ -5,9 +5,9 @@ import 'package:one_second_diary/utils/constants.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 
 SalomonBottomBarItem _bottomBarItem({
-  @required IconData icon,
-  @required String title,
-  @required Color color,
+  required IconData icon,
+  required String title,
+  required Color color,
 }) {
   return SalomonBottomBarItem(
     icon: Icon(icon, size: MediaQuery.of(Get.context).size.width * 0.08),

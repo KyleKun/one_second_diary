@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:one_second_diary/lang/translation_service.dart';
 import 'package:one_second_diary/utils/shared_preferences_util.dart';
+import 'package:one_second_diary/utils/utils.dart';
 
 // TODO: fix
 class LanguageController extends GetxController {
@@ -22,8 +23,11 @@ class LanguageController extends GetxController {
   }
 
   RxString _getLanguage() {
-    if (!TranslationService.languages.contains(StorageUtil.getString('lang')))
+    if (!(TranslationService.languages
+        .contains(StorageUtil.getString('lang')))) {
+      Utils().logInfo('Language Not Found!');
       StorageUtil.putString('lang', Get.deviceLocale.languageCode);
+    }
 
     return StorageUtil.getString('lang').obs;
   }

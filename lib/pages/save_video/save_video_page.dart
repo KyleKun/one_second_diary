@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:one_second_diary/pages/save_video/widgets/save_button.dart';
 import 'package:one_second_diary/routes/app_pages.dart';
+import 'package:one_second_diary/utils/utils.dart';
 import 'package:video_player/video_player.dart';
 
 class SaveVideoPage extends StatefulWidget {
@@ -11,14 +12,14 @@ class SaveVideoPage extends StatefulWidget {
 }
 
 class _SaveVideoPageState extends State<SaveVideoPage> {
-  String _tempVideoPath;
+  late String _tempVideoPath;
   double _opacity = 1.0;
   var _videoController;
 
   @override
   void initState() {
     _tempVideoPath = Get.arguments;
-    _initVideoPlayerController();
+    //_initVideoPlayerController();
     super.initState();
   }
 
@@ -79,24 +80,25 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        return showDialog(
+        showDialog<bool>(
           context: context,
           builder: (context) => AlertDialog(
             title: Text('Discard this video?'),
             actions: <Widget>[
-              RaisedButton(
-                color: Colors.green,
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(primary: Colors.green),
                 child: Text('Yes'),
                 onPressed: () => Get.offNamed(Routes.RECORDING),
               ),
-              RaisedButton(
-                color: Colors.red,
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(primary: Colors.red),
                 child: Text('No'),
                 onPressed: () => Get.back(),
               ),
             ],
           ),
         );
+        return true;
       },
       child: Scaffold(
         appBar: AppBar(
@@ -108,7 +110,10 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
                 ? _dailyVideoPlayer()
                 : Center(child: CircularProgressIndicator()),
             Spacer(flex: 2),
-            SaveButton(videoPath: _tempVideoPath),
+            SaveButton(
+              videoPath: _tempVideoPath,
+              videoController: _videoController,
+            ),
             Spacer(),
           ],
         ),

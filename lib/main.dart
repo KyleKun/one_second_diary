@@ -9,7 +9,7 @@ import 'routes/app_pages.dart';
 import 'utils/shared_preferences_util.dart';
 // import 'package:device_preview/device_preview.dart';
 
-List<CameraDescription> cameras;
+// List<CameraDescription> cameras;
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await StorageUtil.getInstance();

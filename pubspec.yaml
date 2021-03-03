@@ -37,7 +37,8 @@ dependencies:
   rive:
   native_device_orientation:
   video_player:
-  # logger:
+  logger:
+  device_info:
   # device_preview:
 
 dev_dependencies:

@@ -9,36 +9,74 @@ import 'package:one_second_diary/utils/shared_preferences_util.dart';
 class CreateMovieButton extends StatelessWidget {
   void _createMovie() async {
     final allVideos = Utils.getAllVideosFromStorage();
-    // Utils().logInfo('Creating movie with the following files: $allVideos');
 
-    // Creating txt that will be used with ffmpeg
-    String txtPath = await Utils.writeTxt(allVideos);
-    String today = Utils.getToday();
-    String outputPath =
-        StorageUtil.getString('appPath') + 'OneSecondDiary-Movie-$today.mp4';
-
-    await executeFFmpeg(
-        '-f concat -safe 0 -i $txtPath -map 0 -c copy $outputPath');
-    // Utils().logInfo('Cache video saved at: $outputPath');
-
-    GallerySaver.saveVideo(outputPath, albumName: 'OSD-Movies').then((_) {
-      Utils.deleteFile(outputPath);
-      // Utils().logInfo('Video saved in gallery in the folder OSD-Movies!');
+    // Needs more than 1 video to create movie
+    if (allVideos.length < 2) {
       showDialog(
         context: Get.context,
         builder: (context) => AlertDialog(
-          title: Text('Movie created!'),
-          content: Text('Video saved in gallery in OSD-Movies folder!'),
+          title: Text('Movie was not created!'),
+          content: Text(
+            'You need to have 2 or more recorded videos in order to create a movie',
+          ),
           actions: <Widget>[
             RaisedButton(
-              color: AppColors.green,
+              color: Colors.green,
               child: Text('Ok'),
               onPressed: () => Get.back(),
             ),
           ],
         ),
       );
-    });
+    } else {
+      try {
+        // Utils().logInfo('Creating movie with the following files: $allVideos');
+
+        // Creating txt that will be used with ffmpeg
+        String txtPath = await Utils.writeTxt(allVideos);
+        String today = Utils.getToday();
+        String outputPath = StorageUtil.getString('appPath') +
+            'OneSecondDiary-Movie-$today.mp4';
+
+        await executeFFmpeg(
+            '-f concat -safe 0 -i $txtPath -map 0 -c copy $outputPath');
+        // Utils().logInfo('Cache video saved at: $outputPath');
+
+        GallerySaver.saveVideo(outputPath, albumName: 'OSD-Movies').then((_) {
+          Utils.deleteFile(outputPath);
+          // Utils().logInfo('Video saved in gallery in the folder OSD-Movies!');
+          showDialog(
+            context: Get.context,
+            builder: (context) => AlertDialog(
+              title: Text('Movie created!'),
+              content: Text('Video saved in gallery in OSD-Movies folder!'),
+              actions: <Widget>[
+                RaisedButton(
+                  color: AppColors.green,
+                  child: Text('Ok'),
+                  onPressed: () => Get.back(),
+                ),
+              ],
+            ),
+          );
+        });
+      } catch (e) {
+        Utils().logError('$e');
+        showDialog(
+          context: Get.context,
+          builder: (context) => AlertDialog(
+            title: Text('Error creating movie!'),
+            actions: <Widget>[
+              RaisedButton(
+                color: Colors.red,
+                child: Text('Ok'),
+                onPressed: () => Get.back(),
+              ),
+            ],
+          ),
+        );
+      }
+    }
   }
 
   @override

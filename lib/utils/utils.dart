@@ -1,27 +1,29 @@
+import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:url_launcher/url_launcher.dart';
-// import 'package:logger/logger.dart';
+import 'package:logger/logger.dart';
 import 'dart:io' as io;
 import 'shared_preferences_util.dart';
+import 'package:device_info/device_info.dart';
 
 class Utils {
-  // final logger = Logger(
-  //   printer: PrettyPrinter(),
-  //   level: Level.verbose,
-  // );
+  final logger = Logger(
+    printer: PrettyPrinter(),
+    level: Level.verbose,
+  );
 
-  // void logInfo(dynamic info) {
-  //   logger.i(info);
-  // }
+  void logInfo(dynamic info) {
+    logger.i(info);
+  }
 
-  // void logWarning(dynamic warning) {
-  //   logger.w(warning);
-  // }
+  void logWarning(dynamic warning) {
+    logger.w(warning);
+  }
 
-  // void logError(dynamic warning) {
-  //   logger.e(warning);
-  // }
+  void logError(dynamic warning) {
+    logger.e(warning);
+  }
 
   static String getToday({bool isBr = false}) {
     var now = new DateTime.now();
@@ -113,6 +115,43 @@ class Utils {
 
     return txtPath;
   }
+
+  // If android version is >= 10, the ResolutionPreset on camera will be 1920x1080
+  // Otherwise, 1280x720, this prevents Mp4Compose from crashing on older devices because unsupported codecs
+  static Future<bool> shouldUseHigherCodec() async {
+    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+    AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+
+    int androidSdkVersion = androidInfo.version.sdkInt;
+
+    if (androidSdkVersion >= 29) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  // Used only in an alternative way to edit video using ffmpeg
+  // static Future<String> copyFontToStorage() async {
+  //   io.Directory directory = await getApplicationDocumentsDirectory();
+  //   String fontPath = directory.path + "/magic.ttf";
+  //   try {
+  //     if (checkFileExists(fontPath)) {
+  //       Utils().logInfo('Font already exists');
+  //     } else {
+  //       ByteData data =
+  //           await rootBundle.load("assets/fonts/YuseiMagic-Regular.ttf");
+  //       List<int> bytes =
+  //           data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
+  //       await io.File(fontPath).writeAsBytes(bytes);
+  //       Utils().logInfo('Font copied to $fontPath');
+  //     }
+  //   } catch (e) {
+  //     Utils().logError('$e');
+  //   }
+
+  //   return fontPath;
+  // }
 
   static List<String> getAllVideosFromStorage() {
     final directory = io.Directory(StorageUtil.getString('appPath'));

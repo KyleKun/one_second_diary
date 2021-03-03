@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class EmojiWidget extends StatelessWidget {
-  EmojiWidget({this.complete});
+  EmojiWidget({required this.complete});
 
   final bool complete;
 

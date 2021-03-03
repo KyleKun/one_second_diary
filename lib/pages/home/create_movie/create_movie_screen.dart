@@ -18,7 +18,7 @@ class CreateMoviePage extends StatelessWidget {
         // TODO: fix size
         Text(
           'Tap the button below to generate\na single video file:',
-          style: TextStyle(fontSize: MediaQuery.of(context).size.width * 0.03),
+          style: TextStyle(fontSize: MediaQuery.of(context).size.width * 0.04),
           textAlign: TextAlign.center,
         ),
         CreateMovieButton(),
