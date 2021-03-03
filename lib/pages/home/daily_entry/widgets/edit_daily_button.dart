@@ -9,12 +9,14 @@ class EditDailyButton extends StatelessWidget {
     return SizedBox(
       width: MediaQuery.of(context).size.width * 0.4,
       height: MediaQuery.of(context).size.height * 0.08,
-      child: RaisedButton(
-        elevation: 5.0,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(80.0),
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          primary: AppColors.purple,
+          elevation: 5.0,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(80.0),
+          ),
         ),
-        color: AppColors.purple,
         onPressed: () {
           showDialog(
             context: context,
@@ -23,8 +25,8 @@ class EditDailyButton extends StatelessWidget {
               content: Text(
                   'Your previous recording will be deleted, do you want to continue?'),
               actions: <Widget>[
-                RaisedButton(
-                  color: Colors.green,
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(primary: Colors.green),
                   child: Text('Yes'),
                   onPressed: () {
                     // Closing popup before going to recording page
@@ -32,8 +34,8 @@ class EditDailyButton extends StatelessWidget {
                     Get.toNamed(Routes.RECORDING);
                   },
                 ),
-                RaisedButton(
-                  color: Colors.red,
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(primary: Colors.red),
                   child: Text('No'),
                   onPressed: () => Get.back(),
                 ),

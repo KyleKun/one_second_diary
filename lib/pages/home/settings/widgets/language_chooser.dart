@@ -27,11 +27,10 @@ class LanguageChooser extends StatelessWidget {
                 isDense: false,
                 value: _languageController.selectedLanguage.value,
                 onChanged: (symbol) {
-                  _languageController.changeLanguage = symbol!;
+                  _languageController.changeLanguage = symbol;
                 },
                 items: TranslationService.languages.map(
                   (LanguageModel _language) {
-                    print(_language.symbol);
                     return DropdownMenuItem<String>(
                       child: new Text(_language.language),
                       value: _language.symbol,

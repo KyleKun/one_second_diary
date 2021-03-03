@@ -11,7 +11,7 @@ import 'package:one_second_diary/utils/utils.dart';
 import 'package:tapioca/tapioca.dart';
 
 class SaveButton extends StatelessWidget {
-  SaveButton({required this.videoPath, this.videoController});
+  SaveButton({this.videoPath, this.videoController});
 
   // Finding controllers
   final DailyEntryController dayController = Get.find();
@@ -42,7 +42,7 @@ class SaveButton extends StatelessWidget {
       Utils.createFolder();
 
       // Position x to render date on video according resolution
-      int x = resolutionController.isHighRes.value ? 1660 : 1000;
+      int x = resolutionController.isHighRes.value ? 1680 : 1080;
 
       // Setting editing properties
       Cup cup = Cup(
@@ -159,7 +159,7 @@ class SaveButton extends StatelessWidget {
           'Save',
           style: TextStyle(
             color: Colors.white,
-            fontSize: MediaQuery.of(context).size.width * 0.06,
+            fontSize: MediaQuery.of(context).size.width * 0.07,
           ),
         ),
         onPressed: () {

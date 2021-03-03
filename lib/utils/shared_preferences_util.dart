@@ -1,6 +1,5 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
-// TODO: I have no idea
 class StorageUtil {
   static StorageUtil _storageUtil;
   static SharedPreferences _preferences;

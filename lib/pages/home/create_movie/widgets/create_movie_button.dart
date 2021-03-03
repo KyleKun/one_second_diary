@@ -20,8 +20,8 @@ class CreateMovieButton extends StatelessWidget {
             'You need to have 2 or more recorded videos in order to create a movie',
           ),
           actions: <Widget>[
-            RaisedButton(
-              color: Colors.green,
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(primary: Colors.green),
               child: Text('Ok'),
               onPressed: () => Get.back(),
             ),
@@ -51,8 +51,8 @@ class CreateMovieButton extends StatelessWidget {
               title: Text('Movie created!'),
               content: Text('Video saved in gallery in OSD-Movies folder!'),
               actions: <Widget>[
-                RaisedButton(
-                  color: AppColors.green,
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(primary: Colors.green),
                   child: Text('Ok'),
                   onPressed: () => Get.back(),
                 ),
@@ -67,8 +67,8 @@ class CreateMovieButton extends StatelessWidget {
           builder: (context) => AlertDialog(
             title: Text('Error creating movie!'),
             actions: <Widget>[
-              RaisedButton(
-                color: Colors.red,
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(primary: Colors.red),
                 child: Text('Ok'),
                 onPressed: () => Get.back(),
               ),
@@ -84,11 +84,14 @@ class CreateMovieButton extends StatelessWidget {
     return SizedBox(
       width: MediaQuery.of(context).size.width * 0.4,
       height: MediaQuery.of(context).size.height * 0.08,
-      child: RaisedButton(
-        elevation: 5.0,
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(80.0)),
-        color: AppColors.mainColor,
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          primary: AppColors.mainColor,
+          elevation: 5.0,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(80.0),
+          ),
+        ),
         onPressed: () {
           // TODO: prevent double click and show loading
           _createMovie();

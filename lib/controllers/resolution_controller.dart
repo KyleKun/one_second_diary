@@ -9,16 +9,18 @@ class ResolutionController extends GetxController {
     super.onInit();
   }
 
-  final isHighRes = StorageUtil.getBool('isHighRes').obs ?? false.obs;
+  final isHighRes = StorageUtil.getBool('isHighRes').obs;
 
   void _checkCodec() async {
+    isHighRes.value = false;
     bool shouldUseHigherCodec = await Utils.shouldUseHigherCodec();
 
     if (shouldUseHigherCodec && !isHighRes.value) {
       StorageUtil.putBool('isHighRes', true);
       isHighRes.value = StorageUtil.getBool('isHighRes');
-      isHighRes.refresh();
     }
+
+    isHighRes.refresh();
 
     Utils().logInfo('Is High Res?: ${isHighRes.value}');
   }

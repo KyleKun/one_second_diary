@@ -8,7 +8,7 @@ class HeartAnimation extends StatefulWidget {
 }
 
 class _HeartAnimationState extends State<HeartAnimation> {
-  late Artboard _riveArtboard;
+  Artboard _riveArtboard;
 
   @override
   void initState() {
@@ -33,10 +33,12 @@ class _HeartAnimationState extends State<HeartAnimation> {
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height * 0.5,
       child: Center(
-        child: Rive(
-          artboard: _riveArtboard,
-          fit: BoxFit.contain,
-        ),
+        child: _riveArtboard == null
+            ? const SizedBox()
+            : Rive(
+                artboard: _riveArtboard,
+                fit: BoxFit.contain,
+              ),
       ),
     );
   }

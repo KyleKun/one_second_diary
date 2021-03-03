@@ -13,10 +13,12 @@ class RecordDailyButton extends StatelessWidget {
       child: SizedBox(
         width: MediaQuery.of(context).size.width * 0.4,
         height: MediaQuery.of(context).size.height * 0.1,
-        child: RaisedButton(
-          elevation: 8.0,
-          shape: CircleBorder(),
-          color: AppColors.green,
+        child: ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            elevation: 8.0,
+            shape: CircleBorder(),
+            primary: AppColors.green,
+          ),
           onPressed: () {
             Get.toNamed(Routes.RECORDING);
           },

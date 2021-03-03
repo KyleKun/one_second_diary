@@ -25,7 +25,7 @@ dependencies:
   get:
   camera:
   path_provider:
-  shared_preferences:
+  shared_preferences: ^2.0.0-nullsafety.1
   flutter_ffmpeg: 
   permission_handler:
   tapioca:

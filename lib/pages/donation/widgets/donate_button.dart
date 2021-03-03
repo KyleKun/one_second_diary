@@ -6,10 +6,10 @@ class DonateButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: MediaQuery.of(context).size.width * 0.45,
-      height: MediaQuery.of(context).size.width * 0.18,
-      child: RaisedButton(
-        color: AppColors.mainColor,
+      width: MediaQuery.of(context).size.width * 0.35,
+      height: MediaQuery.of(context).size.width * 0.14,
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(primary: AppColors.mainColor),
         child: Text(
           'Donate',
           style: TextStyle(

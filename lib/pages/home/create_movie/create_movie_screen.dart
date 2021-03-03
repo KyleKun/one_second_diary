@@ -8,20 +8,21 @@ class CreateMoviePage extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
+        SizedBox(),
         Text(
           'You have recorded:',
-          style: TextStyle(fontSize: MediaQuery.of(context).size.width * 0.06),
+          style: TextStyle(fontSize: MediaQuery.of(context).size.width * 0.07),
           textAlign: TextAlign.center,
         ),
         VideoCountCard(),
         SizedBox(height: MediaQuery.of(context).size.height * 0.1),
-        // TODO: fix size
         Text(
           'Tap the button below to generate\na single video file:',
-          style: TextStyle(fontSize: MediaQuery.of(context).size.width * 0.04),
+          style: TextStyle(fontSize: MediaQuery.of(context).size.width * 0.045),
           textAlign: TextAlign.center,
         ),
         CreateMovieButton(),
+        SizedBox(),
       ],
     );
   }

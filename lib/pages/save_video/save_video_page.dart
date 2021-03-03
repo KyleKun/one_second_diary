@@ -2,8 +2,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:one_second_diary/pages/save_video/widgets/save_button.dart';
+import 'package:one_second_diary/pages/save_video/widgets/video_properties.dart';
 import 'package:one_second_diary/routes/app_pages.dart';
-import 'package:one_second_diary/utils/utils.dart';
 import 'package:video_player/video_player.dart';
 
 class SaveVideoPage extends StatefulWidget {
@@ -12,14 +12,14 @@ class SaveVideoPage extends StatefulWidget {
 }
 
 class _SaveVideoPageState extends State<SaveVideoPage> {
-  late String _tempVideoPath;
+  String _tempVideoPath;
   double _opacity = 1.0;
   var _videoController;
 
   @override
   void initState() {
     _tempVideoPath = Get.arguments;
-    //_initVideoPlayerController();
+    _initVideoPlayerController();
     super.initState();
   }
 
@@ -109,6 +109,8 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
             _videoController.value.initialized
                 ? _dailyVideoPlayer()
                 : Center(child: CircularProgressIndicator()),
+            Spacer(),
+            VideoProperties(),
             Spacer(flex: 2),
             SaveButton(
               videoPath: _tempVideoPath,

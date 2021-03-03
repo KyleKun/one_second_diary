@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:one_second_diary/bindings/lang_binding.dart';
+import 'package:one_second_diary/controllers/lang_controller.dart';
 import 'package:one_second_diary/utils/theme.dart';
 import 'lang/translation_service.dart';
 import 'routes/app_pages.dart';
@@ -31,7 +32,6 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       // builder: DevicePreview.appBuilder,
-      locale: Get.deviceLocale,
       fallbackLocale: TranslationService.fallbackLocale,
       translations: TranslationService(),
       getPages: AppPages.pages,

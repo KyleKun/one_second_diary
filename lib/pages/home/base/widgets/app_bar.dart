@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:one_second_diary/routes/app_pages.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
-  CustomAppBar({Key? key})
+  CustomAppBar({Key key})
       : preferredSize = Size.fromHeight(60.0),
         super(key: key);
 
