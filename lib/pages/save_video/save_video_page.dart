@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:one_second_diary/pages/save_video/widgets/save_button.dart';
 import 'package:one_second_diary/pages/save_video/widgets/video_properties.dart';
 import 'package:one_second_diary/routes/app_pages.dart';
+import 'package:one_second_diary/utils/custom_dialog.dart';
 import 'package:video_player/video_player.dart';
 
 class SaveVideoPage extends StatefulWidget {
@@ -52,6 +53,11 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
     }
   }
 
+  void closePopupAndPushToRecording() {
+    Get.back();
+    Get.offNamed(Routes.RECORDING);
+  }
+
   Widget _dailyVideoPlayer() {
     return GestureDetector(
       onTap: () => videoPlay(),
@@ -80,22 +86,18 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        showDialog<bool>(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: Text('Discard this video?'),
-            actions: <Widget>[
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(primary: Colors.green),
-                child: Text('Yes'),
-                onPressed: () => Get.offNamed(Routes.RECORDING),
-              ),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(primary: Colors.red),
-                child: Text('No'),
-                onPressed: () => Get.back(),
-              ),
-            ],
+        showDialog(
+          context: Get.context,
+          builder: (context) => CustomDialog(
+            isDoubleAction: true,
+            title: 'Discard this video?',
+            content: 'Press "Yes" to record again',
+            actionText: 'Yes',
+            actionColor: Colors.green,
+            action: () => closePopupAndPushToRecording(),
+            action2Text: 'No',
+            action2Color: Colors.red,
+            action2: () => Get.back(),
           ),
         );
         return true;

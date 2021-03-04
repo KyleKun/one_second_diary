@@ -2,8 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:one_second_diary/routes/app_pages.dart';
 import 'package:one_second_diary/utils/constants.dart';
+import 'package:one_second_diary/utils/custom_dialog.dart';
 
 class EditDailyButton extends StatelessWidget {
+  void closePopupAndPushToRecording() {
+    Get.back();
+    Get.toNamed(Routes.RECORDING);
+  }
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -19,27 +25,18 @@ class EditDailyButton extends StatelessWidget {
         ),
         onPressed: () {
           showDialog(
-            context: context,
-            builder: (context) => AlertDialog(
-              title: Text('Edit video?'),
-              content: Text(
-                  'Your previous recording will be deleted, do you want to continue?'),
-              actions: <Widget>[
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(primary: Colors.green),
-                  child: Text('Yes'),
-                  onPressed: () {
-                    // Closing popup before going to recording page
-                    Get.back();
-                    Get.toNamed(Routes.RECORDING);
-                  },
-                ),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(primary: Colors.red),
-                  child: Text('No'),
-                  onPressed: () => Get.back(),
-                ),
-              ],
+            context: Get.context,
+            builder: (context) => CustomDialog(
+              isDoubleAction: true,
+              title: 'Edit video?',
+              content:
+                  'Your previous recording will be deleted, do you want to continue?',
+              actionText: 'Yes',
+              actionColor: Colors.green,
+              action: () => closePopupAndPushToRecording(),
+              action2Text: 'No',
+              action2Color: Colors.red,
+              action2: () => Get.back(),
             ),
           );
         },

@@ -1,16 +1,13 @@
-import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:one_second_diary/bindings/lang_binding.dart';
-import 'package:one_second_diary/controllers/lang_controller.dart';
 import 'package:one_second_diary/utils/theme.dart';
 import 'lang/translation_service.dart';
 import 'routes/app_pages.dart';
 import 'utils/shared_preferences_util.dart';
-// import 'package:device_preview/device_preview.dart';
+import 'package:device_preview/device_preview.dart';
 
-// List<CameraDescription> cameras;
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await StorageUtil.getInstance();
@@ -19,6 +16,7 @@ Future<void> main() async {
       .then((_) {
     runApp(
       // DevicePreview(
+      //   //child: MyApp(),
       //   enabled: true,
       //   builder: (context) => MyApp(),
       // ),

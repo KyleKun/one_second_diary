@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:one_second_diary/pages/home/settings/widgets/language_chooser.dart';
+import 'package:one_second_diary/pages/home/settings/widgets/resolution_chooser.dart';
 import 'widgets/switch_theme.dart';
 
 class SettingPage extends StatelessWidget {
@@ -12,6 +13,7 @@ class SettingPage extends StatelessWidget {
         children: [
           SwitchThemeComponent(),
           LanguageChooser(),
+          ResolutionChooser(),
         ],
       ),
     );

@@ -22,7 +22,7 @@ class VideoProperties extends StatelessWidget {
           ),
           Center(
             child: Container(
-              color: Colors.yellow,
+              color: Colors.black87,
               child: Text(
                 ' Coming soon... ',
                 style: TextStyle(

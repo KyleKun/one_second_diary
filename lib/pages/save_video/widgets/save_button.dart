@@ -4,8 +4,7 @@ import 'package:one_second_diary/controllers/daily_entry_controller.dart';
 import 'package:one_second_diary/controllers/resolution_controller.dart';
 import 'package:one_second_diary/controllers/video_count_controller.dart';
 import 'package:one_second_diary/routes/app_pages.dart';
-import 'package:one_second_diary/utils/constants.dart';
-import 'package:one_second_diary/utils/ffmpeg_api_wrapper.dart';
+import 'package:one_second_diary/utils/custom_dialog.dart';
 import 'package:one_second_diary/utils/shared_preferences_util.dart';
 import 'package:one_second_diary/utils/utils.dart';
 import 'package:tapioca/tapioca.dart';
@@ -25,9 +24,8 @@ class SaveButton extends StatelessWidget {
   // Properties to edit the video with current date
   final String today =
       Utils.getToday(isBr: Get.deviceLocale.countryCode == 'BR');
-  // int x will be dealt accoding resolution
+
   final int y = 20;
-  final int size = 35;
   final Color color = Colors.black;
 
   // Edit the video, saves it in OneSecondDiary's folder and delete it from cache
@@ -42,7 +40,9 @@ class SaveButton extends StatelessWidget {
       Utils.createFolder();
 
       // Position x to render date on video according resolution
-      int x = resolutionController.isHighRes.value ? 1680 : 1080;
+      int x = resolutionController.editX.value;
+      // Text size
+      int size = resolutionController.dateSize.value;
 
       // Setting editing properties
       Cup cup = Cup(
@@ -84,16 +84,14 @@ class SaveButton extends StatelessWidget {
 
           // Showing confirmation popup
           showDialog(
-            context: context,
-            builder: (context) => AlertDialog(
-              title: Text('Video saved!'),
-              actions: <Widget>[
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(primary: Colors.green),
-                  child: Text('Ok'),
-                  onPressed: () => Get.offAllNamed(Routes.HOME),
-                ),
-              ],
+            context: Get.context,
+            builder: (context) => CustomDialog(
+              isDoubleAction: false,
+              title: 'Video saved!',
+              content: 'See you tomorrow!',
+              actionText: 'Ok',
+              actionColor: Colors.green,
+              action: () => Get.offAllNamed(Routes.HOME),
             ),
           );
         },
@@ -125,16 +123,14 @@ class SaveButton extends StatelessWidget {
       Utils().logError('$e');
       // Showing error popup
       showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text('Error saving video!'),
-          actions: <Widget>[
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(primary: Colors.red),
-              child: Text('Ok'),
-              onPressed: () => Get.offAllNamed(Routes.HOME),
-            ),
-          ],
+        context: Get.context,
+        builder: (context) => CustomDialog(
+          isDoubleAction: false,
+          title: 'Error saving video!',
+          content: 'Please try changing Video Quality in the settings to High',
+          actionText: 'Ok',
+          actionColor: Colors.red,
+          action: () => Get.offAllNamed(Routes.HOME),
         ),
       );
     }

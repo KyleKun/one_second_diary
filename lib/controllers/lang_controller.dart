@@ -29,7 +29,7 @@ class LanguageController extends GetxController {
       Locale locale = new Locale(StorageUtil.getString('lang'));
       Get.updateLocale(locale);
     }
-
+    Utils().logInfo('Selected language: ${StorageUtil.getString('lang')}');
     return StorageUtil.getString('lang').obs;
   }
 }

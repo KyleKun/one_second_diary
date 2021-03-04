@@ -5,7 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:one_second_diary/controllers/resolution_controller.dart';
 import 'package:one_second_diary/routes/app_pages.dart';
-import 'package:one_second_diary/utils/constants.dart';
+import 'package:one_second_diary/utils/custom_dialog.dart';
 import 'package:one_second_diary/utils/utils.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:native_device_orientation/native_device_orientation.dart';
@@ -66,9 +66,8 @@ class _RecordingPageState extends State<RecordingPage>
   }
 
   Future<void> _initCamera(CameraDescription description) async {
-    ResolutionPreset _resolution = _resolutionController.isHighRes.value
-        ? ResolutionPreset.veryHigh
-        : ResolutionPreset.high;
+    ResolutionPreset _resolution = _resolutionController.selectResolution();
+    Utils().logInfo('Camera with resolution: $_resolution');
     _cameraController = CameraController(
       description,
       _resolution,
@@ -148,18 +147,14 @@ class _RecordingPageState extends State<RecordingPage>
           } catch (e) {
             showDialog(
               context: Get.context,
-              builder: (context) => AlertDialog(
-                title: Text('Error recording video!'),
-                content: Text(
-                  'Please, close the app and try again, if the problem persists contact the developer',
-                ),
-                actions: <Widget>[
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(primary: Colors.green),
-                    child: Text('Ok'),
-                    onPressed: () => Get.back(),
-                  ),
-                ],
+              builder: (context) => CustomDialog(
+                isDoubleAction: false,
+                title: 'Error recording video!',
+                content:
+                    'Please try again, if the problem persists contact the developer',
+                actionText: 'Ok',
+                actionColor: Colors.red,
+                action: () => Get.back(),
               ),
             );
           }

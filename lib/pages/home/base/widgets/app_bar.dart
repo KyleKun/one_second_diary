@@ -38,6 +38,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         'One Second Diary',
         style: TextStyle(
           fontFamily: 'Magic',
+          fontSize: MediaQuery.of(context).size.width * 0.05,
         ),
       ),
       actions: [

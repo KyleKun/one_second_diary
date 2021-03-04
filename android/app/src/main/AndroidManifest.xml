@@ -7,7 +7,7 @@
 
     <application
         android:name="io.flutter.app.FlutterApplication"
-        android:label="one_second_diary"
+        android:label="One Second Diary"
         android:requestLegacyExternalStorage="true"
         android:icon="@mipmap/ic_launcher">
         <activity

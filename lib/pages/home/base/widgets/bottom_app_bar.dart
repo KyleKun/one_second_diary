@@ -11,7 +11,12 @@ SalomonBottomBarItem _bottomBarItem({
 }) {
   return SalomonBottomBarItem(
     icon: Icon(icon, size: MediaQuery.of(Get.context).size.width * 0.08),
-    title: Text(title, style: TextStyle(fontFamily: 'Magic')),
+    title: Text(
+      title,
+      style: TextStyle(
+        fontFamily: 'Magic',
+      ),
+    ),
     selectedColor: color,
   );
 }

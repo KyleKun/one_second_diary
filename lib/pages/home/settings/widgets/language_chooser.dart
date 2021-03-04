@@ -23,6 +23,7 @@ class LanguageChooser extends StatelessWidget {
                 ),
               ),
               DropdownButton<String>(
+                iconSize: MediaQuery.of(context).size.width * 0.045,
                 isExpanded: false,
                 isDense: false,
                 value: _languageController.selectedLanguage.value,
@@ -32,7 +33,12 @@ class LanguageChooser extends StatelessWidget {
                 items: TranslationService.languages.map(
                   (LanguageModel _language) {
                     return DropdownMenuItem<String>(
-                      child: new Text(_language.language),
+                      child: new Text(
+                        _language.language,
+                        style: TextStyle(
+                          fontSize: MediaQuery.of(context).size.width * 0.04,
+                        ),
+                      ),
                       value: _language.symbol,
                     );
                   },

@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -5,7 +6,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:logger/logger.dart';
 import 'dart:io' as io;
 import 'shared_preferences_util.dart';
-import 'package:device_info/device_info.dart';
+//import 'package:device_info/device_info.dart';
 
 class Utils {
   final logger = Logger(
@@ -116,20 +117,20 @@ class Utils {
     return txtPath;
   }
 
-  // If android version is >= 10, the ResolutionPreset on camera will be 1920x1080
-  // Otherwise, 1280x720, this prevents Mp4Compose from crashing on older devices because unsupported codecs
-  static Future<bool> shouldUseHigherCodec() async {
-    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-    AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+  // // If android version is >= 11, the ResolutionPreset on camera will be 1920x1080
+  // // Otherwise, 1280x720, this prevents Mp4Compose from crashing on older devices because unsupported codecs
+  // static Future<bool> shouldUseHigherCodec() async {
+  //   DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+  //   AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
 
-    int androidSdkVersion = androidInfo.version.sdkInt;
+  //   int androidSdkVersion = androidInfo.version.sdkInt;
 
-    if (androidSdkVersion >= 29) {
-      return true;
-    } else {
-      return false;
-    }
-  }
+  //   if (androidSdkVersion >= 30) {
+  //     return true;
+  //   } else {
+  //     return false;
+  //   }
+  // }
 
   // Used only in an alternative way to edit video using ffmpeg
   // static Future<String> copyFontToStorage() async {

@@ -25,7 +25,7 @@ dependencies:
   get:
   camera:
   path_provider:
-  shared_preferences: ^2.0.0-nullsafety.1
+  shared_preferences: 
   flutter_ffmpeg: 
   permission_handler:
   tapioca:
@@ -38,8 +38,8 @@ dependencies:
   native_device_orientation:
   video_player:
   logger:
-  device_info:
-  # device_preview:
+  # device_info:
+  device_preview: ^0.6.2-beta
 
 dev_dependencies:
   flutter_test:
