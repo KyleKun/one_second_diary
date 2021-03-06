@@ -3,9 +3,10 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:one_second_diary/controllers/resolution_controller.dart';
+// import 'package:one_second_diary/controllers/resolution_controller.dart';
 import 'package:one_second_diary/routes/app_pages.dart';
 import 'package:one_second_diary/utils/custom_dialog.dart';
+// import 'package:one_second_diary/utils/shared_preferences_util.dart';
 import 'package:one_second_diary/utils/utils.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:native_device_orientation/native_device_orientation.dart';
@@ -23,7 +24,7 @@ class _RecordingPageState extends State<RecordingPage>
   bool _isRecording;
   double _recordingProgress;
 
-  ResolutionController _resolutionController;
+  // ResolutionController _resolutionController;
 
   @override
   void initState() {
@@ -31,7 +32,7 @@ class _RecordingPageState extends State<RecordingPage>
     WidgetsBinding.instance.addObserver(this);
     _isRecording = false;
     _recordingProgress = 0.0;
-    _resolutionController = Get.find<ResolutionController>();
+    // _resolutionController = Get.find<ResolutionController>();
     _getAvailableCameras();
     // _appPath = StorageUtil.getString('appPath');
   }
@@ -66,8 +67,8 @@ class _RecordingPageState extends State<RecordingPage>
   }
 
   Future<void> _initCamera(CameraDescription description) async {
-    ResolutionPreset _resolution = _resolutionController.selectResolution();
-    Utils().logInfo('Camera with resolution: $_resolution');
+    ResolutionPreset _resolution = ResolutionPreset.high;
+    // Utils().logInfo('Camera with resolution: $_resolution');
     _cameraController = CameraController(
       description,
       _resolution,
@@ -107,13 +108,13 @@ class _RecordingPageState extends State<RecordingPage>
       if (newDescription != null) {
         _initCamera(newDescription);
       } else {
-        Utils().logWarning('Asked camera not available');
+        // Utils().logWarning('Asked camera not available');
       }
     } else {
       if (desc != null) {
         _initCamera(desc);
       } else {
-        Utils().logWarning('Asked camera not available');
+        // Utils().logWarning('Asked camera not available');
       }
     }
   }
@@ -190,7 +191,7 @@ class _RecordingPageState extends State<RecordingPage>
     try {
       return _cameraController.stopVideoRecording();
     } on CameraException catch (e) {
-      Utils().logError(e);
+      // Utils().logError(e);
       return null;
     }
   }

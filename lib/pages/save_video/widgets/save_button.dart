@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:one_second_diary/controllers/daily_entry_controller.dart';
-import 'package:one_second_diary/controllers/resolution_controller.dart';
+// import 'package:one_second_diary/controllers/resolution_controller.dart';
 import 'package:one_second_diary/controllers/video_count_controller.dart';
 import 'package:one_second_diary/routes/app_pages.dart';
 import 'package:one_second_diary/utils/custom_dialog.dart';
@@ -15,7 +15,7 @@ class SaveButton extends StatelessWidget {
   // Finding controllers
   final DailyEntryController dayController = Get.find();
   final VideoCountController videoCountController = Get.find();
-  final ResolutionController resolutionController = Get.find();
+  // final ResolutionController resolutionController = Get.find();
 
   // Video path from cache
   final String videoPath;
@@ -25,6 +25,10 @@ class SaveButton extends StatelessWidget {
   final String today =
       Utils.getToday(isBr: Get.deviceLocale.countryCode == 'BR');
 
+  // Position x to render date
+  final int x = 1120; // HiRes: 1690
+  // Text size
+  final int size = 25; // HiRes: 35
   final int y = 20;
   final Color color = Colors.black;
 
@@ -38,11 +42,6 @@ class SaveButton extends StatelessWidget {
 
       // Creates the folder if it is not created yet
       Utils.createFolder();
-
-      // Position x to render date on video according resolution
-      int x = resolutionController.editX.value;
-      // Text size
-      int size = resolutionController.dateSize.value;
 
       // Setting editing properties
       Cup cup = Cup(
@@ -120,7 +119,7 @@ class SaveButton extends StatelessWidget {
       // });
 
     } catch (e) {
-      Utils().logError('$e');
+      // Utils().logError('$e');
       // Showing error popup
       showDialog(
         context: Get.context,
@@ -155,7 +154,7 @@ class SaveButton extends StatelessWidget {
           'Save',
           style: TextStyle(
             color: Colors.white,
-            fontSize: MediaQuery.of(context).size.width * 0.07,
+            fontSize: MediaQuery.of(context).size.width * 0.06,
           ),
         ),
         onPressed: () {

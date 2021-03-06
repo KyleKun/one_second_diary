@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:one_second_diary/bindings/lang_binding.dart';
+import 'package:one_second_diary/bindings/initial_binding.dart';
 import 'package:one_second_diary/utils/theme.dart';
 import 'lang/translation_service.dart';
 import 'routes/app_pages.dart';
 import 'utils/shared_preferences_util.dart';
-import 'package:device_preview/device_preview.dart';
+// import 'package:device_preview/device_preview.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
       fallbackLocale: TranslationService.fallbackLocale,
       translations: TranslationService(),
       getPages: AppPages.pages,
-      initialBinding: LangBinding(),
+      initialBinding: InitialBinding(),
       initialRoute: StorageUtil.getBool('showIntro') == false
           ? Routes.HOME
           : Routes.INTRO,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:one_second_diary/utils/constants.dart';
 
 class VideoProperties extends StatelessWidget {
   @override
@@ -22,7 +23,7 @@ class VideoProperties extends StatelessWidget {
           ),
           Center(
             child: Container(
-              color: Colors.black87,
+              color: AppColors.yellow,
               child: Text(
                 ' Coming soon... ',
                 style: TextStyle(

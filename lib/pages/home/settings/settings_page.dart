@@ -13,7 +13,7 @@ class SettingPage extends StatelessWidget {
         children: [
           SwitchThemeComponent(),
           LanguageChooser(),
-          ResolutionChooser(),
+          // ResolutionChooser(),
         ],
       ),
     );

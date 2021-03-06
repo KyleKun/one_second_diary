@@ -7,26 +7,35 @@ import 'package:one_second_diary/utils/ffmpeg_api_wrapper.dart';
 import 'package:one_second_diary/utils/utils.dart';
 import 'package:one_second_diary/utils/shared_preferences_util.dart';
 
-class CreateMovieButton extends StatelessWidget {
-  void _createMovie() async {
-    final allVideos = Utils.getAllVideosFromStorage();
+class CreateMovieButton extends StatefulWidget {
+  @override
+  _CreateMovieButtonState createState() => _CreateMovieButtonState();
+}
 
-    // Needs more than 1 video to create movie
-    if (allVideos.length < 2) {
-      showDialog(
-        context: Get.context,
-        builder: (context) => CustomDialog(
-          isDoubleAction: false,
-          title: 'Movie was not created!',
-          content:
-              'You need to have 2 or more recorded videos in order to create a movie',
-          actionText: 'Ok',
-          actionColor: Colors.green,
-          action: () => Get.back(),
-        ),
-      );
-    } else {
-      try {
+class _CreateMovieButtonState extends State<CreateMovieButton> {
+  bool isProcessing = false;
+  void _createMovie() async {
+    setState(() {
+      isProcessing = true;
+    });
+    try {
+      final allVideos = Utils.getAllVideosFromStorage();
+
+      // Needs more than 1 video to create movie
+      if (allVideos.length < 2) {
+        showDialog(
+          context: Get.context,
+          builder: (context) => CustomDialog(
+            isDoubleAction: false,
+            title: 'Movie was not created!',
+            content:
+                'You need to have 2 or more recorded videos in order to create a movie',
+            actionText: 'Ok',
+            actionColor: Colors.green,
+            action: () => Get.back(),
+          ),
+        );
+      } else {
         // Utils().logInfo('Creating movie with the following files: $allVideos');
 
         // Creating txt that will be used with ffmpeg
@@ -54,21 +63,40 @@ class CreateMovieButton extends StatelessWidget {
               action: () => Get.back(),
             ),
           );
+        }, onError: (error) {
+          // Utils().logError(error);
+          showDialog(
+            context: Get.context,
+            builder: (context) => CustomDialog(
+              isDoubleAction: false,
+              title: 'Error copying movie to device!',
+              content:
+                  'Please try again. If the problem persists, contact the developer.',
+              actionText: 'Ok',
+              actionColor: Colors.red,
+              action: () => Get.back(),
+            ),
+          );
         });
-      } catch (e) {
-        Utils().logError('$e');
-        showDialog(
-          context: Get.context,
-          builder: (context) => CustomDialog(
-            isDoubleAction: false,
-            title: 'Error creating movie!',
-            content: 'Please contact the developer.',
-            actionText: 'Ok',
-            actionColor: Colors.red,
-            action: () => Get.back(),
-          ),
-        );
       }
+    } catch (e) {
+      // Utils().logError('$e');
+      showDialog(
+        context: Get.context,
+        builder: (context) => CustomDialog(
+          isDoubleAction: false,
+          title: 'Error creating movie!',
+          content:
+              'Please try again. If the problem persists, contact the developer.',
+          actionText: 'Ok',
+          actionColor: Colors.red,
+          action: () => Get.back(),
+        ),
+      );
+    } finally {
+      setState(() {
+        isProcessing = false;
+      });
     }
   }
 
@@ -86,16 +114,21 @@ class CreateMovieButton extends StatelessWidget {
           ),
         ),
         onPressed: () {
-          // TODO: prevent double click and show loading
-          _createMovie();
+          if (!isProcessing) _createMovie();
         },
-        child: Text(
-          'Create',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: MediaQuery.of(context).size.width * 0.055,
-          ),
-        ),
+        child: !isProcessing
+            ? Text(
+                'Create',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: MediaQuery.of(context).size.width * 0.055,
+                ),
+              )
+            : CircularProgressIndicator(
+                valueColor: new AlwaysStoppedAnimation<Color>(
+                  Colors.white,
+                ),
+              ),
       ),
     );
   }
