@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class EmojiWidget extends StatelessWidget {
   EmojiWidget({this.complete});
@@ -10,9 +11,7 @@ class EmojiWidget extends StatelessWidget {
     return Column(
       children: [
         Text(
-          complete
-              ? 'Amazing!\nSee you tomorrow!'
-              : 'Waiting for\nyour recording...',
+          complete ? 'emojiHappy'.tr : 'emojiSad'.tr,
           style: TextStyle(fontSize: MediaQuery.of(context).size.width * 0.065),
           textAlign: TextAlign.center,
         ),

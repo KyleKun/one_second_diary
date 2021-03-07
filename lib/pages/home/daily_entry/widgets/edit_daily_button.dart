@@ -28,13 +28,12 @@ class EditDailyButton extends StatelessWidget {
             context: Get.context,
             builder: (context) => CustomDialog(
               isDoubleAction: true,
-              title: 'Edit video?',
-              content:
-                  'Your previous recording will be deleted, do you want to continue?',
-              actionText: 'Yes',
+              title: 'editQuestionTitle'.tr,
+              content: 'editQuestion'.tr,
+              actionText: 'yes'.tr,
               actionColor: Colors.green,
               action: () => closePopupAndPushToRecording(),
-              action2Text: 'No',
+              action2Text: 'no'.tr,
               action2Color: Colors.red,
               action2: () => Get.back(),
             ),
@@ -49,7 +48,7 @@ class EditDailyButton extends StatelessWidget {
               color: Colors.white,
             ),
             Text(
-              'Edit',
+              'edit'.tr,
               style: TextStyle(
                 color: Colors.white,
                 fontSize: MediaQuery.of(context).size.width * 0.06,

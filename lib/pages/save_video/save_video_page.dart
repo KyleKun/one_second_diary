@@ -90,12 +90,12 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
           context: Get.context,
           builder: (context) => CustomDialog(
             isDoubleAction: true,
-            title: 'Discard this video?',
-            content: 'Press "Yes" to record again',
-            actionText: 'Yes',
+            title: 'discardVideoTitle'.tr,
+            content: 'discardVideoDesc'.tr,
+            actionText: 'yes'.tr,
             actionColor: Colors.green,
             action: () => closePopupAndPushToRecording(),
-            action2Text: 'No',
+            action2Text: 'no'.tr,
             action2Color: Colors.red,
             action2: () => Get.back(),
           ),
@@ -104,7 +104,7 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: Text("Save video"),
+          title: Text('saveVideo'.tr),
         ),
         body: Column(
           children: [

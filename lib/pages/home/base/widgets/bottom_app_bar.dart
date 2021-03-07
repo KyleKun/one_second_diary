@@ -32,17 +32,17 @@ class CustomBottomAppBar extends GetView<BottomAppBarIndexController> {
           items: [
             _bottomBarItem(
               icon: Icons.add_a_photo_outlined,
-              title: "Record",
+              title: 'record'.tr,
               color: AppColors.green,
             ),
             _bottomBarItem(
               icon: Icons.movie_filter_outlined,
-              title: "Create movie",
+              title: 'createMovie'.tr,
               color: AppColors.mainColor,
             ),
             _bottomBarItem(
               icon: Icons.settings_outlined,
-              title: "Settings",
+              title: 'settings'.tr,
               color: AppColors.purple,
             ),
           ],

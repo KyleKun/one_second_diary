@@ -150,9 +150,8 @@ class _RecordingPageState extends State<RecordingPage>
               context: Get.context,
               builder: (context) => CustomDialog(
                 isDoubleAction: false,
-                title: 'Error recording video!',
-                content:
-                    'Please try again, if the problem persists contact the developer',
+                title: 'recordingErrorTitle'.tr,
+                content: 'tryAgainMsg'.tr,
                 actionText: 'Ok',
                 actionColor: Colors.red,
                 action: () => Get.back(),
@@ -219,7 +218,7 @@ class _RecordingPageState extends State<RecordingPage>
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
-          'Rotate your device to the left',
+          'rotateDevice'.tr,
           style: TextStyle(fontSize: MediaQuery.of(context).size.width * 0.05),
         ),
         Icon(Icons.rotate_left, size: MediaQuery.of(context).size.width * 0.2),

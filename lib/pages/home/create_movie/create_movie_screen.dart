@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'widgets/create_movie_button.dart';
 import 'widgets/video_count_card.dart';
+import 'package:get/get.dart';
 
 class CreateMoviePage extends StatelessWidget {
   @override
@@ -10,14 +11,14 @@ class CreateMoviePage extends StatelessWidget {
       children: [
         SizedBox(),
         Text(
-          'You have recorded:',
+          'totalRecordedTitle'.tr,
           style: TextStyle(fontSize: MediaQuery.of(context).size.width * 0.07),
           textAlign: TextAlign.center,
         ),
         VideoCountCard(),
         SizedBox(height: MediaQuery.of(context).size.height * 0.1),
         Text(
-          'Tap the button below to generate\na single video file:',
+          'tapBelowToGenerate'.tr,
           style: TextStyle(fontSize: MediaQuery.of(context).size.width * 0.045),
           textAlign: TextAlign.center,
         ),

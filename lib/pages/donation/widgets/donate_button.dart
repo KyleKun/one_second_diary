@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:one_second_diary/utils/constants.dart';
 import 'package:one_second_diary/utils/utils.dart';
+import 'package:get/get.dart';
 
 class DonateButton extends StatelessWidget {
   @override
@@ -11,7 +12,7 @@ class DonateButton extends StatelessWidget {
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(primary: AppColors.mainColor),
         child: Text(
-          'Donate',
+          'donate'.tr,
           style: TextStyle(
             color: Colors.white,
             fontSize: MediaQuery.of(context).size.width * 0.06,

@@ -17,7 +17,7 @@ class VideoCountCard extends GetView<VideoCountController> {
             Center(
               child: Obx(
                 () => Text(
-                  '${controller.videoCount} days.',
+                  '${controller.videoCount} ' + 'days'.tr + '.',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: MediaQuery.of(context).size.width * 0.1,

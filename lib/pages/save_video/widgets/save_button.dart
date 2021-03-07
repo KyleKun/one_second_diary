@@ -86,8 +86,8 @@ class SaveButton extends StatelessWidget {
             context: Get.context,
             builder: (context) => CustomDialog(
               isDoubleAction: false,
-              title: 'Video saved!',
-              content: 'See you tomorrow!',
+              title: 'videoSavedTitle'.tr,
+              content: 'videoSavedDesc'.tr,
               actionText: 'Ok',
               actionColor: Colors.green,
               action: () => Get.offAllNamed(Routes.HOME),
@@ -125,8 +125,8 @@ class SaveButton extends StatelessWidget {
         context: Get.context,
         builder: (context) => CustomDialog(
           isDoubleAction: false,
-          title: 'Error saving video!',
-          content: 'Please try changing Video Quality in the settings to High',
+          title: 'saveVideoErrorTitle'.tr,
+          content: 'tryAgainMsg'.tr,
           actionText: 'Ok',
           actionColor: Colors.red,
           action: () => Get.offAllNamed(Routes.HOME),
@@ -151,7 +151,7 @@ class SaveButton extends StatelessWidget {
           primary: Colors.green,
         ),
         child: Text(
-          'Save',
+          'save'.tr,
           style: TextStyle(
             color: Colors.white,
             fontSize: MediaQuery.of(context).size.width * 0.06,

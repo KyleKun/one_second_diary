@@ -11,10 +11,10 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final Size preferredSize;
 
   void popupAction(String option) {
-    if (option == 'Donate') {
+    if (option == 'donate'.tr) {
       Get.toNamed(Routes.DONATION);
     }
-    if (option == 'About') {
+    if (option == 'about'.tr) {
       _showAboutPopup();
     }
   }
@@ -23,7 +23,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     showAboutDialog(
       applicationIcon: FlutterLogo(),
       applicationName: 'One Second Diary',
-      applicationVersion: 'Version: 1.0',
+      applicationVersion: 'appVersion'.tr,
       applicationLegalese: 'Copyright © Caio Pedroso, 2021',
       context: Get.context,
     );
@@ -31,7 +31,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<String> options = ['Donate', 'About'];
+    final List<String> options = ['donate'.tr, 'about'.tr];
     return AppBar(
       automaticallyImplyLeading: false,
       title: Text(

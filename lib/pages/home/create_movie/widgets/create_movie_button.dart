@@ -27,9 +27,8 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
           context: Get.context,
           builder: (context) => CustomDialog(
             isDoubleAction: false,
-            title: 'Movie was not created!',
-            content:
-                'You need to have 2 or more recorded videos in order to create a movie',
+            title: 'movieErrorTitle'.tr,
+            content: 'movieInsufficientVideos'.tr,
             actionText: 'Ok',
             actionColor: Colors.green,
             action: () => Get.back(),
@@ -56,8 +55,8 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
             context: Get.context,
             builder: (context) => CustomDialog(
               isDoubleAction: false,
-              title: 'Movie created!',
-              content: 'Video saved in gallery in OSD-Movies folder!',
+              title: 'movieCreatedTitle'.tr,
+              content: 'movieCreatedDesc'.tr,
               actionText: 'Ok',
               actionColor: Colors.green,
               action: () => Get.back(),
@@ -69,9 +68,8 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
             context: Get.context,
             builder: (context) => CustomDialog(
               isDoubleAction: false,
-              title: 'Error copying movie to device!',
-              content:
-                  'Please try again. If the problem persists, contact the developer.',
+              title: 'movieError'.tr,
+              content: 'tryAgainMsg'.tr,
               actionText: 'Ok',
               actionColor: Colors.red,
               action: () => Get.back(),
@@ -85,9 +83,8 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
         context: Get.context,
         builder: (context) => CustomDialog(
           isDoubleAction: false,
-          title: 'Error creating movie!',
-          content:
-              'Please try again. If the problem persists, contact the developer.',
+          title: 'movieErro'.tr,
+          content: 'tryAgainMsg'.tr,
           actionText: 'Ok',
           actionColor: Colors.red,
           action: () => Get.back(),
@@ -118,7 +115,7 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
         },
         child: !isProcessing
             ? Text(
-                'Create',
+                'create'.tr,
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: MediaQuery.of(context).size.width * 0.055,
