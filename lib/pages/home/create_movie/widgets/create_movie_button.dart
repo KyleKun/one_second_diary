@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gallery_saver/gallery_saver.dart';
 import 'package:get/get.dart';
+import 'package:one_second_diary/controllers/video_count_controller.dart';
 import 'package:one_second_diary/utils/constants.dart';
 import 'package:one_second_diary/utils/custom_dialog.dart';
 import 'package:one_second_diary/utils/ffmpeg_api_wrapper.dart';
@@ -13,6 +14,7 @@ class CreateMovieButton extends StatefulWidget {
 }
 
 class _CreateMovieButtonState extends State<CreateMovieButton> {
+  VideoCountController _movieCount = Get.find();
   bool isProcessing = false;
   void _createMovie() async {
     setState(() {
@@ -39,42 +41,40 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
 
         // Creating txt that will be used with ffmpeg
         String txtPath = await Utils.writeTxt(allVideos);
-        String today = Utils.getToday();
-        String outputPath = StorageUtil.getString('appPath') +
-            'OneSecondDiary-Movie-$today.mp4';
+        String outputPath = StorageUtil.getString('moviesPath') +
+            'OneSecondDiary-Movie-${_movieCount.movieCount.value}.mp4';
 
         await executeFFmpeg(
-            '-f concat -safe 0 -i $txtPath -map 0 -c copy $outputPath');
-        // Utils().logInfo('Cache video saved at: $outputPath');
+                '-f concat -safe 0 -i $txtPath -map 0 -c copy $outputPath')
+            .then((result) {
+          if (result == 0) {
+            _movieCount.updateMovieCount();
+            showDialog(
+              context: Get.context,
+              builder: (context) => CustomDialog(
+                isDoubleAction: false,
+                title: 'movieCreatedTitle'.tr,
+                content: 'movieCreatedDesc'.tr,
+                actionText: 'Ok',
+                actionColor: Colors.green,
+                action: () => Get.back(),
+              ),
+            );
+            // Utils().logInfo('Video saved in gallery in the folder OSD-Movies!');
 
-        GallerySaver.saveVideo(outputPath, albumName: 'OSD-Movies').then((_) {
-          Utils.deleteFile(outputPath);
-          // Utils().logInfo('Video saved in gallery in the folder OSD-Movies!');
-
-          showDialog(
-            context: Get.context,
-            builder: (context) => CustomDialog(
-              isDoubleAction: false,
-              title: 'movieCreatedTitle'.tr,
-              content: 'movieCreatedDesc'.tr,
-              actionText: 'Ok',
-              actionColor: Colors.green,
-              action: () => Get.back(),
-            ),
-          );
-        }, onError: (error) {
-          // Utils().logError(error);
-          showDialog(
-            context: Get.context,
-            builder: (context) => CustomDialog(
-              isDoubleAction: false,
-              title: 'movieError'.tr,
-              content: 'tryAgainMsg'.tr,
-              actionText: 'Ok',
-              actionColor: Colors.red,
-              action: () => Get.back(),
-            ),
-          );
+          } else {
+            showDialog(
+              context: Get.context,
+              builder: (context) => CustomDialog(
+                isDoubleAction: false,
+                title: 'movieError'.tr,
+                content: 'tryAgainMsg'.tr,
+                actionText: 'Ok',
+                actionColor: Colors.red,
+                action: () => Get.back(),
+              ),
+            );
+          }
         });
       }
     } catch (e) {
@@ -83,7 +83,7 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
         context: Get.context,
         builder: (context) => CustomDialog(
           isDoubleAction: false,
-          title: 'movieErro'.tr,
+          title: 'movieError'.tr,
           content: 'tryAgainMsg'.tr,
           actionText: 'Ok',
           actionColor: Colors.red,

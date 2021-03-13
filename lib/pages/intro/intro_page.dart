@@ -12,6 +12,7 @@ class IntroPage extends StatelessWidget {
     await StorageUtil.putBool('showIntro', false);
     await StorageUtil.putBool('dailyEntry', false);
     await StorageUtil.putInt('videoCount', 0);
+    await StorageUtil.putInt('movieCount', 1);
     Get.offNamed(Routes.HOME);
   }
 
@@ -37,22 +38,20 @@ class IntroPage extends StatelessWidget {
       key: introKey,
       pages: [
         PageViewModel(
-          title: "Record 1 second everyday",
-          body:
-              "Choose a special moment of your day that you would like to remember in the future.",
+          title: 'introTitle1'.tr,
+          body: 'introDesc1'.tr,
           image: _buildImage('intro1'),
           decoration: pageDecoration,
         ),
         PageViewModel(
-          title: "Create the movie of your life",
-          body: "Generate a compilation of all your recorded videos.",
+          title: 'introTitle2'.tr,
+          body: 'introDesc2'.tr,
           image: _buildImage('intro2'),
           decoration: pageDecoration,
         ),
         PageViewModel(
-          title: "No Ads and Totally Free",
-          body:
-              "If you like the app, consider supporting the development with a donation.",
+          title: 'introTitle3'.tr,
+          body: 'introDesc3'.tr,
           image: _buildImage('intro3'),
           decoration: pageDecoration,
         ),
@@ -61,9 +60,9 @@ class IntroPage extends StatelessWidget {
       showSkipButton: true,
       skipFlex: 0,
       nextFlex: 0,
-      skip: const Text('Skip'),
+      skip: Text('skip'.tr),
       next: const Icon(Icons.arrow_forward),
-      done: const Text('Done', style: TextStyle(fontWeight: FontWeight.w600)),
+      done: Text('done'.tr, style: TextStyle(fontWeight: FontWeight.w600)),
       dotsDecorator: const DotsDecorator(
         size: Size(10.0, 10.0),
         activeColor: AppColors.mainColor,

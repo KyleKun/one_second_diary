@@ -250,9 +250,10 @@ class _RecordingPageState extends State<RecordingPage>
             child: Container(
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height,
-              child: _cameraController != null &&
-                      _cameraController.value.isInitialized &&
-                      !(orientation != NativeDeviceOrientation.landscapeLeft)
+              child: _isRecording ||
+                      (!(orientation !=
+                              NativeDeviceOrientation.landscapeLeft) &&
+                          !_isRecording)
                   ? Stack(
                       fit: StackFit.expand,
                       children: [

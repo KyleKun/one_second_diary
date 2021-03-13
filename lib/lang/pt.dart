@@ -4,8 +4,8 @@ const Map<String, String> pt = {
   'videoQuality': 'Qualidade de vídeo',
   'donate': 'Doar',
   'donateMsg':
-      'Muito obrigado por usar o app!\n\nSe desejar apoiar o desenvolvimento,\nfique à vontade para fazer uma doação ^^',
-  'donationPageTitle': 'Apoiar o desenvolvimento do app',
+      'Muito obrigado por usar o app!\n\nSe desejar apoiar o desenvolvimento, sinta-se livre para fazer uma doação ^^',
+  'donationPageTitle': 'Apoiar o desenvolvimento',
   'about': 'Sobre',
   'appVersion': 'Versão 1.0',
   'record': 'Gravar',
@@ -21,9 +21,9 @@ const Map<String, String> pt = {
       'Por favor, tente novamente. Se o problemar persistir, contate o desenvolvedor.',
   'create': 'Criar',
   'days': 'dias',
+  'day': 'dia',
   'totalRecordedTitle': 'Você já gravou:',
-  'tapBelowToGenerate':
-      'Clique no botão abaixo para\ngerar um vídeo compilado:',
+  'tapBelowToGenerate': 'Clique no botão abaixo para\njuntar seus vídeos:',
   'editQuestionTitle': 'Editar vídeo?',
   'editQuestion': 'Sua gravação anterior será apagada, deseja continuar?',
   'yes': 'Sim',
@@ -42,4 +42,14 @@ const Map<String, String> pt = {
   'saveVideo': 'Salvar vídeo',
   'discardVideoTitle': 'Descartar gravação?',
   'discardVideoDesc': 'Pressione "Sim" para gravar novamente',
+  'introTitle1': 'Grave 1 segundo todos os dias',
+  'introDesc1':
+      'Escolha um momento especial do seu dia que você gostaria de se lembrar no futuro.',
+  'introTitle2': 'Crie o filme da sua vida',
+  'introDesc2': 'Junte todos os seus vídeos com o clique de um botão',
+  'introTitle3': 'Sem anúncios e totalmente grátis',
+  'introDesc3':
+      'Se gostar do app, considere apoiar o desenvolvimento com uma doação.',
+  'skip': 'Pular',
+  'done': 'Feito',
 };

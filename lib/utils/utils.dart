@@ -162,16 +162,18 @@ class Utils {
   static void createFolder() async {
     try {
       await requestPermission(Permission.storage);
-      io.Directory directory;
+      io.Directory appDirectory;
+      io.Directory moviesDirectory;
 
       // Checks if appPath is already stored
       String appPath = StorageUtil.getString('appPath') ?? '';
+      String moviesPath = StorageUtil.getString('moviesPath') ?? '';
 
       // If it is not stored, dive into the device folders and store it properly
-      if (appPath == '') {
-        directory = await getExternalStorageDirectory();
+      if (appPath == '' || moviesPath == '') {
+        appDirectory = await getExternalStorageDirectory();
 
-        List<String> folders = directory.path.split('/');
+        List<String> folders = appDirectory.path.split('/');
         for (int i = 1; i < folders.length; i++) {
           String folder = folders[i];
           if (folder != "Android") {
@@ -180,7 +182,9 @@ class Utils {
             break;
           }
         }
-
+        // Storing appPath
+        moviesPath = appPath + "/OSD-Movies/";
+        StorageUtil.putString('moviesPath', moviesPath);
         // Storing appPath
         appPath = appPath + "/OneSecondDiary/";
         StorageUtil.putString('appPath', appPath);
@@ -189,10 +193,19 @@ class Utils {
       // Utils().logInfo('APP PATH: $appPath');
 
       // Checking if the folder really exists, if not, then create it
-      directory = io.Directory(appPath);
+      appDirectory = io.Directory(appPath);
+      moviesDirectory = io.Directory(moviesPath);
 
-      if (!await directory.exists()) {
-        await directory.create(recursive: true);
+      if (!await appDirectory.exists()) {
+        await appDirectory.create(recursive: true);
+        // Utils().logInfo("Directory created");
+        // Utils().logInfo('Final Directory path: ' + directory.path);
+      } else {
+        // Utils().logInfo("Directory already exists");
+      }
+
+      if (!await moviesDirectory.exists()) {
+        await moviesDirectory.create(recursive: true);
         // Utils().logInfo("Directory created");
         // Utils().logInfo('Final Directory path: ' + directory.path);
       } else {

@@ -14,7 +14,12 @@ class DonationPage extends StatelessWidget {
       body: Column(
         children: [
           HeartAnimation(),
-          DonationDescription(),
+          Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: MediaQuery.of(context).size.width * 0.05,
+            ),
+            child: DonationDescription(),
+          ),
           Spacer(),
           DonateButton(),
           Spacer(flex: 2),

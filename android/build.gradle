@@ -30,7 +30,7 @@ subprojects {
     project.evaluationDependsOn(':app')
 }
 
-ext.flutterFFmpegPackage  = 'video-lts'
+ext.flutterFFmpegPackage  = 'min-gpl-lts'
 
 
 task clean(type: Delete) {

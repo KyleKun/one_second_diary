@@ -81,6 +81,9 @@ class SaveButton extends StatelessWidget {
             videoCountController.updateVideoCount();
           }
 
+          // Deleting video from cache
+          Utils.deleteFile(videoPath);
+
           // Showing confirmation popup
           showDialog(
             context: Get.context,

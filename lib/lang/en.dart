@@ -21,6 +21,7 @@ const Map<String, String> en = {
       'Please try again. If the problem persists, contact the developer.',
   'create': 'Create',
   'days': 'days',
+  'day': 'day',
   'totalRecordedTitle': 'You have recorded:',
   'tapBelowToGenerate':
       'Tap the button below to generate\na single video file:',
@@ -43,4 +44,14 @@ const Map<String, String> en = {
   'saveVideo': 'Save video',
   'discardVideoTitle': 'Discard this video?',
   'discardVideoDesc': 'Press "Yes" to record again',
+  'introTitle1': 'Record 1 second everyday',
+  'introDesc1':
+      'Choose a special moment of your day that you would like to remember in the future.',
+  'introTitle2': 'Create the movie of your life',
+  'introDesc2': 'Generate a compilation of all your recorded videos.',
+  'introTitle3': 'No Ads and Totally Free',
+  'introDesc3':
+      'If you like the app, consider supporting the development with a donation.',
+  'skip': 'Skip',
+  'done': 'Done',
 };
