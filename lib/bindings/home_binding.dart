@@ -10,7 +10,6 @@ class HomeBinding extends Bindings {
   @override
   void dependencies() {
     Get.put<StorageController>(StorageController());
-    // Get.put<ResolutionController>(ResolutionController());
     Get.put<LanguageController>(LanguageController());
     Get.put<DailyEntryController>(DailyEntryController());
     Get.put<BottomAppBarIndexController>(BottomAppBarIndexController());

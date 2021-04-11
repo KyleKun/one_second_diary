@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:one_second_diary/controllers/daily_entry_controller.dart';
 import 'package:one_second_diary/controllers/lang_controller.dart';
-// import 'package:one_second_diary/controllers/resolution_controller.dart';
 import 'package:one_second_diary/controllers/video_count_controller.dart';
 import 'package:one_second_diary/routes/app_pages.dart';
 import 'package:one_second_diary/utils/custom_dialog.dart';
@@ -17,7 +16,6 @@ class SaveButton extends StatelessWidget {
   final DailyEntryController _dayController = Get.find();
   final VideoCountController _videoCountController = Get.find();
   final LanguageController _languageController = Get.find();
-  // final ResolutionController resolutionController = Get.find();
 
   // Video path from cache
   final String videoPath;
@@ -141,7 +139,6 @@ class SaveButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // To prevent user of pressing it twice
     bool _pressedSave = false;
 
     return SizedBox(
@@ -162,7 +159,7 @@ class SaveButton extends StatelessWidget {
           ),
         ),
         onPressed: () {
-          // Prevents the user of clicking it twice
+          // Prevents user from clicking it twice
           if (!_pressedSave) {
             _pressedSave = true;
             _saveVideo(context);

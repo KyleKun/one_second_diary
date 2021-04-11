@@ -3,10 +3,8 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-// import 'package:one_second_diary/controllers/resolution_controller.dart';
 import 'package:one_second_diary/routes/app_pages.dart';
 import 'package:one_second_diary/utils/custom_dialog.dart';
-// import 'package:one_second_diary/utils/shared_preferences_util.dart';
 import 'package:one_second_diary/utils/utils.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:native_device_orientation/native_device_orientation.dart';
@@ -24,17 +22,13 @@ class _RecordingPageState extends State<RecordingPage>
   bool _isRecording;
   double _recordingProgress;
 
-  // ResolutionController _resolutionController;
-
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     _isRecording = false;
     _recordingProgress = 0.0;
-    // _resolutionController = Get.find<ResolutionController>();
     _getAvailableCameras();
-    // _appPath = StorageUtil.getString('appPath');
   }
 
   @override
@@ -68,7 +62,6 @@ class _RecordingPageState extends State<RecordingPage>
 
   Future<void> _initCamera(CameraDescription description) async {
     ResolutionPreset _resolution = ResolutionPreset.high;
-    // Utils().logInfo('Camera with resolution: $_resolution');
     _cameraController = CameraController(
       description,
       _resolution,
