@@ -25,9 +25,13 @@ class IntroPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const bodyStyle = TextStyle(fontSize: 19.0);
+    const bodyStyle = TextStyle(fontSize: 19.0, color: Colors.black);
     const pageDecoration = const PageDecoration(
-      titleTextStyle: TextStyle(fontSize: 28.0, fontWeight: FontWeight.w700),
+      titleTextStyle: TextStyle(
+        fontSize: 28.0,
+        fontWeight: FontWeight.w700,
+        color: Colors.black,
+      ),
       bodyTextStyle: bodyStyle,
       descriptionPadding: EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
       pageColor: Colors.white,
@@ -60,9 +64,23 @@ class IntroPage extends StatelessWidget {
       showSkipButton: true,
       skipFlex: 0,
       nextFlex: 0,
-      skip: Text('skip'.tr),
-      next: const Icon(Icons.arrow_forward),
-      done: Text('done'.tr, style: TextStyle(fontWeight: FontWeight.w600)),
+      skip: Text(
+        'skip'.tr,
+        style: TextStyle(
+          color: Colors.black,
+        ),
+      ),
+      next: const Icon(
+        Icons.arrow_forward,
+        color: Colors.black,
+      ),
+      done: Text(
+        'done'.tr,
+        style: TextStyle(
+          fontWeight: FontWeight.w600,
+          color: Colors.black,
+        ),
+      ),
       dotsDecorator: const DotsDecorator(
         size: Size(10.0, 10.0),
         activeColor: AppColors.mainColor,

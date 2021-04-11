@@ -29,7 +29,6 @@ dependencies:
   flutter_ffmpeg: 
   permission_handler:
   tapioca:
-  gallery_saver:
   salomon_bottom_bar:
   introduction_screen:
   avatar_glow:
@@ -37,6 +36,8 @@ dependencies:
   rive:
   native_device_orientation:
   video_player:
+  about:
+  share:
   # logger:
   # device_info:
   # device_preview: ^0.6.2-beta
@@ -53,6 +54,9 @@ flutter:
     - assets/
     - assets/fonts/
     - assets/images/
+    - CHANGELOG.md
+    - TODO.md
+    - TODO_pt.md
 
   fonts:
     - family: Magic

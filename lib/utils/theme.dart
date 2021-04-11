@@ -25,7 +25,8 @@ class ThemeService {
 
   ThemeMode get theme => isDarkTheme() ? ThemeMode.dark : ThemeMode.light;
 
-  bool isDarkTheme() => StorageUtil.getBool(_key) ?? false;
+  // Dark Mode is true by default
+  bool isDarkTheme() => StorageUtil.getBool(_key) ?? true;
 
   _saveTheme(bool isDarkMode) => StorageUtil.putBool(_key, isDarkMode);
 

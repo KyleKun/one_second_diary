@@ -5,6 +5,7 @@ import 'package:one_second_diary/pages/save_video/widgets/save_button.dart';
 import 'package:one_second_diary/pages/save_video/widgets/video_properties.dart';
 import 'package:one_second_diary/routes/app_pages.dart';
 import 'package:one_second_diary/utils/custom_dialog.dart';
+import 'package:one_second_diary/utils/utils.dart';
 import 'package:video_player/video_player.dart';
 
 class SaveVideoPage extends StatefulWidget {
@@ -53,7 +54,9 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
     }
   }
 
-  void closePopupAndPushToRecording() {
+  void closePopupAndPushToRecording(String cacheVideoPath) {
+    // Deleting video from cache
+    Utils.deleteFile(cacheVideoPath);
     Get.back();
     Get.offNamed(Routes.RECORDING);
   }
@@ -94,7 +97,7 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
             content: 'discardVideoDesc'.tr,
             actionText: 'yes'.tr,
             actionColor: Colors.green,
-            action: () => closePopupAndPushToRecording(),
+            action: () => closePopupAndPushToRecording(_tempVideoPath),
             action2Text: 'no'.tr,
             action2Color: Colors.red,
             action2: () => Get.back(),

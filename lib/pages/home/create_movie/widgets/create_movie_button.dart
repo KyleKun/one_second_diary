@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:gallery_saver/gallery_saver.dart';
 import 'package:get/get.dart';
 import 'package:one_second_diary/controllers/video_count_controller.dart';
 import 'package:one_second_diary/utils/constants.dart';
@@ -42,7 +41,7 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
         // Creating txt that will be used with ffmpeg
         String txtPath = await Utils.writeTxt(allVideos);
         String outputPath = StorageUtil.getString('moviesPath') +
-            'OneSecondDiary-Movie-${_movieCount.movieCount.value}.mp4';
+            'OneSecondDiary-Movie-${_movieCount.movieCount.value}-${Utils.getToday()}.mp4';
 
         await executeFFmpeg(
                 '-f concat -safe 0 -i $txtPath -map 0 -c copy $outputPath')

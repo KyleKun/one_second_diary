@@ -32,7 +32,7 @@ const Map<String, String> en = {
   'no': 'No',
   'edit': 'Edit',
   'emojiHappy': 'Amazing!\nSee you tomorrow!',
-  'emojiSad': 'Waiting for\nyour recording...',
+  'emojiSad': 'Waiting for\nyour recording ...',
   'rotateDevice': 'Rotate your device to the left',
   'recordingErrorTitle': 'Error recording video!',
   'save': 'Save',
@@ -54,4 +54,10 @@ const Map<String, String> en = {
       'If you like the app, consider supporting the development with a donation.',
   'skip': 'Skip',
   'done': 'Done',
+  'futureUpdates': 'Future Updates',
+  'licenses': 'Licenses',
+  'contact': 'Contact',
+  'share': 'Share',
+  'shareMsg':
+      'Check out this app: https://play.google.com/store/apps/details?id=com.kylekun.one_second_diary',
 };

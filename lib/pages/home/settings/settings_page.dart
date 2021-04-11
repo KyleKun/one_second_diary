@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:one_second_diary/pages/home/settings/widgets/contact_button.dart';
 import 'package:one_second_diary/pages/home/settings/widgets/language_chooser.dart';
+import 'widgets/about_button.dart';
 import 'widgets/switch_theme.dart';
 
 class SettingPage extends StatelessWidget {
@@ -12,7 +14,8 @@ class SettingPage extends StatelessWidget {
         children: [
           SwitchThemeComponent(),
           LanguageChooser(),
-          // ResolutionChooser(),
+          ContactButton(),
+          AboutButton(),
         ],
       ),
     );

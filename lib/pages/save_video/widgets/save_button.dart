@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:one_second_diary/controllers/daily_entry_controller.dart';
+import 'package:one_second_diary/controllers/lang_controller.dart';
 // import 'package:one_second_diary/controllers/resolution_controller.dart';
 import 'package:one_second_diary/controllers/video_count_controller.dart';
 import 'package:one_second_diary/routes/app_pages.dart';
@@ -13,17 +14,14 @@ class SaveButton extends StatelessWidget {
   SaveButton({this.videoPath, this.videoController});
 
   // Finding controllers
-  final DailyEntryController dayController = Get.find();
-  final VideoCountController videoCountController = Get.find();
+  final DailyEntryController _dayController = Get.find();
+  final VideoCountController _videoCountController = Get.find();
+  final LanguageController _languageController = Get.find();
   // final ResolutionController resolutionController = Get.find();
 
   // Video path from cache
   final String videoPath;
   final videoController;
-
-  // Properties to edit the video with current date
-  final String today =
-      Utils.getToday(isBr: Get.deviceLocale.countryCode == 'BR');
 
   // Position x to render date
   final int x = 1120; // HiRes: 1690
@@ -48,7 +46,10 @@ class SaveButton extends StatelessWidget {
         Content(videoPath),
         [
           TapiocaBall.textOverlay(
-            today,
+            // Date in the proper format
+            Utils.getToday(
+              isBr: _languageController.selectedLanguage.value == 'pt',
+            ),
             x,
             y,
             size,
@@ -74,11 +75,11 @@ class SaveButton extends StatelessWidget {
         (_) {
           // Utils().logInfo('Finished editing');
 
-          dayController.updateDaily();
+          _dayController.updateDaily();
 
           // Updates the controller: videoCount += 1
           if (!isEdit) {
-            videoCountController.updateVideoCount();
+            _videoCountController.updateVideoCount();
           }
 
           // Deleting video from cache

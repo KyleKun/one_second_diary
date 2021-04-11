@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:one_second_diary/routes/app_pages.dart';
+import 'package:share/share.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   CustomAppBar({Key key})
@@ -14,24 +15,24 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     if (option == 'donate'.tr) {
       Get.toNamed(Routes.DONATION);
     }
-    if (option == 'about'.tr) {
-      _showAboutPopup();
+    if (option == 'share'.tr) {
+      Share.share('shareMsg'.tr);
     }
   }
 
-  void _showAboutPopup() {
-    showAboutDialog(
-      applicationIcon: FlutterLogo(),
-      applicationName: 'One Second Diary',
-      applicationVersion: 'appVersion'.tr,
-      applicationLegalese: 'Copyright © Caio Pedroso, 2021',
-      context: Get.context,
-    );
-  }
+  // void _showAboutPopup() {
+  //   showAboutDialog(
+  //     applicationIcon: FlutterLogo(),
+  //     applicationName: 'One Second Diary',
+  //     applicationVersion: 'appVersion'.tr,
+  //     applicationLegalese: 'Copyright © Caio Pedroso, 2021',
+  //     context: Get.context,
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {
-    final List<String> options = ['donate'.tr, 'about'.tr];
+    final List<String> options = ['donate'.tr, 'share'.tr];
     return AppBar(
       automaticallyImplyLeading: false,
       title: Text(

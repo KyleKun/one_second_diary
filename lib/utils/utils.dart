@@ -170,7 +170,7 @@ class Utils {
       String moviesPath = StorageUtil.getString('moviesPath') ?? '';
 
       // If it is not stored, dive into the device folders and store it properly
-      if (appPath == '' || moviesPath == '') {
+      if (appPath == '') {
         appDirectory = await getExternalStorageDirectory();
 
         List<String> folders = appDirectory.path.split('/');
@@ -182,15 +182,17 @@ class Utils {
             break;
           }
         }
-        // Storing appPath
-        moviesPath = appPath + "/OSD-Movies/";
-        StorageUtil.putString('moviesPath', moviesPath);
+
         // Storing appPath
         appPath = appPath + "/OneSecondDiary/";
         StorageUtil.putString('appPath', appPath);
       }
 
-      // Utils().logInfo('APP PATH: $appPath');
+      if (moviesPath == '') {
+        // Storing moviesPath
+        moviesPath = appPath + "/OSD-Movies/";
+        StorageUtil.putString('moviesPath', moviesPath);
+      }
 
       // Checking if the folder really exists, if not, then create it
       appDirectory = io.Directory(appPath);
