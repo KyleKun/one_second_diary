@@ -31,20 +31,20 @@ class VideoCountCard extends GetView<VideoCountController> {
             Positioned(
               top: 10.0,
               right: 10.0,
-              child: Container(
-                width: MediaQuery.of(context).size.width * 0.07,
-                height: MediaQuery.of(context).size.width * 0.07,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.white,
-                ),
-                child: IconButton(
-                  onPressed: () => Utils.updateVideoCount(),
-                  icon: Icon(
+              child: GestureDetector(
+                onTap: () => Utils.updateVideoCount(),
+                child: Container(
+                  width: MediaQuery.of(context).size.width * 0.07,
+                  height: MediaQuery.of(context).size.width * 0.07,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.white,
+                  ),
+                  child: Icon(
                     Icons.refresh,
+                    size: MediaQuery.of(context).size.width * 0.05,
                     color: AppColors.mainColor,
                   ),
-                  iconSize: MediaQuery.of(context).size.width * 0.05,
                 ),
               ),
             ),

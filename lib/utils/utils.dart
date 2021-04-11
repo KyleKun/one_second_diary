@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:one_second_diary/controllers/video_count_controller.dart';
+import 'package:one_second_diary/utils/constants.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 // import 'package:tapioca/tapioca.dart';
@@ -131,7 +132,7 @@ class Utils {
 
     // Getting video names
     for (int i = 0; i < _files.length; i++) {
-      String _fileName = _files[i].toString();
+      String _fileName = _files[i].path;
       if (_fileName.contains('.mp4')) {
         String temp = _fileName.split('.').first;
         temp = temp.split('/').last;
@@ -139,6 +140,7 @@ class Utils {
       }
     }
 
+    print(mp4Files);
     return mp4Files;
   }
 
@@ -147,15 +149,29 @@ class Utils {
     final allFiles = getAllMp4Files();
     VideoCountController _videoCountController = Get.find();
 
-    _videoCountController.setVideoCount(allFiles.length);
+    final int numberOfVideos = allFiles.length;
 
     final snackBar = SnackBar(
+      margin: EdgeInsets.all(30.0),
+      behavior: SnackBarBehavior.floating,
+      backgroundColor: Colors.black87.withOpacity(0.8),
+      duration: Duration(seconds: 3),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(
+          Radius.circular(10),
+        ),
+      ),
       content: Text(
-        '${allFiles.length} ' + 'foundVideos'.tr,
+        '$numberOfVideos ' + 'foundVideos'.tr,
+        textAlign: TextAlign.center,
+        style: TextStyle(color: Colors.white),
       ),
     );
 
     ScaffoldMessenger.of(Get.context).showSnackBar(snackBar);
+
+    // Setting videoCount number
+    _videoCountController.setVideoCount(numberOfVideos);
   }
 
   // Returns a list of all mp4 files names ordered by date to be written on a txt file

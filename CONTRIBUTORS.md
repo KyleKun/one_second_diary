@@ -7,5 +7,5 @@
 ## Testers & Feedback
 - Augusto Vesco
 - Bianca Pedroso
-- Janaína Souza
+- Jana Souza
 - Samuel Santos
