@@ -23,7 +23,7 @@ const Map<String, String> es = {
   'create': 'Crear',
   'days': 'días',
   'day': 'día',
-  'totalRecordTitle': 'Has grabado',
+  'totalRecordedTitle': 'Has grabado',
   'tapBelowToGenerate':
       'Presiona el siguiente botón para generar\nun archivo de video único.',
   'editQuestionTitle': '¿Deseas editar el video?',
