@@ -128,9 +128,12 @@ class Utils {
 
     // Getting video names
     for (int i = 0; i < _files.length; i++) {
-      String temp = _files[i].toString().split('.').first;
-      temp = temp.split('/').last;
-      allFiles.add(temp);
+      String _fileName = _files[i].toString();
+      if (_fileName.contains('.mp4')) {
+        String temp = _fileName.split('.').first;
+        temp = temp.split('/').last;
+        allFiles.add(temp);
+      }
     }
 
     // Converting to Date in order to sort
@@ -170,27 +173,25 @@ class Utils {
       String moviesPath = StorageUtil.getString('moviesPath') ?? '';
 
       // If it is not stored, dive into the device folders and store it properly
-      if (appPath == '') {
+      if (appPath == '' || moviesPath == '') {
+        String rootPath = '';
         appDirectory = await getExternalStorageDirectory();
 
         List<String> folders = appDirectory.path.split('/');
         for (int i = 1; i < folders.length; i++) {
           String folder = folders[i];
           if (folder != "Android") {
-            appPath += "/" + folder;
+            rootPath += "/" + folder;
           } else {
             break;
           }
         }
 
         // Storing appPath
-        appPath = appPath + "/OneSecondDiary/";
+        appPath = rootPath + "/OneSecondDiary/";
         StorageUtil.putString('appPath', appPath);
-      }
-
-      if (moviesPath == '') {
         // Storing moviesPath
-        moviesPath = appPath + "/OSD-Movies/";
+        moviesPath = rootPath + "/OSD-Movies/";
         StorageUtil.putString('moviesPath', moviesPath);
       }
 

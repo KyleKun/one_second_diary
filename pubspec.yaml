@@ -55,6 +55,7 @@ flutter:
     - assets/fonts/
     - assets/images/
     - CHANGELOG.md
+    - CONTRIBUTORS.md
     - TODO.md
     - TODO_pt.md
 

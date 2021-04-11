@@ -1,5 +1,5 @@
 const Map<String, String> es = {
-  'darkMode': 'Modo oscuro',
+  'darkMode': 'Modo Oscuro',
   'language': 'Idioma',
   'videoQuality': 'Calidad de video',
   'donate': 'Donar',
@@ -60,4 +60,5 @@ const Map<String, String> es = {
   'share': 'Compartir',
   'shareMsg':
       'Mira esta aplicación: https://play.google.com/store/apps/details?id=com.kylekun.one_second_diary',
+  'thanksTo': 'Agradecimientos',
 };

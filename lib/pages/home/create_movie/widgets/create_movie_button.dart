@@ -20,6 +20,9 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
       isProcessing = true;
     });
     try {
+      // Creates the folder if it is not created yet
+      Utils.createFolder();
+
       final allVideos = Utils.getAllVideosFromStorage();
 
       // Needs more than 1 video to create movie

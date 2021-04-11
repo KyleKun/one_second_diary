@@ -25,6 +25,11 @@ class AboutButton extends StatelessWidget {
           title: const Text('Changelog'),
           filename: 'CHANGELOG.md',
         ),
+        MarkdownPageListTile(
+          icon: Icon(Icons.favorite),
+          title: Text('thanksTo'.tr),
+          filename: 'CONTRIBUTORS.md',
+        ),
         LicensesPageListTile(title: Text('licenses'.tr)),
       ],
       applicationIcon: const SizedBox(
