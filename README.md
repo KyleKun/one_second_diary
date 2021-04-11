@@ -14,7 +14,7 @@ Record one second of your day, everyday.
 
 ## About
 
-This app was inspired by this (TED Talk)[https://www.ted.com/talks/cesar_kuriyama_one_second_every_day].
+This app was inspired by this [TED Talk](https://www.ted.com/talks/cesar_kuriyama_one_second_every_day).
 
 After installing many apps and not being satisfied with any of them, I decided to create my own, featuring the two aspects that I wanted the most: Minimalist and 100% Private. 
 
@@ -30,7 +30,9 @@ Then, after a couple months or even years:
 
 
 Last but not least:
-    Markup : It comes with Dark Mode set as default 😉
+  ```
+   It comes with Dark Mode set as default 😉
+  ```
 
 
 ## Next Steps
@@ -39,15 +41,15 @@ If you have any suggestions or want to contribute, feel free to open a PR or con
 
 The future plans include:
 
-[] Login with Google account
-[] Integration with Google Drive for videos backup
-[] Select videos from gallery
-[] Edit any day by selecting it from calendar
-[] Record special days with up to 10 seconds duration
-[] Change date color and format in the videos
-[] Add a title to the video 
-[] Add a short description to the video as subtitles
-[] Generate custom movies with selected videos only
+- [ ] Login with Google account
+- [ ] Integration with Google Drive for videos backup
+- [ ] Select videos from gallery
+- [ ] Edit any day by selecting it from calendar
+- [ ] Record special days with up to 10 seconds duration
+- [ ] Change date color and format in the videos
+- [ ] Add a title to the video 
+- [ ] Add a short description to the video as subtitles
+- [ ] Generate custom movies with selected videos only
 
 ## Support my work
 
