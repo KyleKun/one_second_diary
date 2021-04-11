@@ -16,4 +16,11 @@ class VideoCountController extends GetxController {
     movieCount.refresh();
     StorageUtil.putInt('movieCount', movieCount.value);
   }
+
+  // Used on refresh button
+  void setVideoCount(int count) {
+    videoCount.value = count;
+    videoCount.refresh();
+    StorageUtil.putInt('videoCount', videoCount.value);
+  }
 }

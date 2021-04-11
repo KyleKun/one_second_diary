@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:one_second_diary/controllers/video_count_controller.dart';
 import 'package:one_second_diary/utils/constants.dart';
+import 'package:one_second_diary/utils/utils.dart';
 
 class VideoCountCard extends GetView<VideoCountController> {
   @override
@@ -37,10 +38,13 @@ class VideoCountCard extends GetView<VideoCountController> {
                   shape: BoxShape.circle,
                   color: Colors.white,
                 ),
-                child: Icon(
-                  Icons.emoji_events,
-                  size: MediaQuery.of(context).size.width * 0.05,
-                  color: AppColors.mainColor,
+                child: IconButton(
+                  onPressed: () => Utils.updateVideoCount(),
+                  icon: Icon(
+                    Icons.refresh,
+                    color: AppColors.mainColor,
+                  ),
+                  iconSize: MediaQuery.of(context).size.width * 0.05,
                 ),
               ),
             ),

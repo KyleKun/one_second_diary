@@ -1,5 +1,8 @@
 // import 'package:flutter/material.dart';
 // import 'package:flutter/services.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:one_second_diary/controllers/video_count_controller.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 // import 'package:tapioca/tapioca.dart';
@@ -118,13 +121,13 @@ class Utils {
     return txtPath;
   }
 
-  static List<String> getAllVideosFromStorage() {
+  static List<String> getAllMp4Files() {
     final directory = io.Directory(StorageUtil.getString('appPath'));
 
     List<io.FileSystemEntity> _files;
 
     _files = directory.listSync(recursive: true, followLinks: false);
-    List<String> allFiles = [];
+    List<String> mp4Files = [];
 
     // Getting video names
     for (int i = 0; i < _files.length; i++) {
@@ -132,9 +135,32 @@ class Utils {
       if (_fileName.contains('.mp4')) {
         String temp = _fileName.split('.').first;
         temp = temp.split('/').last;
-        allFiles.add(temp);
+        mp4Files.add(temp);
       }
     }
+
+    return mp4Files;
+  }
+
+  // Updates the counter based on the amount of mp4 files inside the app folder
+  static void updateVideoCount() {
+    final allFiles = getAllMp4Files();
+    VideoCountController _videoCountController = Get.find();
+
+    _videoCountController.setVideoCount(allFiles.length);
+
+    final snackBar = SnackBar(
+      content: Text(
+        '${allFiles.length} ' + 'foundVideos'.tr,
+      ),
+    );
+
+    ScaffoldMessenger.of(Get.context).showSnackBar(snackBar);
+  }
+
+  // Returns a list of all mp4 files names ordered by date to be written on a txt file
+  static List<String> getAllVideosFromStorage() {
+    final allFiles = getAllMp4Files();
 
     // Converting to Date in order to sort
     List<DateTime> allDates = [];

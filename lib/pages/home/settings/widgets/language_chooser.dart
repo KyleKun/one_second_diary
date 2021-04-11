@@ -5,7 +5,7 @@ import 'package:one_second_diary/lang/translation_service.dart';
 
 class LanguageChooser extends StatelessWidget {
   final String title = 'language'.tr;
-  final LanguageController _languageController = Get.find<LanguageController>();
+  final LanguageController _languageController = Get.find();
 
   @override
   Widget build(BuildContext context) {
