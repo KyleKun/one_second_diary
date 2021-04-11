@@ -5,7 +5,7 @@
 
 Record one second of your day, everyday.
 
-<img src="/screenshots/Screenshot_01.png" width="250" height="500"> <img src="/screenshots/Screenshot_02.png" width="250" height="500">
+<img src="/screenshots/Screenshot_1.png" width="250" height="500"> <img src="/screenshots/Screenshot_2.png" width="250" height="500">
 
 ## Download now
 
