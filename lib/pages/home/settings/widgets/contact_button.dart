@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:one_second_diary/utils/constants.dart';
 import 'package:one_second_diary/utils/utils.dart';
 
 class ContactButton extends StatelessWidget {
@@ -23,8 +24,7 @@ class ContactButton extends StatelessWidget {
                 ),
                 IconButton(
                   icon: Icon(Icons.email),
-                  onPressed: () =>
-                      Utils.launchUrl('mailto:kylekundev@gmail.com'),
+                  onPressed: () => Utils.launchUrl(Constants.email),
                 ),
               ],
             ),

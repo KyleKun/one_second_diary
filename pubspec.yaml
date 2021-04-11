@@ -39,8 +39,6 @@ dependencies:
   about:
   share:
   # logger:
-  # device_info:
-  # device_preview: ^0.6.2-beta
 
 dev_dependencies:
   flutter_test:

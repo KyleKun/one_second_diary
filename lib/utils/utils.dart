@@ -3,7 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:one_second_diary/controllers/video_count_controller.dart';
-import 'package:one_second_diary/utils/constants.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 // import 'package:tapioca/tapioca.dart';
@@ -11,7 +10,6 @@ import 'package:url_launcher/url_launcher.dart';
 // import 'package:logger/logger.dart';
 import 'dart:io' as io;
 import 'shared_preferences_util.dart';
-// import 'package:device_info/device_info.dart';
 
 class Utils {
   // final logger = Logger(
@@ -176,31 +174,33 @@ class Utils {
 
   // Returns a list of all mp4 files names ordered by date to be written on a txt file
   static List<String> getAllVideosFromStorage() {
-    final allFiles = getAllMp4Files();
-
-    // Converting to Date in order to sort
-    List<DateTime> allDates = [];
-    for (int i = 0; i < allFiles.length; i++) {
-      allDates.add(DateTime.parse(allFiles[i]));
-    }
-
-    List<DateTime> orderedDates = Utils.orderDates(allDates);
-
-    // Converting back to string
     List<String> allVideos = [];
-    for (int i = 0; i < orderedDates.length; i++) {
-      // Adding a leading zero on Days and Months <= 9
-      String day = orderedDates[i].day <= 9
-          ? "0${orderedDates[i].day}"
-          : "${orderedDates[i].day}";
-      String month = orderedDates[i].month <= 9
-          ? "0${orderedDates[i].month}"
-          : "${orderedDates[i].month}";
-      String year = "${orderedDates[i].year}";
 
-      allVideos.add('$year-$month-$day.mp4');
-    }
+    try {
+      final allFiles = getAllMp4Files();
 
+      // Converting to Date in order to sort
+      List<DateTime> allDates = [];
+      for (int i = 0; i < allFiles.length; i++) {
+        allDates.add(DateTime.parse(allFiles[i]));
+      }
+
+      List<DateTime> orderedDates = Utils.orderDates(allDates);
+
+      // Converting back to string
+      for (int i = 0; i < orderedDates.length; i++) {
+        // Adding a leading zero on Days and Months <= 9
+        String day = orderedDates[i].day <= 9
+            ? "0${orderedDates[i].day}"
+            : "${orderedDates[i].day}";
+        String month = orderedDates[i].month <= 9
+            ? "0${orderedDates[i].month}"
+            : "${orderedDates[i].month}";
+        String year = "${orderedDates[i].year}";
+
+        allVideos.add('$year-$month-$day.mp4');
+      }
+    } catch (e) {}
     return allVideos;
   }
 
@@ -260,21 +260,6 @@ class Utils {
       // Utils().logError('$e');
     }
   }
-
-  // // If android version is >= 11, the ResolutionPreset on camera will be 1920x1080
-  // // Otherwise, 1280x720, this prevents Mp4Compose from crashing on older devices because unsupported codecs
-  // static Future<bool> shouldUseHigherCodec() async {
-  //   DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-  //   AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
-
-  //   int androidSdkVersion = androidInfo.version.sdkInt;
-
-  //   if (androidSdkVersion >= 30) {
-  //     return true;
-  //   } else {
-  //     return false;
-  //   }
-  // }
 
   // Used only in an alternative way to edit video using ffmpeg
   // static Future<String> copyFontToStorage() async {

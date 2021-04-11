@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:one_second_diary/utils/constants.dart';
 import 'package:one_second_diary/utils/utils.dart';
 
 class BackupTutorial extends StatelessWidget {
@@ -22,8 +23,7 @@ class BackupTutorial extends StatelessWidget {
                 ),
                 IconButton(
                   icon: Icon(Icons.backup),
-                  onPressed: () =>
-                      Utils.launchUrl('https://youtu.be/DTvKktkQ4MU'),
+                  onPressed: () => Utils.launchUrl(Constants.backupTutorialUrl),
                 ),
               ],
             ),

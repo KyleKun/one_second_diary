@@ -6,7 +6,6 @@ import 'package:one_second_diary/utils/theme.dart';
 import 'lang/translation_service.dart';
 import 'routes/app_pages.dart';
 import 'utils/shared_preferences_util.dart';
-// import 'package:device_preview/device_preview.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -15,11 +14,6 @@ Future<void> main() async {
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
       .then((_) {
     runApp(
-      // DevicePreview(
-      //   //child: MyApp(),
-      //   enabled: true,
-      //   builder: (context) => MyApp(),
-      // ),
       MyApp(),
     );
   });
