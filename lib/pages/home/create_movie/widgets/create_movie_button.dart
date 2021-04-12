@@ -6,6 +6,7 @@ import 'package:one_second_diary/utils/custom_dialog.dart';
 import 'package:one_second_diary/utils/ffmpeg_api_wrapper.dart';
 import 'package:one_second_diary/utils/utils.dart';
 import 'package:one_second_diary/utils/shared_preferences_util.dart';
+import 'package:open_file/open_file.dart';
 
 class CreateMovieButton extends StatefulWidget {
   @override
@@ -15,6 +16,12 @@ class CreateMovieButton extends StatefulWidget {
 class _CreateMovieButtonState extends State<CreateMovieButton> {
   VideoCountController _movieCount = Get.find();
   bool isProcessing = false;
+
+  void _openVideo(String filePath) async {
+    Get.back();
+    await OpenFile.open(filePath);
+  }
+
   void _createMovie() async {
     setState(() {
       isProcessing = true;
@@ -57,7 +64,7 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
                 content: 'movieCreatedDesc'.tr,
                 actionText: 'Ok',
                 actionColor: Colors.green,
-                action: () => Get.back(),
+                action: () => _openVideo(outputPath),
               ),
             );
             // Utils().logInfo('Video saved in gallery in the folder OSD-Movies!');

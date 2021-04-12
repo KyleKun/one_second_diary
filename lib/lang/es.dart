@@ -15,8 +15,7 @@ const Map<String, String> es = {
   'movieInsufficientVideos':
       'Necesitas tener dos o más videos grabados para crear una película.',
   'movieCreatedTitle': '¡Tu película se ha creado exitosamente!',
-  'movieCreatedDesc':
-      'La película ha sido guardada en tu galería en la carpeta OSD-Movies.',
+  'movieCreatedDesc': 'La película ha sido guardada en la carpeta OSD-Movies.',
   'movieError': 'Ha ocurrido un error guardando la película.',
   'tryAgainMsg':
       'Inténtalo nuevamente, por favor. Si el problema persiste, contacta al desarrollador.',

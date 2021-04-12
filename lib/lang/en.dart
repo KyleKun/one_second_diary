@@ -15,7 +15,7 @@ const Map<String, String> en = {
   'movieInsufficientVideos':
       'You need to have 2 or more recorded videos in order to create a movie',
   'movieCreatedTitle': 'Movie created!',
-  'movieCreatedDesc': 'Movie saved in gallery in OSD-Movies folder',
+  'movieCreatedDesc': 'Movie saved to Storage inside OSD-Movies folder',
   'movieError': 'Error saving the movie!',
   'tryAgainMsg':
       'Please try again. If the problem persists, contact the developer.',

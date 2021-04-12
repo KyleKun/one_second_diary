@@ -15,7 +15,8 @@ const Map<String, String> pt = {
   'movieInsufficientVideos':
       'Você precisa ter no mínimo 2 vídeos gravados para criar um filme',
   'movieCreatedTitle': 'Filme criado!',
-  'movieCreatedDesc': 'O filme foi salvo na galeria na pasta OSD-Movies',
+  'movieCreatedDesc':
+      'O filme foi salvo no Armazenamento Interno na pasta OSD-Movies',
   'movieError': 'Erro ao salvar o filme!',
   'tryAgainMsg':
       'Por favor, tente novamente. Se o problemar persistir, contate o desenvolvedor.',

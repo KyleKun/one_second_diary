@@ -38,6 +38,7 @@ dependencies:
   video_player:
   about:
   share:
+  open_file:
   # logger:
 
 dev_dependencies:
