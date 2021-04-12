@@ -20,9 +20,6 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
       isProcessing = true;
     });
     try {
-      // Creates the folder if it is not created yet
-      Utils.createFolder();
-
       final allVideos = Utils.getAllVideosFromStorage();
 
       // Needs more than 1 video to create movie
@@ -40,11 +37,12 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
         );
       } else {
         // Utils().logInfo('Creating movie with the following files: $allVideos');
+        String today = Utils.getToday();
 
         // Creating txt that will be used with ffmpeg
         String txtPath = await Utils.writeTxt(allVideos);
         String outputPath = StorageUtil.getString('moviesPath') +
-            'OneSecondDiary-Movie-${_movieCount.movieCount.value}-${Utils.getToday()}.mp4';
+            'OneSecondDiary-Movie-${_movieCount.movieCount.value}-$today.mp4';
 
         await executeFFmpeg(
                 '-f concat -safe 0 -i $txtPath -map 0 -c copy $outputPath')

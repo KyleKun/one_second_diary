@@ -183,7 +183,7 @@ class _RecordingPageState extends State<RecordingPage>
     try {
       return _cameraController.stopVideoRecording();
     } on CameraException catch (e) {
-      // Utils().logError(e);
+      print('$e');
       return null;
     }
   }

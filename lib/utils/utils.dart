@@ -138,7 +138,6 @@ class Utils {
       }
     }
 
-    print(mp4Files);
     return mp4Files;
   }
 
