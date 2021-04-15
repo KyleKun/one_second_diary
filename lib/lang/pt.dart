@@ -61,4 +61,5 @@ const Map<String, String> pt = {
       'Confira este app: https://play.google.com/store/apps/details?id=com.kylekun.one_second_diary',
   'thanksTo': 'Agradecimentos',
   'foundVideos': 'vídeos encontrados!',
+  'foundVideo': 'vídeo encontrado!',
 };
