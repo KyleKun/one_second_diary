@@ -1,5 +1,8 @@
 // import 'package:flutter/material.dart';
 // import 'package:flutter/services.dart';
+// import 'package:logger/logger.dart';
+import 'dart:io' as io;
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:one_second_diary/controllers/video_count_controller.dart';
@@ -7,8 +10,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 // import 'package:tapioca/tapioca.dart';
 import 'package:url_launcher/url_launcher.dart';
-// import 'package:logger/logger.dart';
-import 'dart:io' as io;
+
 import 'shared_preferences_util.dart';
 
 class Utils {
@@ -159,7 +161,9 @@ class Utils {
         ),
       ),
       content: Text(
-        '$numberOfVideos ' + 'foundVideos'.tr,
+        (numberOfVideos != 1)
+            ? '$numberOfVideos ' + 'foundVideos'.tr
+            : '$numberOfVideos ' + 'foundVideo'.tr,
         textAlign: TextAlign.center,
         style: TextStyle(color: Colors.white),
       ),
