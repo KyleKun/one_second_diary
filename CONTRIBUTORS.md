@@ -10,3 +10,7 @@
 - Gabriel Oliveira
 - Jana Souza
 - Samuel Santos
+
+## Developers
+- Allen (@oiolong)
+- Joseph (@jsfsarkis)
