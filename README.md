@@ -1,5 +1,7 @@
 [![MIT Licence](https://badges.frapsoft.com/os/mit/mit.svg?v=103)](https://opensource.org/licenses/mit-license.php)
 [![Flutter](https://img.shields.io/badge/Made%20with-Flutter-blue.svg)](https://flutter.dev/)
+![GitHub stars](https://img.shields.io/github/stars/KyleKun/one_second_diary?style=flat)
+[![GitHub forks](https://img.shields.io/github/forks/KyleKun/one_second_diary?style=flat)](https://github.com/KyleKun/one_second_diary/fork)
 
 # One Second Diary
 
@@ -7,7 +9,7 @@ Record one second of your day, everyday.
 
 <img src="/screenshots/Screenshot_1.png" width="250" height="500"> <img src="/screenshots/Screenshot_2.png" width="250" height="500">
 
-## Download Now - Coming Soon
+## Download Now
 
 <a href='https://play.google.com/store/apps/details?id=com.kylekun.one_second_diary&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png'/></a>
 
