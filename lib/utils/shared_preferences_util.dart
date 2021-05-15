@@ -1,8 +1,8 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 class StorageUtil {
-  static StorageUtil _storageUtil;
-  static SharedPreferences _preferences;
+  static StorageUtil? _storageUtil;
+  static SharedPreferences? _preferences;
 
   static Future<StorageUtil> getInstance() async {
     if (_storageUtil == null) {
@@ -10,7 +10,7 @@ class StorageUtil {
       await secureStorage._init();
       _storageUtil = secureStorage;
     }
-    return _storageUtil;
+    return _storageUtil!;
   }
 
   StorageUtil._();
@@ -21,36 +21,33 @@ class StorageUtil {
   // get string
   static String getString(String key, {String defValue = ''}) {
     if (_preferences == null) return defValue;
-    return _preferences.getString(key) ?? defValue;
+    return _preferences!.getString(key) ?? defValue;
   }
 
   // put string
   static Future<bool> putString(String key, String value) {
-    if (_preferences == null) return null;
-    return _preferences.setString(key, value);
+    return _preferences!.setString(key, value);
   }
 
   // get int
-  static int getInt(String key) {
+  static int? getInt(String key) {
     if (_preferences == null) return null;
-    return _preferences.getInt(key);
+    return _preferences!.getInt(key);
   }
 
   // put int
   static Future<bool> putInt(String key, int value) {
-    if (_preferences == null) return null;
-    return _preferences.setInt(key, value);
+    return _preferences!.setInt(key, value);
   }
 
   // get bool
-  static bool getBool(String key) {
+  static bool? getBool(String key) {
     if (_preferences == null) return null;
-    return _preferences.getBool(key);
+    return _preferences!.getBool(key);
   }
 
   // put bool
   static Future<bool> putBool(String key, bool value) {
-    if (_preferences == null) return null;
-    return _preferences.setBool(key, value);
+    return _preferences!.setBool(key, value);
   }
 }

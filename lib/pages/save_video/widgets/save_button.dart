@@ -10,7 +10,7 @@ import 'package:one_second_diary/utils/utils.dart';
 import 'package:tapioca/tapioca.dart';
 
 class SaveButton extends StatelessWidget {
-  SaveButton({this.videoPath, this.videoController});
+  SaveButton({required this.videoPath, this.videoController});
 
   // Finding controllers
   final DailyEntryController _dayController = Get.find();
@@ -85,14 +85,14 @@ class SaveButton extends StatelessWidget {
 
           // Showing confirmation popup
           showDialog(
-            context: Get.context,
+            context: Get.context!,
             builder: (context) => CustomDialog(
               isDoubleAction: false,
               title: 'videoSavedTitle'.tr,
               content: 'videoSavedDesc'.tr,
               actionText: 'Ok',
               actionColor: Colors.green,
-              action: () => Get.offAllNamed(Routes.HOME),
+              action: Get.offAllNamed(Routes.HOME),
             ),
           );
         },
@@ -124,14 +124,14 @@ class SaveButton extends StatelessWidget {
       // Utils().logError('$e');
       // Showing error popup
       showDialog(
-        context: Get.context,
+        context: Get.context!,
         builder: (context) => CustomDialog(
           isDoubleAction: false,
           title: 'saveVideoErrorTitle'.tr,
           content: 'tryAgainMsg'.tr,
           actionText: 'Ok',
           actionColor: Colors.red,
-          action: () => Get.offAllNamed(Routes.HOME),
+          action: Get.offAllNamed(Routes.HOME),
         ),
       );
     }

@@ -25,17 +25,17 @@ class EditDailyButton extends StatelessWidget {
         ),
         onPressed: () {
           showDialog(
-            context: Get.context,
+            context: Get.context!,
             builder: (context) => CustomDialog(
               isDoubleAction: true,
               title: 'editQuestionTitle'.tr,
               content: 'editQuestion'.tr,
               actionText: 'yes'.tr,
               actionColor: Colors.green,
-              action: () => closePopupAndPushToRecording(),
+              action: closePopupAndPushToRecording(),
               action2Text: 'no'.tr,
               action2Color: Colors.red,
-              action2: () => Get.back(),
+              action2: Get.back(),
             ),
           );
         },

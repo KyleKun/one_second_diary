@@ -14,7 +14,7 @@ class SaveVideoPage extends StatefulWidget {
 }
 
 class _SaveVideoPageState extends State<SaveVideoPage> {
-  String _tempVideoPath;
+  late String _tempVideoPath;
   double _opacity = 1.0;
   var _videoController;
 
@@ -90,17 +90,17 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
     return WillPopScope(
       onWillPop: () async {
         showDialog(
-          context: Get.context,
+          context: Get.context!,
           builder: (context) => CustomDialog(
             isDoubleAction: true,
             title: 'discardVideoTitle'.tr,
             content: 'discardVideoDesc'.tr,
             actionText: 'yes'.tr,
             actionColor: Colors.green,
-            action: () => closePopupAndPushToRecording(_tempVideoPath),
+            action: closePopupAndPushToRecording(_tempVideoPath),
             action2Text: 'no'.tr,
             action2Color: Colors.red,
-            action2: () => Get.back(),
+            action2: Get.back(),
           ),
         );
         return true;

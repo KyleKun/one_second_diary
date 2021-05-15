@@ -23,8 +23,8 @@ class LanguageController extends GetxController {
   RxString _getLanguage() {
     if (StorageUtil.getString('lang').length != 2) {
       // Utils().logInfo('Language Not Found!');
-      StorageUtil.putString('lang', Get.deviceLocale.languageCode);
-      Get.updateLocale(Get.deviceLocale);
+      StorageUtil.putString('lang', Get.deviceLocale!.languageCode);
+      Get.updateLocale(Get.deviceLocale!);
     } else {
       Locale locale = new Locale(StorageUtil.getString('lang'));
       Get.updateLocale(locale);

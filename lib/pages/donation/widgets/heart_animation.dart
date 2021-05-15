@@ -8,7 +8,7 @@ class HeartAnimation extends StatefulWidget {
 }
 
 class _HeartAnimationState extends State<HeartAnimation> {
-  Artboard _riveArtboard;
+  late Artboard _riveArtboard;
 
   @override
   void initState() {
@@ -17,16 +17,6 @@ class _HeartAnimationState extends State<HeartAnimation> {
     // CC license, it was adapted
     rootBundle.load('assets/images/heart.riv').then(
       (data) async {
-
-/*
-        final file = RiveFile();
-        if (file.import(data)) {
-          final artboard = file.mainArtboard;
-          artboard.addController(SimpleAnimation('heart'));
-          setState(() => _riveArtboard = artboard);
-        }
-*/
-
         final file = RiveFile.import(data);
         // The artboard is the root of the animation and gets drawn in the
         // Rive widget.
@@ -35,9 +25,6 @@ class _HeartAnimationState extends State<HeartAnimation> {
         // artboard.We store a reference to it so we can toggle playback.
         artboard.addController(SimpleAnimation('heart'));
         setState(() => _riveArtboard = artboard);
-
-
-
       },
     );
   }
@@ -48,12 +35,10 @@ class _HeartAnimationState extends State<HeartAnimation> {
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height * 0.5,
       child: Center(
-        child: _riveArtboard == null
-            ? const SizedBox()
-            : Rive(
-                artboard: _riveArtboard,
-                fit: BoxFit.contain,
-              ),
+        child: Rive(
+          artboard: _riveArtboard,
+          fit: BoxFit.contain,
+        ),
       ),
     );
   }

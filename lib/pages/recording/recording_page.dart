@@ -16,16 +16,16 @@ class RecordingPage extends StatefulWidget {
 
 class _RecordingPageState extends State<RecordingPage>
     with WidgetsBindingObserver, TickerProviderStateMixin {
-  CameraController _cameraController;
-  List<CameraDescription> _availableCameras;
+  late CameraController _cameraController;
+  late List<CameraDescription> _availableCameras;
 
-  bool _isRecording;
-  double _recordingProgress;
+  late bool _isRecording;
+  late double _recordingProgress;
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addObserver(this);
+    WidgetsBinding.instance!.addObserver(this);
     _isRecording = false;
     _recordingProgress = 0.0;
     _getAvailableCameras();
@@ -33,7 +33,7 @@ class _RecordingPageState extends State<RecordingPage>
 
   @override
   void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
+    WidgetsBinding.instance!.removeObserver(this);
     _cameraController.dispose();
     super.dispose();
   }
@@ -81,12 +81,10 @@ class _RecordingPageState extends State<RecordingPage>
     }
   }
 
-  void _handleCameraLens({var desc, bool toggle}) async {
+  void _handleCameraLens({var desc, required bool toggle}) async {
     final lensDirection = desc.lensDirection;
 
-    if (_cameraController != null) {
-      await _cameraController.dispose();
-    }
+    await _cameraController.dispose();
 
     if (toggle) {
       CameraDescription newDescription;
@@ -98,11 +96,7 @@ class _RecordingPageState extends State<RecordingPage>
             description.lensDirection == CameraLensDirection.front);
       }
 
-      if (newDescription != null) {
-        _initCamera(newDescription);
-      } else {
-        // Utils().logWarning('Asked camera not available');
-      }
+      _initCamera(newDescription);
     } else {
       if (desc != null) {
         _initCamera(desc);
@@ -127,27 +121,23 @@ class _RecordingPageState extends State<RecordingPage>
 
           try {
             stopVideoRecording().then((file) {
-              if (file != null) {
-                // Utils().logInfo('Video recorded to ${file.path}');
+              // Utils().logInfo('Video recorded to ${file.path}');
 
-                Get.offNamed(
-                  Routes.SAVE_VIDEO,
-                  arguments: file.path,
-                );
-              } else {
-                print('Error, file is null');
-              }
+              Get.offNamed(
+                Routes.SAVE_VIDEO,
+                arguments: file!.path,
+              );
             });
           } catch (e) {
             showDialog(
-              context: Get.context,
+              context: Get.context!,
               builder: (context) => CustomDialog(
                 isDoubleAction: false,
                 title: 'recordingErrorTitle'.tr,
                 content: 'tryAgainMsg'.tr,
                 actionText: 'Ok',
                 actionColor: Colors.red,
-                action: () => Get.back(),
+                action: Get.back(),
               ),
             );
           }
@@ -175,7 +165,7 @@ class _RecordingPageState extends State<RecordingPage>
     }
   }
 
-  Future<XFile> stopVideoRecording() async {
+  Future<XFile?> stopVideoRecording() async {
     if (!_cameraController.value.isRecordingVideo) {
       return null;
     }

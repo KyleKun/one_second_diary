@@ -32,14 +32,14 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
       // Needs more than 1 video to create movie
       if (allVideos.length < 2) {
         showDialog(
-          context: Get.context,
+          context: Get.context!,
           builder: (context) => CustomDialog(
             isDoubleAction: false,
             title: 'movieErrorTitle'.tr,
             content: 'movieInsufficientVideos'.tr,
             actionText: 'Ok',
             actionColor: Colors.green,
-            action: () => Get.back(),
+            action: Get.back(),
           ),
         );
       } else {
@@ -57,28 +57,28 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
           if (result == 0) {
             _movieCount.updateMovieCount();
             showDialog(
-              context: Get.context,
+              context: Get.context!,
               builder: (context) => CustomDialog(
                 isDoubleAction: false,
                 title: 'movieCreatedTitle'.tr,
                 content: 'movieCreatedDesc'.tr,
                 actionText: 'Ok',
                 actionColor: Colors.green,
-                action: () => _openVideo(outputPath),
+                action: _openVideo(outputPath),
               ),
             );
             // Utils().logInfo('Video saved in gallery in the folder OSD-Movies!');
 
           } else {
             showDialog(
-              context: Get.context,
+              context: Get.context!,
               builder: (context) => CustomDialog(
                 isDoubleAction: false,
                 title: 'movieError'.tr,
                 content: 'tryAgainMsg'.tr,
                 actionText: 'Ok',
                 actionColor: Colors.red,
-                action: () => Get.back(),
+                action: Get.back(),
               ),
             );
           }
@@ -87,14 +87,14 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
     } catch (e) {
       // Utils().logError('$e');
       showDialog(
-        context: Get.context,
+        context: Get.context!,
         builder: (context) => CustomDialog(
           isDoubleAction: false,
           title: 'movieError'.tr,
           content: 'tryAgainMsg'.tr,
           actionText: 'Ok',
           actionColor: Colors.red,
-          action: () => Get.back(),
+          action: Get.back(),
         ),
       );
     } finally {

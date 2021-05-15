@@ -10,7 +10,8 @@ class DailyEntryPage extends GetView<DailyEntryController> {
   @override
   Widget build(BuildContext context) {
     return Obx(
-      () => controller.dailyEntry.value ? _dailyComplete() : _dailyIncomplete(),
+      () =>
+          controller.dailyEntry.value! ? _dailyComplete() : _dailyIncomplete(),
     );
   }
 

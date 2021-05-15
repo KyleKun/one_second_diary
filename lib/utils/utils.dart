@@ -169,7 +169,7 @@ class Utils {
       ),
     );
 
-    ScaffoldMessenger.of(Get.context).showSnackBar(snackBar);
+    ScaffoldMessenger.of(Get.context!).showSnackBar(snackBar);
 
     // Setting videoCount number
     _videoCountController.setVideoCount(numberOfVideos);
@@ -210,19 +210,19 @@ class Utils {
   static void createFolder() async {
     try {
       await requestPermission(Permission.storage);
-      io.Directory appDirectory;
+      io.Directory? appDirectory;
       io.Directory moviesDirectory;
 
       // Checks if appPath is already stored
-      String appPath = StorageUtil.getString('appPath') ?? '';
-      String moviesPath = StorageUtil.getString('moviesPath') ?? '';
+      String appPath = StorageUtil.getString('appPath');
+      String moviesPath = StorageUtil.getString('moviesPath');
 
       // If it is not stored, dive into the device folders and store it properly
       if (appPath == '' || moviesPath == '') {
         String rootPath = '';
         appDirectory = await getExternalStorageDirectory();
 
-        List<String> folders = appDirectory.path.split('/');
+        List<String> folders = appDirectory!.path.split('/');
         for (int i = 1; i < folders.length; i++) {
           String folder = folders[i];
           if (folder != "Android") {
