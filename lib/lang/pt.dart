@@ -30,7 +30,7 @@ const Map<String, String> pt = {
   'yes': 'Sim',
   'no': 'Não',
   'edit': 'Editar',
-  'emojiHappy': 'Incrível!\nAté amanhã!',
+  'emojiHappy': 'Incrível!\nAté amanhã.',
   'emojiSad': 'Aguardando\nsua gravação ...',
   'rotateDevice': 'Gire para a esquerda',
   'recordingErrorTitle': 'Erro ao gravar o vídeo!',
