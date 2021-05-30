@@ -5,7 +5,7 @@
 
 # One Second Diary
 
-Record one second of your day, everyday.
+Record one second of your day, everyday. [WATCH DEMO](https://youtu.be/aufjN9URLFI)
 
 <img src="/screenshots/Screenshot_1.png" width="250" height="500"> <img src="/screenshots/Screenshot_2.png" width="250" height="500">
 
