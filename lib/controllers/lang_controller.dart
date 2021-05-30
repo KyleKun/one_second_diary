@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:one_second_diary/utils/shared_preferences_util.dart';
+import '../utils/shared_preferences_util.dart';
 // import 'package:one_second_diary/utils/utils.dart';
 
 class LanguageController extends GetxController {
@@ -10,26 +10,26 @@ class LanguageController extends GetxController {
     super.onInit();
   }
 
-  var selectedLanguage = StorageUtil.getString('lang').obs;
+  var selectedLanguage = SharedPrefsUtil.getString('lang').obs;
 
   set changeLanguage(String lang) {
-    Locale locale = new Locale(lang);
+    final Locale locale = Locale(lang);
     Get.updateLocale(locale);
-    StorageUtil.putString('lang', lang);
+    SharedPrefsUtil.putString('lang', lang);
     selectedLanguage.value = lang;
     selectedLanguage.refresh();
   }
 
   RxString _getLanguage() {
-    if (StorageUtil.getString('lang').length != 2) {
+    if (SharedPrefsUtil.getString('lang').length != 2) {
       // Utils().logInfo('Language Not Found!');
-      StorageUtil.putString('lang', Get.deviceLocale!.languageCode);
+      SharedPrefsUtil.putString('lang', Get.deviceLocale!.languageCode);
       Get.updateLocale(Get.deviceLocale!);
     } else {
-      Locale locale = new Locale(StorageUtil.getString('lang'));
+      final Locale locale = Locale(SharedPrefsUtil.getString('lang'));
       Get.updateLocale(locale);
     }
     // Utils().logInfo('Selected language: ${StorageUtil.getString('lang')}');
-    return StorageUtil.getString('lang').obs;
+    return SharedPrefsUtil.getString('lang').obs;
   }
 }

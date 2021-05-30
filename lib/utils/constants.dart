@@ -5,6 +5,51 @@ class Constants {
   static const String backupTutorialUrl = 'https://youtu.be/DTvKktkQ4MU';
   static const String email = 'mailto:kylekundev@gmail.com';
   static const String githubUrl = 'https://github.com/KyleKun/one_second_diary';
+
+  static const enMonths = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+  ];
+
+  static const ptMonths = [
+    'Janeiro',
+    'Fevereiro',
+    'Março',
+    'Abril',
+    'Maio',
+    'Junho',
+    'Julho',
+    'Agosto',
+    'Setembro',
+    'Outubro',
+    'Novembro',
+    'Dezembro',
+  ];
+
+  static const esMonths = [
+    'Enero',
+    'Febrero',
+    'Marzo',
+    'Abril',
+    'Mayo',
+    'Junio',
+    'Julio',
+    'Agosto',
+    'Septiembre',
+    'Octubre',
+    'Noviembre',
+    'Diciembre',
+  ];
 }
 
 class AppColors {

@@ -1,26 +1,26 @@
 import 'package:get/get.dart';
-import 'package:one_second_diary/utils/shared_preferences_util.dart';
+import '../utils/shared_preferences_util.dart';
 
 class VideoCountController extends GetxController {
-  final Rx<int> videoCount = StorageUtil.getInt('videoCount')!.obs;
-  final Rx<int> movieCount = StorageUtil.getInt('movieCount')!.obs;
+  final Rx<int> videoCount = SharedPrefsUtil.getInt('videoCount')!.obs;
+  final Rx<int> movieCount = SharedPrefsUtil.getInt('movieCount')!.obs;
 
   void updateVideoCount() {
     videoCount.value++;
     videoCount.refresh();
-    StorageUtil.putInt('videoCount', videoCount.value);
+    SharedPrefsUtil.putInt('videoCount', videoCount.value);
   }
 
   void updateMovieCount() {
     movieCount.value++;
     movieCount.refresh();
-    StorageUtil.putInt('movieCount', movieCount.value);
+    SharedPrefsUtil.putInt('movieCount', movieCount.value);
   }
 
   // Used on refresh button
   void setVideoCount(int count) {
     videoCount.value = count;
     videoCount.refresh();
-    StorageUtil.putInt('videoCount', videoCount.value);
+    SharedPrefsUtil.putInt('videoCount', videoCount.value);
   }
 }

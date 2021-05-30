@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:one_second_diary/controllers/video_count_controller.dart';
-import 'package:one_second_diary/utils/constants.dart';
-import 'package:one_second_diary/utils/custom_dialog.dart';
-import 'package:one_second_diary/utils/ffmpeg_api_wrapper.dart';
-import 'package:one_second_diary/utils/utils.dart';
-import 'package:one_second_diary/utils/shared_preferences_util.dart';
 import 'package:open_file/open_file.dart';
+
+import '../../../../controllers/video_count_controller.dart';
+import '../../../../utils/constants.dart';
+import '../../../../utils/custom_dialog.dart';
+import '../../../../utils/date_format_utils.dart';
+import '../../../../utils/ffmpeg_api_wrapper.dart';
+import '../../../../utils/shared_preferences_util.dart';
+import '../../../../utils/storage_utils.dart';
+import '../../../../utils/utils.dart';
 
 class CreateMovieButton extends StatefulWidget {
   @override
@@ -14,7 +17,7 @@ class CreateMovieButton extends StatefulWidget {
 }
 
 class _CreateMovieButtonState extends State<CreateMovieButton> {
-  VideoCountController _movieCount = Get.find();
+  final VideoCountController _movieCount = Get.find();
   bool isProcessing = false;
 
   void _openVideo(String filePath) async {
@@ -23,6 +26,9 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
   }
 
   void _createMovie() async {
+    // Creates the folder if it is not created yet
+    StorageUtils.createFolder();
+
     setState(() {
       isProcessing = true;
     });
@@ -32,6 +38,7 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
       // Needs more than 1 video to create movie
       if (allVideos.length < 2) {
         showDialog(
+          barrierDismissible: false,
           context: Get.context!,
           builder: (context) => CustomDialog(
             isDoubleAction: false,
@@ -39,17 +46,19 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
             content: 'movieInsufficientVideos'.tr,
             actionText: 'Ok',
             actionColor: Colors.green,
-            action: Get.back(),
+            action: () => Get.back(),
           ),
         );
       } else {
         // Utils().logInfo('Creating movie with the following files: $allVideos');
-        String today = Utils.getToday();
+        final String today = DateFormatUtils.getToday();
 
         // Creating txt that will be used with ffmpeg
-        String txtPath = await Utils.writeTxt(allVideos);
-        String outputPath = StorageUtil.getString('moviesPath') +
-            'OneSecondDiary-Movie-${_movieCount.movieCount.value}-$today.mp4';
+        final String txtPath = await Utils.writeTxt(allVideos);
+        // Utils().logInfo('Saved txt');
+        final String outputPath =
+            '${SharedPrefsUtil.getString('moviesPath')}OneSecondDiary-Movie-${_movieCount.movieCount.value}-$today.mp4';
+        // Utils().logInfo('It will be saved in: $outputPath');
 
         await executeFFmpeg(
                 '-f concat -safe 0 -i $txtPath -map 0 -c copy $outputPath')
@@ -57,6 +66,7 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
           if (result == 0) {
             _movieCount.updateMovieCount();
             showDialog(
+              barrierDismissible: false,
               context: Get.context!,
               builder: (context) => CustomDialog(
                 isDoubleAction: false,
@@ -64,21 +74,23 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
                 content: 'movieCreatedDesc'.tr,
                 actionText: 'Ok',
                 actionColor: Colors.green,
-                action: _openVideo(outputPath),
+                action: () => _openVideo(outputPath),
               ),
             );
             // Utils().logInfo('Video saved in gallery in the folder OSD-Movies!');
 
           } else {
+            // Utils().logError('$result');
             showDialog(
+              barrierDismissible: false,
               context: Get.context!,
               builder: (context) => CustomDialog(
                 isDoubleAction: false,
                 title: 'movieError'.tr,
-                content: 'tryAgainMsg'.tr,
+                content: '${'tryAgainMsg'.tr}\nCode error: $result',
                 actionText: 'Ok',
                 actionColor: Colors.red,
-                action: Get.back(),
+                action: () => Get.back(),
               ),
             );
           }
@@ -87,14 +99,15 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
     } catch (e) {
       // Utils().logError('$e');
       showDialog(
+        barrierDismissible: false,
         context: Get.context!,
         builder: (context) => CustomDialog(
           isDoubleAction: false,
           title: 'movieError'.tr,
-          content: 'tryAgainMsg'.tr,
+          content: '${'tryAgainMsg'.tr}\n\nError: ${e.toString()}',
           actionText: 'Ok',
           actionColor: Colors.red,
-          action: Get.back(),
+          action: () => Get.back(),
         ),
       );
     } finally {
@@ -128,8 +141,8 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
                   fontSize: MediaQuery.of(context).size.width * 0.055,
                 ),
               )
-            : CircularProgressIndicator(
-                valueColor: new AlwaysStoppedAnimation<Color>(
+            : const CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(
                   Colors.white,
                 ),
               ),

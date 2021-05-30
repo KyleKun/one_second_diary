@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:one_second_diary/routes/app_pages.dart';
-import 'package:one_second_diary/utils/constants.dart';
-import 'package:one_second_diary/utils/custom_dialog.dart';
+import '../../../../routes/app_pages.dart';
+import '../../../../utils/constants.dart';
+import '../../../../utils/custom_dialog.dart';
 
 class EditDailyButton extends StatelessWidget {
   void closePopupAndPushToRecording() {
@@ -25,6 +25,7 @@ class EditDailyButton extends StatelessWidget {
         ),
         onPressed: () {
           showDialog(
+            barrierDismissible: false,
             context: Get.context!,
             builder: (context) => CustomDialog(
               isDoubleAction: true,
@@ -32,10 +33,10 @@ class EditDailyButton extends StatelessWidget {
               content: 'editQuestion'.tr,
               actionText: 'yes'.tr,
               actionColor: Colors.green,
-              action: closePopupAndPushToRecording(),
+              action: () => closePopupAndPushToRecording(),
               action2Text: 'no'.tr,
               action2Color: Colors.red,
-              action2: Get.back(),
+              action2: () => Get.back(),
             ),
           );
         },

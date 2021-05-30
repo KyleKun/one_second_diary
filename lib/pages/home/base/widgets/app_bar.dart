@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:one_second_diary/routes/app_pages.dart';
 import 'package:share/share.dart';
+
+import '../../../../routes/app_pages.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   CustomAppBar({Key? key})
-      : preferredSize = Size.fromHeight(60.0),
+      : preferredSize = const Size.fromHeight(60.0),
         super(key: key);
 
   @override
@@ -19,16 +20,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       Share.share('shareMsg'.tr);
     }
   }
-
-  // void _showAboutPopup() {
-  //   showAboutDialog(
-  //     applicationIcon: FlutterLogo(),
-  //     applicationName: 'One Second Diary',
-  //     applicationVersion: 'appVersion'.tr,
-  //     applicationLegalese: 'Copyright © Caio Pedroso, 2021',
-  //     context: Get.context,
-  //   );
-  // }
 
   @override
   Widget build(BuildContext context) {

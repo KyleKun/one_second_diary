@@ -24,9 +24,9 @@ import 'package:flutter_ffmpeg/flutter_ffmpeg.dart';
 import 'package:flutter_ffmpeg/media_information.dart';
 import 'package:flutter_ffmpeg/statistics.dart';
 
-final FlutterFFmpegConfig _flutterFFmpegConfig = new FlutterFFmpegConfig();
-final FlutterFFmpeg _flutterFFmpeg = new FlutterFFmpeg();
-final FlutterFFprobe _flutterFFprobe = new FlutterFFprobe();
+final FlutterFFmpegConfig _flutterFFmpegConfig = FlutterFFmpegConfig();
+final FlutterFFmpeg _flutterFFmpeg = FlutterFFmpeg();
+final FlutterFFprobe _flutterFFprobe = FlutterFFprobe();
 
 void enableLogCallback(LogCallback callback) {
   _flutterFFmpegConfig.enableLogCallback(callback);

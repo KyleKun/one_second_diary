@@ -1,8 +1,8 @@
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:one_second_diary/routes/app_pages.dart';
-import 'package:one_second_diary/utils/constants.dart';
+import '../../../../routes/app_pages.dart';
+import '../../../../utils/constants.dart';
 
 class RecordDailyButton extends StatelessWidget {
   @override
@@ -16,7 +16,7 @@ class RecordDailyButton extends StatelessWidget {
         child: ElevatedButton(
           style: ElevatedButton.styleFrom(
             elevation: 8.0,
-            shape: CircleBorder(),
+            shape: const CircleBorder(),
             primary: AppColors.green,
           ),
           onPressed: () {

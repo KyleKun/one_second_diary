@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+
 import 'widgets/create_movie_button.dart';
 import 'widgets/video_count_card.dart';
-import 'package:get/get.dart';
 
 class CreateMoviePage extends StatelessWidget {
   @override
@@ -9,7 +10,7 @@ class CreateMoviePage extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
-        SizedBox(),
+        const SizedBox(),
         Text(
           'totalRecordedTitle'.tr,
           style: TextStyle(fontSize: MediaQuery.of(context).size.width * 0.07),
@@ -23,7 +24,7 @@ class CreateMoviePage extends StatelessWidget {
           textAlign: TextAlign.center,
         ),
         CreateMovieButton(),
-        SizedBox(),
+        const SizedBox(),
       ],
     );
   }

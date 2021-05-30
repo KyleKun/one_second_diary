@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:one_second_diary/controllers/lang_controller.dart';
-import 'package:one_second_diary/lang/translation_service.dart';
+import '../../../../controllers/lang_controller.dart';
+import '../../../../lang/translation_service.dart';
 
 class LanguageChooser extends StatelessWidget {
   final String title = 'language'.tr;
@@ -12,7 +12,7 @@ class LanguageChooser extends StatelessWidget {
     return Column(
       children: [
         Container(
-          padding: EdgeInsets.symmetric(horizontal: 15.0),
+          padding: const EdgeInsets.symmetric(horizontal: 15.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -33,7 +33,7 @@ class LanguageChooser extends StatelessWidget {
                 items: TranslationService.languages.map(
                   (LanguageModel _language) {
                     return DropdownMenuItem<String>(
-                      child: new Text(
+                      child: Text(
                         _language.language,
                         style: TextStyle(
                           fontSize: MediaQuery.of(context).size.width * 0.04,
@@ -47,7 +47,7 @@ class LanguageChooser extends StatelessWidget {
             ],
           ),
         ),
-        Divider(),
+        const Divider(),
       ],
     );
   }

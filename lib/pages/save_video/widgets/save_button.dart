@@ -1,70 +1,87 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:one_second_diary/controllers/daily_entry_controller.dart';
-import 'package:one_second_diary/controllers/lang_controller.dart';
-import 'package:one_second_diary/controllers/video_count_controller.dart';
-import 'package:one_second_diary/routes/app_pages.dart';
-import 'package:one_second_diary/utils/custom_dialog.dart';
-import 'package:one_second_diary/utils/shared_preferences_util.dart';
-import 'package:one_second_diary/utils/utils.dart';
 import 'package:tapioca/tapioca.dart';
 
-class SaveButton extends StatelessWidget {
-  SaveButton({required this.videoPath, this.videoController});
+import '../../../controllers/daily_entry_controller.dart';
+import '../../../controllers/video_count_controller.dart';
+import '../../../routes/app_pages.dart';
+import '../../../utils/custom_dialog.dart';
+import '../../../utils/date_format_utils.dart';
+import '../../../utils/shared_preferences_util.dart';
+import '../../../utils/storage_utils.dart';
+// import '../../../utils/utils.dart';
+
+class SaveButton extends StatefulWidget {
+  SaveButton({
+    required this.videoPath,
+    required this.videoController,
+    required this.dateColor,
+    required this.dateFormat,
+    required this.isTextDate,
+  });
 
   // Finding controllers
-  final DailyEntryController _dayController = Get.find();
-  final VideoCountController _videoCountController = Get.find();
-  final LanguageController _languageController = Get.find();
-
-  // Video path from cache
   final String videoPath;
   final videoController;
+  final Color dateColor;
+  final String dateFormat;
+  final bool isTextDate;
 
-  // Position x to render date
-  final int x = 1120; // HiRes: 1690
-  // Text size
-  final int size = 25; // HiRes: 35
-  final int y = 20;
-  final Color color = Colors.black;
+  @override
+  _SaveButtonState createState() => _SaveButtonState();
+}
 
-  // Edit the video, saves it in OneSecondDiary's folder and delete it from cache
+class _SaveButtonState extends State<SaveButton> {
+  bool isProcessing = false;
+
+  final DailyEntryController _dayController = Get.find();
+
+  final VideoCountController _videoCountController = Get.find();
+
   void _saveVideo(BuildContext context) async {
+    setState(() {
+      isProcessing = true;
+    });
     // Used to not increment videoCount controller
     bool isEdit = false;
+
+    // Position y to render date
+    final int y = widget.isTextDate ? 660 : 20; // HiRes: 1000 : 20
+    // Position x to render date
+    final int x = widget.isTextDate ? 32 : 1120; // HiRes: 50 : 1690
+    // Text size
+    const int size = 25; // HiRes: 35
 
     try {
       // Utils().logInfo('Saving video...');
 
       // Creates the folder if it is not created yet
-      Utils.createFolder();
+      StorageUtils.createFolder();
 
       // Setting editing properties
-      Cup cup = Cup(
-        Content(videoPath),
+      final Cup cup = Cup(
+        Content(widget.videoPath),
         [
           TapiocaBall.textOverlay(
             // Date in the proper format
-            Utils.getToday(
-              isBr: _languageController.selectedLanguage.value == 'pt',
-            ),
+            widget.dateFormat,
             x,
             y,
             size,
-            color,
+            widget.dateColor,
           ),
         ],
       );
 
       // Path to save the final video
-      String finalPath =
-          StorageUtil.getString('appPath') + Utils.getToday() + '.mp4';
+      final String finalPath =
+          '${SharedPrefsUtil.getString('appPath')}${DateFormatUtils.getToday()}.mp4';
 
       // Check if video already exists and delete it if so (Edit daily feature)
-      if (Utils.checkFileExists(finalPath)) {
+      if (StorageUtils.checkFileExists(finalPath)) {
         isEdit = true;
         // Utils().logWarning('File already exists!');
-        Utils.deleteFile(finalPath);
+        StorageUtils.deleteFile(finalPath);
         // Utils().logWarning('Old file deleted!');
       }
 
@@ -81,10 +98,16 @@ class SaveButton extends StatelessWidget {
           }
 
           // Deleting video from cache
-          Utils.deleteFile(videoPath);
+          StorageUtils.deleteFile(widget.videoPath);
+
+          // Stop loading animation
+          setState(() {
+            isProcessing = false;
+          });
 
           // Showing confirmation popup
           showDialog(
+            barrierDismissible: false,
             context: Get.context!,
             builder: (context) => CustomDialog(
               isDoubleAction: false,
@@ -92,7 +115,7 @@ class SaveButton extends StatelessWidget {
               content: 'videoSavedDesc'.tr,
               actionText: 'Ok',
               actionColor: Colors.green,
-              action: Get.offAllNamed(Routes.HOME),
+              action: () => Get.offAllNamed(Routes.HOME),
             ),
           );
         },
@@ -121,17 +144,24 @@ class SaveButton extends StatelessWidget {
       // });
 
     } catch (e) {
+      // Deleting video from cache
+      StorageUtils.deleteFile(widget.videoPath);
+
+      setState(() {
+        isProcessing = false;
+      });
       // Utils().logError('$e');
       // Showing error popup
       showDialog(
+        barrierDismissible: false,
         context: Get.context!,
         builder: (context) => CustomDialog(
           isDoubleAction: false,
           title: 'saveVideoErrorTitle'.tr,
-          content: 'tryAgainMsg'.tr,
+          content: '${'tryAgainMsg'.tr}\n\nError: ${e.toString()}',
           actionText: 'Ok',
           actionColor: Colors.red,
-          action: Get.offAllNamed(Routes.HOME),
+          action: () => Get.offAllNamed(Routes.HOME),
         ),
       );
     }
@@ -143,7 +173,7 @@ class SaveButton extends StatelessWidget {
 
     return SizedBox(
       width: MediaQuery.of(context).size.width * 0.45,
-      height: MediaQuery.of(context).size.height * 0.1,
+      height: MediaQuery.of(context).size.height * 0.08,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
           elevation: 5.0,
@@ -151,13 +181,19 @@ class SaveButton extends StatelessWidget {
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(80.0)),
           primary: Colors.green,
         ),
-        child: Text(
-          'save'.tr,
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: MediaQuery.of(context).size.width * 0.06,
-          ),
-        ),
+        child: !isProcessing
+            ? Text(
+                'save'.tr,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: MediaQuery.of(context).size.width * 0.07,
+                ),
+              )
+            : const CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(
+                  Colors.white,
+                ),
+              ),
         onPressed: () {
           // Prevents user from clicking it twice
           if (!_pressedSave) {

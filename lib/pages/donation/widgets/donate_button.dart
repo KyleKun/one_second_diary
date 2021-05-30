@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:one_second_diary/utils/constants.dart';
-import 'package:one_second_diary/utils/utils.dart';
 import 'package:get/get.dart';
+
+import '../../../utils/constants.dart';
+import '../../../utils/utils.dart';
 
 class DonateButton extends StatelessWidget {
   @override

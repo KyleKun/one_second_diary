@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:introduction_screen/introduction_screen.dart';
-import 'package:one_second_diary/routes/app_pages.dart';
-import 'package:one_second_diary/utils/constants.dart';
-import 'package:one_second_diary/utils/shared_preferences_util.dart';
+import '../../routes/app_pages.dart';
+import '../../utils/constants.dart';
+import '../../utils/shared_preferences_util.dart';
 
 class IntroPage extends StatelessWidget {
   final introKey = GlobalKey<IntroductionScreenState>();
 
   void _onIntroEnd() async {
-    StorageUtil.putString('appPath', '');
-    StorageUtil.putString('moviesPath', '');
-    await StorageUtil.putBool('showIntro', false);
-    await StorageUtil.putBool('dailyEntry', false);
-    await StorageUtil.putInt('videoCount', 0);
-    await StorageUtil.putInt('movieCount', 1);
+    SharedPrefsUtil.putString('appPath', '');
+    SharedPrefsUtil.putString('moviesPath', '');
+    await SharedPrefsUtil.putBool('showIntro', false);
+    await SharedPrefsUtil.putBool('dailyEntry', false);
+    await SharedPrefsUtil.putInt('videoCount', 0);
+    await SharedPrefsUtil.putInt('movieCount', 1);
     Get.offNamed(Routes.HOME);
   }
 
@@ -28,7 +28,7 @@ class IntroPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const bodyStyle = TextStyle(fontSize: 19.0, color: Colors.black);
-    const pageDecoration = const PageDecoration(
+    const pageDecoration = PageDecoration(
       titleTextStyle: TextStyle(
         fontSize: 28.0,
         fontWeight: FontWeight.w700,
@@ -42,6 +42,7 @@ class IntroPage extends StatelessWidget {
 
     return IntroductionScreen(
       key: introKey,
+      globalBackgroundColor: Colors.white,
       pages: [
         PageViewModel(
           title: 'introTitle1'.tr,
@@ -68,7 +69,7 @@ class IntroPage extends StatelessWidget {
       nextFlex: 0,
       skip: Text(
         'skip'.tr,
-        style: TextStyle(
+        style: const TextStyle(
           color: Colors.black,
         ),
       ),
@@ -78,11 +79,12 @@ class IntroPage extends StatelessWidget {
       ),
       done: Text(
         'done'.tr,
-        style: TextStyle(
+        style: const TextStyle(
           fontWeight: FontWeight.w600,
           color: Colors.black,
         ),
       ),
+      dotsContainerDecorator: const BoxDecoration(color: Colors.white),
       dotsDecorator: const DotsDecorator(
         size: Size(10.0, 10.0),
         activeColor: AppColors.mainColor,

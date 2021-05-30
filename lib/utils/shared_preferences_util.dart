@@ -1,19 +1,19 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
-class StorageUtil {
-  static StorageUtil? _storageUtil;
+class SharedPrefsUtil {
+  static SharedPrefsUtil? _storageUtil;
   static SharedPreferences? _preferences;
 
-  static Future<StorageUtil> getInstance() async {
+  static Future<SharedPrefsUtil> getInstance() async {
     if (_storageUtil == null) {
-      var secureStorage = StorageUtil._();
+      final secureStorage = SharedPrefsUtil._();
       await secureStorage._init();
       _storageUtil = secureStorage;
     }
     return _storageUtil!;
   }
 
-  StorageUtil._();
+  SharedPrefsUtil._();
   Future _init() async {
     _preferences = await SharedPreferences.getInstance();
   }
@@ -31,6 +31,7 @@ class StorageUtil {
 
   // get int
   static int? getInt(String key) {
+    // ignore: avoid_returning_null
     if (_preferences == null) return null;
     return _preferences!.getInt(key);
   }
@@ -42,6 +43,7 @@ class StorageUtil {
 
   // get bool
   static bool? getBool(String key) {
+    // ignore: avoid_returning_null
     if (_preferences == null) return null;
     return _preferences!.getBool(key);
   }

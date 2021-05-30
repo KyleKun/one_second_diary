@@ -16,12 +16,12 @@ class LanguageModel {
 }
 
 class TranslationService extends Translations {
-  static final fallbackLocale = Locale('en', 'US');
+  static const fallbackLocale = Locale('en', 'US');
 
   static final List<LanguageModel> languages = [
-    LanguageModel("English", "en"),
-    LanguageModel("Português", "pt"),
-    LanguageModel("Español", "es"),
+    LanguageModel('English', 'en'),
+    LanguageModel('Português', 'pt'),
+    LanguageModel('Español', 'es'),
   ];
 
   @override

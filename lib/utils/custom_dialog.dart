@@ -18,10 +18,10 @@ class CustomDialog extends StatelessWidget {
   final String content;
   final String actionText;
   final Color actionColor;
-  final void action;
+  final void Function()? action;
   final String? action2Text;
   final Color? action2Color;
-  final void action2;
+  final void Function()? action2;
 
   @override
   Widget build(BuildContext context) {
@@ -32,15 +32,16 @@ class CustomDialog extends StatelessWidget {
         ElevatedButton(
           style: ElevatedButton.styleFrom(primary: actionColor),
           child: Text(actionText),
-          onPressed: () => action,
+          onPressed: action,
         ),
-        isDoubleAction
-            ? ElevatedButton(
-                style: ElevatedButton.styleFrom(primary: action2Color),
-                child: Text(action2Text!),
-                onPressed: () => action2,
-              )
-            : Container()
+        if (isDoubleAction)
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(primary: action2Color),
+            child: Text(action2Text!),
+            onPressed: action2,
+          )
+        else
+          Container()
       ],
     );
   }

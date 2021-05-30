@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
-import 'package:one_second_diary/utils/shared_preferences_util.dart';
-import 'package:one_second_diary/utils/utils.dart';
+import '../utils/date_format_utils.dart';
+import '../utils/shared_preferences_util.dart';
 
 class DailyEntryController extends GetxController {
   @override
@@ -9,23 +9,23 @@ class DailyEntryController extends GetxController {
     super.onInit();
   }
 
-  final dailyEntry = StorageUtil.getBool('dailyEntry').obs;
+  final dailyEntry = SharedPrefsUtil.getBool('dailyEntry').obs;
 
   void updateDaily() {
-    StorageUtil.putBool('dailyEntry', true);
+    SharedPrefsUtil.putBool('dailyEntry', true);
     dailyEntry.value = true;
     dailyEntry.refresh();
     // Utils().logInfo('DailyEntry set to TRUE!');
   }
 
   void _checkTodayEntry() {
-    final String today = Utils.getToday();
+    final String today = DateFormatUtils.getToday();
 
     // Checking by date
-    if (today != StorageUtil.getString('today')) {
+    if (today != SharedPrefsUtil.getString('today')) {
       // Utils().logInfo('New Day, DailyEntry was NOT done!');
-      StorageUtil.putString('today', today);
-      StorageUtil.putBool('dailyEntry', false);
+      SharedPrefsUtil.putString('today', today);
+      SharedPrefsUtil.putBool('dailyEntry', false);
       dailyEntry.value = false;
       dailyEntry.refresh();
     } else {

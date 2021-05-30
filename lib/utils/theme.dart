@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:one_second_diary/utils/shared_preferences_util.dart';
 
 import 'constants.dart';
+import 'shared_preferences_util.dart';
 
 class Themes {
   static final light = ThemeData.light().copyWith(
@@ -26,9 +26,10 @@ class ThemeService {
   ThemeMode get theme => isDarkTheme() ? ThemeMode.dark : ThemeMode.light;
 
   // Dark Mode is true by default
-  bool isDarkTheme() => StorageUtil.getBool(_key) ?? true;
+  bool isDarkTheme() => SharedPrefsUtil.getBool(_key) ?? true;
 
-  _saveTheme(bool isDarkMode) => StorageUtil.putBool(_key, isDarkMode);
+  Future<bool> _saveTheme(bool isDarkMode) =>
+      SharedPrefsUtil.putBool(_key, isDarkMode);
 
   void switchTheme() {
     Get.changeThemeMode(isDarkTheme() ? ThemeMode.light : ThemeMode.dark);

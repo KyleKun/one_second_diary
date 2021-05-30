@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:one_second_diary/controllers/bottom_app_bar_index_controller.dart';
-import 'package:one_second_diary/utils/constants.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
+
+import '../../../../controllers/bottom_app_bar_index_controller.dart';
+import '../../../../utils/constants.dart';
 
 SalomonBottomBarItem _bottomBarItem({
   required IconData icon,
@@ -13,7 +14,7 @@ SalomonBottomBarItem _bottomBarItem({
     icon: Icon(icon, size: MediaQuery.of(Get.context!).size.width * 0.08),
     title: Text(
       title,
-      style: TextStyle(
+      style: const TextStyle(
         fontFamily: 'Magic',
       ),
     ),

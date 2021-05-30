@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:one_second_diary/pages/donation/widgets/donate_button.dart';
-import 'package:one_second_diary/pages/donation/widgets/donation_description.dart';
-import 'package:one_second_diary/pages/donation/widgets/heart_animation.dart';
 import 'package:get/get.dart';
+
+import 'widgets/donate_button.dart';
+import 'widgets/donation_description.dart';
+import 'widgets/heart_animation.dart';
 
 class DonationPage extends StatelessWidget {
   @override
@@ -20,9 +21,9 @@ class DonationPage extends StatelessWidget {
             ),
             child: DonationDescription(),
           ),
-          Spacer(),
+          const Spacer(),
           DonateButton(),
-          Spacer(flex: 2),
+          const Spacer(flex: 2),
         ],
       ),
     );

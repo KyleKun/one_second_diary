@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:one_second_diary/utils/constants.dart';
-import 'package:one_second_diary/utils/theme.dart';
+import '../../../../utils/constants.dart';
+import '../../../../utils/theme.dart';
 
 class SwitchThemeComponent extends StatelessWidget {
   final String title = 'darkMode'.tr;
@@ -10,7 +10,7 @@ class SwitchThemeComponent extends StatelessWidget {
     return Column(
       children: [
         Container(
-          padding: EdgeInsets.symmetric(horizontal: 15.0),
+          padding: const EdgeInsets.symmetric(horizontal: 15.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -20,10 +20,10 @@ class SwitchThemeComponent extends StatelessWidget {
                   fontSize: MediaQuery.of(context).size.width * 0.045,
                 ),
               ),
-              ValueBuilder<bool>(
+              ValueBuilder<bool?>(
                 initialValue: ThemeService().isDarkTheme(),
                 builder: (isChecked, updateFn) => Switch(
-                  value: isChecked,
+                  value: isChecked!,
                   onChanged: (value) {
                     updateFn(!ThemeService().isDarkTheme());
                     ThemeService().switchTheme();
@@ -35,7 +35,7 @@ class SwitchThemeComponent extends StatelessWidget {
             ],
           ),
         ),
-        Divider(),
+        const Divider(),
       ],
     );
   }
