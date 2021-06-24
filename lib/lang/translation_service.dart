@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'en.dart';
 import 'es.dart';
 import 'pt.dart';
+import 'zh.dart';
 
 class LanguageModel {
   LanguageModel(
@@ -22,6 +23,7 @@ class TranslationService extends Translations {
     LanguageModel('English', 'en'),
     LanguageModel('Português', 'pt'),
     LanguageModel('Español', 'es'),
+    LanguageModel('中文', 'zh')
   ];
 
   @override
@@ -29,5 +31,6 @@ class TranslationService extends Translations {
         'en': en,
         'pt': pt,
         'es': es,
+        'zh': zh,
       };
 }

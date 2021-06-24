@@ -4,6 +4,9 @@
 ## Spanish Translation
 - Greily Campusano
 
+## Chinese Translation
+- 陈浮生 (Dilql)
+
 ## Testers & Feedback
 - Augusto Vesco
 - Bianca Pedroso

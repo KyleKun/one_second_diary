@@ -41,7 +41,6 @@ dependencies:
   timezone:
   timer_builder:
   # logger:
-  # device_preview:
 
 dev_dependencies:
   flutter_test:
