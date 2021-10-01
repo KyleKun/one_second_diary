@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 
 import 'en.dart';
 import 'es.dart';
+import 'id.dart';
 import 'pt.dart';
 import 'zh.dart';
 
@@ -23,6 +24,7 @@ class TranslationService extends Translations {
     LanguageModel('English', 'en'),
     LanguageModel('Português', 'pt'),
     LanguageModel('Español', 'es'),
+    LanguageModel('Indonesia', 'id'),
     LanguageModel('中文', 'zh')
   ];
 
@@ -31,6 +33,7 @@ class TranslationService extends Translations {
         'en': en,
         'pt': pt,
         'es': es,
+        'id': id,
         'zh': zh,
       };
 }
