@@ -17,3 +17,4 @@
 ## Developers
 - Allen (@oiolong)
 - Joseph (@jsfsarkis)
+- Atticdev (@atticdev)
