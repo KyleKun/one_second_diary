@@ -6,17 +6,27 @@ import 'shared_preferences_util.dart';
 
 class Themes {
   static final light = ThemeData.light().copyWith(
-    textTheme: ThemeData.light().textTheme.apply(
-          fontFamily: 'Magic',
-        ),
+    appBarTheme: const AppBarTheme(
+      backgroundColor: AppColors.light,
+      titleTextStyle: TextStyle(color: Colors.black),
+      iconTheme: IconThemeData(color: Colors.black),
+    ),
+    textTheme: ThemeData.light().textTheme.apply(fontFamily: 'Magic'),
     primaryColor: AppColors.mainColor,
-    accentColor: AppColors.mainColor,
+    colorScheme: ColorScheme.fromSwatch().copyWith(
+      secondary: AppColors.mainColor,
+    ),
   );
+
   static final dark = ThemeData.dark().copyWith(
+    appBarTheme: const AppBarTheme(backgroundColor: AppColors.dark),
     textTheme: ThemeData.dark().textTheme.apply(
           fontFamily: 'Magic',
         ),
-    accentColor: AppColors.mainColor,
+    primaryColor: AppColors.mainColor,
+    colorScheme: ColorScheme.fromSwatch().copyWith(
+      secondary: AppColors.mainColor,
+    ),
   );
 }
 

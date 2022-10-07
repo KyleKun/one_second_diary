@@ -167,73 +167,73 @@ class Utils {
   }
 }
 
-  /// Old/Not used methods but might be useful in the future
-  /// 
-  // Used only in an alternative way to edit video using ffmpeg
-  // static Future<String> copyFontToStorage() async {
-  //   io.Directory directory = await getApplicationDocumentsDirectory();
-  //   String fontPath = directory.path + "/magic.ttf";
-  //   try {
-  //     if (checkFileExists(fontPath)) {
-  //       Utils().logInfo('Font already exists');
-  //     } else {
-  //       ByteData data =
-  //           await rootBundle.load("assets/fonts/YuseiMagic-Regular.ttf");
-  //       List<int> bytes =
-  //           data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
-  //       await io.File(fontPath).writeAsBytes(bytes);
-  //       Utils().logInfo('Font copied to $fontPath');
-  //     }
-  //   } catch (e) {
-  //     Utils().logError('$e');
-  //   }
+/// Old/Not used methods but might be useful in the future
+///
+// Used only in an alternative way to edit video using ffmpeg
+// static Future<String> copyFontToStorage() async {
+//   io.Directory directory = await getApplicationDocumentsDirectory();
+//   String fontPath = directory.path + "/magic.ttf";
+//   try {
+//     if (checkFileExists(fontPath)) {
+//       Utils().logInfo('Font already exists');
+//     } else {
+//       ByteData data =
+//           await rootBundle.load("assets/fonts/YuseiMagic-Regular.ttf");
+//       List<int> bytes =
+//           data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
+//       await io.File(fontPath).writeAsBytes(bytes);
+//       Utils().logInfo('Font copied to $fontPath');
+//     }
+//   } catch (e) {
+//     Utils().logError('$e');
+//   }
 
-  //   return fontPath;
-  // }
+//   return fontPath;
+// }
 
-  // static Future<String> copyConfigVideoToStorage() async {
-  //   io.Directory directory = await getApplicationDocumentsDirectory();
-  //   String configVideoPath = directory.path + "/config.mp4";
-  //   try {
-  //     if (checkFileExists(configVideoPath)) {
-  //       Utils().logInfo('Config video already exists');
-  //     } else {
-  //       ByteData data = await rootBundle.load("assets/video/config.mp4");
-  //       List<int> bytes =
-  //           data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
-  //       await io.File(configVideoPath).writeAsBytes(bytes);
-  //       Utils().logInfo('Config video copied to $configVideoPath');
-  //     }
-  //   } catch (e) {
-  //     Utils().logError('$e');
-  //   }
+// static Future<String> copyConfigVideoToStorage() async {
+//   io.Directory directory = await getApplicationDocumentsDirectory();
+//   String configVideoPath = directory.path + "/config.mp4";
+//   try {
+//     if (checkFileExists(configVideoPath)) {
+//       Utils().logInfo('Config video already exists');
+//     } else {
+//       ByteData data = await rootBundle.load("assets/video/config.mp4");
+//       List<int> bytes =
+//           data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
+//       await io.File(configVideoPath).writeAsBytes(bytes);
+//       Utils().logInfo('Config video copied to $configVideoPath');
+//     }
+//   } catch (e) {
+//     Utils().logError('$e');
+//   }
 
-  //   return configVideoPath;
-  // }
+//   return configVideoPath;
+// }
 
-  // static Future<void> configCameraResolution(String configVideoPath) async {
-  //   String finalConfigPath = configVideoPath.replaceAll('.mp4', '_.mp4');
-  //   Cup cup = Cup(
-  //     Content(configVideoPath),
-  //     [
-  //       TapiocaBall.textOverlay(
-  //         'a',
-  //         200,
-  //         200,
-  //         20,
-  //         Colors.white,
-  //       ),
-  //     ],
-  //   );
+// static Future<void> configCameraResolution(String configVideoPath) async {
+//   String finalConfigPath = configVideoPath.replaceAll('.mp4', '_.mp4');
+//   Cup cup = Cup(
+//     Content(configVideoPath),
+//     [
+//       TapiocaBall.textOverlay(
+//         'a',
+//         200,
+//         200,
+//         20,
+//         Colors.white,
+//       ),
+//     ],
+//   );
 
-  //   await cup.suckUp(finalConfigPath).then((_) {
-  //     Utils().logInfo('finished processing');
-  //   }, onError: (error) {
-  //     Utils().logError(error);
-  //     StorageUtil.putBool('isHighRes', false);
-  //   });
+//   await cup.suckUp(finalConfigPath).then((_) {
+//     Utils().logInfo('finished processing');
+//   }, onError: (error) {
+//     Utils().logError(error);
+//     StorageUtil.putBool('isHighRes', false);
+//   });
 
-  //   deleteFile(configVideoPath);
-  //   deleteFile(finalConfigPath);
-  //   Utils().logInfo("IS HIGH RES? -> ${StorageUtil.getBool('isHighRes')}");
-  // }
+//   deleteFile(configVideoPath);
+//   deleteFile(finalConfigPath);
+//   Utils().logInfo("IS HIGH RES? -> ${StorageUtil.getBool('isHighRes')}");
+// }

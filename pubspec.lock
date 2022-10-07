@@ -558,12 +558,10 @@ packages:
   tapioca:
     dependency: "direct main"
     description:
-      path: "."
-      ref: master
-      resolved-ref: "45aef95692e88b353b556e602eabef299b6306c1"
-      url: "https://github.com/KyleKun/tapioca.git"
-    source: git
-    version: "1.0.2+1"
+      name: tapioca
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.6+1"
   term_glyph:
     dependency: transitive
     description:

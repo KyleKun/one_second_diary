@@ -14,6 +14,7 @@ class SharedPrefsUtil {
   }
 
   SharedPrefsUtil._();
+
   Future _init() async {
     _preferences = await SharedPreferences.getInstance();
   }

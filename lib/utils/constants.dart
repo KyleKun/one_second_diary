@@ -54,6 +54,8 @@ class Constants {
 
 class AppColors {
   static const Color mainColor = Color(0xffff6366);
+  static const Color dark = Color(0xff212121);
+  static const Color light = Color(0xffEEEEEE);
   static const Color purple = Color(0xff7D7ABC);
   static const Color green = Color(0xff7AC74F);
   static const Color yellow = Color(0xffE5B25D);

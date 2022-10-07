@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
 import '../../../../utils/constants.dart';
 import '../../../../utils/theme.dart';
 
 class SwitchThemeComponent extends StatelessWidget {
   final String title = 'darkMode'.tr;
+
   @override
   Widget build(BuildContext context) {
     return Column(

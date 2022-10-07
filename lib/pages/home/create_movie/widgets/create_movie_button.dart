@@ -124,7 +124,7 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
       height: MediaQuery.of(context).size.height * 0.08,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-          primary: AppColors.mainColor,
+          backgroundColor: AppColors.mainColor,
           elevation: 5.0,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(80.0),
