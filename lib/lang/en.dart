@@ -15,7 +15,7 @@ const Map<String, String> en = {
   'movieInsufficientVideos':
       'You need to have 2 or more recorded videos in order to create a movie',
   'movieCreatedTitle': 'Movie created!',
-  'movieCreatedDesc': 'Movie saved to Storage inside OSD-Movies folder',
+  'movieCreatedDesc': 'Movie saved to storage inside OSD-Movies folder',
   'movieError': 'Error saving the movie!',
   'tryAgainMsg':
       'Please try again. If the problem persists, contact the developer.',
@@ -49,7 +49,7 @@ const Map<String, String> en = {
       'Choose a special moment of your day that you would like to remember in the future.',
   'introTitle2': 'Create the movie of your life',
   'introDesc2': 'Generate a compilation of all your recorded videos.',
-  'introTitle3': 'No Ads and Totally Free',
+  'introTitle3': 'No ads and totally free',
   'introDesc3':
       'If you like the app, consider supporting the development with a donation.',
   'skip': 'Skip',
