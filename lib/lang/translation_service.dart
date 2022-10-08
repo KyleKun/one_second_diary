@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import 'de.dart';
 import 'en.dart';
 import 'es.dart';
 import 'id.dart';
@@ -21,6 +22,7 @@ class TranslationService extends Translations {
   static const fallbackLocale = Locale('en', 'US');
 
   static final List<LanguageModel> languages = [
+    LanguageModel('Deutsch', 'de'),
     LanguageModel('English', 'en'),
     LanguageModel('Português', 'pt'),
     LanguageModel('Español', 'es'),
@@ -30,10 +32,11 @@ class TranslationService extends Translations {
 
   @override
   Map<String, Map<String, String>> get keys => {
+        'de': de,
         'en': en,
-        'pt': pt,
         'es': es,
         'id': id,
+        'pt': pt,
         'zh': zh,
       };
 }
