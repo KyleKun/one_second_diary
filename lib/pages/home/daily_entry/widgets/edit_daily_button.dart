@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
 import '../../../../routes/app_pages.dart';
 import '../../../../utils/constants.dart';
 import '../../../../utils/custom_dialog.dart';
@@ -17,7 +18,7 @@ class EditDailyButton extends StatelessWidget {
       height: MediaQuery.of(context).size.height * 0.08,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-          primary: AppColors.purple,
+          backgroundColor: AppColors.purple,
           elevation: 5.0,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(80.0),

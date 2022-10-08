@@ -11,7 +11,7 @@ class DonateButton extends StatelessWidget {
       width: MediaQuery.of(context).size.width * 0.35,
       height: MediaQuery.of(context).size.width * 0.14,
       child: ElevatedButton(
-        style: ElevatedButton.styleFrom(primary: AppColors.mainColor),
+        style: ElevatedButton.styleFrom(backgroundColor: AppColors.mainColor),
         child: Text(
           'donate'.tr,
           style: TextStyle(

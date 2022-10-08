@@ -36,7 +36,7 @@ class _RecordingPageState extends State<RecordingPage>
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance!.addObserver(this);
+    WidgetsBinding.instance.addObserver(this);
     _isRecording = false;
 
     _isTimerEnable = _recordingSettingsController.isTimerEnable.value;
@@ -47,7 +47,7 @@ class _RecordingPageState extends State<RecordingPage>
 
   @override
   void dispose() {
-    WidgetsBinding.instance!.removeObserver(this);
+    WidgetsBinding.instance.removeObserver(this);
     _timer?.cancel();
     _cameraController.dispose();
     super.dispose();
@@ -426,7 +426,7 @@ class _RecordingPageState extends State<RecordingPage>
                                 ),
                               ),
                               style: ElevatedButton.styleFrom(
-                                primary: !_isRecording
+                                backgroundColor: !_isRecording
                                     ? Colors.white.withOpacity(0.8)
                                     : Colors.grey.withOpacity(0.5),
                                 elevation: 8.0,

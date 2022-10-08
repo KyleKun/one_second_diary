@@ -32,8 +32,8 @@ class _SwitchNotificationsComponentState
     const AndroidInitializationSettings androidInitializationSettings =
         AndroidInitializationSettings('@mipmap/ic_launcher');
 
-    const IOSInitializationSettings iosInitializationSettings =
-        IOSInitializationSettings();
+    const DarwinInitializationSettings iosInitializationSettings =
+        DarwinInitializationSettings();
 
     const InitializationSettings initializationSettings =
         InitializationSettings(
@@ -82,7 +82,7 @@ class _SwitchNotificationsComponentState
         android: AndroidNotificationDetails(
           'channel id',
           'channel name',
-          'channel description',
+          channelDescription: 'channel description',
         ),
       ),
       uiLocalNotificationDateInterpretation:

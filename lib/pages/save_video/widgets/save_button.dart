@@ -177,9 +177,10 @@ class _SaveButtonState extends State<SaveButton> {
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
           elevation: 5.0,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(80.0)),
-          primary: Colors.green,
+          backgroundColor: Colors.green,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(80.0),
+          ),
         ),
         child: !isProcessing
             ? Text(

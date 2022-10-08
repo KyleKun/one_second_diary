@@ -1,6 +1,7 @@
 import 'package:about/about.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
 import '../../../../controllers/lang_controller.dart';
 
 class AboutButton extends StatelessWidget {

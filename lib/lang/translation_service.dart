@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'de.dart';
 import 'en.dart';
 import 'es.dart';
+import 'fr.dart';
 import 'id.dart';
 import 'pt.dart';
 import 'zh.dart';
@@ -27,7 +28,8 @@ class TranslationService extends Translations {
     LanguageModel('Português', 'pt'),
     LanguageModel('Español', 'es'),
     LanguageModel('Indonesia', 'id'),
-    LanguageModel('中文', 'zh')
+    LanguageModel('中文', 'zh'),
+    LanguageModel('Français', 'fr'),
   ];
 
   @override
@@ -38,5 +40,6 @@ class TranslationService extends Translations {
         'id': id,
         'pt': pt,
         'zh': zh,
+        'fr': fr,
       };
 }

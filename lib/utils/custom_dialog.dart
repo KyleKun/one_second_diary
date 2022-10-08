@@ -30,13 +30,13 @@ class CustomDialog extends StatelessWidget {
       content: Text(content),
       actions: <Widget>[
         ElevatedButton(
-          style: ElevatedButton.styleFrom(primary: actionColor),
+          style: ElevatedButton.styleFrom(backgroundColor: actionColor),
           child: Text(actionText),
           onPressed: action,
         ),
         if (isDoubleAction)
           ElevatedButton(
-            style: ElevatedButton.styleFrom(primary: action2Color),
+            style: ElevatedButton.styleFrom(backgroundColor: action2Color),
             child: Text(action2Text!),
             onPressed: action2,
           )
