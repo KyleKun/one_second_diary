@@ -1,11 +1,12 @@
-## App Logo & Banners
+## App Logo & Play Store Banners
 - Victória Marques
 
-## Spanish Translation
-- Greily Campusano
-
-## Chinese Translation
-- 陈浮生 (Dilql)
+## Developers
+- Allen (@oiolong)
+- Joseph (@jsfsarkis)
+- Atticdev (@atticdev)
+- Ardin Biganiro (@ardinbig)
+- Alexander ADAM (@alexanderadam)
 
 ## Testers & Feedback
 - Augusto Vesco
@@ -14,7 +15,8 @@
 - Jana Souza
 - Samuel Santos
 
-## Developers
-- Allen (@oiolong)
-- Joseph (@jsfsarkis)
-- Atticdev (@atticdev)
+## Localization
+- Greily Campusano - Spanish
+- 陈浮生 (Dilql) - Chinese
+- Ardin Biganiro - French
+- Alexander ADAM - German

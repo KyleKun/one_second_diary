@@ -1,3 +1,6 @@
+## v2.0 - xx/2022
+- Added Chinese, German and French localization
+
 ## v1.1 - 05/2021
 - Added feature to receive daily notifications
 - Added feature to record up to 10 seconds video 
