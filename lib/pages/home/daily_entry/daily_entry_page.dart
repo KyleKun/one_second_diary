@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import '../../../controllers/daily_entry_controller.dart';
 import 'widgets/edit_daily_button.dart';
 import 'widgets/emoji_widget.dart';
+import 'widgets/import_video_button.dart';
 import 'widgets/record_daily_button.dart';
 
 class DailyEntryPage extends GetView<DailyEntryController> {
@@ -30,7 +31,15 @@ class DailyEntryPage extends GetView<DailyEntryController> {
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
         EmojiWidget(complete: false),
-        RecordDailyButton(),
+        Row(
+          children: [
+            const Spacer(),
+            RecordDailyButton(),
+            const Spacer(),
+            const ImportVideoButton(),
+            const Spacer()
+          ],
+        )
       ],
     );
   }
