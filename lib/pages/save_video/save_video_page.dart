@@ -105,6 +105,13 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
     }
   }
 
+  void closePopupAndPushToHome(String cacheVideoPath) {
+    // Deleting video from cache
+    StorageUtils.deleteFile(cacheVideoPath);
+    Get.back();
+    Get.offNamed(Routes.HOME);
+  }
+
   void closePopupAndPushToRecording(String cacheVideoPath) {
     // Deleting video from cache
     StorageUtils.deleteFile(cacheVideoPath);
@@ -174,9 +181,9 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
             actionText: 'yes'.tr,
             actionColor: Colors.green,
             action: () => closePopupAndPushToRecording(_tempVideoPath),
-            action2Text: 'no'.tr,
+            action2Text: 'Return to home'.tr,
             action2Color: Colors.red,
-            action2: () => Get.back(),
+            action2: () => closePopupAndPushToHome(_tempVideoPath),
           ),
         );
         return true;

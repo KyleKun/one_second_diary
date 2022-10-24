@@ -37,6 +37,8 @@ dependencies:
   flutter_local_notifications:
   timezone:
   timer_builder:
+  image_picker: ^0.7.2+1
+  file_picker: ^4.6.1
 #logger:
 
 dev_dependencies:

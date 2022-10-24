@@ -1,4 +1,5 @@
 import 'package:avatar_glow/avatar_glow.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -8,6 +9,11 @@ import '../../../../utils/constants.dart';
 
 class ImportVideoButton extends StatelessWidget {
   const ImportVideoButton({Key? key}) : super(key: key);
+
+  Future<String?> pickVideoFileString() async {
+    final result = await FilePicker.platform.pickFiles(type: FileType.video);
+    return result?.files.single.path;
+  }
 
   @override
   Widget build(BuildContext context) =>AvatarGlow(
@@ -22,8 +28,15 @@ class ImportVideoButton extends StatelessWidget {
           backgroundColor: AppColors.green,
           shape: const CircleBorder(),
         ),
-        onPressed: () {
-
+        onPressed: () async {
+          String? filePath;
+          while(filePath==null){
+            filePath=await pickVideoFileString();
+          }
+          Get.offNamed(
+            Routes.SAVE_VIDEO,
+            arguments: filePath,
+          );
         },
         child: Icon(
           Icons.download,
