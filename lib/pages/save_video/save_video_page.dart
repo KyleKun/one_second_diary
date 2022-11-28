@@ -112,6 +112,14 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
     Get.offNamed(Routes.RECORDING);
   }
 
+  Color invert(Color color) {
+    final r = 255 - color.red;
+    final g = 255 - color.green;
+    final b = 255 - color.blue;
+
+    return Color.fromARGB((color.opacity * 255).round(), r, g, b);
+  }
+
   Widget _dailyVideoPlayer() {
     return GestureDetector(
       onTap: () => videoPlay(),
@@ -144,12 +152,26 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
               alignment: isTextDate ? Alignment.bottomLeft : Alignment.topRight,
               child: Padding(
                 padding: const EdgeInsets.all(5.0),
-                child: Text(
-                  _dateFormatValue,
-                  style: TextStyle(
-                    color: currentColor,
-                    fontSize: MediaQuery.of(context).size.width * 0.03,
-                  ),
+                child: Stack(
+                  children: <Widget>[
+                    Text(
+                      _dateFormatValue,
+                      style: TextStyle(
+                        fontSize: MediaQuery.of(context).size.width * 0.03,
+                        foreground: Paint()
+                          ..style = PaintingStyle.stroke
+                          ..strokeWidth = 2
+                          ..color = invert(currentColor),
+                      ),
+                    ),
+                    Text(
+                      _dateFormatValue,
+                      style: TextStyle(
+                        fontSize: MediaQuery.of(context).size.width * 0.03,
+                        color: currentColor,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
