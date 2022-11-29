@@ -38,7 +38,7 @@ class _SaveButtonState extends State<SaveButton> {
 
   final VideoCountController _videoCountController = Get.find();
 
-  void _saveVideo(BuildContext context) async {
+  void _saveVideo() async {
     setState(() {
       isProcessing = true;
     });
@@ -88,8 +88,6 @@ class _SaveButtonState extends State<SaveButton> {
       // Editing video
       await cup.suckUp(finalPath).then(
         (_) {
-          // Utils().logInfo('Finished editing');
-
           _dayController.updateDaily();
 
           // Updates the controller: videoCount += 1
@@ -199,7 +197,7 @@ class _SaveButtonState extends State<SaveButton> {
           // Prevents user from clicking it twice
           if (!_pressedSave) {
             _pressedSave = true;
-            _saveVideo(context);
+            _saveVideo();
           }
         },
       ),
