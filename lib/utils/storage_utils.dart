@@ -69,11 +69,7 @@ class StorageUtils {
 
   /// Used to check if daily video was already recorded
   static bool checkFileExists(String filePath) {
-    if (io.File(filePath).existsSync()) {
-      return true;
-    } else {
-      return false;
-    }
+    return io.File(filePath).existsSync();
   }
 
   /// Delete old video if user is editing daily entry
