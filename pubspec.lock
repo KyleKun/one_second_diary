@@ -558,9 +558,11 @@ packages:
   tapioca:
     dependency: "direct main"
     description:
-      name: tapioca
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: "."
+      ref: android-dependency-patch
+      resolved-ref: "6e06265527918355cff13ca5415486f819fbeb7a"
+      url: "https://github.com/daoxve/tapioca.git"
+    source: git
     version: "1.0.6+1"
   term_glyph:
     dependency: transitive

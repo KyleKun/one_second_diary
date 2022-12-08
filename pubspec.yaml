@@ -22,7 +22,11 @@ dependencies:
   shared_preferences:
   flutter_ffmpeg:
   permission_handler:
+  # TODO: remove this in the future & reference the official package when higher kotlin versions are supported
   tapioca:
+    git:
+      url: https://github.com/daoxve/tapioca.git
+      ref: android-dependency-patch # branch name
   salomon_bottom_bar:
   introduction_screen:
   avatar_glow:
