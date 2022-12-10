@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:timezone/data/latest.dart' as tz;
@@ -114,6 +115,16 @@ class _SwitchNotificationsComponentState extends State<SwitchNotificationsCompon
       'test'.tr,
       'test'.tr,
       platformNotificationDetails,
+    );
+
+    // Feedback to the user that the notification was called
+    await Fluttertoast.showToast(
+      msg: 'done'.tr,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.CENTER,
+      backgroundColor: AppColors.dark,
+      textColor: Colors.white,
+      fontSize: 16.0,
     );
   }
 
