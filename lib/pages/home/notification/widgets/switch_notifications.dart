@@ -19,8 +19,7 @@ class SwitchNotificationsComponent extends StatefulWidget {
 }
 
 class _SwitchNotificationsComponentState extends State<SwitchNotificationsComponent> {
-  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-      FlutterLocalNotificationsPlugin();
+  final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
   final int notificationId = 1;
 
@@ -71,35 +70,23 @@ class _SwitchNotificationsComponentState extends State<SwitchNotificationsCompon
   }
 
   Future<void> scheduleNotification() async {
-    /// Get current hour
-    final hour = DateTime.now().hour;
-
-    /// Since there isn't a way to choose the best time to display, it will be shown around 18pm
-    const int defaultNotificationHour = 18;
-
-    /// Difference between current hour and 12am to calculate scheduling
-    int difference = 0;
-
-    /// Final hour distance that notification will be shown
-    int notificationHour = 0;
-
-    if (hour >= defaultNotificationHour) {
-      difference = hour - defaultNotificationHour;
-      notificationHour = 24 - difference;
-    } else {
-      difference = defaultNotificationHour - hour;
-      notificationHour = difference;
-    }
-
-    // print('notification will be shown in: $notificationHour hours from now');
+    final now = DateTime.now();
+    
+    // sets the scheduled time in DateTime format
+    final String setTime = DateTime(
+      now.year,
+      now.month,
+      now.day,
+      scheduledTimeOfDay.hour,
+      scheduledTimeOfDay.minute,
+    ).toString();
 
     /// Schedule notification
-    flutterLocalNotificationsPlugin.zonedSchedule(
+    await flutterLocalNotificationsPlugin.zonedSchedule(
       notificationId,
       'notificationTitle'.tr,
       'notificationBody'.tr,
-      tz.TZDateTime.now(tz.local).add(Duration(hours: notificationHour)),
-      // tz.TZDateTime.now(tz.local).add(const Duration(seconds: 3)),
+      tz.TZDateTime.parse(tz.local, setTime),
       platformNotificationDetails,
       uiLocalNotificationDateInterpretation:
           UILocalNotificationDateInterpretation.absoluteTime,
@@ -234,6 +221,8 @@ class _SwitchNotificationsComponentState extends State<SwitchNotificationsCompon
               SharedPrefsUtil.putInt('scheduledTimeHour', newTimeOfDay.hour);
               SharedPrefsUtil.putInt('scheduledTimeMinute', newTimeOfDay.minute);
             });
+
+            await scheduleNotification();
           },
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
