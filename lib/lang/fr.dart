@@ -64,6 +64,9 @@ const Map<String, String> fr = {
   'foundVideos': 'vidéos trouvées !',
   'foundVideo': 'vidéo trouvée !',
   'notifications': 'Notifications',
+  'enableNotifications': 'Activer les notifications',
+  'scheduleTime': 'Horaire',
+  'test': 'Test',
   'notificationTitle': 'Hé !',
   'notificationBody':
       "N'oubliez pas d'enregistrer une seconde de votre journée. 👀",

@@ -16,6 +16,15 @@ class Themes {
     colorScheme: ColorScheme.fromSwatch().copyWith(
       secondary: AppColors.mainColor,
     ),
+    timePickerTheme: const TimePickerThemeData(
+      backgroundColor: AppColors.light,
+      hourMinuteTextColor: AppColors.dark,
+      dialTextColor: AppColors.dark,
+      dialHandColor: AppColors.mainColor,
+      hourMinuteColor: Colors.white38,
+      dayPeriodTextColor: AppColors.mainColor,
+      entryModeIconColor: AppColors.dark,
+    ),
   );
 
   static final dark = ThemeData.dark().copyWith(
@@ -26,6 +35,12 @@ class Themes {
     primaryColor: AppColors.mainColor,
     colorScheme: ColorScheme.fromSwatch().copyWith(
       secondary: AppColors.mainColor,
+    ),
+    timePickerTheme: const TimePickerThemeData(
+      backgroundColor: AppColors.dark,
+      hourMinuteTextColor: AppColors.light,
+      hourMinuteColor: Colors.black38,
+      dayPeriodTextColor: AppColors.light,
     ),
   );
 }
