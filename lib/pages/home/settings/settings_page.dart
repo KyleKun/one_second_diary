@@ -5,7 +5,7 @@ import 'widgets/backup_tutorial.dart';
 import 'widgets/contact_button.dart';
 import 'widgets/github_button.dart';
 import 'widgets/language_chooser.dart';
-import 'widgets/switch_notifications.dart';
+import 'widgets/notifications_button.dart';
 import 'widgets/switch_theme.dart';
 
 class SettingPage extends StatelessWidget {
@@ -17,7 +17,7 @@ class SettingPage extends StatelessWidget {
       child: Column(
         children: [
           SwitchThemeComponent(),
-          SwitchNotificationsComponent(),
+          NotificationsButton(),
           LanguageChooser(),
           BackupTutorial(),
           GithubButton(),

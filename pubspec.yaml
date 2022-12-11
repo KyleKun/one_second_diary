@@ -9,36 +9,38 @@ environment:
   sdk: '>=2.18.2 <3.0.0'
 
 dependencies:
-  flutter:
-    sdk: flutter
-
-  get:
+  about: null
+  avatar_glow: null
   camera:
     git:
       url: https://github.com/KyleKun/plugins.git
       path: packages/camera/camera/
-  flutter_colorpicker:
-  path_provider:
-  shared_preferences:
-  flutter_ffmpeg:
-  permission_handler:
+  flutter:
+    sdk: flutter
+  flutter_colorpicker: null
+  flutter_ffmpeg: null
+  flutter_local_notifications: null
+  fluttertoast: ^8.1.1
+  get: null
+  group_radio_button: null
+  introduction_screen: null
+  native_device_orientation: null
+  open_file: null
+  path_provider: null
+  permission_handler: null
+  rive: null
+  salomon_bottom_bar: null
+  share: null
+  shared_preferences: null
   tapioca:
-  salomon_bottom_bar:
-  introduction_screen:
-  avatar_glow:
-  url_launcher:
-  rive:
-  native_device_orientation:
-  video_player:
-  about:
-  share:
-  open_file:
-  group_radio_button:
-  flutter_local_notifications:
-  timezone:
-  timer_builder:
+    git:
+      url: https://github.com/daoxve/tapioca.git
+      ref: android-dependency-patch
+  timer_builder: null
+  timezone: null
+  url_launcher: null
+  video_player: null
 #logger:
-
 dev_dependencies:
   flutter_test:
     sdk: flutter
