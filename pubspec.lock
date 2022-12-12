@@ -129,13 +129,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.1"
-  fijkplayer:
-    dependency: transitive
+  ffmpeg_kit_flutter:
+    dependency: "direct main"
     description:
-      name: fijkplayer
+      name: ffmpeg_kit_flutter
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.8.8"
+    version: "5.1.0"
+  ffmpeg_kit_flutter_platform_interface:
+    dependency: transitive
+    description:
+      name: ffmpeg_kit_flutter_platform_interface
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.2.1"
   file:
     dependency: transitive
     description:
@@ -155,20 +162,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.3"
-  flutter_ffmpeg:
-    dependency: "direct main"
-    description:
-      name: flutter_ffmpeg
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.4.2"
-  flutter_ffmpeg_fijkplayer:
-    dependency: "direct main"
-    description:
-      name: flutter_ffmpeg_fijkplayer
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.0.3"
   flutter_local_notifications:
     dependency: "direct main"
     description:
