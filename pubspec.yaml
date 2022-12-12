@@ -1,52 +1,54 @@
 name: one_second_diary
 description: Record one second of your day, everyday.
 
-publish_to: 'none'
+publish_to: "none"
 
 version: 1.1.3+7
 
 environment:
-  sdk: '>=2.18.2 <3.0.0'
+  sdk: ">=2.18.2 <3.0.0"
 
 dependencies:
-  about: null
-  avatar_glow: null
+  about: ^2.1.1
+  avatar_glow: ^2.0.2
   camera:
     git:
       url: https://github.com/KyleKun/plugins.git
       path: packages/camera/camera/
+  ffmpeg_kit_flutter: ^5.1.0
   flutter:
     sdk: flutter
-  flutter_colorpicker: null
-  flutter_ffmpeg: null
-  flutter_local_notifications: null
+  flutter_colorpicker: ^1.0.3
+  flutter_local_notifications: ^12.0.4
   fluttertoast: ^8.1.1
-  get: null
-  group_radio_button: null
-  introduction_screen: null
-  native_device_orientation: null
-  open_file: null
-  path_provider: null
-  permission_handler: null
-  rive: null
-  salomon_bottom_bar: null
-  share: null
-  shared_preferences: null
+  get: ^4.6.5
+  group_radio_button: ^1.3.0
+  introduction_screen: ^3.1.1
+  native_device_orientation: ^1.1.4
+  open_file:
+    git:
+      url: https://github.com/crazecoder/open_file.git
+      ref: fbf68e4
+  path_provider: ^2.0.11
+  permission_handler: ^10.2.0
+  rive: ^0.9.1
+  salomon_bottom_bar: ^3.3.1
+  share_plus: ^6.3.0
+  shared_preferences: ^2.0.15
   tapioca:
     git:
       url: https://github.com/daoxve/tapioca.git
       ref: android-dependency-patch
-  timer_builder: null
-  timezone: null
-  url_launcher: null
-  video_player: null
+  timer_builder: ^2.0.0
+  timezone: ^0.9.0
+  url_launcher: ^6.1.7
+  video_player: ^2.4.9
 #logger:
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
 flutter:
-
   uses-material-design: true
 
   assets:

@@ -1,158 +1,123 @@
-/*
- * Copyright (c) 2020 Taner Sener
- *
- * This file is part of FlutterFFmpeg.
- *
- * FlutterFFmpeg is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * FlutterFFmpeg is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public License
- * along with FlutterFFmpeg.  If not, see <http://www.gnu.org/licenses/>.
- */
-
 import 'dart:async';
 
-import 'package:flutter_ffmpeg/ffmpeg_execution.dart';
-import 'package:flutter_ffmpeg/flutter_ffmpeg.dart';
-import 'package:flutter_ffmpeg/media_information.dart';
-import 'package:flutter_ffmpeg/statistics.dart';
-
-final FlutterFFmpegConfig _flutterFFmpegConfig = FlutterFFmpegConfig();
-final FlutterFFmpeg _flutterFFmpeg = FlutterFFmpeg();
-final FlutterFFprobe _flutterFFprobe = FlutterFFprobe();
+import 'package:ffmpeg_kit_flutter/ffmpeg_kit.dart';
+import 'package:ffmpeg_kit_flutter/ffmpeg_kit_config.dart';
+import 'package:ffmpeg_kit_flutter/ffmpeg_session.dart';
+import 'package:ffmpeg_kit_flutter/ffprobe_kit.dart';
+import 'package:ffmpeg_kit_flutter/ffprobe_session.dart';
+import 'package:ffmpeg_kit_flutter/log_callback.dart';
+import 'package:ffmpeg_kit_flutter/media_information_session.dart';
+import 'package:ffmpeg_kit_flutter/session.dart';
+import 'package:ffmpeg_kit_flutter/statistics.dart';
+import 'package:ffmpeg_kit_flutter/statistics_callback.dart';
 
 void enableLogCallback(LogCallback callback) {
-  _flutterFFmpegConfig.enableLogCallback(callback);
+  FFmpegKitConfig.enableLogCallback(callback);
 }
 
 void enableStatisticsCallback(StatisticsCallback callback) {
-  _flutterFFmpegConfig.enableStatisticsCallback(callback);
+  FFmpegKitConfig.enableStatisticsCallback(callback);
 }
 
-Future<String> getFFmpegVersion() async {
-  return await _flutterFFmpegConfig.getFFmpegVersion();
+Future<String?> getFFmpegVersion() async {
+  return await FFmpegKitConfig.getFFmpegVersion();
 }
 
-Future<String> getPlatform() async {
-  return await _flutterFFmpegConfig.getPlatform();
+Future<String?> getPlatform() async {
+  return await FFmpegKitConfig.getPlatform();
 }
 
-Future<int> executeFFmpegWithArguments(List<String> arguments) async {
-  return await _flutterFFmpeg.executeWithArguments(arguments);
+Future<FFmpegSession> executeFFmpegWithArguments(List<String> arguments) async {
+  return await FFmpegKit.executeWithArguments(arguments);
 }
 
-Future<int> executeFFmpeg(String command) async {
-  return await _flutterFFmpeg.execute(command);
+Future<FFmpegSession> executeFFmpeg(String command) async {
+  return await FFmpegKit.execute(command);
 }
 
-Future<int> executeAsyncFFmpeg(
-    String command, ExecuteCallback executeCallback) async {
-  return await _flutterFFmpeg.executeAsync(command, executeCallback);
+Future<FFmpegSession> executeAsyncFFmpeg(
+    String command, void Function(FFmpegSession)? completeCallback) async {
+  return await FFmpegKit.executeAsync(command, completeCallback);
 }
 
-Future<int> executeFFprobeWithArguments(List<String> arguments) async {
-  return await _flutterFFprobe.executeWithArguments(arguments);
+Future<FFprobeSession> executeFFprobeWithArguments(List<String> arguments) async {
+  return await FFprobeKit.executeWithArguments(arguments);
 }
 
-Future<int> executeFFprobe(String command) async {
-  return await _flutterFFprobe.execute(command);
+Future<FFprobeSession> executeFFprobe(String command) async {
+  return await FFprobeKit.execute(command);
 }
 
 Future<void> cancel() async {
-  return await _flutterFFmpeg.cancel();
+  return await FFmpegKit.cancel();
 }
 
 Future<void> cancelExecution(int executionId) async {
-  return await _flutterFFmpeg.cancelExecution(executionId);
+  return await FFmpegKit.cancel(executionId);
 }
 
 Future<void> disableRedirection() async {
-  return await _flutterFFmpegConfig.disableRedirection();
+  return await FFmpegKitConfig.disableRedirection();
 }
 
-Future<int> getLogLevel() async {
-  return await _flutterFFmpegConfig.getLogLevel();
-}
+int getLogLevel() => FFmpegKitConfig.getLogLevel();
 
 Future<void> setLogLevel(int logLevel) async {
-  return await _flutterFFmpegConfig.setLogLevel(logLevel);
+  return await FFmpegKitConfig.setLogLevel(logLevel);
 }
 
 Future<void> enableLogs() async {
-  return await _flutterFFmpegConfig.enableLogs();
+  return await FFmpegKitConfig.enableLogs();
 }
 
 Future<void> disableLogs() async {
-  return await _flutterFFmpegConfig.disableLogs();
+  return await FFmpegKitConfig.disableLogs();
 }
 
 Future<void> enableStatistics() async {
-  return await _flutterFFmpegConfig.enableStatistics();
+  return await FFmpegKitConfig.enableStatistics();
 }
 
 Future<void> disableStatistics() async {
-  return await _flutterFFmpegConfig.disableStatistics();
+  return await FFmpegKitConfig.disableStatistics();
 }
 
-Future<Statistics> getLastReceivedStatistics() async {
-  return await _flutterFFmpegConfig.getLastReceivedStatistics();
-}
-
-Future<void> resetStatistics() async {
-  return await _flutterFFmpegConfig.resetStatistics();
+Future<Statistics?> getLastReceivedStatistics() async {
+  return FFmpegSession().getLastReceivedStatistics();
 }
 
 Future<void> setFontconfigConfigurationPath(String path) async {
-  return await _flutterFFmpegConfig.setFontconfigConfigurationPath(path);
+  return await FFmpegKitConfig.setFontconfigConfigurationPath(path);
 }
 
-Future<void> setFontDirectory(
-    String fontDirectory, Map<String, String> fontNameMap) async {
-  return await _flutterFFmpegConfig.setFontDirectory(
-      fontDirectory, fontNameMap);
+Future<void> setFontDirectory(String fontDirectory, Map<String, String> fontNameMap) async {
+  return await FFmpegKitConfig.setFontDirectory(fontDirectory, fontNameMap);
 }
 
-Future<String> getPackageName() async {
-  return await _flutterFFmpegConfig.getPackageName();
+Future<Session?> getLastReturnCode() async {
+  return await FFmpegKitConfig.getLastCompletedSession();
 }
 
-Future<List<dynamic>> getExternalLibraries() async {
-  return await _flutterFFmpegConfig.getExternalLibraries();
+Future<Session?> getLastCommandOutput() async {
+  return await FFmpegKitConfig.getLastSession();
 }
 
-Future<int> getLastReturnCode() async {
-  return await _flutterFFmpegConfig.getLastReturnCode();
+Future<MediaInformationSession> getMediaInformation(String path) async {
+  return await FFprobeKit.getMediaInformation(path);
 }
 
-Future<String> getLastCommandOutput() async {
-  return await _flutterFFmpegConfig.getLastCommandOutput();
+Future<String?> registerNewFFmpegPipe() async {
+  return await FFmpegKitConfig.registerNewFFmpegPipe();
 }
 
-Future<MediaInformation> getMediaInformation(String path) async {
-  return await _flutterFFprobe.getMediaInformation(path);
+Future<void> setEnvironmentVariable(String variableName, String variableValue) async {
+  return await FFmpegKitConfig.setEnvironmentVariable(variableName, variableValue);
 }
 
-Future<String> registerNewFFmpegPipe() async {
-  return await _flutterFFmpegConfig.registerNewFFmpegPipe();
-}
-
-Future<void> setEnvironmentVariable(
-    String variableName, String variableValue) async {
-  return await _flutterFFmpegConfig.setEnvironmentVariable(
-      variableName, variableValue);
-}
-
-Future<List<FFmpegExecution>> listFFmpegExecutions() async {
-  return await _flutterFFmpeg.listExecutions();
+Future<List<FFmpegSession>> listFFmpegSessions() async {
+  return await FFmpegKit.listSessions();
 }
 
 List<String>? parseArguments(command) {
-  return FlutterFFmpeg.parseArguments(command);
+  return FFmpegKitConfig.parseArguments(command);
 }
