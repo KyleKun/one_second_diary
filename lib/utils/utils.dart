@@ -1,6 +1,8 @@
 import 'dart:io' as io;
 
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 // import 'package:logger/logger.dart';
 import 'package:path_provider/path_provider.dart';
@@ -52,6 +54,34 @@ class Utils {
         // Utils().logInfo('Permission granted? : ${result.isGranted}');
         return false;
       }
+    }
+  }
+
+  /// Used to request storage-specific Android permissions due to Android 13 breaking changes
+  static Future<bool> requestStoragePermissions() async {
+    final androidDeviceInfo = await DeviceInfoPlugin().androidInfo;
+    late final Map<Permission, PermissionStatus> permissionStatuses;
+
+    if (androidDeviceInfo.version.sdkInt <= 32) {
+      // For android 12 and below devices
+      permissionStatuses = await [Permission.storage, Permission.manageExternalStorage].request();
+    } else {
+      permissionStatuses =
+          await [Permission.videos, Permission.photos, Permission.audio, Permission.manageExternalStorage].request();
+    }
+
+    bool allAccepted = true;
+    permissionStatuses.forEach((permission, status) {
+      if (status != PermissionStatus.granted) {
+        allAccepted = false;
+      }
+      print(permissionStatuses);
+    });
+
+    if (allAccepted) {
+      return true;
+    } else {
+      return false;
     }
   }
 
@@ -152,9 +182,8 @@ class Utils {
       // Converting back to string
       for (int i = 0; i < orderedDates.length; i++) {
         // Adding a leading zero on Days and Months <= 9
-        final String day = orderedDates[i].day <= 9
-            ? '0${orderedDates[i].day}'
-            : '${orderedDates[i].day}';
+        final String day =
+            orderedDates[i].day <= 9 ? '0${orderedDates[i].day}' : '${orderedDates[i].day}';
         final String month = orderedDates[i].month <= 9
             ? '0${orderedDates[i].month}'
             : '${orderedDates[i].month}';
@@ -164,6 +193,29 @@ class Utils {
       }
     } catch (e) {}
     return allVideos;
+  }
+
+  static Future<String> copyFontToStorage() async {
+    final io.Directory directory = await getApplicationDocumentsDirectory();
+    final String fontPath = '${directory.path}/magic.ttf';
+    try {
+      if (StorageUtils.checkFileExists(fontPath)) {
+        // Utils().logInfo('Font already exists');
+        print('Font already exists');
+      } else {
+        final ByteData data = await rootBundle.load('assets/fonts/YuseiMagic-Regular.ttf');
+        final List<int> bytes =
+            data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
+        await io.File(fontPath).writeAsBytes(bytes);
+        print('Font copied to $fontPath');
+        // Utils().logInfo('Font copied to $fontPath');
+      }
+    } catch (e) {
+      // Utils().logError('$e');
+      print(e);
+    }
+
+    return fontPath;
   }
 }
 

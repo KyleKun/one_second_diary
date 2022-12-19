@@ -62,8 +62,8 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
 
         await executeFFmpeg(
                 '-f concat -safe 0 -i $txtPath -map 0 -c copy $outputPath')
-            .then((result) {
-          if (result == 0) {
+            .then((session) {
+          if (session.getReturnCode() == 0) {
             _movieCount.updateMovieCount();
             showDialog(
               barrierDismissible: false,
@@ -87,7 +87,7 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
               builder: (context) => CustomDialog(
                 isDoubleAction: false,
                 title: 'movieError'.tr,
-                content: '${'tryAgainMsg'.tr}\nCode error: $result',
+                content: '${'tryAgainMsg'.tr}\nCode error: ${session.getFailStackTrace()}',
                 actionText: 'Ok',
                 actionColor: Colors.red,
                 action: () => Get.back(),

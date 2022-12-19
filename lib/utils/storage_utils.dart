@@ -1,16 +1,26 @@
 import 'dart:io' as io;
 
+import 'package:get/get.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 import 'shared_preferences_util.dart';
 import 'utils.dart';
 
 class StorageUtils {
   /// Create application folder in internal storage
-  static void createFolder() async {
+  static Future<void> createFolder() async {
     try {
-      await Utils.requestPermission(Permission.storage);
+      final hasStoragePerms = await Utils.requestStoragePermissions();
+      print('Storage perms enabled? $hasStoragePerms');
+
+      if (hasStoragePerms == false) {
+        // Get.snackbar(
+        //   'Oh no!',
+        //   'Not all permissions were granted. Some app features may not work properly',
+        // );
+        print('Looks like some permissions were not granted');
+      }
+
       io.Directory? appDirectory;
       io.Directory? moviesDirectory;
 
@@ -63,6 +73,7 @@ class StorageUtils {
         // Utils().logInfo("Directory already exists");
       }
     } catch (e) {
+      print(e);
       // Utils().logError('$e');
     }
   }
