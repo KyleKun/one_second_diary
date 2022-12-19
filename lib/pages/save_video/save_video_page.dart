@@ -428,7 +428,7 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
                   padding: EdgeInsets.symmetric(
                       horizontal: MediaQuery.of(context).size.width * 0.04),
                   title: Text(
-                    'Enable Geotagging',
+                    'enableGeotagging'.tr,
                     style: TextStyle(
                       fontSize: MediaQuery.of(context).size.height * 0.025,
                     ),
@@ -440,7 +440,9 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
                     await showDialog(
                       context: context,
                       builder: (context) => AlertDialog(
-                        title: const Center(child: Text('Set custom location')),
+                        title: Center(
+                          child: Text('setCustomLocation'.tr),
+                        ),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
@@ -450,14 +452,14 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
                             TextField(
                               controller: customLocationTextController,
                               cursorColor: Colors.green,
-                              decoration: const InputDecoration(
-                                hintText: 'Enter location',
+                              decoration: InputDecoration(
+                                hintText: 'enterLocation'.tr,
                                 filled: true,
-                                border: OutlineInputBorder(
+                                border: const OutlineInputBorder(
                                   borderSide: BorderSide(color: Colors.green),
                                 ),
                                 enabledBorder: InputBorder.none,
-                                focusedBorder: OutlineInputBorder(
+                                focusedBorder: const OutlineInputBorder(
                                   borderSide: BorderSide(color: Colors.green),
                                 ),
                               ),
@@ -466,14 +468,11 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
                         ),
                         actions: [
                           TextButton(
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
-                            // color: AppColors.green,
+                            onPressed: () => Navigator.pop(context),
                             style: TextButton.styleFrom(
                               foregroundColor: AppColors.green,
                             ),
-                            child: const Text('OK'),
+                            child: Text('ok'.tr),
                           ),
                           TextButton(
                             onPressed: () {
@@ -484,14 +483,14 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
                             style: TextButton.styleFrom(
                               foregroundColor: Colors.red,
                             ),
-                            child: const Text('Reset'),
+                            child: Text('reset'.tr),
                           )
                         ],
                       ),
                     );
                   },
                   title: Text(
-                    'Set custom location',
+                    'setCustomLocation'.tr,
                     style: TextStyle(
                       fontSize: MediaQuery.of(context).size.height * 0.025,
                     ),

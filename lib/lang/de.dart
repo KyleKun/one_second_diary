@@ -75,4 +75,9 @@ const Map<String, String> de = {
   'dateFormat': 'Datumsformat:',
   'dateColor': 'Datumsfarbe:',
   'selectColor': 'Wähle eine Farbe',
+  'enableGeotagging': 'Geotagging aktivieren',
+  'setCustomLocation': 'Setzen Sie den benutzerdefinierten Standort',
+  'ok': 'OK',
+  'reset': 'Zurücksetzen',
+  'enterLocation': 'Ort eingeben',
 };
