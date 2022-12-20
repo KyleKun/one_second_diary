@@ -192,6 +192,20 @@ class _SaveButtonState extends State<SaveButton> {
         if (!isEdit) {
           _videoCountController.updateVideoCount();
         }
+
+        // Showing confirmation popup
+        showDialog(
+          barrierDismissible: false,
+          context: Get.context!,
+          builder: (context) => CustomDialog(
+            isDoubleAction: false,
+            title: 'videoSavedTitle'.tr,
+            content: 'videoSavedDesc'.tr,
+            actionText: 'Ok',
+            actionColor: Colors.green,
+            action: () => Get.offAllNamed(Routes.HOME),
+          ),
+        );
       } else if (ReturnCode.isCancel(returnCode)) {
         print('Execution was cancelled');
       } else {
