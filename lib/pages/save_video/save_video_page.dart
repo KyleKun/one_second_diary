@@ -2,14 +2,18 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:group_radio_button/group_radio_button.dart';
 import 'package:video_player/video_player.dart';
 
 import '../../routes/app_pages.dart';
 import '../../utils/constants.dart';
+import '../../utils/custom_checkbox_list_tile.dart';
 import '../../utils/custom_dialog.dart';
 import '../../utils/date_format_utils.dart';
+import '../../utils/shared_preferences_util.dart';
 import '../../utils/storage_utils.dart';
 import 'widgets/save_button.dart';
 
@@ -21,7 +25,9 @@ class SaveVideoPage extends StatefulWidget {
 class _SaveVideoPageState extends State<SaveVideoPage> {
   double _opacity = 1.0;
   late String _tempVideoPath;
-  late var _videoController;
+  late VideoPlayerController _videoController;
+
+  final TextEditingController customLocationTextController = TextEditingController();
 
   Color pickerColor = const Color(0xff000000);
   Color currentColor = const Color(0xff000000);
@@ -35,6 +41,76 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
   ];
 
   bool isTextDate = false;
+
+  String? _currentAddress;
+  Position? _currentPosition;
+  bool isGeotaggingEnabled = SharedPrefsUtil.getBool('isGeotaggingEnabled') ?? false;
+
+  Future<void> checkGeotaggingStatus() async {
+    isGeotaggingEnabled = SharedPrefsUtil.getBool('isGeotaggingEnabled') ?? false;
+    if (isGeotaggingEnabled) {
+      await _getCurrentPosition();
+    }
+  }
+
+  Future<void> toggleGeotaggingStatus() async {
+    isGeotaggingEnabled = !isGeotaggingEnabled;
+    await SharedPrefsUtil.putBool('isGeotaggingEnabled', isGeotaggingEnabled);
+    setState(() {});
+  }
+
+  Future<bool> _handleLocationPermission() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('Location services are disabled. Please enable the services')));
+      return false;
+    }
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(const SnackBar(content: Text('Location permissions are denied')));
+        return false;
+      }
+    }
+    if (permission == LocationPermission.deniedForever) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text(
+              'Location permissions are permanently denied, we cannot request permissions.')));
+      return false;
+    }
+    return true;
+  }
+
+  Future<void> _getCurrentPosition() async {
+    final hasPermission = await _handleLocationPermission();
+
+    if (!hasPermission) return;
+    await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
+        .then((Position position) {
+      setState(() => _currentPosition = position);
+      _getAddressFromLatLng(_currentPosition!);
+    }).catchError((e) {
+      debugPrint(e);
+    });
+  }
+
+  Future<void> _getAddressFromLatLng(Position position) async {
+    await placemarkFromCoordinates(_currentPosition!.latitude, _currentPosition!.longitude)
+        .then((List<Placemark> placemarks) {
+      final Placemark place = placemarks[0];
+      setState(() {
+        _currentAddress = '${place.administrativeArea}, ${place.country}';
+      });
+    }).catchError((e) {
+      debugPrint(e);
+    });
+  }
 
   void changeColor(Color color) {
     setState(() => pickerColor = color);
@@ -73,6 +149,12 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
   void initState() {
     _tempVideoPath = Get.arguments;
     _initVideoPlayerController();
+    checkGeotaggingStatus().whenComplete(
+      () {
+        print(_currentAddress);
+        setState(() {});
+      },
+    );
     super.initState();
   }
 
@@ -143,12 +225,30 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
             Align(
               alignment: isTextDate ? Alignment.bottomLeft : Alignment.topRight,
               child: Padding(
-                padding: const EdgeInsets.all(5.0),
+                padding: const EdgeInsets.all(10.0),
                 child: Text(
                   _dateFormatValue,
                   style: TextStyle(
                     color: currentColor,
                     fontSize: MediaQuery.of(context).size.width * 0.03,
+                  ),
+                ),
+              ),
+            ),
+            Visibility(
+              visible: isGeotaggingEnabled,
+              child: Align(
+                alignment: Alignment.bottomRight,
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Text(
+                    customLocationTextController.text.isEmpty
+                        ? _currentAddress ?? customLocationTextController.text
+                        : customLocationTextController.text,
+                    style: TextStyle(
+                      color: currentColor,
+                      fontSize: MediaQuery.of(context).size.width * 0.032,
+                    ),
                   ),
                 ),
               ),
@@ -197,6 +297,10 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
               dateColor: currentColor,
               dateFormat: _dateFormatValue,
               isTextDate: isTextDate,
+              userLocation: customLocationTextController.text.isEmpty
+                  ? _currentAddress ?? ''
+                  : customLocationTextController.text,
+              isGeotaggingEnabled: isGeotaggingEnabled,
             ),
             const Spacer(),
           ],
@@ -208,14 +312,15 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
   Widget videoProperties() {
     return Container(
       width: MediaQuery.of(context).size.width * 0.9,
-      height: MediaQuery.of(context).size.height * 0.4,
+      height: MediaQuery.of(context).size.height * 0.49,
       decoration: BoxDecoration(
         border: Border.all(color: AppColors.mainColor),
         borderRadius: BorderRadius.circular(30),
       ),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
+          SizedBox(height: MediaQuery.of(context).size.height * 0.02),
           Center(
             child: Text(
               'editVideoProperties'.tr,
@@ -225,36 +330,37 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
               ),
             ),
           ),
+          SizedBox(height: MediaQuery.of(context).size.height * 0.02),
           SizedBox(
-            height: MediaQuery.of(context).size.width * 0.6,
+            height: MediaQuery.of(context).size.width * 0.8,
             // decoration: BoxDecoration(
             //   border: Border.all(color: AppColors.mainColor),
             //   borderRadius: BorderRadius.circular(30),
             // ),
             child: Column(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
+                // Date color
                 GestureDetector(
                   onTap: () => colorPickerDialog(),
                   child: Row(
-                    mainAxisSize: MainAxisSize.max,
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Padding(
                         padding: EdgeInsets.only(
-                            left: MediaQuery.of(context).size.width * 0.04),
+                          left: MediaQuery.of(context).size.width * 0.04,
+                          bottom: MediaQuery.of(context).size.height * 0.02,
+                        ),
                         child: Text(
                           'dateColor'.tr,
                           style: TextStyle(
-                            fontSize:
-                                MediaQuery.of(context).size.height * 0.025,
+                            fontSize: MediaQuery.of(context).size.height * 0.025,
                           ),
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsets.only(
-                            left: MediaQuery.of(context).size.width * 0.04),
+                        padding:
+                            EdgeInsets.only(left: MediaQuery.of(context).size.width * 0.04),
                         child: Container(
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
@@ -267,6 +373,8 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
                     ],
                   ),
                 ),
+
+                // Date Format
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -305,6 +413,89 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
                     ),
                   ],
                 ),
+
+                // Geotagging
+                CustomCheckboxListTile(
+                  isChecked: isGeotaggingEnabled,
+                  onChanged: (_) async {
+                    await toggleGeotaggingStatus();
+                    if (isGeotaggingEnabled) {
+                      print('Getting location');
+                      await _getCurrentPosition();
+                    }
+                    setState(() {});
+                  },
+                  padding: EdgeInsets.symmetric(
+                      horizontal: MediaQuery.of(context).size.width * 0.04),
+                  title: Text(
+                    'enableGeotagging'.tr,
+                    style: TextStyle(
+                      fontSize: MediaQuery.of(context).size.height * 0.025,
+                    ),
+                  ),
+                ),
+
+                ListTile(
+                  onTap: () async {
+                    await showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        title: Center(
+                          child: Text('setCustomLocation'.tr),
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        content: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            TextField(
+                              controller: customLocationTextController,
+                              cursorColor: Colors.green,
+                              decoration: InputDecoration(
+                                hintText: 'enterLocation'.tr,
+                                filled: true,
+                                border: const OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.green),
+                                ),
+                                enabledBorder: InputBorder.none,
+                                focusedBorder: const OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.green),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.pop(context),
+                            style: TextButton.styleFrom(
+                              foregroundColor: AppColors.green,
+                            ),
+                            child: Text('ok'.tr),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                              customLocationTextController.clear();
+                              setState(() {});
+                            },
+                            style: TextButton.styleFrom(
+                              foregroundColor: Colors.red,
+                            ),
+                            child: Text('reset'.tr),
+                          )
+                        ],
+                      ),
+                    );
+                  },
+                  title: Text(
+                    'setCustomLocation'.tr,
+                    style: TextStyle(
+                      fontSize: MediaQuery.of(context).size.height * 0.025,
+                    ),
+                  ),
+                )
               ],
             ),
           ),

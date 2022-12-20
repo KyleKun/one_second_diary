@@ -1,15 +1,15 @@
 import 'dart:async';
 
-import 'package:ffmpeg_kit_flutter/ffmpeg_kit.dart';
-import 'package:ffmpeg_kit_flutter/ffmpeg_kit_config.dart';
-import 'package:ffmpeg_kit_flutter/ffmpeg_session.dart';
-import 'package:ffmpeg_kit_flutter/ffprobe_kit.dart';
-import 'package:ffmpeg_kit_flutter/ffprobe_session.dart';
-import 'package:ffmpeg_kit_flutter/log_callback.dart';
-import 'package:ffmpeg_kit_flutter/media_information_session.dart';
-import 'package:ffmpeg_kit_flutter/session.dart';
-import 'package:ffmpeg_kit_flutter/statistics.dart';
-import 'package:ffmpeg_kit_flutter/statistics_callback.dart';
+import 'package:ffmpeg_kit_flutter_full_gpl/ffmpeg_kit.dart';
+import 'package:ffmpeg_kit_flutter_full_gpl/ffmpeg_kit_config.dart';
+import 'package:ffmpeg_kit_flutter_full_gpl/ffmpeg_session.dart';
+import 'package:ffmpeg_kit_flutter_full_gpl/ffprobe_kit.dart';
+import 'package:ffmpeg_kit_flutter_full_gpl/ffprobe_session.dart';
+import 'package:ffmpeg_kit_flutter_full_gpl/log_callback.dart';
+import 'package:ffmpeg_kit_flutter_full_gpl/media_information_session.dart';
+import 'package:ffmpeg_kit_flutter_full_gpl/session.dart';
+import 'package:ffmpeg_kit_flutter_full_gpl/statistics.dart';
+import 'package:ffmpeg_kit_flutter_full_gpl/statistics_callback.dart';
 
 void enableLogCallback(LogCallback callback) {
   FFmpegKitConfig.enableLogCallback(callback);

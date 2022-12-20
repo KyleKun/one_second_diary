@@ -68,4 +68,9 @@ const Map<String, String> zh = {
   'dateFormat': '日期格式:',
   'dateColor': '日期颜色:',
   'selectColor': '选择颜色',
+  'enableGeotagging': '启用地理标记',
+  'setCustomLocation': '设置自定义位置',
+  'ok': '好的',
+  'reset': '重置',
+  'enterLocation': '输入位置',
 };

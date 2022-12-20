@@ -75,4 +75,9 @@ const Map<String, String> id = {
   'dateFormat': 'Format Tanggal:',
   'dateColor': 'Warna Hari:',
   'selectColor': 'Pilih warna',
+  'enableGeotagging': 'Aktifkan geotagging',
+  'setCustomLocation': 'Setel lokasi khusus',
+  'ok': 'Oke',
+  'reset': 'Mengatur ulang',
+  'enterLocation': 'Masukkan lokasi',
 };
