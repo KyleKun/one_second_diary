@@ -136,8 +136,8 @@ class _SaveButtonState extends State<SaveButton> {
     const String locPosY = 'h-th-40';
     const String locPosX = 'w-tw-40';
 
-    final double dateTextSize = MediaQuery.of(context).size.width * 0.032 * 2.5;
-    final double locTextSize = MediaQuery.of(context).size.width * 0.032 * 2.67;
+    const double dateTextSize = 31;
+    const double locTextSize = 33;
 
     String locOutput = '';
 
