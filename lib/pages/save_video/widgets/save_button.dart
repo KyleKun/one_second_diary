@@ -26,6 +26,8 @@ class SaveButton extends StatefulWidget {
     required this.isTextDate,
     required this.userLocation,
     required this.isGeotaggingEnabled,
+    required this.textOutlineColor,
+    required this.textOutlineWidth,
   });
 
   // Finding controllers
@@ -36,6 +38,8 @@ class SaveButton extends StatefulWidget {
   final bool isTextDate;
   final String? userLocation;
   final bool isGeotaggingEnabled;
+  final Color textOutlineColor;
+  final double textOutlineWidth;
 
   @override
   _SaveButtonState createState() => _SaveButtonState();
@@ -151,6 +155,8 @@ class _SaveButtonState extends State<SaveButton> {
     // Parses the color code to a hex code format which can be read by ffmpeg
     final String parsedDateColor =
         '0x${widget.dateColor.value.toRadixString(16).substring(2)}';
+    final String parsedTextOutlineColor =
+        '0x${widget.textOutlineColor.value.toRadixString(16).substring(2)}';
 
     // Path to save the final video
     final String finalPath =
@@ -171,7 +177,7 @@ class _SaveButtonState extends State<SaveButton> {
     // If geotagging is enabled, we can allow the command to render the location text into the video
     if (isGeotaggingEnabled) {
       locOutput =
-          ', drawtext=$fontPath:text=\'${widget.userLocation}\':fontsize=$locTextSize:fontcolor=\'$parsedDateColor\':x=$locPosX:y=$locPosY';
+          ', drawtext=$fontPath:text=\'${widget.userLocation}\':fontsize=$locTextSize:fontcolor=\'$parsedDateColor\':borderw=${widget.textOutlineWidth}:bordercolor=$parsedTextOutlineColor:x=$locPosX:y=$locPosY';
     }
 
     // Caches the default font to save texts in ffmpeg.
@@ -179,7 +185,7 @@ class _SaveButtonState extends State<SaveButton> {
     await FFmpegKitConfig.setFontDirectory(fontPath);
 
     await executeFFmpeg(
-      '-i $videoPath -vf [in]drawtext="$fontPath:text=\'${widget.dateFormat}\':fontsize=$dateTextSize:fontcolor=\'$parsedDateColor\':x=$datePosX:y=$datePosY$locOutput[out]" -codec:v libx264 -pix_fmt yuv420p $finalPath -y',
+      '-i $videoPath -vf [in]drawtext="$fontPath:text=\'${widget.dateFormat}\':fontsize=$dateTextSize:fontcolor=\'$parsedDateColor\':borderw=${widget.textOutlineWidth}:bordercolor=$parsedTextOutlineColor:x=$datePosX:y=$datePosY$locOutput[out]" -codec:v libx264 -pix_fmt yuv420p $finalPath -y',
     ).then((session) async {
       print(session.getCommand().toString());
       final returnCode = await session.getReturnCode();
