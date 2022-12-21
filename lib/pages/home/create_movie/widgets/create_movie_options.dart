@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../../enums/export_date_range.dart';
+// import '../../../../enums/export_orientations.dart';
 import '../../../../utils/constants.dart';
 import '../../../../utils/theme.dart';
 import '../../../../utils/utils.dart';
@@ -19,11 +20,11 @@ class _CreateMovieOptionsState extends State<CreateMovieOptions> {
   ExportDateRange _exportPeriodGroupValue = ExportDateRange.allTime;
   final List<ExportDateRange> _exportPeriods = ExportDateRange.values;
 
-  // String _orientationDefaultValue = 'Landscape';
+  // ExportOrientation _orientationDefaultValue = ExportOrientation.landscape;
 
-  // final List<String> _orientationValues = [
-  //   'Portrait',
-  //   'Landscape',
+  // final List<ExportOrientation> _orientationValues = [
+  //   ExportOrientation.portrait,
+  //   ExportOrientation.landscape,
   // ];
 
   // Stores the names of the manually selected videos
@@ -97,12 +98,12 @@ class _CreateMovieOptionsState extends State<CreateMovieOptions> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          'Date Range',
+                          'dateRange'.tr,
                           style: TextStyle(
                             fontSize: MediaQuery.of(context).size.height * 0.025,
                           ),
                         ),
-                        Text('Clips found: ${getClipsFound()}'),
+                        Text('${'clipsFound'.tr}: ${getClipsFound()}'),
                       ],
                     ),
                   ),
@@ -144,7 +145,7 @@ class _CreateMovieOptionsState extends State<CreateMovieOptions> {
                             (ExportDateRange value) {
                               return DropdownMenuItem<ExportDateRange>(
                                 value: value,
-                                child: Text(value.label),
+                                child: Text(value.localizationLabel.tr),
                               );
                             },
                           ).toList(),
@@ -182,7 +183,7 @@ class _CreateMovieOptionsState extends State<CreateMovieOptions> {
               //         alignment: Alignment.centerLeft,
               //         child: SizedBox(
               //           width: 300,
-              //           child: DropdownButtonFormField<String>(
+              //           child: DropdownButtonFormField<ExportOrientation>(
               //             value: _orientationDefaultValue,
               //             icon: const Icon(Icons.expand_more),
               //             iconSize: 24,
@@ -205,11 +206,11 @@ class _CreateMovieOptionsState extends State<CreateMovieOptions> {
               //                 _orientationDefaultValue = newValue!;
               //               });
               //             },
-              //             items: _orientationValues.map<DropdownMenuItem<String>>(
-              //               (String value) {
-              //                 return DropdownMenuItem<String>(
+              //             items: _orientationValues.map<DropdownMenuItem<ExportOrientation>>(
+              //               (ExportOrientation value) {
+              //                 return DropdownMenuItem<ExportOrientation>(
               //                   value: value,
-              //                   child: Text(value),
+              //                   child: Text(value.label),
               //                 );
               //               },
               //             ).toList(),

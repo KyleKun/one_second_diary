@@ -1,15 +1,16 @@
 enum ExportDateRange {
-  allTime('All Time'),
-  last7Days('Last 7 days'),
-  last30Days('Last 30 days'),
-  last60Days('Last 60 days'),
-  last90Days('Last 90 days'),
-  thisMonth('This month'),
-  thisYear('This year'),
-  lastYear('Last year'),
-  custom('Custom');
+  allTime('All Time', 'allTime'),
+  last7Days('Last 7 days', 'last7Days'),
+  last30Days('Last 30 days', 'last30Days'),
+  last60Days('Last 60 days', 'last60Days'),
+  last90Days('Last 90 days', 'last90Days'),
+  thisMonth('This month', 'thisMonth'),
+  thisYear('This year', 'thisYear'),
+  lastYear('Last year', 'lastYear'),
+  custom('Custom', 'custom');
 
   final String label;
+  final String localizationLabel;
 
-  const ExportDateRange(this.label);
+  const ExportDateRange(this.label, this.localizationLabel);
 }
