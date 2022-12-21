@@ -27,7 +27,8 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
   late String _tempVideoPath;
   late VideoPlayerController _videoController;
 
-  final TextEditingController customLocationTextController = TextEditingController();
+  final TextEditingController customLocationTextController =
+      TextEditingController();
 
   Color pickerColor = const Color(0xff000000);
   Color currentColor = const Color(0xff000000);
@@ -46,10 +47,13 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
 
   String? _currentAddress;
   Position? _currentPosition;
-  bool isGeotaggingEnabled = SharedPrefsUtil.getBool('isGeotaggingEnabled') ?? false;
+  bool isGeotaggingEnabled =
+      SharedPrefsUtil.getBool('isGeotaggingEnabled') ?? false;
+  String? _subtitles;
 
   Future<void> checkGeotaggingStatus() async {
-    isGeotaggingEnabled = SharedPrefsUtil.getBool('isGeotaggingEnabled') ?? false;
+    isGeotaggingEnabled =
+        SharedPrefsUtil.getBool('isGeotaggingEnabled') ?? false;
     if (isGeotaggingEnabled) {
       await _getCurrentPosition();
     }
@@ -68,15 +72,16 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text('Location services are disabled. Please enable the services')));
+          content: Text(
+              'Location services are disabled. Please enable the services')));
       return false;
     }
     permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(const SnackBar(content: Text('Location permissions are denied')));
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Location permissions are denied')));
         return false;
       }
     }
@@ -103,7 +108,8 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
   }
 
   Future<void> _getAddressFromLatLng(Position position) async {
-    await placemarkFromCoordinates(_currentPosition!.latitude, _currentPosition!.longitude)
+    await placemarkFromCoordinates(
+            _currentPosition!.latitude, _currentPosition!.longitude)
         .then((List<Placemark> placemarks) {
       final Placemark place = placemarks[0];
       setState(() {
@@ -269,7 +275,8 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
                     children: [
                       Text(
                         customLocationTextController.text.isEmpty
-                            ? _currentAddress ?? customLocationTextController.text
+                            ? _currentAddress ??
+                                customLocationTextController.text
                             : customLocationTextController.text,
                         style: TextStyle(
                           fontSize: MediaQuery.of(context).size.width * 0.032,
@@ -281,7 +288,8 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
                       ),
                       Text(
                         customLocationTextController.text.isEmpty
-                            ? _currentAddress ?? customLocationTextController.text
+                            ? _currentAddress ??
+                                customLocationTextController.text
                             : customLocationTextController.text,
                         style: TextStyle(
                           fontSize: MediaQuery.of(context).size.width * 0.032,
@@ -325,224 +333,233 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
         appBar: AppBar(
           title: Text('saveVideo'.tr),
         ),
-        body: Column(
-          children: [
-            _dailyVideoPlayer(),
-            const Spacer(),
-            videoProperties(),
-            const Spacer(flex: 2),
-            SaveButton(
-              videoPath: _tempVideoPath,
-              videoController: _videoController,
-              dateColor: currentColor,
-              dateFormat: _dateFormatValue,
-              isTextDate: isTextDate,
-              userLocation: customLocationTextController.text.isEmpty
-                  ? _currentAddress ?? ''
-                  : customLocationTextController.text,
-              isGeotaggingEnabled: isGeotaggingEnabled,
-              textOutlineColor: invert(currentColor),
-              textOutlineWidth: textOutlineStrokeWidth,
+        floatingActionButton: SaveButton(
+          videoPath: _tempVideoPath,
+          videoController: _videoController,
+          dateColor: currentColor,
+          dateFormat: _dateFormatValue,
+          isTextDate: isTextDate,
+          userLocation: customLocationTextController.text.isEmpty
+              ? _currentAddress ?? ''
+              : customLocationTextController.text,
+          subtitles: _subtitles,
+          videoDuration: _videoController.value.duration.inSeconds,
+          isGeotaggingEnabled: isGeotaggingEnabled,
+          textOutlineColor: invert(currentColor),
+          textOutlineWidth: textOutlineStrokeWidth,
+        ),
+        body: SingleChildScrollView(
+          child: SizedBox(
+            height: MediaQuery.of(context).size.height,
+            child: Column(
+              children: [
+                _dailyVideoPlayer(),
+                Expanded(child: videoProperties()),
+              ],
             ),
-            const Spacer(),
-          ],
+          ),
         ),
       ),
     );
   }
 
   Widget videoProperties() {
-    return Container(
-      width: MediaQuery.of(context).size.width * 0.9,
-      height: MediaQuery.of(context).size.height * 0.49,
-      decoration: BoxDecoration(
-        border: Border.all(color: AppColors.mainColor),
-        borderRadius: BorderRadius.circular(30),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          SizedBox(height: MediaQuery.of(context).size.height * 0.02),
-          Center(
-            child: Text(
-              'editVideoProperties'.tr,
-              style: TextStyle(
-                fontSize: MediaQuery.of(context).size.height * 0.025,
-                fontWeight: FontWeight.bold,
-              ),
+    return Column(
+      children: [
+        SizedBox(height: MediaQuery.of(context).size.height * 0.02),
+        Center(
+          child: Text(
+            'editVideoProperties'.tr,
+            style: TextStyle(
+              fontSize: MediaQuery.of(context).size.height * 0.020,
+              fontWeight: FontWeight.bold,
             ),
           ),
-          SizedBox(height: MediaQuery.of(context).size.height * 0.02),
-          SizedBox(
-            height: MediaQuery.of(context).size.width * 0.8,
-            // decoration: BoxDecoration(
-            //   border: Border.all(color: AppColors.mainColor),
-            //   borderRadius: BorderRadius.circular(30),
-            // ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                // Date color
-                GestureDetector(
-                  onTap: () => colorPickerDialog(),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.only(
-                          left: MediaQuery.of(context).size.width * 0.04,
-                          bottom: MediaQuery.of(context).size.height * 0.02,
-                        ),
-                        child: Text(
-                          'dateColor'.tr,
-                          style: TextStyle(
-                            fontSize: MediaQuery.of(context).size.height * 0.025,
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding:
-                            EdgeInsets.only(left: MediaQuery.of(context).size.width * 0.04),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: currentColor,
-                          ),
-                          width: MediaQuery.of(context).size.width * 0.08,
-                          height: MediaQuery.of(context).size.width * 0.08,
-                        ),
-                      ),
-                    ],
+        ),
+        SizedBox(height: MediaQuery.of(context).size.height * 0.02),
+
+        // Date color
+        GestureDetector(
+          onTap: () => colorPickerDialog(),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Padding(
+                padding: EdgeInsets.only(
+                  left: MediaQuery.of(context).size.width * 0.04,
+                  bottom: MediaQuery.of(context).size.height * 0.02,
+                ),
+                child: Text(
+                  'dateColor'.tr,
+                  style: TextStyle(
+                    fontSize: MediaQuery.of(context).size.height * 0.020,
                   ),
                 ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(
+                    left: MediaQuery.of(context).size.width * 0.04),
+                child: Container(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: currentColor,
+                  ),
+                  width: MediaQuery.of(context).size.width * 0.08,
+                  height: MediaQuery.of(context).size.width * 0.08,
+                ),
+              ),
+            ],
+          ),
+        ),
 
-                // Date Format
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        // Date Format
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Padding(
+              padding: EdgeInsets.only(
+                left: MediaQuery.of(context).size.width * 0.04,
+              ),
+              child: Text(
+                'dateFormat'.tr,
+                style: TextStyle(
+                  fontSize: MediaQuery.of(context).size.height * 0.020,
+                ),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.all(
+                MediaQuery.of(context).size.height * 0.01,
+              ),
+              child: RadioGroup<String>.builder(
+                direction: Axis.vertical,
+                horizontalAlignment: MainAxisAlignment.start,
+                groupValue: _dateFormatValue,
+                onChanged: (value) => setState(() {
+                  _dateFormatValue = value!;
+                  // Place date in the bottom if it is text format
+                  _dateFormatValue == _dateFormats[0]
+                      ? isTextDate = false
+                      : isTextDate = true;
+                }),
+                items: _dateFormats,
+                itemBuilder: (item) => RadioButtonBuilder(
+                  item,
+                ),
+              ),
+            ),
+          ],
+        ),
+
+        // Geotagging
+        CustomCheckboxListTile(
+          isChecked: isGeotaggingEnabled,
+          onChanged: (_) async {
+            await toggleGeotaggingStatus();
+            if (isGeotaggingEnabled) {
+              print('Getting location');
+              await _getCurrentPosition();
+            }
+            setState(() {});
+          },
+          padding: EdgeInsets.symmetric(
+              horizontal: MediaQuery.of(context).size.width * 0.04),
+          title: Text(
+            'enableGeotagging'.tr,
+            style: TextStyle(
+              fontSize: MediaQuery.of(context).size.height * 0.020,
+            ),
+          ),
+        ),
+
+        ListTile(
+          onTap: () async {
+            await showDialog(
+              context: context,
+              builder: (context) => AlertDialog(
+                title: Center(
+                  child: Text('setCustomLocation'.tr),
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
-                    Padding(
-                      padding: EdgeInsets.only(
-                        left: MediaQuery.of(context).size.width * 0.04,
-                      ),
-                      child: Text(
-                        'dateFormat'.tr,
-                        style: TextStyle(
-                          fontSize: MediaQuery.of(context).size.height * 0.025,
+                    TextField(
+                      controller: customLocationTextController,
+                      cursorColor: Colors.green,
+                      decoration: InputDecoration(
+                        hintText: 'enterLocation'.tr,
+                        filled: true,
+                        border: const OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.green),
                         ),
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.all(
-                        MediaQuery.of(context).size.height * 0.01,
-                      ),
-                      child: RadioGroup<String>.builder(
-                        direction: Axis.vertical,
-                        horizontalAlignment: MainAxisAlignment.start,
-                        groupValue: _dateFormatValue,
-                        onChanged: (value) => setState(() {
-                          _dateFormatValue = value!;
-                          // Place date in the bottom if it is text format
-                          _dateFormatValue == _dateFormats[0]
-                              ? isTextDate = false
-                              : isTextDate = true;
-                        }),
-                        items: _dateFormats,
-                        itemBuilder: (item) => RadioButtonBuilder(
-                          item,
+                        enabledBorder: InputBorder.none,
+                        focusedBorder: const OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.green),
                         ),
                       ),
                     ),
                   ],
                 ),
-
-                // Geotagging
-                CustomCheckboxListTile(
-                  isChecked: isGeotaggingEnabled,
-                  onChanged: (_) async {
-                    await toggleGeotaggingStatus();
-                    if (isGeotaggingEnabled) {
-                      print('Getting location');
-                      await _getCurrentPosition();
-                    }
-                    setState(() {});
-                  },
-                  padding: EdgeInsets.symmetric(
-                      horizontal: MediaQuery.of(context).size.width * 0.04),
-                  title: Text(
-                    'enableGeotagging'.tr,
-                    style: TextStyle(
-                      fontSize: MediaQuery.of(context).size.height * 0.025,
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(context),
+                    style: TextButton.styleFrom(
+                      foregroundColor: AppColors.green,
                     ),
+                    child: Text('ok'.tr),
                   ),
-                ),
-
-                ListTile(
-                  onTap: () async {
-                    await showDialog(
-                      context: context,
-                      builder: (context) => AlertDialog(
-                        title: Center(
-                          child: Text('setCustomLocation'.tr),
-                        ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        content: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            TextField(
-                              controller: customLocationTextController,
-                              cursorColor: Colors.green,
-                              decoration: InputDecoration(
-                                hintText: 'enterLocation'.tr,
-                                filled: true,
-                                border: const OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.green),
-                                ),
-                                enabledBorder: InputBorder.none,
-                                focusedBorder: const OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.green),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        actions: [
-                          TextButton(
-                            onPressed: () => Navigator.pop(context),
-                            style: TextButton.styleFrom(
-                              foregroundColor: AppColors.green,
-                            ),
-                            child: Text('ok'.tr),
-                          ),
-                          TextButton(
-                            onPressed: () {
-                              Navigator.pop(context);
-                              customLocationTextController.clear();
-                              setState(() {});
-                            },
-                            style: TextButton.styleFrom(
-                              foregroundColor: Colors.red,
-                            ),
-                            child: Text('reset'.tr),
-                          )
-                        ],
-                      ),
-                    );
-                  },
-                  title: Text(
-                    'setCustomLocation'.tr,
-                    style: TextStyle(
-                      fontSize: MediaQuery.of(context).size.height * 0.025,
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                      customLocationTextController.clear();
+                      setState(() {});
+                    },
+                    style: TextButton.styleFrom(
+                      foregroundColor: Colors.red,
                     ),
-                  ),
-                )
-              ],
+                    child: Text('reset'.tr),
+                  )
+                ],
+              ),
+            );
+          },
+          title: Text(
+            'setCustomLocation'.tr,
+            style: TextStyle(
+              fontSize: MediaQuery.of(context).size.height * 0.020,
             ),
           ),
-        ],
-      ),
+        ),
+
+        // Subtitles
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextField(
+              cursorColor: Colors.green,
+              maxLines: null,
+              onChanged: (value) => setState(() {
+                _subtitles = value;
+              }),
+              decoration: InputDecoration(
+                hintText: 'enterSubtitles'.tr,
+                filled: true,
+                border: const OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.green),
+                ),
+                enabledBorder: InputBorder.none,
+                focusedBorder: const OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.green),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
