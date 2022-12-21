@@ -15,7 +15,8 @@ const Map<String, String> id = {
   'movieInsufficientVideos':
       'Anda harus memiliki lebih 2 rekaman video untuk bisa membuat video gabungan',
   'movieCreatedTitle': 'Video dibuat!',
-  'movieCreatedDesc': 'Video disimpan ke dalam penyimpanan di dalam folder OSD-Movies folder',
+  'movieCreatedDesc':
+      'Video disimpan ke dalam penyimpanan di dalam folder OSD-Movies folder',
   'movieError': 'Gagal menyimpan video!',
   'tryAgainMsg':
       'Coba beberapa saaat lagi. Jika masalah masih tetap ada, hubungi pengembang.',
@@ -26,8 +27,7 @@ const Map<String, String> id = {
   'tapBelowToGenerate':
       'Tekan tombol di bawah untuk menghasilkan\n satu file video single video file:',
   'editQuestionTitle': 'Ubah video?',
-  'editQuestion':
-      'Rekaman sebelumnya akan dihapus, apakah Anda yakin?',
+  'editQuestion': 'Rekaman sebelumnya akan dihapus, apakah Anda yakin?',
   'yes': 'Ya',
   'no': 'Tidak',
   'edit': 'Ubah',
@@ -80,4 +80,16 @@ const Map<String, String> id = {
   'ok': 'Oke',
   'reset': 'Mengatur ulang',
   'enterLocation': 'Masukkan lokasi',
+  'allTime': 'Sepanjang waktu',
+  'last7Days': '7 hari terakhir',
+  'last30Days': '30 hari terakhir',
+  'last60Days': '60 hari terakhir',
+  'last90Days': '90 hari terakhir',
+  'thisMonth': 'Bulan ini',
+  'thisYear': 'Tahun ini',
+  'lastYear': 'Tahun lalu',
+  'custom': 'Kebiasaan',
+  'dateRange': 'Rentang tanggal',
+  'clipsFound': 'Klip ditemukan',
+  'enterSubtitles': 'Masukkan subjudul',
 };
