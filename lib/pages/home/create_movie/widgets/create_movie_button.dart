@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:open_file/open_file.dart';
 
 import '../../../../controllers/video_count_controller.dart';
+import '../../../../enums/export_date_range.dart';
 import '../../../../utils/constants.dart';
 import '../../../../utils/custom_dialog.dart';
 import '../../../../utils/date_format_utils.dart';
@@ -13,6 +14,15 @@ import '../../../../utils/storage_utils.dart';
 import '../../../../utils/utils.dart';
 
 class CreateMovieButton extends StatefulWidget {
+  const CreateMovieButton({
+    super.key,
+    required this.selectedExportDateRange,
+    // required this.selectedOrientation,
+  });
+
+  final ExportDateRange selectedExportDateRange;
+  // final ExportOrientation selectedOrientation;
+
   @override
   _CreateMovieButtonState createState() => _CreateMovieButtonState();
 }
@@ -34,10 +44,11 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
       isProcessing = true;
     });
     try {
-      final allVideos = Utils.getAllVideosFromStorage();
+      final selectedExportDateRange = widget.selectedExportDateRange;
+      final selectedVideos = Utils.getSelectedVideosFromStorage(selectedExportDateRange);
 
       // Needs more than 1 video to create movie
-      if (allVideos.length < 2) {
+      if (selectedVideos.length < 2) {
         showDialog(
           barrierDismissible: false,
           context: Get.context!,
@@ -55,13 +66,14 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
         final String today = DateFormatUtils.getToday();
 
         // Creating txt that will be used with ffmpeg
-        final String txtPath = await Utils.writeTxt(allVideos);
+        final String txtPath = await Utils.writeTxt(selectedVideos);
         // Utils().logInfo('Saved txt');
         final String outputPath =
             '${SharedPrefsUtil.getString('moviesPath')}OneSecondDiary-Movie-${_movieCount.movieCount.value}-$today.mp4';
         // Utils().logInfo('It will be saved in: $outputPath');
 
-        await executeFFmpeg('-f concat -safe 0 -i $txtPath -map 0 -c copy $outputPath -y').then(
+        await executeFFmpeg('-f concat -safe 0 -i $txtPath -map 0 -c copy $outputPath -y')
+            .then(
           (session) async {
             final returnCode = await session.getReturnCode();
             if (ReturnCode.isSuccess(returnCode)) {

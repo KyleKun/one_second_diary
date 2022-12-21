@@ -7,4 +7,5 @@ abstract class Routes {
   static const RECORDING = '/recording';
   static const DONATION = '/donation';
   static const SAVE_VIDEO = '/save_video';
+  static const CREATEMOVIEOPTIONS = '/home/create_movie_options';
 }

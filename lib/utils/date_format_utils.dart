@@ -3,6 +3,7 @@ import 'dart:ui' as ui;
 import 'package:get/get.dart';
 
 import 'constants.dart';
+import 'extensions.dart';
 
 class DateFormatUtils {
   /// Add ['st', 'nd' or 'st'] for date in text format if it is in English
@@ -70,7 +71,9 @@ class DateFormatUtils {
   }
 
   /// Get the current date and format it properly
-  static String getToday({bool isDayFirst = false}) {
+  static String getToday({bool? isDayFirst}) {
+    // If no default value is given, we check directly in the function
+    isDayFirst ??= isDayFirstPattern();
     final now = DateTime.now();
 
     // Adding a leading zero on Days and Months <= 9
@@ -84,6 +87,35 @@ class DateFormatUtils {
     } else {
       return '$year-$month-$day';
     }
+  }
+
+    /// Get the given date and format it properly
+  static String getDate(DateTime date, {bool? isDayFirst}) {
+    // If no default value is given, we check directly in the function
+    isDayFirst ??= isDayFirstPattern();
+
+    // Adding a leading zero on Days and Months <= 9
+    final String day = date.day <= 9 ? '0${date.day}' : '${date.day}';
+    final String month = date.month <= 9 ? '0${date.month}' : '${date.month}';
+    final String year = '${date.year}';
+
+    // Brazilian pattern
+    if (isDayFirst) {
+      return '$day-$month-$year';
+    } else {
+      return '$year-$month-$day';
+    }
+  }
+
+  /// Convert the given date from the app's ffmpeg friendly format to DateTime
+  static DateTime parseToDateTime(String date, {bool? isDayFirst}) {
+    isDayFirst ??= isDayFirstPattern();
+
+    final String day = isDayFirst ? date.split('-').first : date.split('-').last;
+    final String month = date.split('-')[1];
+    final String year = isDayFirst ? date.split('-').last : date.split('-').first;
+
+    return DateTime(year.toInt(), month.toInt(), day.toInt());
   }
 
   /// Order the dates before writing the txt file for generating movie
