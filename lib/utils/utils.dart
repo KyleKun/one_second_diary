@@ -10,6 +10,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../controllers/video_count_controller.dart';
+import '../enums/export_date_range.dart';
 import 'date_format_utils.dart';
 import 'shared_preferences_util.dart';
 import 'storage_utils.dart';
@@ -64,10 +65,15 @@ class Utils {
 
     if (androidDeviceInfo.version.sdkInt <= 32) {
       // For android 12 and below devices
-      permissionStatuses = await [Permission.storage, Permission.manageExternalStorage].request();
-    } else {
       permissionStatuses =
-          await [Permission.videos, Permission.photos, Permission.audio, Permission.manageExternalStorage].request();
+          await [Permission.storage, Permission.manageExternalStorage].request();
+    } else {
+      permissionStatuses = await [
+        Permission.videos,
+        Permission.photos,
+        Permission.audio,
+        Permission.manageExternalStorage,
+      ].request();
     }
 
     bool allAccepted = true;
@@ -164,9 +170,15 @@ class Utils {
     _videoCountController.setVideoCount(numberOfVideos);
   }
 
-  // Get the list of all mp4 files names ordered by date to be written on a txt file
-  static List<String> getAllVideosFromStorage() {
+  /// Get a filtered list of mp4 files names ordered by date to be written on a txt file
+  /// To get all videos, use `ExportDateRange.allTime`
+  static List<String> getSelectedVideosFromStorage(ExportDateRange exportDateRange) {
+    final now = DateTime.now();
     final List<String> allVideos = [];
+
+    /// We use the properties of `now` instead of just calling `DateTime.now()` because we want to offset from the current date at a little past midnight
+    /// Not doing this causes incorrect results in some scenarios
+    final today = DateTime(now.year, now.month, now.day, 0, 1);
 
     try {
       final allFiles = getAllVideos();
@@ -176,6 +188,67 @@ class Utils {
       for (int i = 0; i < allFiles.length; i++) {
         allDates.add(DateTime.parse(allFiles[i]));
       }
+
+      switch (exportDateRange) {
+        case ExportDateRange.last7Days:
+          final last7Days = today.subtract(const Duration(days: 7));
+          for (int i = 0; i < allDates.length; i++) {
+            allDates.removeWhere((e) => e.isBefore(last7Days));
+          }
+          break;
+        case ExportDateRange.last30Days:
+          final last30Days = today.subtract(const Duration(days: 30));
+          for (int i = 0; i < allDates.length; i++) {
+            allDates.removeWhere((e) => e.isBefore(last30Days));
+          }
+          break;
+        case ExportDateRange.last60Days:
+          final last60Days = today.subtract(const Duration(days: 60));
+          for (int i = 0; i < allDates.length; i++) {
+            allDates.removeWhere((e) => e.isBefore(last60Days));
+          }
+          break;
+        case ExportDateRange.last90Days:
+          final last90Days = today.subtract(const Duration(days: 90));
+          for (int i = 0; i < allDates.length; i++) {
+            allDates.removeWhere((e) => e.isBefore(last90Days));
+          }
+          break;
+        case ExportDateRange.thisMonth:
+          for (int i = 0; i < allDates.length; i++) {
+            // Retains all the dates from the beginning of the month until the current date
+            allDates.retainWhere(
+              (e) => e.compareTo(DateTime(now.year, now.month)) >= 0 && e.compareTo(now) <= 0,
+            );
+          }
+          break;
+        case ExportDateRange.thisYear:
+          for (int i = 0; i < allDates.length; i++) {
+            // Retains all the dates from the start of the year until the current date within the year
+            allDates.retainWhere(
+              (e) => e.compareTo(DateTime(now.year)) >= 0 && e.compareTo(now) <= 0,
+            );
+          }
+          break;
+        case ExportDateRange.lastYear:
+          for (int i = 0; i < allDates.length; i++) {
+            // Retains all the dates from the start to the end of the previous year
+            allDates.retainWhere(
+              (e) =>
+                  e.compareTo(DateTime(now.year - 1)) >= 0 &&
+                  e.compareTo(DateTime(now.year)) < 0,
+            );
+          }
+          break;
+        case ExportDateRange.custom:
+        case ExportDateRange.allTime:
+        default:
+        // Nothing else needs to be done here
+      }
+
+      // Removes all dates in the list after the current date
+      // This shouldn't have any effect in normal scenarios because the dates in the list can't be ahead of the current day, but it is simply a safety measure.
+      allDates.removeWhere((e) => e.isAfter(now));
 
       final List<DateTime> orderedDates = DateFormatUtils.orderDates(allDates);
 
