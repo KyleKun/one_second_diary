@@ -6,7 +6,8 @@ enum ExportDateRange {
   last90Days('Last 90 days'),
   thisMonth('This month'),
   thisYear('This year'),
-  lastYear('Last year');
+  lastYear('Last year'),
+  custom('Custom');
 
   final String label;
 

@@ -190,9 +190,6 @@ class Utils {
       }
 
       switch (exportDateRange) {
-        case ExportDateRange.allTime:
-          // Nothing else needs to be done here
-          break;
         case ExportDateRange.last7Days:
           final last7Days = today.subtract(const Duration(days: 7));
           for (int i = 0; i < allDates.length; i++) {
@@ -243,7 +240,10 @@ class Utils {
             );
           }
           break;
+        case ExportDateRange.custom:
+        case ExportDateRange.allTime:
         default:
+        // Nothing else needs to be done here
       }
 
       // Removes all dates in the list after the current date

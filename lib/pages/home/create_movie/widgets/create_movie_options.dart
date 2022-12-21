@@ -1,15 +1,11 @@
-import 'dart:developer';
-
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:group_radio_button/group_radio_button.dart';
-import 'package:intl/intl.dart';
-import 'package:one_second_diary/utils/utils.dart';
 
 import '../../../../enums/export_date_range.dart';
 import '../../../../utils/constants.dart';
-import '../../../../utils/date_format_utils.dart';
 import '../../../../utils/theme.dart';
+import '../../../../utils/utils.dart';
 import 'create_movie_button.dart';
 
 class CreateMovieOptions extends StatefulWidget {
@@ -30,6 +26,9 @@ class _CreateMovieOptionsState extends State<CreateMovieOptions> {
   //   'Landscape',
   // ];
 
+  // Stores the names of the manually selected videos
+  List<String> customSelectedVideos = [];
+
   final dropdownBorder = OutlineInputBorder(
     borderSide: BorderSide(
       color: ThemeService().isDarkTheme() ? Colors.black : Colors.white,
@@ -37,9 +36,36 @@ class _CreateMovieOptionsState extends State<CreateMovieOptions> {
     ),
   );
 
+  Future<void> selectVideosFromStorage() async {
+    final rawFiles = await FilePicker.platform.pickFiles(
+      allowMultiple: true,
+      type: FileType.video,
+    );
+
+    if (rawFiles != null) {
+      // Splits the file names from the path before creating a new list
+      setState(() {
+        customSelectedVideos = rawFiles.paths.map((e) => e!.split('/file_picker/')[1]).toList()
+          // Arrange the elements in the correct order
+          ..sort(
+            (a, b) => a.compareTo(b),
+          );
+      });
+    }
+
+    print('Custom selected videos are - > $customSelectedVideos');
+  }
+
   @override
   Widget build(BuildContext context) {
     final selectedVideos = Utils.getSelectedVideosFromStorage(_exportPeriodGroupValue);
+
+    String getClipsFound() {
+      if (_exportPeriodGroupValue == ExportDateRange.custom) {
+        return customSelectedVideos.length.toString();
+      }
+      return selectedVideos.length.toString();
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -76,7 +102,7 @@ class _CreateMovieOptionsState extends State<CreateMovieOptions> {
                             fontSize: MediaQuery.of(context).size.height * 0.025,
                           ),
                         ),
-                        Text('Clips found: ${selectedVideos.length}'),
+                        Text('Clips found: ${getClipsFound()}'),
                       ],
                     ),
                   ),
@@ -106,10 +132,13 @@ class _CreateMovieOptionsState extends State<CreateMovieOptions> {
                                 ? AppColors.dark
                                 : AppColors.light,
                           ),
-                          onChanged: (newValue) {
+                          onChanged: (newValue) async {
                             setState(() {
                               _exportPeriodGroupValue = newValue!;
                             });
+                            if (newValue == ExportDateRange.custom) {
+                              await selectVideosFromStorage();
+                            }
                           },
                           items: _exportPeriods.map<DropdownMenuItem<ExportDateRange>>(
                             (ExportDateRange value) {
@@ -126,7 +155,7 @@ class _CreateMovieOptionsState extends State<CreateMovieOptions> {
                 ],
               ),
 
-              SizedBox(height: MediaQuery.of(context).size.height * 0.045),
+              SizedBox(height: MediaQuery.of(context).size.height * 0.025),
 
               // Orientation
               // Column(
@@ -197,6 +226,7 @@ class _CreateMovieOptionsState extends State<CreateMovieOptions> {
               CreateMovieButton(
                 selectedExportDateRange: _exportPeriodGroupValue,
                 // selectedOrientation: _orientationDefaultValue,
+                customSelectedVideos: customSelectedVideos,
               ),
             ],
           ),

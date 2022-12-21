@@ -18,10 +18,12 @@ class CreateMovieButton extends StatefulWidget {
     super.key,
     required this.selectedExportDateRange,
     // required this.selectedOrientation,
+    required this.customSelectedVideos,
   });
 
   final ExportDateRange selectedExportDateRange;
   // final ExportOrientation selectedOrientation;
+  final List<String> customSelectedVideos;
 
   @override
   _CreateMovieButtonState createState() => _CreateMovieButtonState();
@@ -45,7 +47,14 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
     });
     try {
       final selectedExportDateRange = widget.selectedExportDateRange;
-      final selectedVideos = Utils.getSelectedVideosFromStorage(selectedExportDateRange);
+      final customSelectedVideos = widget.customSelectedVideos;
+      List<String> selectedVideos = [];
+
+      if (customSelectedVideos.isNotEmpty) {
+        selectedVideos = customSelectedVideos;
+      } else {
+        selectedVideos = Utils.getSelectedVideosFromStorage(selectedExportDateRange);
+      }
 
       // Needs more than 1 video to create movie
       if (selectedVideos.length < 2) {
