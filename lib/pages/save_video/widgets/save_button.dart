@@ -25,6 +25,8 @@ class SaveButton extends StatefulWidget {
     required this.dateFormat,
     required this.isTextDate,
     required this.userLocation,
+    required this.subtitles,
+    required this.videoDuration,
     required this.isGeotaggingEnabled,
     required this.textOutlineColor,
     required this.textOutlineWidth,
@@ -37,6 +39,8 @@ class SaveButton extends StatefulWidget {
   final String dateFormat;
   final bool isTextDate;
   final String? userLocation;
+  final String? subtitles;
+  final int videoDuration;
   final bool isGeotaggingEnabled;
   final Color textOutlineColor;
   final double textOutlineWidth;
@@ -97,42 +101,30 @@ class _SaveButtonState extends State<SaveButton> {
   Widget build(BuildContext context) {
     bool _pressedSave = false;
 
-    return SizedBox(
-      width: MediaQuery.of(context).size.width * 0.45,
-      height: MediaQuery.of(context).size.height * 0.08,
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          elevation: 5.0,
-          backgroundColor: Colors.green,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(80.0),
-          ),
-        ),
-        child: !isProcessing
-            ? Text(
-                'save'.tr,
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: MediaQuery.of(context).size.width * 0.07,
-                ),
-              )
-            : const CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(
-                  Colors.white,
-                ),
+    return FloatingActionButton(
+      backgroundColor: Colors.green,
+      child: !isProcessing
+          ? const Icon(
+              Icons.save,
+              color: Colors.white,
+            )
+          : const CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation<Color>(
+                Colors.white,
               ),
-        onPressed: () {
-          // Prevents user from clicking it twice
-          if (!_pressedSave) {
-            _pressedSave = true;
-            _saveVideo();
-          }
-        },
-      ),
+            ),
+      onPressed: () {
+        // Prevents user from clicking it twice
+        if (!_pressedSave) {
+          _pressedSave = true;
+          _saveVideo();
+        }
+      },
     );
   }
 
-  Future<void> _editWithFFmpeg(bool isGeotaggingEnabled, BuildContext context) async {
+  Future<void> _editWithFFmpeg(
+      bool isGeotaggingEnabled, BuildContext context) async {
     // Positions to render texts for the (x, y co-ordinates)
     // According to the ffmpeg docs, the x, y positions are relative to the top-left side of the output frame.
     final String datePosY = widget.isTextDate ? 'h-th-40' : '40';
@@ -144,6 +136,7 @@ class _SaveButtonState extends State<SaveButton> {
     const double locTextSize = 33;
 
     String locOutput = '';
+    String subtitles = '';
 
     // Used to not increment videoCount controller
     bool isEdit = false;
@@ -169,7 +162,8 @@ class _SaveButtonState extends State<SaveButton> {
     }
 
     // Checks to ensure special read/write permissions with storage access framework
-    final hasSafDirPerms = await Saf.isPersistedPermissionDirectoryFor(finalPath) ?? false;
+    final hasSafDirPerms =
+        await Saf.isPersistedPermissionDirectoryFor(finalPath) ?? false;
     if (hasSafDirPerms) {
       await Saf(finalPath).getDirectoryPermission(isDynamic: true);
     }
@@ -180,12 +174,21 @@ class _SaveButtonState extends State<SaveButton> {
           ', drawtext=$fontPath:text=\'${widget.userLocation}\':fontsize=$locTextSize:fontcolor=\'$parsedDateColor\':borderw=${widget.textOutlineWidth}:bordercolor=$parsedTextOutlineColor:x=$locPosX:y=$locPosY';
     }
 
+    // If subtitles TextBox were not left empty, we can allow the command to render the subtitles into the video
+    if (widget.subtitles != null && widget.subtitles != '') {
+      final subtitlesPath = await Utils.writeSrt(
+        widget.subtitles!,
+        widget.videoDuration,
+      );
+      subtitles = '-i $subtitlesPath -c copy -c:s mov_text';
+    }
+
     // Caches the default font to save texts in ffmpeg.
     // The edit may fail unexpectedly in some devices if this is not done.
     await FFmpegKitConfig.setFontDirectory(fontPath);
 
     await executeFFmpeg(
-      '-i $videoPath -vf [in]drawtext="$fontPath:text=\'${widget.dateFormat}\':fontsize=$dateTextSize:fontcolor=\'$parsedDateColor\':borderw=${widget.textOutlineWidth}:bordercolor=$parsedTextOutlineColor:x=$datePosX:y=$datePosY$locOutput[out]" -codec:v libx264 -pix_fmt yuv420p $finalPath -y',
+      '-i $videoPath $subtitles -vf [in]drawtext="$fontPath:text=\'${widget.dateFormat}\':fontsize=$dateTextSize:fontcolor=\'$parsedDateColor\':borderw=${widget.textOutlineWidth}:bordercolor=$parsedTextOutlineColor:x=$datePosX:y=$datePosY$locOutput[out]" -codec:v libx264 -pix_fmt yuv420p $finalPath -y',
     ).then((session) async {
       print(session.getCommand().toString());
       final returnCode = await session.getReturnCode();
@@ -215,7 +218,8 @@ class _SaveButtonState extends State<SaveButton> {
       } else if (ReturnCode.isCancel(returnCode)) {
         print('Execution was cancelled');
       } else {
-        print('Error editing video: Return code is ${await session.getReturnCode()}');
+        print(
+            'Error editing video: Return code is ${await session.getReturnCode()}');
         final sessionLog = await session.getAllLogsAsString();
         final failureStackTrace = await session.getFailStackTrace();
         debugPrint('Session lasted for ${await session.getDuration()} ms');

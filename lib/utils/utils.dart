@@ -65,14 +65,16 @@ class Utils {
 
     if (androidDeviceInfo.version.sdkInt <= 32) {
       // For android 12 and below devices
-      permissionStatuses =
-          await [Permission.storage, Permission.manageExternalStorage].request();
+      permissionStatuses = await [
+        Permission.storage,
+        Permission.manageExternalStorage
+      ].request();
     } else {
       permissionStatuses = await [
         Permission.videos,
         Permission.photos,
         Permission.audio,
-        Permission.manageExternalStorage,
+        Permission.manageExternalStorage
       ].request();
     }
 
@@ -114,6 +116,47 @@ class Utils {
     }
 
     return txtPath;
+  }
+
+  /// Write srt file used by ffmpeg to add subtitles to the movie
+  static Future<String> writeSrt(String text, int videoDuration) async {
+    final io.Directory directory = await getApplicationDocumentsDirectory();
+    final String srtPath = '${directory.path}/subtitles.srt';
+
+    // Delete old srt files
+    if (StorageUtils.checkFileExists(srtPath)) StorageUtils.deleteFile(srtPath);
+
+    final io.File file = io.File(srtPath);
+
+    // Add linebreaks if a line is > 45 chars
+    text = '$text\n';
+    final List<String> lines = text.split('\n');
+    text = '';
+    for (int i = 0; i < lines.length; i++) {
+      if (lines[i].length > 45) {
+        final List<String> words = lines[i].split(' ');
+        String temp = '';
+        for (int j = 0; j < words.length; j++) {
+          if (temp.length + words[j].length > 45) {
+            text += '$temp\n';
+            temp = '';
+          }
+          temp += '${words[j]} ';
+        }
+        text += '$temp\n';
+      } else {
+        text += '${lines[i]}\n';
+      }
+    }
+
+    final String totalSeconds = videoDuration == 10 ? '10' : '0$videoDuration';
+    final String subtitles =
+        '1\r\n00:00:00,000 --> 00:00:$totalSeconds,000\r\n$text\r\n';
+
+    // Writing file
+    await file.writeAsString(subtitles, mode: io.FileMode.write);
+
+    return srtPath;
   }
 
   /// Get all video files inside OneSecondDiary folder
@@ -172,7 +215,8 @@ class Utils {
 
   /// Get a filtered list of mp4 files names ordered by date to be written on a txt file
   /// To get all videos, use `ExportDateRange.allTime`
-  static List<String> getSelectedVideosFromStorage(ExportDateRange exportDateRange) {
+  static List<String> getSelectedVideosFromStorage(
+      ExportDateRange exportDateRange) {
     final now = DateTime.now();
     final List<String> allVideos = [];
 
@@ -218,7 +262,9 @@ class Utils {
           for (int i = 0; i < allDates.length; i++) {
             // Retains all the dates from the beginning of the month until the current date
             allDates.retainWhere(
-              (e) => e.compareTo(DateTime(now.year, now.month)) >= 0 && e.compareTo(now) <= 0,
+              (e) =>
+                  e.compareTo(DateTime(now.year, now.month)) >= 0 &&
+                  e.compareTo(now) <= 0,
             );
           }
           break;
@@ -226,7 +272,8 @@ class Utils {
           for (int i = 0; i < allDates.length; i++) {
             // Retains all the dates from the start of the year until the current date within the year
             allDates.retainWhere(
-              (e) => e.compareTo(DateTime(now.year)) >= 0 && e.compareTo(now) <= 0,
+              (e) =>
+                  e.compareTo(DateTime(now.year)) >= 0 && e.compareTo(now) <= 0,
             );
           }
           break;
@@ -255,8 +302,9 @@ class Utils {
       // Converting back to string
       for (int i = 0; i < orderedDates.length; i++) {
         // Adding a leading zero on Days and Months <= 9
-        final String day =
-            orderedDates[i].day <= 9 ? '0${orderedDates[i].day}' : '${orderedDates[i].day}';
+        final String day = orderedDates[i].day <= 9
+            ? '0${orderedDates[i].day}'
+            : '${orderedDates[i].day}';
         final String month = orderedDates[i].month <= 9
             ? '0${orderedDates[i].month}'
             : '${orderedDates[i].month}';
@@ -276,7 +324,8 @@ class Utils {
         // Utils().logInfo('Font already exists');
         print('Font already exists');
       } else {
-        final ByteData data = await rootBundle.load('assets/fonts/YuseiMagic-Regular.ttf');
+        final ByteData data =
+            await rootBundle.load('assets/fonts/YuseiMagic-Regular.ttf');
         final List<int> bytes =
             data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
         await io.File(fontPath).writeAsBytes(bytes);
