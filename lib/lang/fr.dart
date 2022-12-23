@@ -93,4 +93,6 @@ const Map<String, String> fr = {
   'dateRange': 'Date Range',
   'clipsFound': 'Clips trouvés',
   'enterSubtitles': 'Entrer le sous-titre',
+  'totalSelected': 'Total sélectionné: ',
+  'selectVideos': 'Sélectionnez les vidéos',
 };

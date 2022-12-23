@@ -91,4 +91,6 @@ const Map<String, String> pt = {
   'dateRange': 'Período',
   'clipsFound': 'Clipes encontrados',
   'enterSubtitles': 'Digite uma legenda',
+  'totalSelected': 'Total selecionado: ',
+  'selectVideos': 'Escolha os vídeos',
 };
