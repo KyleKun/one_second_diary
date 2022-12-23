@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:one_second_diary/utils/lazy_future_builder.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 import '../../../../utils/utils.dart';
 import 'create_movie_button.dart';
@@ -31,15 +32,18 @@ class _SelectVideoFromStorageState extends State<SelectVideoFromStorage> {
   Widget build(BuildContext context) {
     // Count all true in isSelected and return quantity
     final int totalSelected = isSelected.where((element) => element).length;
-    return Material(
-      child: Column(
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Select videos'),
+      ),
+      body: Column(
         children: [
-          const SizedBox(height: 40),
+          const SizedBox(height: 10),
           Padding(
-            padding: const EdgeInsets.all(20.0),
+            padding: const EdgeInsets.symmetric(vertical: 20.0),
             // TODO: translate
             child: Text(
-              'Tap on a video to select it. Total selected: $totalSelected',
+              'Total selected: $totalSelected',
             ),
           ),
           Expanded(
@@ -48,7 +52,8 @@ class _SelectVideoFromStorageState extends State<SelectVideoFromStorage> {
               shrinkWrap: true,
               controller: scrollController,
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 1,
+                crossAxisCount: 2,
+                childAspectRatio: 1.12,
               ),
               itemCount: allVideos.length,
               itemBuilder: (context, index) {
@@ -79,12 +84,12 @@ class _SelectVideoFromStorageState extends State<SelectVideoFromStorage> {
                           border: Border.all(
                             color:
                                 isSelected[index] ? Colors.green : Colors.white,
-                            width: 5,
+                            width: isSelected[index] ? 3 : 0,
                           ),
                           borderRadius: BorderRadius.circular(5),
                         ),
-                        child: FutureBuilder(
-                          future: getThumbnail(allVideos[index]),
+                        child: LazyFutureBuilder(
+                          future:  () => getThumbnail(allVideos[index]),
                           builder: (context, snapshot) {
                             if (snapshot.connectionState ==
                                 ConnectionState.waiting) {
