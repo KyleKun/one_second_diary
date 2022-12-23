@@ -85,4 +85,6 @@ const Map<String, String> zh = {
   'dateRange': '日期范围',
   'clipsFound': '找到夹子',
   'enterSubtitles': '输入字幕',
+  'totalSelected': '总选定: ',
+  'selectVideos': '选择视频',
 };

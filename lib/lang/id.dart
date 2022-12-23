@@ -92,4 +92,6 @@ const Map<String, String> id = {
   'dateRange': 'Rentang tanggal',
   'clipsFound': 'Klip ditemukan',
   'enterSubtitles': 'Masukkan subjudul',
+  'totalSelected': 'Total dipilih: ',
+  'selectVideos': 'Pilih video',
 };

@@ -91,4 +91,6 @@ const Map<String, String> de = {
   'dateRange': 'Datumsbereich',
   'clipsFound': 'Clips gefunden',
   'enterSubtitles': 'Untertitel eingeben',
+  'totalSelected': 'Gesamt ausgewählt: ',
+  'selectVideos': 'Videos auswählen',
 };
