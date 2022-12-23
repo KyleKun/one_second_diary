@@ -23,7 +23,7 @@ class ContactButton extends StatelessWidget {
               ),
               IconButton(
                 icon: const Icon(Icons.email),
-                onPressed: () => Utils.launchUrl(Constants.email),
+                onPressed: () => Utils.launchURL(Constants.email),
               ),
             ],
           ),

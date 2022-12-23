@@ -1,8 +1,8 @@
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../../enums/export_date_range.dart';
+import '../../../../routes/app_pages.dart';
 // import '../../../../enums/export_orientations.dart';
 import '../../../../utils/constants.dart';
 import '../../../../utils/theme.dart';
@@ -27,9 +27,6 @@ class _CreateMovieOptionsState extends State<CreateMovieOptions> {
   //   ExportOrientation.landscape,
   // ];
 
-  // Stores the names of the manually selected videos
-  List<String> customSelectedVideos = [];
-
   final dropdownBorder = OutlineInputBorder(
     borderSide: BorderSide(
       color: ThemeService().isDarkTheme() ? Colors.black : Colors.white,
@@ -37,34 +34,12 @@ class _CreateMovieOptionsState extends State<CreateMovieOptions> {
     ),
   );
 
-  Future<void> selectVideosFromStorage() async {
-    final rawFiles = await FilePicker.platform.pickFiles(
-      allowMultiple: true,
-      type: FileType.video,
-    );
-
-    if (rawFiles != null) {
-      // Splits the file names from the path before creating a new list
-      setState(() {
-        customSelectedVideos = rawFiles.paths.map((e) => e!.split('/file_picker/')[1]).toList()
-          // Arrange the elements in the correct order
-          ..sort(
-            (a, b) => a.compareTo(b),
-          );
-      });
-    }
-
-    print('Custom selected videos are - > $customSelectedVideos');
-  }
-
   @override
   Widget build(BuildContext context) {
-    final selectedVideos = Utils.getSelectedVideosFromStorage(_exportPeriodGroupValue);
+    final selectedVideos =
+        Utils.getSelectedVideosFromStorage(_exportPeriodGroupValue);
 
     String getClipsFound() {
-      if (_exportPeriodGroupValue == ExportDateRange.custom) {
-        return customSelectedVideos.length.toString();
-      }
       return selectedVideos.length.toString();
     }
 
@@ -100,10 +75,12 @@ class _CreateMovieOptionsState extends State<CreateMovieOptions> {
                         Text(
                           'dateRange'.tr,
                           style: TextStyle(
-                            fontSize: MediaQuery.of(context).size.height * 0.025,
+                            fontSize:
+                                MediaQuery.of(context).size.height * 0.025,
                           ),
                         ),
-                        Text('${'clipsFound'.tr}: ${getClipsFound()}'),
+                        if (_exportPeriodGroupValue != ExportDateRange.custom)
+                          Text('${'clipsFound'.tr}: ${getClipsFound()}'),
                       ],
                     ),
                   ),
@@ -122,8 +99,9 @@ class _CreateMovieOptionsState extends State<CreateMovieOptions> {
                           elevation: 16,
                           borderRadius: BorderRadius.circular(12),
                           isExpanded: true,
-                          dropdownColor:
-                              ThemeService().isDarkTheme() ? AppColors.dark : AppColors.light,
+                          dropdownColor: ThemeService().isDarkTheme()
+                              ? AppColors.dark
+                              : AppColors.light,
                           decoration: InputDecoration(
                             enabledBorder: dropdownBorder,
                             focusedBorder: dropdownBorder,
@@ -138,10 +116,12 @@ class _CreateMovieOptionsState extends State<CreateMovieOptions> {
                               _exportPeriodGroupValue = newValue!;
                             });
                             if (newValue == ExportDateRange.custom) {
-                              await selectVideosFromStorage();
+                              // await selectVideosFromStorage();
+                              Get.toNamed(Routes.SELECT_VIDEOS_FROM_STORAGE);
                             }
                           },
-                          items: _exportPeriods.map<DropdownMenuItem<ExportDateRange>>(
+                          items: _exportPeriods
+                              .map<DropdownMenuItem<ExportDateRange>>(
                             (ExportDateRange value) {
                               return DropdownMenuItem<ExportDateRange>(
                                 value: value,
@@ -227,7 +207,6 @@ class _CreateMovieOptionsState extends State<CreateMovieOptions> {
               CreateMovieButton(
                 selectedExportDateRange: _exportPeriodGroupValue,
                 // selectedOrientation: _orientationDefaultValue,
-                customSelectedVideos: customSelectedVideos,
               ),
             ],
           ),

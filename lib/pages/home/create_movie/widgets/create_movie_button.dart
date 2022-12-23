@@ -1,10 +1,10 @@
 import 'package:ffmpeg_kit_flutter_full_gpl/return_code.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:open_file/open_file.dart';
 
 import '../../../../controllers/video_count_controller.dart';
 import '../../../../enums/export_date_range.dart';
+import '../../../../routes/app_pages.dart';
 // import '../../../../enums/export_orientations.dart';
 import '../../../../utils/constants.dart';
 import '../../../../utils/custom_dialog.dart';
@@ -17,14 +17,16 @@ import '../../../../utils/utils.dart';
 class CreateMovieButton extends StatefulWidget {
   const CreateMovieButton({
     super.key,
-    required this.selectedExportDateRange,
+    this.selectedExportDateRange,
     // required this.selectedOrientation,
-    required this.customSelectedVideos,
+    this.customSelectedVideos,
+    this.customSelectedVideosIsSelected,
   });
 
-  final ExportDateRange selectedExportDateRange;
+  final ExportDateRange? selectedExportDateRange;
   // final ExportOrientation selectedOrientation;
-  final List<String> customSelectedVideos;
+  final List<String>? customSelectedVideos;
+  final List<bool>? customSelectedVideosIsSelected;
 
   @override
   _CreateMovieButtonState createState() => _CreateMovieButtonState();
@@ -33,11 +35,12 @@ class CreateMovieButton extends StatefulWidget {
 class _CreateMovieButtonState extends State<CreateMovieButton> {
   final VideoCountController _movieCount = Get.find();
   bool isProcessing = false;
+  bool isCustom = false;
 
-  void _openVideo(String filePath) async {
-    Get.back();
-    await OpenFile.open(filePath);
-  }
+  // void _openVideo(String filePath) async {
+  //   Get.back();
+  //   await OpenFile.open(filePath);
+  // }
 
   void _createMovie() async {
     // Creates the folder if it is not created yet
@@ -51,10 +54,16 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
       final customSelectedVideos = widget.customSelectedVideos;
       List<String> selectedVideos = [];
 
-      if (customSelectedVideos.isNotEmpty) {
-        selectedVideos = customSelectedVideos;
+      if (customSelectedVideos != null && customSelectedVideos.isNotEmpty) {
+        isCustom = true;
+        for (int i = 0; i < customSelectedVideos.length; i++) {
+          if (widget.customSelectedVideosIsSelected![i]) {
+            selectedVideos.add(customSelectedVideos[i]);
+          }
+        }
       } else {
-        selectedVideos = Utils.getSelectedVideosFromStorage(selectedExportDateRange);
+        selectedVideos =
+            Utils.getSelectedVideosFromStorage(selectedExportDateRange!);
       }
 
       // Needs more than 1 video to create movie
@@ -76,13 +85,14 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
         final String today = DateFormatUtils.getToday();
 
         // Creating txt that will be used with ffmpeg
-        final String txtPath = await Utils.writeTxt(selectedVideos);
+        final String txtPath = await Utils.writeTxt(selectedVideos, isCustom);
         // Utils().logInfo('Saved txt');
         final String outputPath =
             '${SharedPrefsUtil.getString('moviesPath')}OneSecondDiary-Movie-${_movieCount.movieCount.value}-$today.mp4';
         // Utils().logInfo('It will be saved in: $outputPath');
 
-        await executeFFmpeg('-f concat -safe 0 -i $txtPath -map 0 -c copy $outputPath -y')
+        await executeFFmpeg(
+                '-f concat -safe 0 -i $txtPath -map 0 -c copy $outputPath -y')
             .then(
           (session) async {
             final returnCode = await session.getReturnCode();
@@ -97,7 +107,8 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
                   content: 'movieCreatedDesc'.tr,
                   actionText: 'Ok',
                   actionColor: Colors.green,
-                  action: () => _openVideo(outputPath),
+                  // TODO: Video player screen showing movie
+                  action: () => Get.offAllNamed(Routes.HOME),
                 ),
               );
               // Utils().logInfo('Video saved in gallery in the folder OSD-Movies!');
@@ -106,10 +117,12 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
               print('Execution was cancelled');
             } else {
               // Utils().logError('$result');
-              print('Error editing video: Return code is ${await session.getReturnCode()}');
+              print(
+                  'Error editing video: Return code is ${await session.getReturnCode()}');
               final sessionLog = await session.getAllLogsAsString();
               final failureStackTrace = await session.getFailStackTrace();
-              debugPrint('Session lasted for ${await session.getDuration()} ms');
+              debugPrint(
+                  'Session lasted for ${await session.getDuration()} ms');
               debugPrint(session.getArguments().toString());
               debugPrint('Session log is $sessionLog');
               debugPrint('Failure stacktrace - $failureStackTrace');
@@ -120,10 +133,11 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
                 builder: (context) => CustomDialog(
                   isDoubleAction: false,
                   title: 'movieError'.tr,
-                  content: '${'tryAgainMsg'.tr}\nCode error: ${session.getFailStackTrace()}',
+                  content:
+                      '${'tryAgainMsg'.tr}\nCode error: ${session.getFailStackTrace()}',
                   actionText: 'Ok',
                   actionColor: Colors.red,
-                  action: () => Get.back(),
+                  action: () => Get.offAllNamed(Routes.HOME),
                 ),
               );
             }
@@ -141,7 +155,7 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
           content: '${'tryAgainMsg'.tr}\n\nError: ${e.toString()}',
           actionText: 'Ok',
           actionColor: Colors.red,
-          action: () => Get.back(),
+          action: () => Get.offAllNamed(Routes.HOME),
         ),
       );
     } finally {

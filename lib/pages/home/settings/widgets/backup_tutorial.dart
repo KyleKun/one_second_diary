@@ -22,7 +22,7 @@ class BackupTutorial extends StatelessWidget {
               ),
               IconButton(
                 icon: const Icon(Icons.backup),
-                onPressed: () => Utils.launchUrl(Constants.backupTutorialUrl),
+                onPressed: () => Utils.launchURL(Constants.backupTutorialUrl),
               ),
             ],
           ),
