@@ -47,7 +47,7 @@ class _CreateMovieOptionsButton extends StatelessWidget {
             borderRadius: BorderRadius.circular(80.0),
           ),
         ),
-        onPressed: () async => await Get.toNamed(Routes.CREATEMOVIEOPTIONS),
+        onPressed: () async => await Get.toNamed(Routes.CREATE_MOVIE_OPTIONS),
         child: Text(
           'create'.tr,
           style: TextStyle(

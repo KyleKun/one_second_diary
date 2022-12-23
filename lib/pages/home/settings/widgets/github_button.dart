@@ -22,7 +22,7 @@ class GithubButton extends StatelessWidget {
               ),
               IconButton(
                 icon: const Icon(Icons.code),
-                onPressed: () => Utils.launchUrl(Constants.githubUrl),
+                onPressed: () => Utils.launchURL(Constants.githubUrl),
               ),
             ],
           ),

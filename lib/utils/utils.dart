@@ -33,7 +33,7 @@ class Utils {
   //   logger.e(warning);
   // }
 
-  static void launchUrl(String url) async {
+  static void launchURL(String url) async {
     if (await canLaunch(url)) {
       await launch(url);
     } else {
@@ -94,7 +94,7 @@ class Utils {
   }
 
   /// Write txt used by ffmpeg to concatenate videos when generating movie
-  static Future<String> writeTxt(List<String> files) async {
+  static Future<String> writeTxt(List<String> files, bool isCustom) async {
     final io.Directory directory = await getApplicationDocumentsDirectory();
     final String txtPath = '${directory.path}/videos.txt';
     final String appPath = SharedPrefsUtil.getString('appPath');
@@ -105,11 +105,14 @@ class Utils {
     final io.File file = io.File(txtPath);
 
     for (int i = 0; i < files.length; i++) {
-      // file model accepted by ffmpeg to be written
-      String ffString = "file '$appPath${files[i]}'\r\n";
+      // Do not add app folder path if custom videos are being used
+      final String filePath = isCustom ? files[i] : appPath + files[i];
 
-      // Not adding a new line at the end
-      if (i == files.length - 1) ffString = "file '$appPath${files[i]}'";
+      // Add file and a new line at the end
+      String ffString = "file '$filePath'\r\n";
+
+      // Avoid adding a new line at the end of the file
+      if (i == files.length - 1) ffString = "file '$filePath'";
 
       // Appending it to the txt
       await file.writeAsString(ffString, mode: io.FileMode.append);
@@ -160,23 +163,27 @@ class Utils {
   }
 
   /// Get all video files inside OneSecondDiary folder
-  static List<String> getAllVideos() {
+  static List<String> getAllVideos({bool fullPath = false}) {
     final directory = io.Directory(SharedPrefsUtil.getString('appPath'));
-
-    List<io.FileSystemEntity> _files;
-
-    _files = directory.listSync(recursive: true, followLinks: false);
+    final List<io.FileSystemEntity> files =
+        directory.listSync(recursive: true, followLinks: false);
     final List<String> mp4Files = [];
 
     // Getting video names
-    for (int i = 0; i < _files.length; i++) {
-      final String _fileName = _files[i].path;
-      if (_fileName.contains('.mp4')) {
-        String temp = _fileName.split('.').first;
-        temp = temp.split('/').last;
-        mp4Files.add(temp);
+    for (int i = 0; i < files.length; i++) {
+      final String filePath = files[i].path;
+      if (filePath.contains('.mp4')) {
+        if (fullPath) {
+          mp4Files.add(filePath);
+        } else {
+          final String videoName = filePath.split('.mp4').first.split('/').last;
+          mp4Files.add(videoName);
+        }
       }
     }
+
+    // Sorting files
+    mp4Files.sort((a, b) => a.compareTo(b));
 
     return mp4Files;
   }
@@ -292,10 +299,6 @@ class Utils {
         default:
         // Nothing else needs to be done here
       }
-
-      // Removes all dates in the list after the current date
-      // This shouldn't have any effect in normal scenarios because the dates in the list can't be ahead of the current day, but it is simply a safety measure.
-      allDates.removeWhere((e) => e.isAfter(now));
 
       final List<DateTime> orderedDates = DateFormatUtils.orderDates(allDates);
 

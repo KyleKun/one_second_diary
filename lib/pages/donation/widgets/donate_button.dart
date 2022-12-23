@@ -19,7 +19,7 @@ class DonateButton extends StatelessWidget {
             fontSize: MediaQuery.of(context).size.width * 0.06,
           ),
         ),
-        onPressed: () => Utils.launchUrl(Constants.donationUrl),
+        onPressed: () => Utils.launchURL(Constants.donationUrl),
       ),
     );
   }
