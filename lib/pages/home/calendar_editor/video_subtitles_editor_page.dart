@@ -17,7 +17,7 @@ class VideoSubtitlesEditorPage extends StatefulWidget {
   });
 
   final String videoPath;
-  final String subtitles;
+  final String? subtitles;
 
   @override
   State<VideoSubtitlesEditorPage> createState() =>
@@ -35,9 +35,9 @@ class _VideoSubtitlesEditorPageState extends State<VideoSubtitlesEditorPage> {
   @override
   void initState() {
     _initVideoPlayerController();
-    if (widget.subtitles.isNotEmpty) {
-      subtitlesController.text = widget.subtitles;
-      _subtitles = widget.subtitles;
+    if (widget.subtitles != null) {
+      subtitlesController.text = widget.subtitles!;
+      _subtitles = widget.subtitles!;
       isEdit = true;
     }
 

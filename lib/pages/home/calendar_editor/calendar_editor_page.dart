@@ -26,7 +26,7 @@ class CalendarEditorPage extends StatefulWidget {
 
 class _CalendarEditorPageState extends State<CalendarEditorPage> {
   late List<String> allVideos;
-  String subtitles = '';
+  late String? subtitles;
   String currentVideo = '';
   bool wasDateRecorded = false;
   DateTime _currentDate = DateTime.now();
@@ -247,7 +247,7 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
                           });
                         } else {
                           setState(() {
-                            subtitles = '';
+                            subtitles = null;
                           });
                           print('No subtitles found');
                         }
