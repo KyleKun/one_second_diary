@@ -127,7 +127,10 @@ class _SelectVideoFromStorageState extends State<SelectVideoFromStorage> {
                                   child: SizedBox(
                                     height: 30,
                                     width: 30,
-                                    child: CircularProgressIndicator(),
+                                    child: Padding(
+                                      padding: EdgeInsets.all(4.0),
+                                      child: CircularProgressIndicator(),
+                                    ),
                                   ),
                                 );
                               }

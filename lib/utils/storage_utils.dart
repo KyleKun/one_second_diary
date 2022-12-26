@@ -1,6 +1,5 @@
 import 'dart:io' as io;
 
-import 'package:get/get.dart';
 import 'package:path_provider/path_provider.dart';
 
 import 'shared_preferences_util.dart';
@@ -75,6 +74,17 @@ class StorageUtils {
     } catch (e) {
       print(e);
       // Utils().logError('$e');
+    }
+  }
+
+  /// Rename file
+  static bool renameFile(String oldPath, String newPath) {
+    try {
+      io.File(oldPath).renameSync(newPath);
+      return true;
+    } catch (e) {
+      print(e);
+      return false;
     }
   }
 

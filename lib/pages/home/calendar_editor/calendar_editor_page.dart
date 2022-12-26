@@ -1,16 +1,21 @@
 import 'dart:io';
 
+import 'package:ffmpeg_kit_flutter_full_gpl/return_code.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_calendar_carousel/classes/event.dart';
 import 'package:flutter_calendar_carousel/flutter_calendar_carousel.dart'
     show CalendarCarousel;
 import 'package:get/get.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 
+import '../../../utils/constants.dart';
 import '../../../utils/date_format_utils.dart';
+import '../../../utils/ffmpeg_api_wrapper.dart';
 import '../../../utils/theme.dart';
 import '../../../utils/utils.dart';
+import 'video_subtitles_editor_page.dart';
 
 class CalendarEditorPage extends StatefulWidget {
   const CalendarEditorPage({super.key});
@@ -21,7 +26,7 @@ class CalendarEditorPage extends StatefulWidget {
 
 class _CalendarEditorPageState extends State<CalendarEditorPage> {
   late List<String> allVideos;
-  final String _subtitles = '';
+  String subtitles = '';
   String currentVideo = '';
   bool wasDateRecorded = false;
   DateTime _currentDate = DateTime.now();
@@ -221,14 +226,39 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
                     child: ElevatedButton(
                       // Circle
                       style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.mainColor,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30.0),
                         ),
                       ),
-                      onPressed: () {
-                        null;
+                      onPressed: () async {
+                        final Directory directory =
+                            await getApplicationDocumentsDirectory();
+                        final String srtPath = '${directory.path}/temp.srt';
+                        final getSubsFile =
+                            await executeFFmpeg('-i $currentVideo $srtPath -y');
+                        final resultCode = await getSubsFile.getReturnCode();
+                        debugPrint(resultCode.toString());
+                        if (ReturnCode.isSuccess(resultCode)) {
+                          final srtFile = await File(srtPath).readAsString();
+                          setState(() {
+                            subtitles = srtFile.trim().split(',000').last;
+                            print('srtFileContent -> $subtitles');
+                          });
+                        } else {
+                          setState(() {
+                            subtitles = '';
+                          });
+                          print('No subtitles found');
+                        }
+                        Get.to(
+                          VideoSubtitlesEditorPage(
+                            videoPath: currentVideo,
+                            subtitles: subtitles,
+                          ),
+                        );
                       },
-                      child: Text('edit'.tr),
+                      child: Text('editSubtitles'.tr),
                     ),
                   ),
                 ),
@@ -243,22 +273,3 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
     );
   }
 }
-
-// TextField(
-//                         cursorColor: Colors.green,
-//                         maxLines: null,
-//                         onChanged: (value) => setState(() {
-//                           _subtitles = value;
-//                         }),
-//                         decoration: InputDecoration(
-//                           hintText: 'enterSubtitles'.tr,
-//                           filled: true,
-//                           border: const OutlineInputBorder(
-//                             borderSide: BorderSide(color: Colors.green),
-//                           ),
-//                           enabledBorder: InputBorder.none,
-//                           focusedBorder: const OutlineInputBorder(
-//                             borderSide: BorderSide(color: Colors.green),
-//                           ),
-//                         ),
-//                       ),
