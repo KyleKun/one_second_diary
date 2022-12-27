@@ -79,7 +79,7 @@ const Map<String, String> pt = {
   'ok': 'OK',
   'reset': 'Redefinir',
   'enterLocation': 'Digite o local',
-  'allTime': 'Tempo todo',
+  'allTime': 'Tudo',
   'last7Days': 'Últimos 7 dias',
   'last30Days': 'Últimos 30 dias',
   'last60Days': 'Últimos 60 dias',
