@@ -10,6 +10,7 @@ import 'package:get/get.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 
+import '../../../controllers/lang_controller.dart';
 import '../../../utils/constants.dart';
 import '../../../utils/date_format_utils.dart';
 import '../../../utils/ffmpeg_api_wrapper.dart';
@@ -32,6 +33,7 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
   DateTime _currentDate = DateTime.now();
   late Color mainColor;
   final String _currentDateStr = DateFormatUtils.getToday(isDayFirst: false);
+  final LanguageController _languageController = Get.find();
 
   @override
   void initState() {
@@ -74,7 +76,7 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
           Container(
             margin: const EdgeInsets.symmetric(horizontal: 16.0),
             child: CalendarCarousel<Event>(
-              childAspectRatio: 1.05,
+              childAspectRatio: 1.2,
               onDayPressed: (DateTime date, List<Event> events) {
                 setState(
                   () => _currentDate = date,
@@ -133,7 +135,7 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
                     child: Text(
                       date.day.toString(),
                       style: TextStyle(
-                        color: hasVideo ? Colors.green : Colors.red,
+                        color: hasVideo ? AppColors.green : AppColors.mainColor,
                         fontFamily: 'Magic',
                       ),
                     ),
@@ -158,26 +160,23 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
               inactiveDaysTextStyle: const TextStyle(
                 fontFamily: 'Magic',
               ),
-              nextDaysTextStyle: const TextStyle(
-                color: Colors.grey,
-                fontFamily: 'Magic',
-              ),
-              prevDaysTextStyle: const TextStyle(
-                color: Colors.grey,
-                fontFamily: 'Magic',
-              ),
               weekdayTextStyle: TextStyle(
                 fontFamily: 'Magic',
                 color: mainColor,
                 fontWeight: FontWeight.w900,
               ),
               weekFormat: false,
-              iconColor:
-                  ThemeService().isDarkTheme() ? Colors.white : Colors.black, // Color of icon
+              iconColor: ThemeService().isDarkTheme()
+                  ? Colors.white
+                  : Colors.black, // Color of icon
               headerTextStyle: TextStyle(
+                fontFamily: 'Magic',
                 fontSize: 20.0,
                 color: mainColor,
               ),
+              locale: _languageController.selectedLanguage.value,
+              shouldShowTransform: false,
+              showOnlyCurrentMonthDate: true,
               height: 350.0,
               selectedDateTime: _currentDate,
               daysHaveCircularBorder: true,
@@ -202,7 +201,8 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
                       child: FutureBuilder(
                         future: getThumbnail(currentVideo),
                         builder: (context, snapshot) {
-                          if (snapshot.connectionState == ConnectionState.waiting) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
                             return Center(
                               child: SizedBox(
                                 height: 30,
@@ -230,13 +230,14 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
                     padding: const EdgeInsets.all(8.0),
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.mainColor,
+                        backgroundColor: AppColors.purple,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30.0),
                         ),
                       ),
                       onPressed: () async {
-                        final Directory directory = await getApplicationDocumentsDirectory();
+                        final Directory directory =
+                            await getApplicationDocumentsDirectory();
                         final String srtPath = '${directory.path}/temp.srt';
                         final getSubsFile =
                             await executeFFmpeg('-i $currentVideo $srtPath -y');
@@ -261,9 +262,12 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
                           ),
                         );
                       },
-                      child: Text(
-                        'editSubtitles'.tr,
-                        textAlign: TextAlign.center,
+                      child: Padding(
+                        padding: const EdgeInsets.all(4.0),
+                        child: Text(
+                          'editSubtitles'.tr,
+                          textAlign: TextAlign.center,
+                        ),
                       ),
                     ),
                   ),
@@ -273,9 +277,6 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
           } else ...{
             Column(
               children: [
-                const SizedBox(
-                  height: 20.0,
-                ),
                 Text('noVideoRecorded'.tr),
                 const SizedBox(
                   height: 10.0,
@@ -284,16 +285,19 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
                   padding: const EdgeInsets.all(8.0),
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.yellow,
+                      backgroundColor: AppColors.mainColor,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30.0),
                       ),
                     ),
                     // TODO: implement
                     onPressed: () {},
-                    child: Text(
-                      'addVideo'.tr,
-                      textAlign: TextAlign.center,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        'addVideo'.tr,
+                        textAlign: TextAlign.center,
+                      ),
                     ),
                   ),
                 ),

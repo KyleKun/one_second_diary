@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 
+import '../../../../utils/date_format_utils.dart';
 import '../../../../utils/lazy_future_builder.dart';
 import '../../../../utils/utils.dart';
 import 'create_movie_button.dart';
@@ -104,7 +105,9 @@ class _SelectVideoFromStorageState extends State<SelectVideoFromStorage> {
                 return Column(
                   children: [
                     Text(
-                      allVideos[index].split('/').last.split('.mp4')[0],
+                      DateFormatUtils.parseDateStringAccordingLocale(
+                        allVideos[index].split('/').last.split('.mp4').first,
+                      ),
                       key: globalKeys[index],
                     ),
                     GestureDetector(

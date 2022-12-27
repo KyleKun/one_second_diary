@@ -51,6 +51,7 @@ class _CreateMovieOptionsButton extends StatelessWidget {
         onPressed: () async => await Get.toNamed(Routes.CREATE_MOVIE_OPTIONS),
         child: Text(
           'createMovie'.tr,
+          textAlign: TextAlign.center,
           style: TextStyle(
             color: Colors.white,
             fontSize: MediaQuery.of(context).size.width * 0.055,

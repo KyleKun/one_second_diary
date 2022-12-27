@@ -89,7 +89,7 @@ class DateFormatUtils {
     }
   }
 
-    /// Get the given date and format it properly
+  /// Get the given date and format it properly
   static String getDate(DateTime date, {bool? isDayFirst}) {
     // If no default value is given, we check directly in the function
     isDayFirst ??= isDayFirstPattern();
@@ -107,13 +107,27 @@ class DateFormatUtils {
     }
   }
 
+  static String parseDateStringAccordingLocale(String date) {
+    final String year = date.split('-').first;
+    final String month = date.split('-')[1];
+    final String day = date.split('-').last;
+
+    if (isDayFirstPattern()) {
+      return '$day-$month-$year';
+    }
+
+    return '$year-$month-$day';
+  }
+
   /// Convert the given date from the app's ffmpeg friendly format to DateTime
   static DateTime parseToDateTime(String date, {bool? isDayFirst}) {
     isDayFirst ??= isDayFirstPattern();
 
-    final String day = isDayFirst ? date.split('-').first : date.split('-').last;
+    final String day =
+        isDayFirst ? date.split('-').first : date.split('-').last;
     final String month = date.split('-')[1];
-    final String year = isDayFirst ? date.split('-').last : date.split('-').first;
+    final String year =
+        isDayFirst ? date.split('-').last : date.split('-').first;
 
     return DateTime(year.toInt(), month.toInt(), day.toInt());
   }
