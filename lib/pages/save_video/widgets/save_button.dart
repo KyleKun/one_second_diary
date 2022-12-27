@@ -57,7 +57,7 @@ class _SaveButtonState extends State<SaveButton> {
   final VideoCountController _videoCountController = Get.find();
 
   void _saveVideo() async {
-    print('Starting to save video');
+    debugPrint('Starting to save video');
     setState(() {
       isProcessing = true;
     });
@@ -69,7 +69,7 @@ class _SaveButtonState extends State<SaveButton> {
         isProcessing = false;
       });
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
 
       setState(() {
         isProcessing = false;
@@ -189,10 +189,10 @@ class _SaveButtonState extends State<SaveButton> {
     await executeFFmpeg(
       '-i $videoPath $subtitles -vf [in]drawtext="$fontPath:text=\'${widget.dateFormat}\':fontsize=$dateTextSize:fontcolor=\'$parsedDateColor\':borderw=${widget.textOutlineWidth}:bordercolor=$parsedTextOutlineColor:x=$datePosX:y=$datePosY$locOutput[out]" -codec:v libx264 -pix_fmt yuv420p $finalPath -y',
     ).then((session) async {
-      print(session.getCommand().toString());
+      debugPrint(session.getCommand().toString());
       final returnCode = await session.getReturnCode();
       if (ReturnCode.isSuccess(returnCode)) {
-        print('Video edited successfully');
+        debugPrint('Video edited successfully');
 
         _dayController.updateDaily();
 
@@ -215,9 +215,9 @@ class _SaveButtonState extends State<SaveButton> {
           ),
         );
       } else if (ReturnCode.isCancel(returnCode)) {
-        print('Execution was cancelled');
+        debugPrint('Execution was cancelled');
       } else {
-        print(
+        debugPrint(
             'Error editing video: Return code is ${await session.getReturnCode()}');
         final sessionLog = await session.getAllLogsAsString();
         final failureStackTrace = await session.getFailStackTrace();

@@ -98,7 +98,6 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
                       ),
                     );
                   });
-                  print(currentVideo);
                 } else {
                   setState(() {
                     wasDateRecorded = false;
@@ -223,7 +222,6 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: ElevatedButton(
-                      // Circle
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.mainColor,
                         shape: RoundedRectangleBorder(
@@ -242,13 +240,13 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
                           final srtFile = await File(srtPath).readAsString();
                           setState(() {
                             subtitles = srtFile.trim().split(',000').last;
-                            print('srtFileContent -> $subtitles');
+                            debugPrint('srtFileContent -> $subtitles');
                           });
                         } else {
                           setState(() {
                             subtitles = null;
                           });
-                          print('No subtitles found');
+                          debugPrint('No subtitles found');
                         }
                         Get.to(
                           VideoSubtitlesEditorPage(
@@ -279,7 +277,6 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: ElevatedButton(
-                    // Circle
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.yellow,
                       shape: RoundedRectangleBorder(
@@ -287,9 +284,7 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
                       ),
                     ),
                     // TODO: implement
-                    onPressed: () {
-                      print('Add video from gallery');
-                    },
+                    onPressed: () {},
                     child: Text(
                       'addVideo'.tr,
                       textAlign: TextAlign.center,

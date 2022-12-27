@@ -144,10 +144,10 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
               // Utils().logInfo('Video saved in gallery in the folder OSD-Movies!');
 
             } else if (ReturnCode.isCancel(returnCode)) {
-              print('Execution was cancelled');
+              debugPrint('Execution was cancelled');
             } else {
               // Utils().logError('$result');
-              print(
+              debugPrint(
                   'Error editing video: Return code is ${await session.getReturnCode()}');
               final sessionLog = await session.getAllLogsAsString();
               final failureStackTrace = await session.getFailStackTrace();

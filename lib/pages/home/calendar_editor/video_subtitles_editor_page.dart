@@ -41,7 +41,6 @@ class _VideoSubtitlesEditorPageState extends State<VideoSubtitlesEditorPage> {
           .replaceAll('\n', ' ')
           .replaceAll(RegExp(r'\s+'), ' ');
       subtitlesController.text = _subtitles;
-      print(_subtitles);
       isEdit = true;
     }
 
@@ -146,7 +145,6 @@ class _VideoSubtitlesEditorPageState extends State<VideoSubtitlesEditorPage> {
                   setState(() {
                     isProcessing = true;
                   });
-                  print('running');
                   final subtitles = await Utils.writeSrt(
                     _subtitles,
                     _videoController.value.duration.inSeconds,
@@ -167,14 +165,13 @@ class _VideoSubtitlesEditorPageState extends State<VideoSubtitlesEditorPage> {
                   }
 
                   await executeFFmpeg(command).then((session) async {
-                    print(session.getCommand().toString());
                     final returnCode = await session.getReturnCode();
                     if (ReturnCode.isSuccess(returnCode)) {
-                      print('Video edited successfully');
+                      debugPrint('Video edited successfully');
                       StorageUtils.deleteFile(widget.videoPath);
                       StorageUtils.renameFile(tempPath, widget.videoPath);
                     } else {
-                      print('Video editing failed');
+                      debugPrint('Video editing failed');
                       final sessionLog = await session.getAllLogsAsString();
                       final failureStackTrace =
                           await session.getFailStackTrace();

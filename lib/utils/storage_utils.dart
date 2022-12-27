@@ -1,5 +1,6 @@
 import 'dart:io' as io;
 
+import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 
 import 'shared_preferences_util.dart';
@@ -10,14 +11,14 @@ class StorageUtils {
   static Future<void> createFolder() async {
     try {
       final hasStoragePerms = await Utils.requestStoragePermissions();
-      print('Storage perms enabled? $hasStoragePerms');
+      debugPrint('Storage permissions enabled? $hasStoragePerms');
 
       if (hasStoragePerms == false) {
         // Get.snackbar(
         //   'Oh no!',
         //   'Not all permissions were granted. Some app features may not work properly',
         // );
-        print('Looks like some permissions were not granted');
+        debugPrint('Looks like some permissions were not granted');
       }
 
       io.Directory? appDirectory;
@@ -72,7 +73,7 @@ class StorageUtils {
         // Utils().logInfo("Directory already exists");
       }
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
       // Utils().logError('$e');
     }
   }
@@ -83,7 +84,7 @@ class StorageUtils {
       io.File(oldPath).renameSync(newPath);
       return true;
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
       return false;
     }
   }
