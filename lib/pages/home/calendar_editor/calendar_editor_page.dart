@@ -74,6 +74,7 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
           Container(
             margin: const EdgeInsets.symmetric(horizontal: 16.0),
             child: CalendarCarousel<Event>(
+              childAspectRatio: 1.05,
               onDayPressed: (DateTime date, List<Event> events) {
                 setState(
                   () => _currentDate = date,
@@ -115,6 +116,9 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
                 bool isThisMonthDay,
                 DateTime date,
               ) {
+                final firstRecVideoDate = DateTime.parse(
+                  allVideos.first.split('/').last.split('.').first,
+                );
                 final hasVideo = allVideos.any(
                   (a) => a.contains(
                     DateFormatUtils.getDate(
@@ -123,7 +127,8 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
                     ),
                   ),
                 );
-                if (DateTime.now().compareTo(date) != -1) {
+                if (DateTime.now().compareTo(date) != -1 &&
+                    firstRecVideoDate.compareTo(date) != 1) {
                   return Center(
                     child: Text(
                       date.day.toString(),
@@ -161,13 +166,14 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
                 color: Colors.grey,
                 fontFamily: 'Magic',
               ),
-              weekdayTextStyle: const TextStyle(
+              weekdayTextStyle: TextStyle(
                 fontFamily: 'Magic',
+                color: mainColor,
+                fontWeight: FontWeight.w900,
               ),
               weekFormat: false,
-              iconColor: ThemeService().isDarkTheme()
-                  ? Colors.white
-                  : Colors.black, // Color of icon
+              iconColor:
+                  ThemeService().isDarkTheme() ? Colors.white : Colors.black, // Color of icon
               headerTextStyle: TextStyle(
                 fontSize: 20.0,
                 color: mainColor,
@@ -184,7 +190,7 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
           const SizedBox(
             height: 20.0,
           ),
-          if (wasDateRecorded)
+          if (wasDateRecorded) ...{
             Row(
               children: [
                 Expanded(
@@ -196,13 +202,14 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
                       child: FutureBuilder(
                         future: getThumbnail(currentVideo),
                         builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return const Center(
+                          if (snapshot.connectionState == ConnectionState.waiting) {
+                            return Center(
                               child: SizedBox(
                                 height: 30,
                                 width: 30,
-                                child: CircularProgressIndicator(),
+                                child: CircularProgressIndicator(
+                                  color: mainColor,
+                                ),
                               ),
                             );
                           }
@@ -229,8 +236,7 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
                         ),
                       ),
                       onPressed: () async {
-                        final Directory directory =
-                            await getApplicationDocumentsDirectory();
+                        final Directory directory = await getApplicationDocumentsDirectory();
                         final String srtPath = '${directory.path}/temp.srt';
                         final getSubsFile =
                             await executeFFmpeg('-i $currentVideo $srtPath -y');
@@ -264,7 +270,7 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
                 ),
               ],
             )
-          else
+          } else ...{
             Column(
               children: [
                 const SizedBox(
@@ -293,6 +299,7 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
                 ),
               ],
             ),
+          }
         ],
       ),
     );
