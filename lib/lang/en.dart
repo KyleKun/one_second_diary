@@ -7,7 +7,7 @@ const Map<String, String> en = {
       'Thank you so much for using the app!\n\nIf you wish to support the development,\nfeel free to make a donation ^^',
   'donationPageTitle': 'Support app development',
   'about': 'About',
-  'appVersion': 'Version 1.1',
+  'appVersion': 'Version 1.5',
   'record': 'Record',
   'createMovie': 'Create movie',
   'settings': 'Settings',
@@ -94,4 +94,9 @@ const Map<String, String> en = {
   'enterSubtitles': 'Enter subtitles',
   'totalSelected': 'Total Selected: ',
   'selectVideos': 'Select videos',
+  'editSubtitles': 'Edit\nsubtitles',
+  'noVideoRecorded': 'No video recorded',
+  'subtitles': 'Subtitles',
+  'addVideo': 'Add video',
+  'calendar': 'Calendar',
 };

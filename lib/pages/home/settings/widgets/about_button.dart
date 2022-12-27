@@ -2,32 +2,29 @@ import 'package:about/about.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../../controllers/lang_controller.dart';
+import '../../../../utils/constants.dart';
 
 class AboutButton extends StatelessWidget {
-  final LanguageController _languageController = Get.find();
-
   void showAbout(BuildContext context) {
     showAboutPage(
       title: Text('about'.tr),
       context: context,
       applicationVersion: 'appVersion'.tr,
-      applicationLegalese: 'Copyright © Caio Pedroso, 2021',
+      applicationLegalese: 'Copyright © Caio Pedroso, 2023',
       children: <Widget>[
-        MarkdownPageListTile(
-          filename: _languageController.selectedLanguage.value == 'pt'
-              ? 'TODO_pt.md'
-              : 'TODO.md',
-          title: Text('futureUpdates'.tr),
-          icon: const Icon(Icons.more_time_outlined),
-        ),
         const MarkdownPageListTile(
-          icon: Icon(Icons.list),
+          icon: Icon(
+            Icons.history,
+            color: AppColors.green,
+          ),
           title: Text('Changelog'),
           filename: 'CHANGELOG.md',
         ),
         MarkdownPageListTile(
-          icon: const Icon(Icons.favorite),
+          icon: const Icon(
+            Icons.favorite,
+            color: AppColors.mainColor,
+          ),
           title: Text('thanksTo'.tr),
           filename: 'CONTRIBUTORS.md',
         ),
@@ -47,23 +44,26 @@ class AboutButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Container(
-          height: MediaQuery.of(context).size.height * 0.065,
-          padding: const EdgeInsets.symmetric(horizontal: 15.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'about'.tr,
-                style: TextStyle(
-                  fontSize: MediaQuery.of(context).size.width * 0.045,
+        GestureDetector(
+          onTap: () => showAbout(context),
+          child: Container(
+            height: MediaQuery.of(context).size.height * 0.065,
+            padding: const EdgeInsets.symmetric(horizontal: 15.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'about'.tr,
+                  style: TextStyle(
+                    fontSize: MediaQuery.of(context).size.width * 0.045,
+                  ),
                 ),
-              ),
-              IconButton(
-                icon: const Icon(Icons.info),
-                onPressed: () => showAbout(context),
-              ),
-            ],
+                IconButton(
+                  icon: const Icon(Icons.info),
+                  onPressed: () => showAbout(context),
+                ),
+              ],
+            ),
           ),
         ),
         const Divider(),

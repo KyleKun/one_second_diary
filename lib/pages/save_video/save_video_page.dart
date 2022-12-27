@@ -159,7 +159,7 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
     _initVideoPlayerController();
     checkGeotaggingStatus().whenComplete(
       () {
-        print(_currentAddress);
+        debugPrint(_currentAddress);
         setState(() {});
       },
     );
@@ -458,7 +458,7 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
           onChanged: (_) async {
             await toggleGeotaggingStatus();
             if (isGeotaggingEnabled) {
-              print('Getting location');
+              debugPrint('Getting location');
               await _getCurrentPosition();
             }
             setState(() {});

@@ -6,7 +6,7 @@ const Map<String, String> zh = {
   'donateMsg': '非常感谢您使用该应用程序！如果你想支持开发，欢迎您随时捐款 ^^',
   'donationPageTitle': '支持应用开发',
   'about': '关于',
-  'appVersion': '版本信息 1.1',
+  'appVersion': '版本信息 1.5',
   'record': '记录',
   'createMovie': '创建电影',
   'settings': '设置',
@@ -87,4 +87,9 @@ const Map<String, String> zh = {
   'enterSubtitles': '输入字幕',
   'totalSelected': '总选定: ',
   'selectVideos': '选择视频',
+  'editSubtitles': '编辑字幕',
+  'noVideoRecorded': '没有视频被记录',
+  'subtitles': '字幕',
+  'addVideo': '添加视频',
+  'calendar': '日历',
 };

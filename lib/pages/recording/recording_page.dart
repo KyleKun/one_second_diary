@@ -301,7 +301,7 @@ class _RecordingPageState extends State<RecordingPage>
         ),
       );
     } on CameraException catch (e) {
-      print('$e');
+      debugPrint('$e');
       // Utils().logError(e);
       return null;
     }

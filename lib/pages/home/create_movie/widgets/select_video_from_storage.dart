@@ -23,6 +23,8 @@ class _SelectVideoFromStorageState extends State<SelectVideoFromStorage> {
   late List<GlobalKey> globalKeys;
   Map<String, Uint8List?> thumbnails = {};
   final ScrollController scrollController = ScrollController();
+  IconData selectIcon = Icons.select_all;
+  IconData navigationIcon = Icons.arrow_downward;
 
   @override
   void initState() {
@@ -41,19 +43,39 @@ class _SelectVideoFromStorageState extends State<SelectVideoFromStorage> {
         title: Text('selectVideos'.tr),
         actions: [
           IconButton(
-            icon: const Icon(Icons.deselect),
+            icon: Icon(navigationIcon),
             onPressed: () {
-              setState(() {
-                isSelected = List.filled(allVideos.length, false);
-              });
+              if (navigationIcon == Icons.arrow_downward) {
+                scrollController.jumpTo(
+                  scrollController.position.maxScrollExtent,
+                );
+                setState(() {
+                  navigationIcon = Icons.arrow_upward;
+                });
+              } else {
+                scrollController.jumpTo(
+                  scrollController.position.minScrollExtent,
+                );
+                setState(() {
+                  navigationIcon = Icons.arrow_downward;
+                });
+              }
             },
           ),
           IconButton(
-            icon: const Icon(Icons.select_all),
+            icon: Icon(selectIcon),
             onPressed: () {
-              setState(() {
-                isSelected = List.filled(allVideos.length, true);
-              });
+              if (selectIcon == Icons.select_all) {
+                setState(() {
+                  isSelected = List.filled(allVideos.length, true);
+                  selectIcon = Icons.deselect;
+                });
+              } else {
+                setState(() {
+                  isSelected = List.filled(allVideos.length, false);
+                  selectIcon = Icons.select_all;
+                });
+              }
             },
           ),
         ],
@@ -68,84 +90,80 @@ class _SelectVideoFromStorageState extends State<SelectVideoFromStorage> {
             ),
           ),
           Expanded(
-            child: Scrollbar(
-              thickness: 10,
-              thumbVisibility: true,
+            child: GridView.builder(
+              addAutomaticKeepAlives: true,
+              cacheExtent: 99999,
+              shrinkWrap: true,
               controller: scrollController,
-              interactive: true,
-              radius:
-                  const Radius.circular(10), // give the thumb rounded corners
-              child: GridView.builder(
-                addAutomaticKeepAlives: true,
-                cacheExtent: 100,
-                shrinkWrap: true,
-                controller: scrollController,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  childAspectRatio: 1.12,
-                ),
-                itemCount: allVideos.length,
-                itemBuilder: (context, index) {
-                  return Column(
-                    children: [
-                      Text(
-                        allVideos[index].split('/').last.split('.mp4')[0],
-                        key: globalKeys[index],
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            isSelected[index] = !isSelected[index];
-                          });
-                          if (isSelected[index] &&
-                              index != allVideos.length - 1) {
-                            scrollController.position.ensureVisible(
-                              globalKeys[index + 1]
-                                  .currentContext!
-                                  .findRenderObject()!,
-                              duration: const Duration(milliseconds: 750),
-                            );
-                          }
-                        },
-                        child: Container(
-                          margin: const EdgeInsets.all(15.0),
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: isSelected[index]
-                                  ? Colors.green
-                                  : Colors.white,
-                              width: isSelected[index] ? 4 : 1,
-                            ),
-                            borderRadius: BorderRadius.circular(5),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                childAspectRatio: 1.12,
+              ),
+              itemCount: allVideos.length,
+              itemBuilder: (context, index) {
+                return Column(
+                  children: [
+                    Text(
+                      allVideos[index].split('/').last.split('.mp4')[0],
+                      key: globalKeys[index],
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          isSelected[index] = !isSelected[index];
+                        });
+                        if (isSelected[index] &&
+                            index != allVideos.length - 1) {
+                          scrollController.position.ensureVisible(
+                            globalKeys[index + 1]
+                                .currentContext!
+                                .findRenderObject()!,
+                            duration: const Duration(milliseconds: 750),
+                          );
+                        }
+                      },
+                      child: Container(
+                        margin: const EdgeInsets.all(15.0),
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color:
+                                isSelected[index] ? Colors.green : Colors.white,
+                            width: isSelected[index] ? 4 : 1,
                           ),
-                          child: LazyFutureBuilder(
-                            future: () => getThumbnail(allVideos[index]),
-                            builder: (context, snapshot) {
-                              if (snapshot.connectionState ==
-                                  ConnectionState.waiting) {
-                                return const Center(
-                                  child: SizedBox(
-                                    height: 30,
-                                    width: 30,
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        child: LazyFutureBuilder(
+                          future: () => getThumbnail(allVideos[index]),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return const Center(
+                                child: SizedBox(
+                                  height: 30,
+                                  width: 30,
+                                  child: Padding(
+                                    padding: EdgeInsets.all(4.0),
                                     child: CircularProgressIndicator(),
                                   ),
-                                );
-                              }
+                                ),
+                              );
+                            }
 
-                              if (snapshot.hasError) {
-                                return Text(
-                                  '${snapshot.error}',
-                                );
-                              }
-                              return Image.memory(snapshot.data as Uint8List);
-                            },
-                          ),
+                            if (snapshot.hasError) {
+                              return Text(
+                                '${snapshot.error}',
+                              );
+                            }
+                            return Image.memory(
+                              snapshot.data as Uint8List,
+                            );
+                          },
                         ),
                       ),
-                    ],
-                  );
-                },
-              ),
+                    ),
+                  ],
+                );
+              },
             ),
           ),
           if (totalSelected >= 2) ...{

@@ -37,6 +37,11 @@ class CustomBottomAppBar extends GetView<BottomAppBarIndexController> {
               color: AppColors.green,
             ),
             _bottomBarItem(
+              icon: Icons.calendar_month_outlined,
+              title: 'calendar'.tr,
+              color: AppColors.yellow,
+            ),
+            _bottomBarItem(
               icon: Icons.movie_filter_outlined,
               title: 'createMovie'.tr,
               color: AppColors.mainColor,

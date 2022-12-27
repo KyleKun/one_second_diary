@@ -6,11 +6,7 @@ import 'shared_preferences_util.dart';
 
 class Themes {
   static final light = ThemeData.light().copyWith(
-    appBarTheme: const AppBarTheme(
-      backgroundColor: AppColors.light,
-      titleTextStyle: TextStyle(color: Colors.black),
-      iconTheme: IconThemeData(color: Colors.black),
-    ),
+    appBarTheme: const AppBarTheme(backgroundColor: AppColors.mainColor),
     textTheme: ThemeData.light().textTheme.apply(fontFamily: 'Magic'),
     primaryColor: AppColors.mainColor,
     colorScheme: ColorScheme.fromSwatch().copyWith(

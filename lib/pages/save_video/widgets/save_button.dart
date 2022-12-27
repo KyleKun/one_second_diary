@@ -57,25 +57,19 @@ class _SaveButtonState extends State<SaveButton> {
   final VideoCountController _videoCountController = Get.find();
 
   void _saveVideo() async {
-    print('Starting to save video');
+    debugPrint('Starting to save video');
     setState(() {
       isProcessing = true;
     });
 
     try {
-      // await _editWithTapicoa(datePosX, datePosY, size, isEdit);
-
-      // Alternative way of editing video, using ffmpeg, but it is very slow
       await _editWithFFmpeg(widget.isGeotaggingEnabled, context);
 
       setState(() {
         isProcessing = false;
       });
     } catch (e) {
-      print(e);
-
-      // Deleting video from cache
-      StorageUtils.deleteFile(widget.videoPath);
+      debugPrint(e.toString());
 
       setState(() {
         isProcessing = false;
@@ -94,6 +88,9 @@ class _SaveButtonState extends State<SaveButton> {
           action: () => Get.offAllNamed(Routes.HOME),
         ),
       );
+    } finally {
+      // Deleting video from cache
+      StorageUtils.deleteFile(widget.videoPath);
     }
   }
 
@@ -136,7 +133,6 @@ class _SaveButtonState extends State<SaveButton> {
     const double locTextSize = 33;
 
     String locOutput = '';
-    String subtitles = '';
 
     // Used to not increment videoCount controller
     bool isEdit = false;
@@ -174,14 +170,17 @@ class _SaveButtonState extends State<SaveButton> {
           ', drawtext=$fontPath:text=\'${widget.userLocation}\':fontsize=$locTextSize:fontcolor=\'$parsedDateColor\':borderw=${widget.textOutlineWidth}:bordercolor=$parsedTextOutlineColor:x=$locPosX:y=$locPosY';
     }
 
-    // If subtitles TextBox were not left empty, we can allow the command to render the subtitles into the video
+    // If subtitles TextBox were not left empty, we can allow the command to render the subtitles into the video, otherwise we add empty subtitles to populate the streams with a subtitle stream, so that concat demuxer can work properly when creating a movie
+    String subtitlesPath = '';
     if (widget.subtitles != null && widget.subtitles != '') {
-      final subtitlesPath = await Utils.writeSrt(
+      subtitlesPath = await Utils.writeSrt(
         widget.subtitles!,
         widget.videoDuration,
       );
-      subtitles = '-i $subtitlesPath -c copy -c:s mov_text';
+    } else {
+      subtitlesPath = await Utils.writeSrt('', 0);
     }
+    final subtitles = '-i $subtitlesPath -c copy -c:s mov_text';
 
     // Caches the default font to save texts in ffmpeg.
     // The edit may fail unexpectedly in some devices if this is not done.
@@ -190,10 +189,10 @@ class _SaveButtonState extends State<SaveButton> {
     await executeFFmpeg(
       '-i $videoPath $subtitles -vf [in]drawtext="$fontPath:text=\'${widget.dateFormat}\':fontsize=$dateTextSize:fontcolor=\'$parsedDateColor\':borderw=${widget.textOutlineWidth}:bordercolor=$parsedTextOutlineColor:x=$datePosX:y=$datePosY$locOutput[out]" -codec:v libx264 -pix_fmt yuv420p $finalPath -y',
     ).then((session) async {
-      print(session.getCommand().toString());
+      debugPrint(session.getCommand().toString());
       final returnCode = await session.getReturnCode();
       if (ReturnCode.isSuccess(returnCode)) {
-        print('Video edited successfully');
+        debugPrint('Video edited successfully');
 
         _dayController.updateDaily();
 
@@ -216,9 +215,9 @@ class _SaveButtonState extends State<SaveButton> {
           ),
         );
       } else if (ReturnCode.isCancel(returnCode)) {
-        print('Execution was cancelled');
+        debugPrint('Execution was cancelled');
       } else {
-        print(
+        debugPrint(
             'Error editing video: Return code is ${await session.getReturnCode()}');
         final sessionLog = await session.getAllLogsAsString();
         final failureStackTrace = await session.getFailStackTrace();
@@ -229,72 +228,4 @@ class _SaveButtonState extends State<SaveButton> {
       }
     });
   }
-
-  // Future<void> _editWithTapicoa(int x, int y, int size, bool isEdit) async {
-  //   // Utils().logInfo('Saving video...');
-
-  //   // Creates the folder if it is not created yet
-  //   await StorageUtils.createFolder();
-
-  //   // Setting editing properties
-  //   final Cup cup = Cup(
-  //     Content(widget.videoPath),
-  //     [
-  //       TapiocaBall.textOverlay(
-  //         // Date in the proper format
-  //         widget.dateFormat,
-  //         x,
-  //         y,
-  //         size,
-  //         widget.dateColor,
-  //       ),
-  //     ],
-  //   );
-
-  //   // Path to save the final video
-  //   final String finalPath =
-  //       '${SharedPrefsUtil.getString('appPath')}${DateFormatUtils.getToday()}.mp4';
-
-  //   // Check if video already exists and delete it if so (Edit daily feature)
-  //   if (StorageUtils.checkFileExists(finalPath)) {
-  //     isEdit = true;
-  //     // Utils().logWarning('File already exists!');
-  //     StorageUtils.deleteFile(finalPath);
-  //     // Utils().logWarning('Old file deleted!');
-  //   }
-
-  //   // Editing video
-  //   await cup.suckUp(finalPath).then(
-  //     (_) {
-  //       _dayController.updateDaily();
-
-  //       // Updates the controller: videoCount += 1
-  //       if (!isEdit) {
-  //         _videoCountController.updateVideoCount();
-  //       }
-
-  //       // Deleting video from cache
-  //       StorageUtils.deleteFile(widget.videoPath);
-
-  //       // Stop loading animation
-  //       setState(() {
-  //         isProcessing = false;
-  //       });
-
-  //       // Showing confirmation popup
-  //       showDialog(
-  //         barrierDismissible: false,
-  //         context: Get.context!,
-  //         builder: (context) => CustomDialog(
-  //           isDoubleAction: false,
-  //           title: 'videoSavedTitle'.tr,
-  //           content: 'videoSavedDesc'.tr,
-  //           actionText: 'Ok',
-  //           actionColor: Colors.green,
-  //           action: () => Get.offAllNamed(Routes.HOME),
-  //         ),
-  //       );
-  //     },
-  //   );
-  // }
 }

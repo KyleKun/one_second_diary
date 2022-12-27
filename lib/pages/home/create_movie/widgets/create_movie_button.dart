@@ -91,6 +91,36 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
             '${SharedPrefsUtil.getString('moviesPath')}OneSecondDiary-Movie-${_movieCount.movieCount.value}-$today.mp4';
         // Utils().logInfo('It will be saved in: $outputPath');
 
+        // Make sure all selected videos have a subtitles stream before creating movie
+        for (String video in selectedVideos) {
+          await executeFFprobe(
+                  '-v quiet -select_streams s -show_streams $video')
+              .then((session) async {
+            final returnCode = await session.getReturnCode();
+            if (ReturnCode.isSuccess(returnCode)) {
+              final sessionLog = await session.getAllLogsAsString();
+              debugPrint('\n\nStream info for $video --> $sessionLog\n\n');
+              if (sessionLog == null || sessionLog.isEmpty) {
+                debugPrint('No subtitles stream for $video, adding one...');
+                final String tempPath = '${video.split('.mp4').first}_temp.mp4';
+                final String subtitles = await Utils.writeSrt('', 0);
+                final command =
+                    '-i $video -i $subtitles -c copy -c:s mov_text $tempPath -y';
+                await executeFFmpeg(command).then((session) async {
+                  final returnCode = await session.getReturnCode();
+                  if (ReturnCode.isSuccess(returnCode)) {
+                    StorageUtils.deleteFile(video);
+                    StorageUtils.renameFile(tempPath, video);
+                    debugPrint('Added empty subtitles stream to $video');
+                  } else {
+                    debugPrint('Error adding subtitles stream to $video');
+                  }
+                });
+              }
+            }
+          });
+        }
+
         await executeFFmpeg(
                 '-f concat -safe 0 -i $txtPath -map 0 -c copy $outputPath -y')
             .then(
@@ -114,10 +144,10 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
               // Utils().logInfo('Video saved in gallery in the folder OSD-Movies!');
 
             } else if (ReturnCode.isCancel(returnCode)) {
-              print('Execution was cancelled');
+              debugPrint('Execution was cancelled');
             } else {
               // Utils().logError('$result');
-              print(
+              debugPrint(
                   'Error editing video: Return code is ${await session.getReturnCode()}');
               final sessionLog = await session.getAllLogsAsString();
               final failureStackTrace = await session.getFailStackTrace();

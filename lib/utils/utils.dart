@@ -34,11 +34,10 @@ class Utils {
   // }
 
   static void launchURL(String url) async {
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw 'Could not launch $url';
-    }
+    await launchUrl(
+      Uri.parse(url),
+      mode: LaunchMode.externalApplication,
+    );
   }
 
   /// Used to request Android permissions
@@ -325,19 +324,19 @@ class Utils {
     try {
       if (StorageUtils.checkFileExists(fontPath)) {
         // Utils().logInfo('Font already exists');
-        print('Font already exists');
+        debugPrint('Font already exists');
       } else {
         final ByteData data =
             await rootBundle.load('assets/fonts/YuseiMagic-Regular.ttf');
         final List<int> bytes =
             data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
         await io.File(fontPath).writeAsBytes(bytes);
-        print('Font copied to $fontPath');
+        debugPrint('Font copied to $fontPath');
         // Utils().logInfo('Font copied to $fontPath');
       }
     } catch (e) {
       // Utils().logError('$e');
-      print(e);
+      debugPrint(e.toString());
     }
 
     return fontPath;

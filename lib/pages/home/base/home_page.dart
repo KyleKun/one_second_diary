@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../controllers/bottom_app_bar_index_controller.dart';
+import '../calendar_editor/calendar_editor_page.dart';
 import '../create_movie/create_movie_screen.dart';
 import '../daily_entry/daily_entry_page.dart';
 import '../settings/settings_page.dart';
@@ -29,8 +30,10 @@ class HomePage extends GetView<BottomAppBarIndexController> {
       case 0:
         return DailyEntryPage();
       case 1:
-        return CreateMoviePage();
+        return const CalendarEditorPage();
       case 2:
+        return CreateMoviePage();
+      case 3:
         return SettingPage();
       default:
         return DailyEntryPage();

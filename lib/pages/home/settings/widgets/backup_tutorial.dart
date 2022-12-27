@@ -8,23 +8,26 @@ class BackupTutorial extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Container(
-          height: MediaQuery.of(context).size.height * 0.065,
-          padding: const EdgeInsets.symmetric(horizontal: 15.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Backup Tutorial',
-                style: TextStyle(
-                  fontSize: MediaQuery.of(context).size.width * 0.045,
+        GestureDetector(
+          onTap: () => Utils.launchURL(Constants.backupTutorialUrl),
+          child: Container(
+            height: MediaQuery.of(context).size.height * 0.065,
+            padding: const EdgeInsets.symmetric(horizontal: 15.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Backup Tutorial',
+                  style: TextStyle(
+                    fontSize: MediaQuery.of(context).size.width * 0.045,
+                  ),
                 ),
-              ),
-              IconButton(
-                icon: const Icon(Icons.backup),
-                onPressed: () => Utils.launchURL(Constants.backupTutorialUrl),
-              ),
-            ],
+                IconButton(
+                  icon: const Icon(Icons.backup),
+                  onPressed: () => Utils.launchURL(Constants.backupTutorialUrl),
+                ),
+              ],
+            ),
           ),
         ),
         const Divider(),
