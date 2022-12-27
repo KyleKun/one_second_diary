@@ -108,15 +108,14 @@ class DateFormatUtils {
   }
 
   static String parseDateStringAccordingLocale(String date) {
-    final String year = date.split('-').first;
-    final String month = date.split('-')[1];
-    final String day = date.split('-').last;
-
     if (isDayFirstPattern()) {
+      final String year = date.split('-').first;
+      final String month = date.split('-')[1];
+      final String day = date.split('-').last;
       return '$day-$month-$year';
     }
 
-    return '$year-$month-$day';
+    return date;
   }
 
   /// Convert the given date from the app's ffmpeg friendly format to DateTime
