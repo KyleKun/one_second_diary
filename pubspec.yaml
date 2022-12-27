@@ -10,7 +10,6 @@ environment:
 
 dependencies:
   about: ^2.1.1
-  async: ^2.9.0
   avatar_glow: ^2.0.2
   camera:
     git:
