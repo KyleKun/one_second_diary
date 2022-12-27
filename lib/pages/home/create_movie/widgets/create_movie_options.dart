@@ -66,22 +66,14 @@ class _CreateMovieOptionsState extends State<CreateMovieOptions> {
                 children: [
                   Padding(
                     padding: EdgeInsets.only(
-                      left: MediaQuery.of(context).size.width * 0.04,
+                      left: MediaQuery.of(context).size.height * 0.025,
                       bottom: MediaQuery.of(context).size.height * 0.01,
                     ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'dateRange'.tr,
-                          style: TextStyle(
-                            fontSize:
-                                MediaQuery.of(context).size.height * 0.025,
-                          ),
-                        ),
-                        if (_exportPeriodGroupValue != ExportDateRange.custom)
-                          Text('${'clipsFound'.tr}: ${getClipsFound()}'),
-                      ],
+                    child: Text(
+                      'dateRange'.tr,
+                      style: TextStyle(
+                        fontSize: MediaQuery.of(context).size.height * 0.025,
+                      ),
                     ),
                   ),
                   Padding(
@@ -200,10 +192,23 @@ class _CreateMovieOptionsState extends State<CreateMovieOptions> {
               //     ),
               //   ],
               // ),
-
               const Spacer(),
-
-              // Create movie button
+              if (_exportPeriodGroupValue != ExportDateRange.custom)
+                Text(
+                  '${'clipsFound'.tr}: ${getClipsFound()}',
+                  style: TextStyle(
+                    fontSize: MediaQuery.of(context).size.width * 0.060,
+                  ),
+                ),
+              const Spacer(),
+              Text(
+                'tapBelowToGenerate'.tr,
+                style: TextStyle(
+                  fontSize: MediaQuery.of(context).size.width * 0.045,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 20.0),
               CreateMovieButton(
                 selectedExportDateRange: _exportPeriodGroupValue,
                 // selectedOrientation: _orientationDefaultValue,

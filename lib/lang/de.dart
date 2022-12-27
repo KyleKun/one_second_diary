@@ -7,7 +7,7 @@ const Map<String, String> de = {
       'Vielen Dank!\n\nWenn Du die App unterstützen möchtest,\nfreuen wir uns auf Deine Spende ^^',
   'donationPageTitle': 'App-Entwicklung unterstützen',
   'about': 'Über die App',
-  'appVersion': 'Version 1.1',
+  'appVersion': 'Version 1.5',
   'record': 'Aufnehmen',
   'createMovie': 'Film erstellen',
   'settings': 'Einstellungen',
@@ -93,4 +93,9 @@ const Map<String, String> de = {
   'enterSubtitles': 'Untertitel eingeben',
   'totalSelected': 'Gesamt ausgewählt: ',
   'selectVideos': 'Videos auswählen',
+  'editSubtitles': 'Untertitel\nbearbeiten',
+  'noVideoRecorded': 'Kein Video aufgenommen',
+  'subtitles': 'Untertitel',
+  'addVideo': 'Video hinzufügen',
+  'calendar': 'Kalender',
 };

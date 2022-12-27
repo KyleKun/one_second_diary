@@ -71,7 +71,6 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
     return SingleChildScrollView(
       child: Column(
         children: [
-          const Text('Select a day to add or edit a video'),
           Container(
             margin: const EdgeInsets.symmetric(horizontal: 16.0),
             child: CalendarCarousel<Event>(
@@ -258,15 +257,46 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
                           ),
                         );
                       },
-                      child: Text('editSubtitles'.tr),
+                      child: Text(
+                        'editSubtitles'.tr,
+                        textAlign: TextAlign.center,
+                      ),
                     ),
                   ),
                 ),
               ],
             )
           else
-            const Center(
-              child: Text('No video recorded for this day'),
+            Column(
+              children: [
+                const SizedBox(
+                  height: 20.0,
+                ),
+                Text('noVideoRecorded'.tr),
+                const SizedBox(
+                  height: 10.0,
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ElevatedButton(
+                    // Circle
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.yellow,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30.0),
+                      ),
+                    ),
+                    // TODO: implement
+                    onPressed: () {
+                      print('Add video from gallery');
+                    },
+                    child: Text(
+                      'addVideo'.tr,
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+              ],
             ),
         ],
       ),

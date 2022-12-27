@@ -7,7 +7,7 @@ const Map<String, String> pt = {
       'Muito obrigado por usar o app!\n\nSe desejar apoiar o desenvolvimento, sinta-se livre para fazer uma doação ^^',
   'donationPageTitle': 'Apoiar o desenvolvimento',
   'about': 'Sobre',
-  'appVersion': 'Versão 1.1',
+  'appVersion': 'Versão 1.5',
   'record': 'Gravar',
   'createMovie': 'Criar filme',
   'settings': 'Configurações',
@@ -93,4 +93,9 @@ const Map<String, String> pt = {
   'enterSubtitles': 'Digite uma legenda',
   'totalSelected': 'Total selecionado: ',
   'selectVideos': 'Escolha os vídeos',
+  'editSubtitles': 'Editar\nlegendas',
+  'noVideoRecorded': 'Nenhum vídeo gravado',
+  'subtitles': 'Legendas',
+  'addVideo': 'Adicionar vídeo',
+  'calendar': 'Calendário',
 };

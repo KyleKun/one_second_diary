@@ -8,25 +8,26 @@ import 'widgets/video_count_card.dart';
 class CreateMoviePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: [
-        const SizedBox(),
-        Text(
-          'totalRecordedTitle'.tr,
-          style: TextStyle(fontSize: MediaQuery.of(context).size.width * 0.07),
-          textAlign: TextAlign.center,
-        ),
-        VideoCountCard(),
-        SizedBox(height: MediaQuery.of(context).size.height * 0.1),
-        Text(
-          'tapBelowToGenerate'.tr,
-          style: TextStyle(fontSize: MediaQuery.of(context).size.width * 0.045),
-          textAlign: TextAlign.center,
-        ),
-        const _CreateMovieOptionsButton(),
-        const SizedBox(),
-      ],
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 40.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Column(
+            children: [
+              Text(
+                'totalRecordedTitle'.tr,
+                style: TextStyle(
+                    fontSize: MediaQuery.of(context).size.width * 0.07),
+                textAlign: TextAlign.center,
+              ),
+              SizedBox(height: MediaQuery.of(context).size.height * 0.05),
+              VideoCountCard(),
+            ],
+          ),
+          const _CreateMovieOptionsButton(),
+        ],
+      ),
     );
   }
 }
@@ -49,7 +50,7 @@ class _CreateMovieOptionsButton extends StatelessWidget {
         ),
         onPressed: () async => await Get.toNamed(Routes.CREATE_MOVIE_OPTIONS),
         child: Text(
-          'create'.tr,
+          'createMovie'.tr,
           style: TextStyle(
             color: Colors.white,
             fontSize: MediaQuery.of(context).size.width * 0.055,

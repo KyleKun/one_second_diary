@@ -11,7 +11,7 @@ class NotificationsButton extends StatelessWidget {
         GestureDetector(
           onTap: () => Get.toNamed(Routes.NOTIFICATION),
           child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
+            padding: const EdgeInsets.symmetric(horizontal: 15.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -20,6 +20,10 @@ class NotificationsButton extends StatelessWidget {
                   style: TextStyle(
                     fontSize: MediaQuery.of(context).size.width * 0.045,
                   ),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.notifications),
+                  onPressed: () => Get.toNamed(Routes.NOTIFICATION),
                 ),
               ],
             ),

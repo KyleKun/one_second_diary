@@ -1,5 +1,12 @@
-## v2.0 - xx/2022
-- Added Chinese, German and French localization
+## v1.5 - 01/2023
+- Added subtitles feature
+- Added Calendar page
+- Added Edit Subtitles and Add Video options in Calendar page
+- Added automatic and manual geotagging in recording
+- Added options to create a movie by period or only with selected videos
+- Added option to schedule notifications time
+- Added Chinese, Deutsch, Indonesian, and French localization
+- Fixed issues where video recording could not be saved
 
 ## v1.1 - 05/2021
 - Added feature to receive daily notifications

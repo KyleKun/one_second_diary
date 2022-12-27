@@ -7,7 +7,7 @@ const Map<String, String> id = {
       'Terima kasih sudah menggunakan aplikasi ini!\n\nJika Anda ingin mendukung pembuatan aplikasi ini, jangan sungkan untuk berdonasi^^.',
   'donationPageTitle': 'Dukung pembuatan aplikasi',
   'about': 'Tentang',
-  'appVersion': 'Versi 1.1',
+  'appVersion': 'Versi 1.5',
   'record': 'Rekam',
   'createMovie': 'Buat video',
   'settings': 'Pengaturan',
@@ -94,4 +94,9 @@ const Map<String, String> id = {
   'enterSubtitles': 'Masukkan subjudul',
   'totalSelected': 'Total dipilih: ',
   'selectVideos': 'Pilih video',
+  'editSubtitles': 'Ubah\nsubjudul',
+  'noVideoRecorded': 'Tidak ada video yang direkam',
+  'subtitles': 'Subjudul',
+  'addVideo': 'Tambah video',
+  'calendar': 'Kalender',
 };
