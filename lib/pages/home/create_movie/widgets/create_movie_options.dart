@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../../enums/export_date_range.dart';
-import '../../../../routes/app_pages.dart';
 // import '../../../../enums/export_orientations.dart';
+import '../../../../routes/app_pages.dart';
 import '../../../../utils/constants.dart';
 import '../../../../utils/theme.dart';
 import '../../../../utils/utils.dart';
@@ -141,7 +141,7 @@ class _CreateMovieOptionsState extends State<CreateMovieOptions> {
               //         bottom: MediaQuery.of(context).size.height * 0.01,
               //       ),
               //       child: Text(
-              //         'Orientation',
+              //         'orientation'.tr,
               //         style: TextStyle(
               //           fontSize: MediaQuery.of(context).size.height * 0.025,
               //         ),
@@ -182,7 +182,7 @@ class _CreateMovieOptionsState extends State<CreateMovieOptions> {
               //               (ExportOrientation value) {
               //                 return DropdownMenuItem<ExportOrientation>(
               //                   value: value,
-              //                   child: Text(value.label),
+              //                   child: Text(value.localizationLabel.tr),
               //                 );
               //               },
               //             ).toList(),

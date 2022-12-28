@@ -99,4 +99,7 @@ const Map<String, String> en = {
   'subtitles': 'Subtitles',
   'addVideo': 'Add video',
   'calendar': 'Calendar',
+  'orientation': 'Orientation',
+  'portrait': 'Portrait',
+  'landscape': 'Landscape',
 };

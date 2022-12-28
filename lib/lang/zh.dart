@@ -92,4 +92,7 @@ const Map<String, String> zh = {
   'subtitles': '字幕',
   'addVideo': '添加视频',
   'calendar': '日历',
+  'orientation': '方向',
+  'portrait': '肖像',
+  'landscape': '景观',
 };

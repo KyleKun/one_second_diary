@@ -98,4 +98,7 @@ const Map<String, String> es = {
   'subtitles': 'Subtítulos',
   'addVideo': 'Agregar video',
   'calendar': 'Calendario',
+  'orientation': 'Orientación',
+  'portrait': 'Retrato',
+  'landscape': 'Paisaje',
 };

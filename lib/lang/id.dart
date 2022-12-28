@@ -99,4 +99,7 @@ const Map<String, String> id = {
   'subtitles': 'Subjudul',
   'addVideo': 'Tambah video',
   'calendar': 'Kalender',
+  'orientation': 'Orientasi',
+  'portrait': 'Potret',
+  'landscape': 'Lanskap',
 };
