@@ -21,6 +21,10 @@ class Themes {
       dayPeriodTextColor: AppColors.mainColor,
       entryModeIconColor: AppColors.dark,
     ),
+    listTileTheme: const ListTileThemeData(
+      tileColor: AppColors.light,
+      iconColor: AppColors.dark,
+    ),
   );
 
   static final dark = ThemeData.dark().copyWith(
@@ -37,6 +41,10 @@ class Themes {
       hourMinuteTextColor: AppColors.light,
       hourMinuteColor: Colors.black38,
       dayPeriodTextColor: AppColors.light,
+    ),
+    listTileTheme: const ListTileThemeData(
+      tileColor: AppColors.dark,
+      iconColor: AppColors.light,
     ),
   );
 }
