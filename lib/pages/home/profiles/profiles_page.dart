@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 import '../../../models/profile.dart';
@@ -84,7 +85,9 @@ class _ProfilesPageState extends State<ProfilesPage> {
                 TextFormField(
                   controller: _profileNameController,
                   cursorColor: Colors.green,
-                  maxLength: 45,
+                  inputFormatters: [
+                    LengthLimitingTextInputFormatter(45),
+                  ],
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Profile name cannot be empty';
