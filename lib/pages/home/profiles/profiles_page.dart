@@ -21,9 +21,6 @@ class _ProfilesPageState extends State<ProfilesPage> {
 
   final List<Profile> profiles = [
     const Profile(label: 'Default', isDefault: true),
-    const Profile(label: 'Enola\'s Goldfish'),
-    const Profile(label: '1st year college'),
-    const Profile(label: 'My Birthdays'),
   ];
 
   Future<void> _addNewProfileDialog() async {
