@@ -71,15 +71,15 @@ class _ProfilesPageState extends State<ProfilesPage> {
         builder: (context, setState) => Form(
           key: _profileNameFormKey,
           child: AlertDialog(
-            title: const Text('New profile'),
+            title: Text('newProfile'.tr),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10),
             ),
             content: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Text(
-                  'Creating a new profile will set up a seperate directory for videos created while that profile is selected',
+                Text(
+                  'newProfileTooltip'.tr,
                 ),
                 const SizedBox(height: 12),
                 TextFormField(
@@ -90,17 +90,17 @@ class _ProfilesPageState extends State<ProfilesPage> {
                   ],
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Profile name cannot be empty';
+                      return 'profileNameCannotBeEmpty'.tr;
                     }
 
                     if (value.toLowerCase() == 'default') {
-                      return 'This is a reserved profile name';
+                      return 'reservedProfileName'.tr;
                     }
 
                     return null;
                   },
                   decoration: InputDecoration(
-                    hintText: 'Enter profile name',
+                    hintText: 'enterProfileName'.tr,
                     errorStyle: const TextStyle(
                       color: AppColors.mainColor,
                     ),
@@ -168,15 +168,15 @@ class _ProfilesPageState extends State<ProfilesPage> {
     return await showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Delete profile'),
+        title: Text('deleteProfile'.tr),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
         ),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text(
-              'All videos associated with this profile will also be permanently deleted. Are you sure to continue?',
+            Text(
+              'deleteProfileTooltip'.tr,
             ),
           ],
         ),
@@ -223,7 +223,7 @@ class _ProfilesPageState extends State<ProfilesPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Profiles',
+          'profiles'.tr,
           style: TextStyle(
             fontFamily: 'Magic',
             fontSize: MediaQuery.of(context).size.width * 0.05,
@@ -237,7 +237,7 @@ class _ProfilesPageState extends State<ProfilesPage> {
           child: Column(
             children: [
               Text(
-                'Tap on a profile to switch',
+                'tapToSwitch'.tr,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: MediaQuery.of(context).size.width * 0.035,
@@ -292,7 +292,7 @@ class _ProfilesPageState extends State<ProfilesPage> {
                 style: TextButton.styleFrom(
                   foregroundColor: AppColors.mainColor,
                 ),
-                label: const Text('Create New Profile'),
+                label: Text('createNewProfile'.tr),
               )
             ],
           ),

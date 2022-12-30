@@ -101,4 +101,16 @@ const Map<String, String> de = {
   'orientation': 'Orientierung',
   'portrait': 'Porträt',
   'landscape': 'Landschaft',
+  'profiles': 'Profils',
+  'tapToSwitch': 'Tippen Sie auf ein Profil, um zu wechseln',
+  'createNewProfile': 'Neues Profil erstellen',
+  'newProfile': 'Neues Profil',
+  'deleteProfile': 'Profil löschen',
+  'enterProfileName': 'Profilname eingeben',
+  'newProfileTooltip':
+      'Erstellen eines neuen Profils wird ein separates Verzeichnis für Videos eingerichtet, die erstellt wurden, während dieses Profil ausgewählt ist',
+  'deleteProfileTooltip':
+      'Alle mit diesem Profil verknüpften Videos werden ebenfalls dauerhaft gelöscht.Bist du sicher weiter? ',
+  'profileNameCannotBeEmpty': 'Profilname kann nicht leer sein',
+  'reservedProfileName': 'Dies ist ein reservierter Profilname',
 };

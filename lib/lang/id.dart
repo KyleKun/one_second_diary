@@ -102,4 +102,16 @@ const Map<String, String> id = {
   'orientation': 'Orientasi',
   'portrait': 'Potret',
   'landscape': 'Lanskap',
+  'profiles': 'Profil',
+  'tapToSwitch': 'Ketuk pada profil untuk beralih',
+  'createNewProfile': 'Buat profil baru',
+  'newProfile': 'Profil baru',
+  'deleteProfile': 'Hapus profil',
+  'enterProfileName': 'Masukkan nama profil',
+  'newProfileTooltip':
+      'Membuat profil baru akan mengatur direktori terpisah untuk video yang dibuat saat profil itu dipilih',
+  'deleteProfileTooltip':
+      'Semua video yang terkait dengan profil ini juga akan dihapus secara permanen.Apakah kamu pasti akan melanjutkan? ',
+  'profileNameCannotBeEmpty': 'Nama profil tidak bisa kosong',
+  'reservedProfileName': 'Ini adalah nama profil yang dipesan',
 };

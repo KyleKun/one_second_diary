@@ -101,4 +101,16 @@ const Map<String, String> pt = {
   'orientation': 'Orientação',
   'portrait': 'Retrato',
   'landscape': 'Paisagem',
+  'profiles': 'Perfis',
+  'tapToSwitch': 'Toque em um perfil para mudar',
+  'createNewProfile': 'Crie novo perfil',
+  'newProfile': 'Novo perfil',
+  'deleteProfile': 'Excluir perfil',
+  'enterProfileName': 'Digite o nome do perfil',
+  'newProfileTooltip':
+      'Criar um novo perfil configurará um diretório separado para vídeos criados enquanto esse perfil é selecionado',
+  'deleteProfileTooltip':
+      'Todos os vídeos associados a este perfil também serão excluídos permanentemente. Você tem certeza de continuar?',
+  'profileNameCannotBeEmpty': 'O nome do perfil não pode estar vazio',
+  'reservedProfileName': 'Este é um nome de perfil reservado',
 };

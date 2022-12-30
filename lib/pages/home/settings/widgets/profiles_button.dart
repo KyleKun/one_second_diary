@@ -16,7 +16,7 @@ class ProfilesButton extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Profiles',
+                  'profiles'.tr,
                   style: TextStyle(
                     fontSize: MediaQuery.of(context).size.width * 0.045,
                   ),
