@@ -129,8 +129,8 @@ class _SaveButtonState extends State<SaveButton> {
     const String locPosY = 'h-th-40';
     const String locPosX = 'w-tw-40';
 
-    const double dateTextSize = 31;
-    const double locTextSize = 33;
+    const double dateTextSize = 40;
+    const double locTextSize = 40;
 
     String locOutput = '';
 

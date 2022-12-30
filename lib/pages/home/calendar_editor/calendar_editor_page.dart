@@ -32,7 +32,7 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
   bool wasDateRecorded = false;
   DateTime _currentDate = DateTime.now();
   late Color mainColor;
-  final String _currentDateStr = DateFormatUtils.getToday(isDayFirst: false);
+  final String _currentDateStr = DateFormatUtils.getToday();
   final LanguageController _languageController = Get.find();
 
   @override
@@ -118,31 +118,35 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
                 bool isThisMonthDay,
                 DateTime date,
               ) {
-                final firstRecVideoDate = DateTime.parse(
-                  allVideos.first.split('/').last.split('.').first,
-                );
-                final hasVideo = allVideos.any(
-                  (a) => a.contains(
-                    DateFormatUtils.getDate(
-                      date,
-                      isDayFirst: false,
-                    ),
-                  ),
-                );
-                if (DateTime.now().compareTo(date) != -1 &&
-                    firstRecVideoDate.compareTo(date) != 1) {
-                  return Center(
-                    child: Text(
-                      date.day.toString(),
-                      style: TextStyle(
-                        color: hasVideo ? AppColors.green : AppColors.mainColor,
-                        fontFamily: 'Magic',
+                if (allVideos.isNotEmpty) {
+                  final firstRecVideoDate = DateTime.parse(
+                    allVideos.first.split('/').last.split('.').first,
+                  );
+                  final hasVideo = allVideos.any(
+                    (a) => a.contains(
+                      DateFormatUtils.getDate(
+                        date,
+                        isDayFirst: false,
                       ),
                     ),
                   );
-                } else {
-                  return null;
+                  if (DateTime.now().compareTo(date) != -1 &&
+                      firstRecVideoDate.compareTo(date) != 1) {
+                    return Center(
+                      child: Text(
+                        date.day.toString(),
+                        style: TextStyle(
+                          color:
+                              hasVideo ? AppColors.green : AppColors.mainColor,
+                          fontFamily: 'Magic',
+                        ),
+                      ),
+                    );
+                  } else {
+                    return null;
+                  }
                 }
+                return null;
               },
               selectedDayBorderColor: mainColor,
               selectedDayButtonColor: Colors.transparent,
