@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 
 import '../../../models/profile.dart';
 import '../../../utils/constants.dart';
+import '../../../utils/storage_utils.dart';
 import '../../../utils/theme.dart';
 
 class ProfilesPage extends StatefulWidget {
@@ -18,11 +19,11 @@ class _ProfilesPageState extends State<ProfilesPage> {
 
   final mainColor = ThemeService().isDarkTheme() ? AppColors.dark : AppColors.light;
 
-  final List<String> profiles = [
-    'Default',
-    'My Goldfish',
-    'Birthdays',
-    'Concerts',
+  final List<Profile> profiles = [
+    const Profile(label: 'Default', isDefault: true),
+    const Profile(label: 'Enola\'s Goldfish'),
+    const Profile(label: '1st year college'),
+    const Profile(label: 'My Birthdays'),
   ];
 
   Future<void> _addNewProfileDialog() async {
@@ -61,11 +62,16 @@ class _ProfilesPageState extends State<ProfilesPage> {
         actions: [
           TextButton(
             onPressed: () async {
+              // Create the profile directory for the new profile
+              await StorageUtils.createSpecificProfileFolder(
+                _profileNameController.text,
+              );
+
               // Add the new profile to the end of the list
               setState(() {
                 profiles.insert(
                   profiles.length,
-                  _profileNameController.text,
+                  Profile(label: _profileNameController.text),
                 );
                 _profileNameController.clear();
               });
@@ -109,10 +115,15 @@ class _ProfilesPageState extends State<ProfilesPage> {
           ),
           TextButton(
             onPressed: () async {
-              // Remove the profile from the list
-              setState(() {
-                profiles.removeAt(index);
-              });
+              // Delete the profile directory for the specific profile
+              await StorageUtils.deleteSpecificProfileFolder(
+                profiles[index].label,
+              );
+
+              // // Remove the profile from the list
+              // setState(() {
+              //   profiles.removeAt(index);
+              // });
               Navigator.pop(context);
             },
             style: TextButton.styleFrom(
@@ -169,8 +180,8 @@ class _ProfilesPageState extends State<ProfilesPage> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
-                        title: Text(profiles[index]),
-                        secondary: profiles[index] == 0
+                        title: Text(profiles[index].label),
+                        secondary: profiles[index].isDefault
                             ? null
                             : IconButton(
                                 onPressed: () async {

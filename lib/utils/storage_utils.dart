@@ -78,6 +78,41 @@ class StorageUtils {
     }
   }
 
+  // Create specific profile folder in internal storage
+  static Future<void> createSpecificProfileFolder(String profileName) async {
+    try {
+      final String appPath = SharedPrefsUtil.getString('appPath');
+      final String profilePath = '$appPath/Profiles/$profileName/';
+
+      // Checking if the folder really exists, if not, then create it
+      final io.Directory? profileDirectory = io.Directory(profilePath);
+
+      // ignore: avoid_slow_async_io
+      if (profileDirectory != null && !await profileDirectory.exists()) {
+        await profileDirectory.create(recursive: true);
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
+
+  // Delete specific profile folder in internal storage
+  static Future<void> deleteSpecificProfileFolder(String profileName) async {
+    try {
+      final String appPath = SharedPrefsUtil.getString('appPath');
+      final String profilePath = '$appPath/Profiles/$profileName';
+
+      // Checking if the folder really exists, if not, then create it
+      final io.Directory? profileDirectory = io.Directory(profilePath);
+
+      if (profileDirectory!.existsSync()) {
+        await profileDirectory.delete(recursive: true);
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
+
   /// Rename file
   static bool renameFile(String oldPath, String newPath) {
     try {
