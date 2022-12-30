@@ -120,10 +120,10 @@ class _ProfilesPageState extends State<ProfilesPage> {
                 profiles[index].label,
               );
 
-              // // Remove the profile from the list
-              // setState(() {
-              //   profiles.removeAt(index);
-              // });
+              // Remove the profile from the list
+              setState(() {
+                profiles.removeAt(index);
+              });
               Navigator.pop(context);
             },
             style: TextButton.styleFrom(
