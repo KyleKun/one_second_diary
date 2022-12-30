@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 
 import '../../../models/profile.dart';
 import '../../../utils/constants.dart';
+import '../../../utils/shared_preferences_util.dart';
 import '../../../utils/storage_utils.dart';
 import '../../../utils/theme.dart';
 
@@ -21,9 +22,46 @@ class _ProfilesPageState extends State<ProfilesPage> {
 
   final mainColor = ThemeService().isDarkTheme() ? AppColors.dark : AppColors.light;
 
-  final List<Profile> profiles = [
-    const Profile(label: 'Default', isDefault: true),
-  ];
+  List<Profile> profiles = [];
+
+  @override
+  void initState() {
+    super.initState();
+    validateProfileList();
+    setSelectedProfileIndex();
+  }
+
+  void validateProfileList() {
+    // Get profiles from persistence
+    List<String>? storedProfiles = SharedPrefsUtil.getStringList('profiles');
+
+    if (storedProfiles == null || storedProfiles.isEmpty) {
+      // Add the default profile to storage
+      storedProfiles = ['Default'];
+      SharedPrefsUtil.putStringList('profiles', storedProfiles);
+    }
+
+    // Check if the 'Default' profile already exists in storage, otherwise add it
+    if (!storedProfiles.contains('Default')) {
+      profiles.insert(
+        0,
+        const Profile(label: 'Default', isDefault: true),
+      );
+    } else {
+      profiles = storedProfiles.map(
+        (e) {
+          if (e == 'Default') return Profile(label: e, isDefault: true);
+          return Profile(label: e);
+        },
+      ).toList();
+    }
+
+    print('Stored Profiles are: $storedProfiles');
+  }
+
+  void setSelectedProfileIndex() {
+    groupValue = SharedPrefsUtil.getInt('selectedProfileIndex') ?? 0;
+  }
 
   Future<void> _addNewProfileDialog() async {
     return await showDialog(
@@ -50,6 +88,10 @@ class _ProfilesPageState extends State<ProfilesPage> {
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Profile name cannot be empty';
+                    }
+
+                    if (value.toLowerCase() == 'default') {
+                      return 'This is a reserved profile name';
                     }
 
                     return null;
@@ -99,6 +141,11 @@ class _ProfilesPageState extends State<ProfilesPage> {
                       );
                       _profileNameController.clear();
                     });
+
+                    // Add the modified profile list to persistence
+                    final profileNamesToStringList = profiles.map((e) => e.label).toList();
+                    SharedPrefsUtil.putStringList('profiles', profileNamesToStringList);
+
                     Navigator.pop(context);
                   }
                 },
@@ -151,6 +198,11 @@ class _ProfilesPageState extends State<ProfilesPage> {
               setState(() {
                 profiles.removeAt(index);
               });
+
+              // Update the profile list in persistence
+              final profileNamesToStringList = profiles.map((e) => e.label).toList();
+              SharedPrefsUtil.putStringList('profiles', profileNamesToStringList);
+
               Navigator.pop(context);
             },
             style: TextButton.styleFrom(
@@ -200,9 +252,14 @@ class _ProfilesPageState extends State<ProfilesPage> {
                         groupValue: groupValue,
                         onChanged: (val) {
                           if (val == null) return;
+
+                          // Set index in UI
                           setState(() {
                             groupValue = val;
                           });
+
+                          // Set index in persistence
+                          SharedPrefsUtil.putInt('selectedProfileIndex', val);
                         },
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),

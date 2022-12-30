@@ -45,4 +45,13 @@ class SharedPrefsUtil {
   static Future<bool> putBool(String key, bool value) {
     return _preferences!.setBool(key, value);
   }
+
+  static List<String>? getStringList(String key, {String defValue = ''}) {
+    if (_preferences == null) return null;
+    return _preferences!.getStringList(key);
+  }
+
+  static Future<bool> putStringList(String key, List<String> value) {
+    return _preferences!.setStringList(key, value);
+  }
 }
