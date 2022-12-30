@@ -14,8 +14,10 @@ class ProfilesPage extends StatefulWidget {
 }
 
 class _ProfilesPageState extends State<ProfilesPage> {
-  int groupValue = 3;
+  int groupValue = 0;
+
   final _profileNameController = TextEditingController();
+  final _profileNameFormKey = GlobalKey<FormState>();
 
   final mainColor = ThemeService().isDarkTheme() ? AppColors.dark : AppColors.light;
 
@@ -26,60 +28,88 @@ class _ProfilesPageState extends State<ProfilesPage> {
   Future<void> _addNewProfileDialog() async {
     return await showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('New profile'),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Text(
-              'Creating a new profile will set up a seperate directory for videos created while that profile is selected',
+      builder: (context) => StatefulBuilder(
+        builder: (context, setState) => Form(
+          key: _profileNameFormKey,
+          child: AlertDialog(
+            title: const Text('New profile'),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
             ),
-            const SizedBox(height: 12),
-            TextField(
-              controller: _profileNameController,
-              cursorColor: Colors.green,
-              decoration: InputDecoration(
-                hintText: 'Enter profile name',
-                border: const UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.green),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text(
+                  'Creating a new profile will set up a seperate directory for videos created while that profile is selected',
                 ),
-                enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: mainColor),
-                ),
-                focusedBorder: const UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.green),
-                ),
-              ),
-            )
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () async {
-              // Create the profile directory for the new profile
-              await StorageUtils.createSpecificProfileFolder(
-                _profileNameController.text,
-              );
+                const SizedBox(height: 12),
+                TextFormField(
+                  controller: _profileNameController,
+                  cursorColor: Colors.green,
+                  maxLength: 45,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Profile name cannot be empty';
+                    }
 
-              // Add the new profile to the end of the list
-              setState(() {
-                profiles.insert(
-                  profiles.length,
-                  Profile(label: _profileNameController.text),
-                );
-                _profileNameController.clear();
-              });
-              Navigator.pop(context);
-            },
-            style: TextButton.styleFrom(
-              foregroundColor: AppColors.green,
+                    return null;
+                  },
+                  decoration: InputDecoration(
+                    hintText: 'Enter profile name',
+                    errorStyle: const TextStyle(
+                      color: AppColors.mainColor,
+                    ),
+                    border: const UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.green),
+                    ),
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: mainColor),
+                    ),
+                    focusedBorder: const UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.green),
+                    ),
+                    focusedErrorBorder: const UnderlineInputBorder(
+                      borderSide: BorderSide(color: AppColors.mainColor),
+                    ),
+                    errorBorder: const UnderlineInputBorder(
+                      borderSide: BorderSide(color: AppColors.mainColor),
+                    ),
+                  ),
+                )
+              ],
             ),
-            child: Text('done'.tr),
-          )
-        ],
+            actions: [
+              TextButton(
+                onPressed: () async {
+                  // Checks if the textfield is valid based on if the text passes all the validations we set
+                  final bool isTextValid =
+                      _profileNameFormKey.currentState?.validate() ?? false;
+
+                  if (isTextValid) {
+                    // Create the profile directory for the new profile
+                    await StorageUtils.createSpecificProfileFolder(
+                      _profileNameController.text,
+                    );
+
+                    // Add the new profile to the end of the list
+                    setState(() {
+                      profiles.insert(
+                        profiles.length,
+                        Profile(label: _profileNameController.text),
+                      );
+                      _profileNameController.clear();
+                    });
+                    Navigator.pop(context);
+                  }
+                },
+                style: TextButton.styleFrom(
+                  foregroundColor: AppColors.green,
+                ),
+                child: Text('done'.tr),
+              )
+            ],
+          ),
+        ),
       ),
     );
   }
