@@ -116,13 +116,11 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
         .then((List<Placemark> placemarks) {
       final Placemark place = placemarks[0];
       String city = '';
-      if (place.locality != null && place.locality?.isNotEmpty == true) {
+      if (place.locality?.isNotEmpty == true) {
         city = place.locality!;
-      } else if (place.subAdministrativeArea != null &&
-          place.subAdministrativeArea?.isNotEmpty == true) {
+      } else if (place.subAdministrativeArea?.isNotEmpty == true) {
         city = place.subAdministrativeArea!;
-      } else if (place.administrativeArea != null &&
-          place.administrativeArea?.isNotEmpty == true) {
+      } else if (place.administrativeArea?.isNotEmpty == true) {
         city = place.administrativeArea!;
       }
       setState(() {
