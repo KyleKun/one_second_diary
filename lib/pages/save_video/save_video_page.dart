@@ -35,11 +35,14 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
 
   final double textOutlineStrokeWidth = 1;
 
-  String _dateFormatValue =
-      DateFormatUtils.getToday(isDayFirst: DateFormatUtils.isDayFirstPattern());
+  String _dateFormatValue = DateFormatUtils.getToday(
+    allowCheckFormattingDayFirst: true,
+  );
 
   final List<String> _dateFormats = [
-    DateFormatUtils.getToday(isDayFirst: DateFormatUtils.isDayFirstPattern()),
+    DateFormatUtils.getToday(
+      allowCheckFormattingDayFirst: true,
+    ),
     DateFormatUtils.getWrittenToday(lang: Get.locale!.languageCode),
   ];
 
@@ -112,8 +115,18 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
             _currentPosition!.latitude, _currentPosition!.longitude)
         .then((List<Placemark> placemarks) {
       final Placemark place = placemarks[0];
+      String city = '';
+      if (place.locality != null && place.locality?.isNotEmpty == true) {
+        city = place.locality!;
+      } else if (place.subAdministrativeArea != null &&
+          place.subAdministrativeArea?.isNotEmpty == true) {
+        city = place.subAdministrativeArea!;
+      } else if (place.administrativeArea != null &&
+          place.administrativeArea?.isNotEmpty == true) {
+        city = place.administrativeArea!;
+      }
       setState(() {
-        _currentAddress = '${place.administrativeArea}, ${place.country}';
+        _currentAddress = '$city, ${place.country}';
       });
     }).catchError((e) {
       debugPrint(e);

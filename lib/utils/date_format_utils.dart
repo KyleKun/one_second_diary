@@ -71,9 +71,7 @@ class DateFormatUtils {
   }
 
   /// Get the current date and format it properly
-  static String getToday({bool? isDayFirst}) {
-    // If no default value is given, we check directly in the function
-    isDayFirst ??= isDayFirstPattern();
+  static String getToday({bool allowCheckFormattingDayFirst = false}) {
     final now = DateTime.now();
 
     // Adding a leading zero on Days and Months <= 9
@@ -82,11 +80,13 @@ class DateFormatUtils {
     final String year = '${now.year}';
 
     // Brazilian pattern
-    if (isDayFirst) {
-      return '$day-$month-$year';
-    } else {
-      return '$year-$month-$day';
+    if (allowCheckFormattingDayFirst) {
+      if (isDayFirstPattern()) {
+        return '$day-$month-$year';
+      }
     }
+
+    return '$year-$month-$day';
   }
 
   /// Get the given date and format it properly

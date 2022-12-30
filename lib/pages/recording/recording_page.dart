@@ -33,6 +33,14 @@ class _RecordingPageState extends State<RecordingPage>
   int _timerSeconds = 3;
   late bool _isTimerEnable;
 
+  // Zoom properties
+  double _minAvailableZoom = 1.0;
+  double _maxAvailableZoom = 1.0;
+  double _currentScale = 1.0;
+  double _baseScale = 1.0;
+  // Counting pointers (number of user fingers on screen)
+  int _pointers = 0;
+
   @override
   void initState() {
     super.initState();
@@ -98,6 +106,32 @@ class _RecordingPageState extends State<RecordingPage>
     }
   }
 
+  void _handleScaleStart(ScaleStartDetails details) {
+    _baseScale = _currentScale;
+  }
+
+  Future<void> _handleScaleUpdate(ScaleUpdateDetails details) async {
+    // When there are not exactly two fingers on screen don't scale
+    if (_pointers != 2) {
+      return;
+    }
+
+    _currentScale = (_baseScale * details.scale)
+        .clamp(_minAvailableZoom, _maxAvailableZoom);
+
+    // TODO: this works only in preview for some reason, recording doesn't apply zoom
+    await _cameraController.setZoomLevel(_currentScale);
+  }
+
+  void onViewFinderTap(TapDownDetails details, BoxConstraints constraints) {
+    final offset = Offset(
+      details.localPosition.dx / constraints.maxWidth,
+      details.localPosition.dy / constraints.maxHeight,
+    );
+    _cameraController.setExposurePoint(offset);
+    _cameraController.setFocusPoint(offset);
+  }
+
   Future<void> _getAvailableCameras() async {
     WidgetsFlutterBinding.ensureInitialized();
     await Utils.requestPermission(Permission.camera);
@@ -106,11 +140,11 @@ class _RecordingPageState extends State<RecordingPage>
   }
 
   Future<void> _initCamera(CameraDescription description) async {
-    const ResolutionPreset _resolution = ResolutionPreset.high;
+    const ResolutionPreset _resolution = ResolutionPreset.veryHigh;
     _cameraController = CameraController(
       description,
       _resolution,
-      enableAudio: false,
+      enableAudio: true,
     );
     _cameraController.addListener(() {
       if (mounted) {
@@ -119,6 +153,14 @@ class _RecordingPageState extends State<RecordingPage>
     });
     try {
       await _cameraController.initialize();
+      await Future.wait([
+        _cameraController
+            .getMaxZoomLevel()
+            .then((value) => _maxAvailableZoom = value),
+        _cameraController
+            .getMinZoomLevel()
+            .then((value) => _minAvailableZoom = value),
+      ]);
       await _cameraController
           .lockCaptureOrientation(DeviceOrientation.landscapeRight);
     } catch (e) {
@@ -343,7 +385,24 @@ class _RecordingPageState extends State<RecordingPage>
       quarterTurns: 1, //_turnsDeviceOrientation(context),
       child: Container(
         decoration: _screenBorderDecoration(),
-        child: Center(child: CameraPreview(_cameraController)),
+        child: Center(
+          child: Listener(
+              onPointerDown: (_) => _pointers++,
+              onPointerUp: (_) => _pointers--,
+              child: CameraPreview(
+                _cameraController,
+                child: LayoutBuilder(builder:
+                    (BuildContext context, BoxConstraints constraints) {
+                  return GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onScaleStart: _handleScaleStart,
+                    onScaleUpdate: _handleScaleUpdate,
+                    onTapDown: (details) =>
+                        onViewFinderTap(details, constraints),
+                  );
+                }),
+              )),
+        ),
       ),
     );
   }
