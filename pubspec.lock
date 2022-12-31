@@ -176,6 +176,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_archive:
+    dependency: "direct main"
+    description:
+      name: flutter_archive
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "5.0.0"
   flutter_calendar_carousel:
     dependency: "direct main"
     description:
@@ -190,6 +197,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.3"
+  flutter_email_sender:
+    dependency: "direct main"
+    description:
+      name: flutter_email_sender
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "5.2.0"
   flutter_local_notifications:
     dependency: "direct main"
     description:
@@ -361,6 +375,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.6.4"
+  logger:
+    dependency: "direct main"
+    description:
+      name: logger
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.1.0"
   logging:
     dependency: transitive
     description:
@@ -414,9 +435,9 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: fbf68e4
+      ref: HEAD
       resolved-ref: fbf68e4bb5cb3e262d8f8ebe10b2f8449ff8e030
-      url: "https://github.com/crazecoder/open_file.git"
+      url: "https://github.com/KyleKun/open_file.git"
     source: git
     version: "3.2.2"
   path:
@@ -663,7 +684,7 @@ packages:
     source: hosted
     version: "1.9.0"
   stack_trace:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: stack_trace
       url: "https://pub.dartlang.org"
@@ -690,15 +711,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.1"
-  tapioca:
-    dependency: "direct main"
-    description:
-      path: "."
-      ref: android-dependency-patch
-      resolved-ref: "6e06265527918355cff13ca5415486f819fbeb7a"
-      url: "https://github.com/daoxve/tapioca.git"
-    source: git
-    version: "1.0.6+1"
   term_glyph:
     dependency: transitive
     description:

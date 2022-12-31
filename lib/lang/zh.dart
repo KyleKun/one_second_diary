@@ -109,4 +109,5 @@ const Map<String, String> zh = {
   'doNotCloseTheApp': '请不要关闭应用程序',
   'cancelMovieCreation': '取消电影创建',
   'cancelMovieDesc': '您确定要取消电影创建吗?',
+  'reportError': '报告错误',
 };

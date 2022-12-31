@@ -19,6 +19,7 @@ class ProfilesPage extends StatefulWidget {
 }
 
 class _ProfilesPageState extends State<ProfilesPage> {
+  final String logTag = '[PROFILES PAGE] - ';
   int groupValue = 0;
 
   final _profileNameController = TextEditingController();
@@ -63,7 +64,7 @@ class _ProfilesPageState extends State<ProfilesPage> {
       ).toList();
     }
 
-    print('Stored Profiles are: $storedProfiles');
+    Utils.logInfo('${logTag}Stored Profiles are: $storedProfiles');
   }
 
   void setSelectedProfileIndex() {
@@ -142,6 +143,10 @@ class _ProfilesPageState extends State<ProfilesPage> {
                       _profileNameController.text,
                     );
 
+                    Utils.logInfo(
+                      '${logTag}Profile ${_profileNameController.text} created!',
+                    );
+
                     // Add the new profile to the end of the list
                     setState(() {
                       profiles.insert(
@@ -205,6 +210,10 @@ class _ProfilesPageState extends State<ProfilesPage> {
               // Delete the profile directory for the specific profile
               await StorageUtils.deleteSpecificProfileFolder(
                 profiles[index].label,
+              );
+
+              Utils.logWarning(
+                '${logTag}Profile ${profiles[index].label} deleted!',
               );
 
               // Remove the profile from the list
@@ -331,6 +340,10 @@ class _ProfilesPageState extends State<ProfilesPage> {
     // Update the video count card
     Utils.updateVideoCount();
 
+    Utils.logInfo(
+      '${logTag}Selected Profile changed!',
+    );
+
     // Update daily entry
     final String today = DateFormatUtils.getToday();
     final String profile = Utils.getCurrentProfile();
@@ -342,11 +355,12 @@ class _ProfilesPageState extends State<ProfilesPage> {
     }
     final bool isTodayRecorded = StorageUtils.checkFileExists(todaysVideoPath);
     if (isTodayRecorded) {
-      debugPrint('$todaysVideoPath exists, setting today status to recorded.');
+      Utils.logInfo(
+          '$logTag$todaysVideoPath exists, setting today status to recorded.');
       dailyEntryController.updateDaily();
     } else {
-      debugPrint(
-          '$todaysVideoPath does not exist, setting today status to not recorded.');
+      Utils.logInfo(
+          '$logTag$todaysVideoPath does not exist, setting today status to not recorded.');
       dailyEntryController.updateDaily(value: false);
     }
   }

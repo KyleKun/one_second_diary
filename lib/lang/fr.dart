@@ -120,4 +120,5 @@ const Map<String, String> fr = {
   'doNotCloseTheApp': 'Ne fermez pas l\'application.',
   'cancelMovieCreation': 'Annuler la création du film',
   'cancelMovieDesc': 'Voulez-vous vraiment annuler la création du film ?',
+  'reportError': 'Signaler une erreur',
 };

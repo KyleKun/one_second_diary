@@ -118,4 +118,8 @@ const Map<String, String> en = {
   'doNotCloseTheApp': 'Do not close the app.',
   'cancelMovieCreation': 'Cancel movie creation',
   'cancelMovieDesc': 'Are you sure you want to cancel the movie creation?',
+  'reportError': 'Report Error',
+  'errorMailSubject': '[One Second Diary - v1.5] App Error Report',
+  'errorMailBody':
+      'Please describe the error you encountered and steps to reproduce it. Thank you!',
 };

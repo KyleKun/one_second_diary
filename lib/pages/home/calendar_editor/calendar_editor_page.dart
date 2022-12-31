@@ -245,18 +245,15 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
                         final getSubsFile =
                             await executeFFmpeg('-i $currentVideo $srtPath -y');
                         final resultCode = await getSubsFile.getReturnCode();
-                        debugPrint(resultCode.toString());
                         if (ReturnCode.isSuccess(resultCode)) {
                           final srtFile = await File(srtPath).readAsString();
                           setState(() {
                             subtitles = srtFile.trim().split(',000').last;
-                            debugPrint('srtFileContent -> $subtitles');
                           });
                         } else {
                           setState(() {
                             subtitles = null;
                           });
-                          debugPrint('No subtitles found');
                         }
                         Get.to(
                           VideoSubtitlesEditorPage(

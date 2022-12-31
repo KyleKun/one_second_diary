@@ -21,6 +21,7 @@ class RecordingPage extends StatefulWidget {
 
 class _RecordingPageState extends State<RecordingPage>
     with WidgetsBindingObserver, TickerProviderStateMixin {
+  final logTag = '[CAMERA] - ';
   late CameraController _cameraController;
   late List<CameraDescription> _availableCameras;
 
@@ -69,7 +70,6 @@ class _RecordingPageState extends State<RecordingPage>
 
   /// Start countdown timer if it is actived
   void startTimer() {
-    // print('timer started');
     const oneSec = Duration(seconds: 1);
     _timer = Timer.periodic(
       oneSec,
@@ -80,7 +80,6 @@ class _RecordingPageState extends State<RecordingPage>
             _isTimerEnable = false;
             timer.cancel();
           });
-          // print('recording after timer');
           startVideoRecording();
         } else {
           setState(() {
@@ -164,7 +163,7 @@ class _RecordingPageState extends State<RecordingPage>
       await _cameraController
           .lockCaptureOrientation(DeviceOrientation.landscapeRight);
     } catch (e) {
-      // Utils().logError(e);
+      Utils.logError('$logTag${e.toString()}');
     }
   }
 
@@ -178,9 +177,11 @@ class _RecordingPageState extends State<RecordingPage>
       if (lensDirection == CameraLensDirection.front) {
         newDescription = _availableCameras.firstWhere((description) =>
             description.lensDirection == CameraLensDirection.back);
+        Utils.logInfo('${logTag}Changed to back camera');
       } else {
         newDescription = _availableCameras.firstWhere((description) =>
             description.lensDirection == CameraLensDirection.front);
+        Utils.logInfo('${logTag}Changed to front camera');
       }
 
       _initCamera(newDescription);
@@ -188,7 +189,7 @@ class _RecordingPageState extends State<RecordingPage>
       if (desc != null) {
         _initCamera(desc);
       } else {
-        // Utils().logWarning('Asked camera not available');
+        Utils.logWarning('${logTag}Asked camera not available');
       }
     }
   }
@@ -294,10 +295,9 @@ class _RecordingPageState extends State<RecordingPage>
   }
 
   Future<void> startVideoRecording() async {
-    // print('recording');
-
+    Utils.logInfo('${logTag}Started recording video');
     if (!_cameraController.value.isInitialized) {
-      // Utils().logWarning('Controller is not initialized');
+      Utils.logWarning('${logTag}Controller is not initialized');
       return null;
     }
 
@@ -311,7 +311,7 @@ class _RecordingPageState extends State<RecordingPage>
           .onVideoRecordedEvent()
           .listen((VideoRecordedEvent event) {
         try {
-          // Utils().logInfo('Video recorded to ${event.file.path}');
+          Utils.logInfo('${logTag}Video recorded to ${event.file.path}');
           setState(() {
             _isRecording = false;
           });
@@ -343,8 +343,7 @@ class _RecordingPageState extends State<RecordingPage>
         ),
       );
     } on CameraException catch (e) {
-      debugPrint('$e');
-      // Utils().logError(e);
+      Utils.logError('$logTag${e.toString()}');
       return null;
     }
   }
@@ -528,7 +527,6 @@ class _RecordingPageState extends State<RecordingPage>
                             ),
                             onTap: () {
                               if (!_isRecording) {
-                                // Utils().logInfo('Changed camera');
                                 _handleCameraLens(
                                   desc: _cameraController.description,
                                   toggle: true,

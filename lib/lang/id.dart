@@ -119,4 +119,5 @@ const Map<String, String> id = {
   'doNotCloseTheApp': 'Jangan tutup aplikasi ini.',
   'cancelMovieCreation': 'Batalkan pembuatan video',
   'cancelMovieDesc': 'Apakah Anda yakin ingin membatalkan pembuatan video?',
+  'reportError': 'Laporkan kesalahan',
 };

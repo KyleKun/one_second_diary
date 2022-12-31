@@ -37,6 +37,7 @@ class CreateMovieButton extends StatefulWidget {
 }
 
 class _CreateMovieButtonState extends State<CreateMovieButton> {
+  final String logTag = '[CREATE MOVIE] - ';
   final VideoCountController _movieCount = Get.find();
   bool isProcessing = false;
   String progress = '';
@@ -64,13 +65,19 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
             selectedVideos.add(customSelectedVideos[i].split('/').last);
           }
         }
+        Utils.logInfo(
+            '${logTag}Creating movie with the following custom selected videos: $selectedVideos');
       } else {
         selectedVideos =
             Utils.getSelectedVideosFromStorage(selectedExportDateRange!);
+        Utils.logInfo(
+            '${logTag}Creating movie in range ${selectedExportDateRange.toString()} with the following videos: $selectedVideos');
       }
 
       // Needs more than 1 video to create movie
       if (selectedVideos.length < 2) {
+        Utils.logWarning(
+            '${logTag}Insufficient videos to create movie. Videos: $selectedVideos');
         showDialog(
           barrierDismissible: false,
           context: Get.context!,
@@ -84,8 +91,6 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
           ),
         );
       } else {
-        // Utils().logInfo('Creating movie with the following files: $allVideos');
-
         final snackBar = SnackBar(
           margin: const EdgeInsets.all(10.0),
           behavior: SnackBarBehavior.floating,
@@ -115,6 +120,8 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
           videosFolder = '$videosFolder';
         }
 
+        Utils.logInfo('${logTag}Base videos folder: $videosFolder');
+
         // Create a dummy m4a for adding audio stream if necessary
         // final String dummyM4a = await Utils.writeM4a();
 
@@ -141,16 +148,15 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
               if (sessionLog == null ||
                   sessionLog.isEmpty ||
                   !sessionLog.contains(Constants.artist)) {
-                debugPrint(
-                    '$currentVideo was not recorded on v1.5. Processing it...');
+                Utils.logWarning(
+                    '$logTag$currentVideo was not recorded on v1.5. Processing it...');
                 isV1point5 = false;
               }
             } else {
-              final sessionLog = await session.getAllLogsAsString();
-              debugPrint(returnCode.toString());
-              debugPrint(
-                  'Error checking if $currentVideo was recorded on v1.5');
-              debugPrint(sessionLog);
+              final sessionLog = await session.getLogsAsString();
+              Utils.logError(
+                  '${logTag}Error checking if $currentVideo was recorded on v1.5');
+              Utils.logError('${logTag}Error: $sessionLog');
             }
           });
 
@@ -165,16 +171,18 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
               if (ReturnCode.isSuccess(returnCode)) {
                 StorageUtils.deleteFile(currentVideo);
                 StorageUtils.renameFile(tempVideo, currentVideo);
-                debugPrint('Converted $currentVideo to 1080p, h264');
+                Utils.logInfo(
+                    '${logTag}Converted $currentVideo to 1080p, h264');
               } else {
                 final sessionLog = await session.getLogsAsString();
-                debugPrint('Error converting $currentVideo to 1080p, h264');
-                debugPrint('Error: $sessionLog');
+                Utils.logError(
+                    '${logTag}Error converting $currentVideo to 1080p, h264');
+                Utils.logError('${logTag}Error: $sessionLog');
               }
             });
 
-            print('Checking streams for $currentVideo');
-            bool hasSubs = false;
+            Utils.logInfo('${logTag}Checking streams for $currentVideo');
+            bool hasSubtitles = false;
             bool hasAudio = false;
 
             // Streams check
@@ -186,15 +194,17 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
                 final sessionLog = await session.getOutput();
                 if (sessionLog == null) return;
                 final List<dynamic> streams = jsonDecode(sessionLog)['streams'];
-                debugPrint('Streams info for $currentVideo --> $sessionLog');
+                Utils.logInfo(
+                    '${logTag}Streams info for $currentVideo --> $sessionLog');
                 for (var stream in streams) {
                   if (stream['codec_type'] == 'audio') {
-                    debugPrint('$currentVideo already has audio');
+                    Utils.logWarning('$logTag$currentVideo already has audio!');
                     hasAudio = true;
                   }
                   if (stream['codec_type'] == 'subtitle') {
-                    debugPrint('$currentVideo already has subs');
-                    hasSubs = true;
+                    Utils.logWarning(
+                        '$logTag$currentVideo already has subtitles!');
+                    hasSubtitles = true;
                   }
                 }
               }
@@ -202,7 +212,8 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
 
             // Add audio stream if necessary
             if (!hasAudio) {
-              debugPrint('No audio stream for $currentVideo, adding one...');
+              Utils.logInfo(
+                  '${logTag}No audio stream for $currentVideo, adding one...');
               // final command =
               //     '-i $currentVideo -i $dummyM4a -c copy -c:s copy -map 0:v -map 1:a -shortest $tempVideo -y';
               // final command =
@@ -217,17 +228,21 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
                 if (ReturnCode.isSuccess(returnCode)) {
                   StorageUtils.deleteFile(currentVideo);
                   StorageUtils.renameFile(tempVideo, currentVideo);
-                  debugPrint('Added empty audio stream to $currentVideo');
+                  Utils.logInfo(
+                      '${logTag}Added empty audio stream to $currentVideo');
                 } else {
-                  debugPrint('Error adding audio stream to $currentVideo');
+                  final sessionLog = await session.getLogsAsString();
+                  Utils.logError(
+                      '${logTag}Error adding audio stream to $currentVideo');
+                  Utils.logError('${logTag}Error: $sessionLog');
                 }
               });
             }
 
             // Add subtitles stream if necessary
-            if (!hasSubs) {
-              debugPrint(
-                  'No subtitles stream for $currentVideo, adding one...');
+            if (!hasSubtitles) {
+              Utils.logInfo(
+                  '${logTag}No subtitles stream for $currentVideo, adding one...');
               final command =
                   '-i $currentVideo -i $dummySubtitles -c copy -c:s mov_text $tempVideo -y';
               await executeFFmpeg(command).then((session) async {
@@ -235,9 +250,13 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
                 if (ReturnCode.isSuccess(returnCode)) {
                   StorageUtils.deleteFile(currentVideo);
                   StorageUtils.renameFile(tempVideo, currentVideo);
-                  debugPrint('Added empty subtitles stream to $currentVideo');
+                  Utils.logInfo(
+                      '${logTag}Added empty subtitles stream to $currentVideo');
                 } else {
-                  debugPrint('Error adding subtitles stream to $currentVideo');
+                  final sessionLog = await session.getLogsAsString();
+                  Utils.logError(
+                      '${logTag}Error adding subtitles stream to $currentVideo');
+                  Utils.logError('${logTag}Error: $sessionLog');
                 }
               });
             }
@@ -250,9 +269,13 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
               if (ReturnCode.isSuccess(returnCode)) {
                 StorageUtils.deleteFile(currentVideo);
                 StorageUtils.renameFile(tempVideo, currentVideo);
-                debugPrint('Added artist metadata to $currentVideo');
+                Utils.logInfo(
+                    '${logTag}Added artist metadata to $currentVideo');
               } else {
-                debugPrint('Error adding artist metadata to $currentVideo');
+                final sessionLog = await session.getLogsAsString();
+                Utils.logError(
+                    '${logTag}Error adding artist metadata to $currentVideo');
+                Utils.logError('${logTag}Error: $sessionLog');
               }
             });
           }
@@ -263,25 +286,24 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
                   '${selectedVideos.indexOf(video) + 1} / ${selectedVideos.length}';
             });
           } else {
-            debugPrint('Aborted');
+            Utils.logWarning('${logTag}Aborted movie creation!');
             break;
           }
 
-          debugPrint('Progress: $progress');
+          Utils.logInfo('${logTag}Progress: $progress');
         }
 
         if (mounted) {
-          debugPrint('Finished checking videos... creating movie...');
+          Utils.logInfo(
+              '${logTag}Finished checking videos... creating movie...');
 
           final String today = DateFormatUtils.getToday();
 
-          // Creating txt that will be used with ffmpeg
-          debugPrint('Creating txt with: $selectedVideos');
+          // Creating txt that will be used with ffmpeg to concatenate all videos
           final String txtPath = await Utils.writeTxt(selectedVideos);
-          // Utils().logInfo('Saved txt');
           final String outputPath =
               '${SharedPrefsUtil.getString('moviesPath')}OneSecondDiary-Movie-${_movieCount.movieCount.value}-$today.mp4';
-          // Utils().logInfo('It will be saved in: $outputPath');
+          Utils.logInfo('${logTag}Movie will be saved as: $outputPath');
 
           setState(() {
             progress = '${'creatingMovie'.tr.split('...')[0]}...';
@@ -314,21 +336,17 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
                     },
                   ),
                 );
-                // Utils().logInfo('Video saved in gallery in the folder OSD-Movies!');
-
+                Utils.logInfo(
+                    '${logTag}Video saved in gallery in the folder OSD-Movies!');
               } else if (ReturnCode.isCancel(returnCode)) {
-                debugPrint('Execution was cancelled');
+                Utils.logWarning('${logTag}Execution was cancelled');
               } else {
-                // Utils().logError('$result');
-                debugPrint(
-                    'Error editing video: Return code is ${await session.getReturnCode()}');
+                Utils.logError('${logTag}Error creating movie -> $outputPath');
                 final sessionLog = await session.getAllLogsAsString();
                 final failureStackTrace = await session.getFailStackTrace();
-                debugPrint(
-                    'Session lasted for ${await session.getDuration()} ms');
-                debugPrint(session.getArguments().toString());
-                debugPrint('Session log is $sessionLog');
-                debugPrint('Failure stacktrace - $failureStackTrace');
+                Utils.logError('${logTag}Session log is: $sessionLog');
+                Utils.logError(
+                    '${logTag}Failure stacktrace: $failureStackTrace');
 
                 showDialog(
                   barrierDismissible: false,
@@ -349,7 +367,7 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
         }
       }
     } catch (e) {
-      // Utils().logError('$e');
+      Utils.logError(e);
       showDialog(
         barrierDismissible: false,
         context: Get.context!,

@@ -25,6 +25,7 @@ class VideoSubtitlesEditorPage extends StatefulWidget {
 }
 
 class _VideoSubtitlesEditorPageState extends State<VideoSubtitlesEditorPage> {
+  final logTag = '[SUBTITLES EDITOR PAGE] - ';
   double _opacity = 1.0;
   String _subtitles = '';
   bool isProcessing = false;
@@ -155,11 +156,13 @@ class _VideoSubtitlesEditorPageState extends State<VideoSubtitlesEditorPage> {
                       '${widget.videoPath.split('.mp4').first}_temp.mp4';
 
                   if (isEdit) {
-                    debugPrint('editing subtitles');
+                    Utils.logInfo(
+                        '{$logTag}Editing subtitles for ${widget.videoPath}');
                     command =
                         '-i ${widget.videoPath} -i $subtitles -c:s mov_text -c:v copy -c:a copy -map 0:v -map 0:a? -map 1 -disposition:s:0 default $tempPath -y';
                   } else {
-                    debugPrint('adding new subtitles');
+                    Utils.logInfo(
+                        '{$logTag}Adding brand new subtitles for ${widget.videoPath}');
                     command =
                         '-i ${widget.videoPath} -i $subtitles -c copy -c:s mov_text $tempPath -y';
                   }
@@ -167,19 +170,18 @@ class _VideoSubtitlesEditorPageState extends State<VideoSubtitlesEditorPage> {
                   await executeFFmpeg(command).then((session) async {
                     final returnCode = await session.getReturnCode();
                     if (ReturnCode.isSuccess(returnCode)) {
-                      debugPrint('Video edited successfully');
+                      Utils.logInfo(
+                          '{$logTag}Video subtitles updated successfully!');
                       StorageUtils.deleteFile(widget.videoPath);
                       StorageUtils.renameFile(tempPath, widget.videoPath);
                     } else {
-                      debugPrint('Video editing failed');
-                      final sessionLog = await session.getAllLogsAsString();
+                      Utils.logError('{$logTag}Video subtitles update failed!');
+                      final sessionLog = await session.getLogsAsString();
                       final failureStackTrace =
                           await session.getFailStackTrace();
-                      debugPrint(
-                          'Session lasted for ${await session.getDuration()} ms');
-                      debugPrint(session.getArguments().toString());
-                      debugPrint('Session log is $sessionLog');
-                      debugPrint('Failure stacktrace - $failureStackTrace');
+                      Utils.logError('{$logTag}Session log: $sessionLog');
+                      Utils.logError(
+                          '{$logTag}Failure stacktrace: $failureStackTrace');
                     }
                   });
 

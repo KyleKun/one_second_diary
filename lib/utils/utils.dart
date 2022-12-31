@@ -4,9 +4,10 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-// import 'package:logger/logger.dart';
+import 'package:logger/logger.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:stack_trace/stack_trace.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../controllers/video_count_controller.dart';
@@ -15,24 +16,12 @@ import 'date_format_utils.dart';
 import 'shared_preferences_util.dart';
 import 'storage_utils.dart';
 
+final logger = Logger(
+  printer: PrettyPrinter(printTime: true),
+  level: Level.verbose,
+);
+
 class Utils {
-  // final logger = Logger(
-  //   printer: PrettyPrinter(),
-  //   level: Level.verbose,
-  // );
-
-  // void logInfo(info) {
-  //   logger.i(info);
-  // }
-
-  // void logWarning(warning) {
-  //   logger.w(warning);
-  // }
-
-  // void logError(warning) {
-  //   logger.e(warning);
-  // }
-
   static void launchURL(String url) async {
     await launchUrl(
       Uri.parse(url),
@@ -40,18 +29,48 @@ class Utils {
     );
   }
 
+  static void logInfo(info) {
+    logger.i(info);
+    final String file = SharedPrefsUtil.getString('currentLogFile');
+    final String now = DateTime.now().toString();
+    final String line = '[INFO] $now: ${info.toString()}';
+    appendLineToFile(file, line);
+  }
+
+  static void logWarning(warning) {
+    logger.w(warning);
+    final String file = SharedPrefsUtil.getString('currentLogFile');
+    final String now = DateTime.now().toString();
+    final String line = '[WARNING] $now: ${warning.toString()}';
+    appendLineToFile(file, line);
+  }
+
+  static void logError(error) {
+    logger.e(error);
+    final String file = SharedPrefsUtil.getString('currentLogFile');
+    final String now = DateTime.now().toString();
+    final String stacktrace =
+        Trace.from(StackTrace.current).terse.frames.first.toString();
+    final line =
+        '[ERROR] $now: ${error.toString()}' + '\nStacktrace: $stacktrace';
+    appendLineToFile(file, line);
+  }
+
   /// Used to request Android permissions
   static Future<bool> requestPermission(Permission permission) async {
     if (await permission.isGranted) {
-      // Utils().logInfo('Permission was already granted');
+      logInfo(
+          '[Utils.requestPermission()] - Permission ${permission.toString()} was already granted');
       return true;
     } else {
       final result = await permission.request();
       if (result == PermissionStatus.granted) {
-        // Utils().logInfo('Permission granted? : ${result.isGranted}');
+        logInfo(
+            '[Utils.requestPermission()] - Permission ${permission.toString()} granted!');
         return true;
       } else {
-        // Utils().logInfo('Permission granted? : ${result.isGranted}');
+        logInfo(
+            '[Utils.requestPermission()] - Permission ${permission.toString()} denied!');
         return false;
       }
     }
@@ -92,10 +111,33 @@ class Utils {
     }
   }
 
+  // Example 2022-01-01_12-30-45.txt
+  static String getTodaysLogFilename() {
+    return '${DateTime.now().toString().split('.')[0].replaceAll(':', '-').replaceAll(' ', '_')}.txt';
+  }
+
+  // Add a new line to txt log file
+  static Future<void> appendLineToFile(String fileName, String line) async {
+    if (fileName.isEmpty) return;
+    final String appPath = SharedPrefsUtil.getString('appPath');
+
+    // Open the file for appending
+    final file = io.File('$appPath/Logs/$fileName');
+    final sink = file.openWrite(mode: io.FileMode.append);
+
+    // Write the line to the file
+    sink.write('$line\n');
+
+    // Close the file
+    await sink.close();
+  }
+
   /// Write txt used by ffmpeg to concatenate videos when generating movie
   static Future<String> writeTxt(List<String> files) async {
     final io.Directory directory = await getApplicationDocumentsDirectory();
     final String txtPath = '${directory.path}/videos.txt';
+    
+    logInfo('[Utils.writeTxt()] - Writing txt file to $txtPath');
 
     // Get current profile
     final currentProfileName = getCurrentProfile();
@@ -127,6 +169,8 @@ class Utils {
       debugPrint('$filePath added to txt file');
     }
 
+    logInfo('[Utils.writeTxt()] - Text file written successfully!');
+
     return txtPath;
   }
 
@@ -156,6 +200,7 @@ class Utils {
   static Future<String> writeSrt(String text, int videoDuration) async {
     final io.Directory directory = await getApplicationDocumentsDirectory();
     final String srtPath = '${directory.path}/subtitles.srt';
+    logInfo('[Utils.writeSrt()] - Writing srt file to $srtPath');
 
     // Delete old srt files
     StorageUtils.deleteFile(srtPath);
@@ -184,11 +229,14 @@ class Utils {
     }
 
     final String totalSeconds = videoDuration == 10 ? '10' : '0$videoDuration';
+    logInfo('[Utils.writeSrt()] - Subtitles total duration $videoDuration');
     final String subtitles =
         '1\r\n00:00:00,000 --> 00:00:$totalSeconds,000\r\n$text\r\n';
 
     // Writing file
     await file.writeAsString(subtitles, mode: io.FileMode.write);
+
+    logInfo('[Utils.writeSrt()] - Subtitles file written successfully!');
 
     return srtPath;
   }
@@ -206,6 +254,11 @@ class Utils {
         currentProfileName = allProfiles[selectedProfileIndex];
       }
     }
+
+    final profileLog =
+        currentProfileName == '' ? 'Default' : currentProfileName;
+    logInfo('[Utils.getCurrentProfile()] - Selected profile: $profileLog');
+
     return currentProfileName;
   }
 
@@ -228,7 +281,8 @@ class Utils {
     final List<String> mp4Files = [];
 
     // Getting video names
-    debugPrint('Getting all videos inside ${directory.path}');
+    logInfo(
+        '[Utils.getAllVideos()] - Getting all videos inside ${directory.path}');
     for (int i = 0; i < files.length; i++) {
       final String filePath = files[i].path;
       if (filePath.contains('.mp4') && !filePath.contains('temp')) {
@@ -236,7 +290,6 @@ class Utils {
         if (currentProfileName.isEmpty && filePath.contains('Profiles')) {
           continue;
         }
-        debugPrint('Found mp4 file: $filePath');
         if (fullPath) {
           mp4Files.add(filePath);
         } else {
@@ -248,6 +301,8 @@ class Utils {
 
     // Sorting files
     mp4Files.sort((a, b) => a.compareTo(b));
+    logInfo('[Utils.getAllVideos()] - Asked for full path: $fullPath');
+    logInfo('[Utils.getAllVideos()] - Sorted videos: $mp4Files');
 
     return mp4Files;
   }
@@ -388,93 +443,19 @@ class Utils {
     final String fontPath = '${directory.path}/magic.ttf';
     try {
       if (StorageUtils.checkFileExists(fontPath)) {
-        // Utils().logInfo('Font already exists');
-        debugPrint('Font already exists');
+        logInfo('Text font for ffmpeg already exists, not copying it.');
       } else {
         final ByteData data =
             await rootBundle.load('assets/fonts/YuseiMagic-Regular.ttf');
         final List<int> bytes =
             data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
         await io.File(fontPath).writeAsBytes(bytes);
-        debugPrint('Font copied to $fontPath');
-        // Utils().logInfo('Font copied to $fontPath');
+        logInfo('Text font for ffmpeg copied to $fontPath');
       }
     } catch (e) {
-      // Utils().logError('$e');
-      debugPrint(e.toString());
+      logError(e);
     }
 
     return fontPath;
   }
 }
-
-/// Old/Not used methods but might be useful in the future
-///
-// Used only in an alternative way to edit video using ffmpeg
-// static Future<String> copyFontToStorage() async {
-//   io.Directory directory = await getApplicationDocumentsDirectory();
-//   String fontPath = directory.path + "/magic.ttf";
-//   try {
-//     if (checkFileExists(fontPath)) {
-//       Utils().logInfo('Font already exists');
-//     } else {
-//       ByteData data =
-//           await rootBundle.load("assets/fonts/YuseiMagic-Regular.ttf");
-//       List<int> bytes =
-//           data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
-//       await io.File(fontPath).writeAsBytes(bytes);
-//       Utils().logInfo('Font copied to $fontPath');
-//     }
-//   } catch (e) {
-//     Utils().logError('$e');
-//   }
-
-//   return fontPath;
-// }
-
-// static Future<String> copyConfigVideoToStorage() async {
-//   io.Directory directory = await getApplicationDocumentsDirectory();
-//   String configVideoPath = directory.path + "/config.mp4";
-//   try {
-//     if (checkFileExists(configVideoPath)) {
-//       Utils().logInfo('Config video already exists');
-//     } else {
-//       ByteData data = await rootBundle.load("assets/video/config.mp4");
-//       List<int> bytes =
-//           data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
-//       await io.File(configVideoPath).writeAsBytes(bytes);
-//       Utils().logInfo('Config video copied to $configVideoPath');
-//     }
-//   } catch (e) {
-//     Utils().logError('$e');
-//   }
-
-//   return configVideoPath;
-// }
-
-// static Future<void> configCameraResolution(String configVideoPath) async {
-//   String finalConfigPath = configVideoPath.replaceAll('.mp4', '_.mp4');
-//   Cup cup = Cup(
-//     Content(configVideoPath),
-//     [
-//       TapiocaBall.textOverlay(
-//         'a',
-//         200,
-//         200,
-//         20,
-//         Colors.white,
-//       ),
-//     ],
-//   );
-
-//   await cup.suckUp(finalConfigPath).then((_) {
-//     Utils().logInfo('finished processing');
-//   }, onError: (error) {
-//     Utils().logError(error);
-//     StorageUtil.putBool('isHighRes', false);
-//   });
-
-//   deleteFile(configVideoPath);
-//   deleteFile(finalConfigPath);
-//   Utils().logInfo("IS HIGH RES? -> ${StorageUtil.getBool('isHighRes')}");
-// }

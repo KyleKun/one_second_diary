@@ -15,10 +15,12 @@ import '../../../../utils/utils.dart';
 
 class SwitchNotificationsComponent extends StatefulWidget {
   @override
-  _SwitchNotificationsComponentState createState() => _SwitchNotificationsComponentState();
+  _SwitchNotificationsComponentState createState() =>
+      _SwitchNotificationsComponentState();
 }
 
-class _SwitchNotificationsComponentState extends State<SwitchNotificationsComponent> {
+class _SwitchNotificationsComponentState
+    extends State<SwitchNotificationsComponent> {
   final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
   final int notificationId = 1;
@@ -41,7 +43,8 @@ class _SwitchNotificationsComponentState extends State<SwitchNotificationsCompon
     const DarwinInitializationSettings iosInitializationSettings =
         DarwinInitializationSettings();
 
-    const InitializationSettings initializationSettings = InitializationSettings(
+    const InitializationSettings initializationSettings =
+        InitializationSettings(
       android: androidInitializationSettings,
       iOS: iosInitializationSettings,
     );
@@ -71,7 +74,7 @@ class _SwitchNotificationsComponentState extends State<SwitchNotificationsCompon
 
   Future<void> scheduleNotification() async {
     final now = DateTime.now();
-    
+
     // sets the scheduled time in DateTime format
     final String setTime = DateTime(
       now.year,
@@ -80,6 +83,8 @@ class _SwitchNotificationsComponentState extends State<SwitchNotificationsCompon
       scheduledTimeOfDay.hour,
       scheduledTimeOfDay.minute,
     ).toString();
+
+    Utils.logInfo('[NOTIFICATIONS] - Scheduled with setTime=$setTime');
 
     /// Schedule notification
     await flutterLocalNotificationsPlugin.zonedSchedule(
@@ -144,10 +149,18 @@ class _SwitchNotificationsComponentState extends State<SwitchNotificationsCompon
                       updateFn(NotificationService().isNotificationActivated());
 
                       if (NotificationService().isNotificationActivated()) {
+                        Utils.logInfo(
+                          '[NOTIFICATIONS] - Notifications were enabled',
+                        );
+
                         /// Schedule notification if switch in ON
                         await Utils.requestPermission(Permission.notification);
                         await scheduleNotification();
                       } else {
+                        Utils.logInfo(
+                          '[NOTIFICATIONS] - Notifications were disabled',
+                        );
+
                         /// Cancel notification if switch is OFF
                         flutterLocalNotificationsPlugin.cancelAll();
                       }
@@ -219,13 +232,15 @@ class _SwitchNotificationsComponentState extends State<SwitchNotificationsCompon
             setState(() {
               scheduledTimeOfDay = newTimeOfDay;
               SharedPrefsUtil.putInt('scheduledTimeHour', newTimeOfDay.hour);
-              SharedPrefsUtil.putInt('scheduledTimeMinute', newTimeOfDay.minute);
+              SharedPrefsUtil.putInt(
+                  'scheduledTimeMinute', newTimeOfDay.minute);
             });
 
             await scheduleNotification();
           },
           child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
+            padding:
+                const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [

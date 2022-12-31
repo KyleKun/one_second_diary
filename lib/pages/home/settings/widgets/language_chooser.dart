@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 
 import '../../../../controllers/lang_controller.dart';
 import '../../../../lang/translation_service.dart';
+import '../../../../utils/utils.dart';
 
 class LanguageChooser extends StatelessWidget {
   final String title = 'language'.tr;
@@ -30,6 +31,7 @@ class LanguageChooser extends StatelessWidget {
                 value: _languageController.selectedLanguage.value,
                 onChanged: (symbol) {
                   _languageController.changeLanguage = symbol!;
+                  Utils.logInfo('[SETTINGS] - App language changed to $symbol');
                 },
                 items: TranslationService.languages.map(
                   (LanguageModel _language) {
