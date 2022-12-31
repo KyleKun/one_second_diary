@@ -96,7 +96,17 @@ class Utils {
   static Future<String> writeTxt(List<String> files) async {
     final io.Directory directory = await getApplicationDocumentsDirectory();
     final String txtPath = '${directory.path}/videos.txt';
-    final String appPath = SharedPrefsUtil.getString('appPath');
+
+    // Get current profile
+    final currentProfileName = getCurrentProfile();
+
+    // Default directory
+    String videosFolderPath = SharedPrefsUtil.getString('appPath');
+
+    // If a profile is selected, use that directory
+    if (currentProfileName != '') {
+      videosFolderPath = '${videosFolderPath}Profiles/$currentProfileName/';
+    }
 
     // Delete old txt files
     StorageUtils.deleteFile(txtPath);
@@ -104,7 +114,7 @@ class Utils {
     final io.File file = io.File(txtPath);
 
     for (int i = 0; i < files.length; i++) {
-      final String filePath = appPath + files[i];
+      final String filePath = videosFolderPath + files[i];
 
       // Add file and a new line at the end
       String ffString = "file '$filePath'\r\n";
@@ -114,6 +124,7 @@ class Utils {
 
       // Appending it to the txt
       await file.writeAsString(ffString, mode: io.FileMode.append);
+      debugPrint('$filePath added to txt file');
     }
 
     return txtPath;
@@ -182,17 +193,50 @@ class Utils {
     return srtPath;
   }
 
+  /// Get current profile name, empty string if Default
+  static String getCurrentProfile() {
+    // Get current profile
+    String currentProfileName = '';
+
+    final selectedProfileIndex =
+        SharedPrefsUtil.getInt('selectedProfileIndex') ?? 0;
+    if (selectedProfileIndex != 0) {
+      final allProfiles = SharedPrefsUtil.getStringList('profiles');
+      if (allProfiles != null) {
+        currentProfileName = allProfiles[selectedProfileIndex];
+      }
+    }
+    return currentProfileName;
+  }
+
   /// Get all video files inside OneSecondDiary folder
   static List<String> getAllVideos({bool fullPath = false}) {
-    final directory = io.Directory(SharedPrefsUtil.getString('appPath'));
+    // Get current profile
+    final currentProfileName = getCurrentProfile();
+
+    // Default directory
+    io.Directory directory = io.Directory(SharedPrefsUtil.getString('appPath'));
+
+    // If a profile is selected, use that directory
+    if (currentProfileName != '') {
+      directory = io.Directory(
+          '${SharedPrefsUtil.getString('appPath')}Profiles/$currentProfileName/');
+    }
+
     final List<io.FileSystemEntity> files =
         directory.listSync(recursive: true, followLinks: false);
     final List<String> mp4Files = [];
 
     // Getting video names
+    debugPrint('Getting all videos inside ${directory.path}');
     for (int i = 0; i < files.length; i++) {
       final String filePath = files[i].path;
       if (filePath.contains('.mp4') && !filePath.contains('temp')) {
+        // Make sure we are not counting in videos from other profiles if default is selected
+        if (currentProfileName.isEmpty && filePath.contains('Profiles')) {
+          continue;
+        }
+        debugPrint('Found mp4 file: $filePath');
         if (fullPath) {
           mp4Files.add(filePath);
         } else {

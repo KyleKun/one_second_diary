@@ -9,25 +9,24 @@ class ContactButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        GestureDetector(
+        InkWell(
           onTap: () => Utils.launchURL(Constants.email),
-          child: Container(
-            height: MediaQuery.of(context).size.height * 0.065,
-            padding: const EdgeInsets.symmetric(horizontal: 15.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'contact'.tr,
-                  style: TextStyle(
-                    fontSize: MediaQuery.of(context).size.width * 0.045,
+          child: Ink(
+            child: Container(
+              height: MediaQuery.of(context).size.height * 0.065,
+              padding: const EdgeInsets.symmetric(horizontal: 15.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'contact'.tr,
+                    style: TextStyle(
+                      fontSize: MediaQuery.of(context).size.width * 0.045,
+                    ),
                   ),
-                ),
-                IconButton(
-                  icon: const Icon(Icons.email),
-                  onPressed: () => Utils.launchURL(Constants.email),
-                ),
-              ],
+                  const Icon(Icons.email),
+                ],
+              ),
             ),
           ),
         ),

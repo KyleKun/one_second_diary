@@ -75,7 +75,7 @@ const Map<String, String> pt = {
   'dateColor': 'Cor de Data:',
   'selectColor': 'Selecione uma cor',
   'enableGeotagging': 'Ativar geotagging',
-  'setCustomLocation': 'Defina o local personalizado',
+  'setCustomLocation': 'Definir local personalizado',
   'ok': 'OK',
   'reset': 'Redefinir',
   'enterLocation': 'Digite o local',

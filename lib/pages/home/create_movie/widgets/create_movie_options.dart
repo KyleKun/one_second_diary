@@ -51,7 +51,7 @@ class _CreateMovieOptionsState extends State<CreateMovieOptions> {
           context: Get.context!,
           builder: (context) => CustomDialog(
             isDoubleAction: true,
-            title: 'cancelMovie'.tr,
+            title: 'cancelMovieCreation'.tr,
             content: 'cancelMovieDesc'.tr,
             actionText: 'yes'.tr,
             actionColor: Colors.green,
