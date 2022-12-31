@@ -64,8 +64,6 @@ flutter:
     - assets/images/
     - CHANGELOG.md
     - CONTRIBUTORS.md
-    - TODO.md
-    - TODO_pt.md
 
   fonts:
     - family: Magic
