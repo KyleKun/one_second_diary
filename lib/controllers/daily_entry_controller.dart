@@ -18,6 +18,7 @@ class DailyEntryController extends GetxController {
     dailyEntry.value = value;
     dailyEntry.refresh();
     Utils.logInfo('DailyEntry set to $value!');
+
   }
 
   void _checkTodayEntry() {

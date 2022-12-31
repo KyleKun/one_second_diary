@@ -136,6 +136,7 @@ class Utils {
   static Future<String> writeTxt(List<String> files) async {
     final io.Directory directory = await getApplicationDocumentsDirectory();
     final String txtPath = '${directory.path}/videos.txt';
+    
     logInfo('[Utils.writeTxt()] - Writing txt file to $txtPath');
 
     // Get current profile
@@ -165,6 +166,7 @@ class Utils {
 
       // Appending it to the txt
       await file.writeAsString(ffString, mode: io.FileMode.append);
+      debugPrint('$filePath added to txt file');
     }
 
     logInfo('[Utils.writeTxt()] - Text file written successfully!');
