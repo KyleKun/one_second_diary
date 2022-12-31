@@ -102,11 +102,18 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
             style: const TextStyle(color: Colors.white),
           ),
         );
-
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
 
+        // Get current profile
+        final currentProfileName = Utils.getCurrentProfile();
+
         // Videos folder
-        final String videosFolder = SharedPrefsUtil.getString('appPath');
+        String videosFolder = SharedPrefsUtil.getString('appPath');
+        if (currentProfileName.isNotEmpty) {
+          videosFolder = '${videosFolder}Profiles/$currentProfileName/';
+        } else {
+          videosFolder = '$videosFolder';
+        }
 
         // Create a dummy m4a for adding audio stream if necessary
         // final String dummyM4a = await Utils.writeM4a();
@@ -269,6 +276,7 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
           final String today = DateFormatUtils.getToday();
 
           // Creating txt that will be used with ffmpeg
+          debugPrint('Creating txt with: $selectedVideos');
           final String txtPath = await Utils.writeTxt(selectedVideos);
           // Utils().logInfo('Saved txt');
           final String outputPath =

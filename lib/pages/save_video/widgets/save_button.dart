@@ -52,6 +52,7 @@ class SaveButton extends StatefulWidget {
 
 class _SaveButtonState extends State<SaveButton> {
   bool isProcessing = false;
+  String currentProfileName = 'Default';
 
   final DailyEntryController _dayController = Get.find();
 
@@ -136,7 +137,10 @@ class _SaveButtonState extends State<SaveButton> {
       // This means we are using a custom profile
       final allProfiles = SharedPrefsUtil.getStringList('profiles');
       if (allProfiles != null) {
-        final currentProfileName = allProfiles[selectedProfileIndex];
+        setState(() {
+          currentProfileName = allProfiles[selectedProfileIndex];
+        });
+
         videoOutputPath =
             '${SharedPrefsUtil.getString('appPath')}Profiles/$currentProfileName/${DateFormatUtils.getToday()}.mp4';
       }
@@ -205,7 +209,8 @@ class _SaveButtonState extends State<SaveButton> {
     }
 
     final subtitles = '-i $subtitlesPath -c copy -c:s mov_text';
-    const metadata = '-metadata artist="${Constants.artist}"';
+    final metadata =
+        '-metadata artist="${Constants.artist}" -metadata album="$currentProfileName"';
 
     // Caches the default font to save texts in ffmpeg.
     // The edit may fail unexpectedly in some devices if this is not done.

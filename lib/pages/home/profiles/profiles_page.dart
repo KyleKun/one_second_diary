@@ -2,11 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
+import '../../../controllers/daily_entry_controller.dart';
 import '../../../models/profile.dart';
 import '../../../utils/constants.dart';
+import '../../../utils/date_format_utils.dart';
 import '../../../utils/shared_preferences_util.dart';
 import '../../../utils/storage_utils.dart';
 import '../../../utils/theme.dart';
+import '../../../utils/utils.dart';
 
 class ProfilesPage extends StatefulWidget {
   const ProfilesPage({super.key});
@@ -21,9 +24,12 @@ class _ProfilesPageState extends State<ProfilesPage> {
   final _profileNameController = TextEditingController();
   final _profileNameFormKey = GlobalKey<FormState>();
 
-  final mainColor = ThemeService().isDarkTheme() ? AppColors.dark : AppColors.light;
+  final mainColor =
+      ThemeService().isDarkTheme() ? AppColors.dark : AppColors.light;
 
   List<Profile> profiles = [];
+
+  final DailyEntryController dailyEntryController = Get.find();
 
   @override
   void initState() {
@@ -146,8 +152,10 @@ class _ProfilesPageState extends State<ProfilesPage> {
                     });
 
                     // Add the modified profile list to persistence
-                    final profileNamesToStringList = profiles.map((e) => e.label).toList();
-                    SharedPrefsUtil.putStringList('profiles', profileNamesToStringList);
+                    final profileNamesToStringList =
+                        profiles.map((e) => e.label).toList();
+                    SharedPrefsUtil.putStringList(
+                        'profiles', profileNamesToStringList);
 
                     Navigator.pop(context);
                   }
@@ -164,7 +172,7 @@ class _ProfilesPageState extends State<ProfilesPage> {
     );
   }
 
-  Future<void> _showdeleteProfileDialog(int index) async {
+  Future<void> _showDeleteProfileDialog(int index) async {
     return await showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -186,7 +194,9 @@ class _ProfilesPageState extends State<ProfilesPage> {
               Navigator.pop(context);
             },
             style: TextButton.styleFrom(
-              foregroundColor: ThemeService().isDarkTheme() ? AppColors.light : AppColors.dark,
+              foregroundColor: ThemeService().isDarkTheme()
+                  ? AppColors.light
+                  : AppColors.dark,
             ),
             child: Text('no'.tr),
           ),
@@ -203,8 +213,20 @@ class _ProfilesPageState extends State<ProfilesPage> {
               });
 
               // Update the profile list in persistence
-              final profileNamesToStringList = profiles.map((e) => e.label).toList();
-              SharedPrefsUtil.putStringList('profiles', profileNamesToStringList);
+              final profileNamesToStringList =
+                  profiles.map((e) => e.label).toList();
+              SharedPrefsUtil.putStringList(
+                  'profiles', profileNamesToStringList);
+
+              // Select default if the deleted profile was selected
+              if (index == groupValue) {
+                SharedPrefsUtil.putInt('selectedProfileIndex', 0);
+                // Set index in UI
+                setState(() {
+                  groupValue = 0;
+                });
+                updateAppProfile();
+              }
 
               Navigator.pop(context);
             },
@@ -263,6 +285,9 @@ class _ProfilesPageState extends State<ProfilesPage> {
 
                           // Set index in persistence
                           SharedPrefsUtil.putInt('selectedProfileIndex', val);
+
+                          // Updates everything related to the profile
+                          updateAppProfile();
                         },
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
@@ -272,7 +297,7 @@ class _ProfilesPageState extends State<ProfilesPage> {
                             ? null
                             : IconButton(
                                 onPressed: () async {
-                                  await _showdeleteProfileDialog(index);
+                                  await _showDeleteProfileDialog(index);
                                 },
                                 icon: const Icon(
                                   Icons.delete,
@@ -299,5 +324,30 @@ class _ProfilesPageState extends State<ProfilesPage> {
         ),
       ),
     );
+  }
+
+  // Updates the calendar, video count card and daily recording status
+  void updateAppProfile() {
+    // Update the video count card
+    Utils.updateVideoCount();
+
+    // Update daily entry
+    final String today = DateFormatUtils.getToday();
+    final String profile = Utils.getCurrentProfile();
+    String todaysVideoPath = SharedPrefsUtil.getString('appPath');
+    if (profile.isEmpty) {
+      todaysVideoPath = '$todaysVideoPath$today.mp4';
+    } else {
+      todaysVideoPath = '${todaysVideoPath}Profiles/$profile/$today.mp4';
+    }
+    final bool isTodayRecorded = StorageUtils.checkFileExists(todaysVideoPath);
+    if (isTodayRecorded) {
+      debugPrint('$todaysVideoPath exists, setting today status to recorded.');
+      dailyEntryController.updateDaily();
+    } else {
+      debugPrint(
+          '$todaysVideoPath does not exist, setting today status to not recorded.');
+      dailyEntryController.updateDaily(value: false);
+    }
   }
 }
