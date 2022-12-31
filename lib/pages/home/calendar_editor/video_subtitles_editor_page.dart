@@ -157,12 +157,12 @@ class _VideoSubtitlesEditorPageState extends State<VideoSubtitlesEditorPage> {
 
                   if (isEdit) {
                     Utils.logInfo(
-                        '{$logTag}Editing subtitles for ${widget.videoPath}');
+                        '${logTag}Editing subtitles for ${widget.videoPath}');
                     command =
                         '-i ${widget.videoPath} -i $subtitles -c:s mov_text -c:v copy -c:a copy -map 0:v -map 0:a? -map 1 -disposition:s:0 default $tempPath -y';
                   } else {
                     Utils.logInfo(
-                        '{$logTag}Adding brand new subtitles for ${widget.videoPath}');
+                        '${logTag}Adding brand new subtitles for ${widget.videoPath}');
                     command =
                         '-i ${widget.videoPath} -i $subtitles -c copy -c:s mov_text $tempPath -y';
                   }
@@ -171,17 +171,17 @@ class _VideoSubtitlesEditorPageState extends State<VideoSubtitlesEditorPage> {
                     final returnCode = await session.getReturnCode();
                     if (ReturnCode.isSuccess(returnCode)) {
                       Utils.logInfo(
-                          '{$logTag}Video subtitles updated successfully!');
+                          '${logTag}Video subtitles updated successfully!');
                       StorageUtils.deleteFile(widget.videoPath);
                       StorageUtils.renameFile(tempPath, widget.videoPath);
                     } else {
-                      Utils.logError('{$logTag}Video subtitles update failed!');
+                      Utils.logError('${logTag}Video subtitles update failed!');
                       final sessionLog = await session.getLogsAsString();
                       final failureStackTrace =
                           await session.getFailStackTrace();
-                      Utils.logError('{$logTag}Session log: $sessionLog');
+                      Utils.logError('${logTag}Session log: $sessionLog');
                       Utils.logError(
-                          '{$logTag}Failure stacktrace: $failureStackTrace');
+                          '${logTag}Failure stacktrace: $failureStackTrace');
                     }
                   });
 
