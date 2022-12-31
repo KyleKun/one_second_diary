@@ -120,8 +120,29 @@ class _SaveButtonState extends State<SaveButton> {
     );
   }
 
-  Future<void> _editWithFFmpeg(
-      bool isGeotaggingEnabled, BuildContext context) async {
+  // Check if user is using a custom profile to determine the output path of the video
+  String getVideoOutputPath() {
+    String videoOutputPath = '';
+    final String defaultOutputPath =
+        '${SharedPrefsUtil.getString('appPath')}${DateFormatUtils.getToday()}.mp4';
+
+    final selectedProfileIndex = SharedPrefsUtil.getInt('selectedProfileIndex') ?? 0;
+    if (selectedProfileIndex == 0) {
+      // If this is true, it means we are using the default profile, so the output folder would be the default output path
+      videoOutputPath = defaultOutputPath;
+    } else {
+      // This means we are using a custom profile
+      final allProfiles = SharedPrefsUtil.getStringList('profiles');
+      if (allProfiles != null) {
+        final currentProfileName = allProfiles[selectedProfileIndex];
+        videoOutputPath =
+            '${SharedPrefsUtil.getString('appPath')}Profiles/$currentProfileName/${DateFormatUtils.getToday()}.mp4';
+      }
+    }
+    return videoOutputPath;
+  }
+
+  Future<void> _editWithFFmpeg(bool isGeotaggingEnabled, BuildContext context) async {
     // Positions to render texts for the (x, y co-ordinates)
     // According to the ffmpeg docs, the x, y positions are relative to the top-left side of the output frame.
     final String datePosY = widget.isTextDate ? 'h-th-40' : '40';
@@ -148,8 +169,7 @@ class _SaveButtonState extends State<SaveButton> {
         '0x${widget.textOutlineColor.value.toRadixString(16).substring(2)}';
 
     // Path to save the final video
-    final String finalPath =
-        '${SharedPrefsUtil.getString('appPath')}${DateFormatUtils.getToday()}.mp4';
+    final String finalPath = getVideoOutputPath();
 
     // Check if video already exists and delete it if so (Edit daily feature)
     if (StorageUtils.checkFileExists(finalPath)) {

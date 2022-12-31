@@ -98,4 +98,19 @@ const Map<String, String> es = {
   'subtitles': 'Subtítulos',
   'addVideo': 'Agregar video',
   'calendar': 'Calendario',
+  'orientation': 'Orientación',
+  'portrait': 'Retrato',
+  'landscape': 'Paisaje',
+  'profiles': 'Perfiles',
+  'tapToSwitch': 'Toque un perfil para cambiar',
+  'createNewProfile': 'Crear nuevo perfil',
+  'newProfile': 'Nuevo perfil',
+  'deleteProfile': 'Borrar perfil',
+  'enterProfileName': 'Ingrese el nombre del perfil',
+  'newProfileTooltip':
+      'Crear un nuevo perfil configurará un directorio separado para videos creados mientras se selecciona ese perfil',
+  'deleteProfileTooltip':
+      'Todos los videos asociados con este perfil también se eliminarán permanentemente.¿Estás seguro de continuar?',
+  'profileNameCannotBeEmpty': 'El nombre del perfil no puede estar vacío',
+  'reservedProfileName': 'Este es un nombre de perfil reservado',
 };

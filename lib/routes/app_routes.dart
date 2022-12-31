@@ -9,4 +9,5 @@ abstract class Routes {
   static const SAVE_VIDEO = '/save_video';
   static const CREATE_MOVIE_OPTIONS = '/home/create_movie_options';
   static const SELECT_VIDEOS_FROM_STORAGE = '/home/select_videos_from_storage';
+  static const PROFILES = '/home/profiles';
 }

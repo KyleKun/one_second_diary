@@ -6,6 +6,7 @@ import '../pages/home/base/home_page.dart';
 import '../pages/home/create_movie/widgets/create_movie_options.dart';
 import '../pages/home/create_movie/widgets/select_video_from_storage.dart';
 import '../pages/home/notification/notification_page.dart';
+import '../pages/home/profiles/profiles_page.dart';
 import '../pages/intro/intro_page.dart';
 import '../pages/recording/recording_page.dart';
 import '../pages/save_video/save_video_page.dart';
@@ -27,6 +28,7 @@ class AppPages {
     GetPage(
       name: Routes.SELECT_VIDEOS_FROM_STORAGE,
       page: () => const SelectVideoFromStorage(),
-    )
+    ),
+    GetPage(name: Routes.PROFILES, page: () => const ProfilesPage()),
   ];
 }
