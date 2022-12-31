@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
 import 'widgets/switch_notifications.dart';
 
 class NotificationPage extends StatelessWidget {

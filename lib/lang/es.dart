@@ -119,4 +119,5 @@ const Map<String, String> es = {
   'cancelMovieCreation': 'Cancelar creación de película',
   'cancelMovieDesc':
       '¿Estás seguro de que quieres cancelar la creación de la película?',
+  'reportError': 'Reportar error',
 };

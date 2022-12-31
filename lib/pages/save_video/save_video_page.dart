@@ -15,6 +15,7 @@ import '../../utils/custom_dialog.dart';
 import '../../utils/date_format_utils.dart';
 import '../../utils/shared_preferences_util.dart';
 import '../../utils/storage_utils.dart';
+import '../../utils/utils.dart';
 import 'widgets/save_button.dart';
 
 class SaveVideoPage extends StatefulWidget {
@@ -106,7 +107,7 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
       setState(() => _currentPosition = position);
       _getAddressFromLatLng(_currentPosition!);
     }).catchError((e) {
-      debugPrint(e);
+      Utils.logError('[Geolocation] - Failed to get location: $e');
     });
   }
 
@@ -126,8 +127,10 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
       setState(() {
         _currentAddress = '$city, ${place.country}';
       });
+
+      Utils.logError('[Geolocation] - Location obtained successfully!');
     }).catchError((e) {
-      debugPrint(e);
+      Utils.logError('[Geolocation] - Failed to decode location: $e');
     });
   }
 
@@ -170,7 +173,6 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
     _initVideoPlayerController();
     checkGeotaggingStatus().whenComplete(
       () {
-        debugPrint(_currentAddress);
         setState(() {});
       },
     );
@@ -320,7 +322,6 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
 
   @override
   Widget build(BuildContext context) {
-    // Utils().logInfo(Get.locale!.languageCode);
     return WillPopScope(
       onWillPop: () async {
         showDialog(
@@ -469,7 +470,7 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
           onChanged: (_) async {
             await toggleGeotaggingStatus();
             if (isGeotaggingEnabled) {
-              debugPrint('Getting location');
+              Utils.logInfo('[Geolocation] - Getting location...');
               await _getCurrentPosition();
             }
             setState(() {});

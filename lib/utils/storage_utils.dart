@@ -1,6 +1,5 @@
 import 'dart:io' as io;
 
-import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 
 import 'shared_preferences_util.dart';
@@ -11,14 +10,13 @@ class StorageUtils {
   static Future<void> createFolder() async {
     try {
       final hasStoragePerms = await Utils.requestStoragePermissions();
-      debugPrint('Storage permissions enabled? $hasStoragePerms');
-
       if (hasStoragePerms == false) {
         // Get.snackbar(
         //   'Oh no!',
         //   'Not all permissions were granted. Some app features may not work properly',
         // );
-        debugPrint('Looks like some permissions were not granted');
+        Utils.logError('[StorageUtils] - ' +
+            'Looks like some permissions were not granted');
       }
 
       io.Directory? appDirectory;
@@ -58,23 +56,60 @@ class StorageUtils {
       // ignore: avoid_slow_async_io
       if (!await appDirectory.exists()) {
         await appDirectory.create(recursive: true);
-        // Utils().logInfo("Directory created");
-        // Utils().logInfo('Final Directory path: ' + directory.path);
+        Utils.logInfo('[StorageUtils] - ' + 'Videos directory created');
       } else {
-        // Utils().logInfo("Directory already exists");
+        Utils.logInfo('[StorageUtils] - ' + 'Videos directory already exists');
       }
 
       // ignore: avoid_slow_async_io
       if (!await moviesDirectory.exists()) {
         await moviesDirectory.create(recursive: true);
-        // Utils().logInfo("Directory created");
-        // Utils().logInfo('Final Directory path: ' + directory.path);
+        Utils.logInfo('[StorageUtils] - ' + 'Movies directory created');
       } else {
-        // Utils().logInfo("Directory already exists");
+        Utils.logInfo('[StorageUtils] - ' + 'Movies directory already exists');
       }
     } catch (e) {
-      debugPrint(e.toString());
-      // Utils().logError('$e');
+      Utils.logError('[StorageUtils] - $e');
+    }
+  }
+
+  // Create log file in internal storage
+  static Future<void> createLogFile() async {
+    try {
+      final String appPath = SharedPrefsUtil.getString('appPath');
+      final String logPath = '$appPath/Logs/';
+
+      // Checking if the folder really exists, if not, then create it
+      final io.Directory? logDirectory = io.Directory(logPath);
+
+      // ignore: avoid_slow_async_io
+      if (logDirectory != null && !await logDirectory.exists()) {
+        await logDirectory.create(recursive: true);
+      }
+
+      final String logFileName = Utils.getTodaysLogFilename();
+
+      // ignore: avoid_slow_async_io
+      if (!await io.File('$logPath/$logFileName').exists()) {
+        await io.File('$logPath/$logFileName').create(recursive: false);
+        SharedPrefsUtil.putString('currentLogFile', logFileName);
+      }
+
+      // Delete old log files (7 days past today)
+      final List<io.FileSystemEntity> files = logDirectory!.listSync();
+      for (final io.FileSystemEntity file in files) {
+        final String filename = file.path.split('/').last;
+        final String date = filename.split('_').first;
+        final DateTime fileDate = DateTime.parse(date);
+        final DateTime today = DateTime.now();
+        final int difference = today.difference(fileDate).inDays;
+
+        if (difference > 7) {
+          await io.File(file.path).delete();
+        }
+      }
+    } catch (e) {
+      Utils.logError('[StorageUtils] - $e');
     }
   }
 
@@ -92,7 +127,7 @@ class StorageUtils {
         await profileDirectory.create(recursive: true);
       }
     } catch (e) {
-      debugPrint(e.toString());
+      Utils.logError('[StorageUtils] - $e');
     }
   }
 
@@ -109,7 +144,7 @@ class StorageUtils {
         await profileDirectory.delete(recursive: true);
       }
     } catch (e) {
-      debugPrint(e.toString());
+      Utils.logError('[StorageUtils] - $e');
     }
   }
 
@@ -119,7 +154,7 @@ class StorageUtils {
       try {
         io.File(oldPath).renameSync(newPath);
       } catch (e) {
-        debugPrint(e.toString());
+        Utils.logError('[StorageUtils] - $e');
       }
     }
   }

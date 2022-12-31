@@ -118,4 +118,5 @@ const Map<String, String> de = {
   'doNotCloseTheApp': 'Bitte schließen Sie die\nApp nicht.',
   'cancelMovieCreation': 'Film erstellen abbrechen',
   'cancelMovieDesc': 'Möchtest Du wirklich abbrechen?',
+  'reportError': 'Fehler melden',
 };

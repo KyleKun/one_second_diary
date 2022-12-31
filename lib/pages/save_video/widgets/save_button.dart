@@ -3,7 +3,6 @@ import 'package:ffmpeg_kit_flutter_full_gpl/return_code.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:saf/saf.dart';
-// import 'package:tapioca/tapioca.dart';
 import 'package:video_player/video_player.dart';
 
 import '../../../controllers/daily_entry_controller.dart';
@@ -16,7 +15,6 @@ import '../../../utils/ffmpeg_api_wrapper.dart';
 import '../../../utils/shared_preferences_util.dart';
 import '../../../utils/storage_utils.dart';
 import '../../../utils/utils.dart';
-// import '../../../utils/utils.dart';
 
 class SaveButton extends StatefulWidget {
   SaveButton({
@@ -51,6 +49,7 @@ class SaveButton extends StatefulWidget {
 }
 
 class _SaveButtonState extends State<SaveButton> {
+  final String logTag = '[SAVE RECORDING] - ';
   bool isProcessing = false;
   String currentProfileName = 'Default';
 
@@ -59,7 +58,7 @@ class _SaveButtonState extends State<SaveButton> {
   final VideoCountController _videoCountController = Get.find();
 
   void _saveVideo() async {
-    debugPrint('Starting to save video');
+    Utils.logInfo('${logTag}Starting to edit ${widget.videoPath} with ffmpeg');
     setState(() {
       isProcessing = true;
     });
@@ -71,12 +70,10 @@ class _SaveButtonState extends State<SaveButton> {
         isProcessing = false;
       });
     } catch (e) {
-      debugPrint(e.toString());
-
+      Utils.logError(logTag + e.toString());
       setState(() {
         isProcessing = false;
       });
-      // Utils().logError('$e');
       // Showing error popup
       await showDialog(
         barrierDismissible: false,
@@ -88,6 +85,7 @@ class _SaveButtonState extends State<SaveButton> {
           actionText: 'Ok',
           actionColor: Colors.red,
           action: () => Get.offAllNamed(Routes.HOME),
+          sendLogs: true,
         ),
       );
     } finally {
@@ -177,9 +175,12 @@ class _SaveButtonState extends State<SaveButton> {
 
     // Path to save the final video
     final String finalPath = getVideoOutputPath();
+    Utils.logInfo('${logTag}Video will be saved to: $finalPath');
 
     // Check if video already exists and delete it if so (Edit daily feature)
     if (StorageUtils.checkFileExists(finalPath)) {
+      Utils.logInfo(
+          '${logTag}Video already exists, deleting it to perform edit.');
       isEdit = true;
       StorageUtils.deleteFile(finalPath);
     }
@@ -205,8 +206,11 @@ class _SaveButtonState extends State<SaveButton> {
         widget.videoDuration,
       );
     } else {
+      Utils.logInfo(
+          '${logTag}Subtitles TextField was left empty. Adding empty subtitles...');
       subtitlesPath = await Utils.writeSrt('', 0);
     }
+    Utils.logInfo('${logTag}Subtitles file path: $subtitlesPath');
 
     final subtitles = '-i $subtitlesPath -c copy -c:s mov_text';
     final metadata =
@@ -217,13 +221,12 @@ class _SaveButtonState extends State<SaveButton> {
     await FFmpegKitConfig.setFontDirectory(fontPath);
 
     // Edit and save video
-    await executeFFmpeg(
-      '-i $videoPath $subtitles $metadata -vf [in]drawtext="$fontPath:text=\'${widget.dateFormat}\':fontsize=$dateTextSize:fontcolor=\'$parsedDateColor\':borderw=${widget.textOutlineWidth}:bordercolor=$parsedTextOutlineColor:x=$datePosX:y=$datePosY$locOutput[out]" -c:a aac -b:a 256k -codec:v libx264 -pix_fmt yuv420p $finalPath -y',
-    ).then((session) async {
-      debugPrint(session.getCommand().toString());
+    final command =
+        '-i $videoPath $subtitles $metadata -vf [in]drawtext="$fontPath:text=\'${widget.dateFormat}\':fontsize=$dateTextSize:fontcolor=\'$parsedDateColor\':borderw=${widget.textOutlineWidth}:bordercolor=$parsedTextOutlineColor:x=$datePosX:y=$datePosY$locOutput[out]" -c:a aac -b:a 256k -codec:v libx264 -pix_fmt yuv420p $finalPath -y';
+    await executeFFmpeg(command).then((session) async {
       final returnCode = await session.getReturnCode();
       if (ReturnCode.isSuccess(returnCode)) {
-        debugPrint('Video edited successfully');
+        Utils.logInfo('${logTag}Video edited successfully');
 
         _dayController.updateDaily();
 
@@ -246,16 +249,27 @@ class _SaveButtonState extends State<SaveButton> {
           ),
         );
       } else if (ReturnCode.isCancel(returnCode)) {
-        debugPrint('Execution was cancelled');
+        Utils.logInfo('${logTag}Execution was cancelled');
       } else {
-        debugPrint(
-            'Error editing video: Return code is ${await session.getReturnCode()}');
-        final sessionLog = await session.getAllLogsAsString();
+        Utils.logError(
+            '${logTag}Error editing video: Return code is ${await session.getReturnCode()}');
+        final sessionLog = await session.getLogsAsString();
         final failureStackTrace = await session.getFailStackTrace();
-        debugPrint('Session lasted for ${await session.getDuration()} ms');
-        debugPrint(session.getArguments().toString());
-        debugPrint('Session log is $sessionLog');
-        debugPrint('Failure stacktrace - $failureStackTrace');
+        Utils.logError('${logTag}Session log is: $sessionLog');
+        Utils.logError('${logTag}Failure stacktrace: $failureStackTrace');
+        await showDialog(
+          barrierDismissible: false,
+          context: Get.context!,
+          builder: (context) => CustomDialog(
+            isDoubleAction: false,
+            title: 'saveVideoErrorTitle'.tr,
+            content: '${'tryAgainMsg'.tr}\n\nError: $sessionLog',
+            actionText: 'Ok',
+            actionColor: Colors.red,
+            action: () => Get.offAllNamed(Routes.HOME),
+            sendLogs: true,
+          ),
+        );
       }
     });
   }

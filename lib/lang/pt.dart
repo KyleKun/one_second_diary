@@ -118,4 +118,5 @@ const Map<String, String> pt = {
   'doNotCloseTheApp': 'Não feche o aplicativo.',
   'cancelMovieCreation': 'Cancelar criação de filme',
   'cancelMovieDesc': 'Você tem certeza que deseja cancelar a criação do filme?',
+  'reportError': 'Relatar erro',
 };
