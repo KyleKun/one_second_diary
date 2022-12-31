@@ -93,19 +93,18 @@ class Utils {
   }
 
   /// Write txt used by ffmpeg to concatenate videos when generating movie
-  static Future<String> writeTxt(List<String> files, bool isCustom) async {
+  static Future<String> writeTxt(List<String> files) async {
     final io.Directory directory = await getApplicationDocumentsDirectory();
     final String txtPath = '${directory.path}/videos.txt';
     final String appPath = SharedPrefsUtil.getString('appPath');
 
     // Delete old txt files
-    if (StorageUtils.checkFileExists(txtPath)) StorageUtils.deleteFile(txtPath);
+    StorageUtils.deleteFile(txtPath);
 
     final io.File file = io.File(txtPath);
 
     for (int i = 0; i < files.length; i++) {
-      // Do not add app folder path if custom videos are being used
-      final String filePath = isCustom ? files[i] : appPath + files[i];
+      final String filePath = appPath + files[i];
 
       // Add file and a new line at the end
       String ffString = "file '$filePath'\r\n";
@@ -120,13 +119,35 @@ class Utils {
     return txtPath;
   }
 
+  /// Write dummy m4a file used by ffmpeg to add audio to the a video
+  // static Future<String> writeM4a() async {
+  //   final io.Directory directory = await getApplicationDocumentsDirectory();
+  //   final String m4aPath = '${directory.path}/dummy.m4a';
+
+  //   // Check if file exists and end it here if so
+  //   // if (StorageUtils.checkFileExists(m4aPath)) return m4aPath;
+
+  //   // ffmpeg command to create m4a file with 48000Hz sample rate
+
+  //   try {
+  //     await executeFFmpeg(
+  //       '-f lavfi -i anullsrc=cl=mono -t 1 $m4aPath -y',
+  //     );
+  //     debugPrint('Dummy m4a file created');
+  //   } catch (e) {
+  //     print(e);
+  //   }
+
+  //   return m4aPath;
+  // }
+
   /// Write srt file used by ffmpeg to add subtitles to the movie
   static Future<String> writeSrt(String text, int videoDuration) async {
     final io.Directory directory = await getApplicationDocumentsDirectory();
     final String srtPath = '${directory.path}/subtitles.srt';
 
     // Delete old srt files
-    if (StorageUtils.checkFileExists(srtPath)) StorageUtils.deleteFile(srtPath);
+    StorageUtils.deleteFile(srtPath);
 
     final io.File file = io.File(srtPath);
 
@@ -171,7 +192,7 @@ class Utils {
     // Getting video names
     for (int i = 0; i < files.length; i++) {
       final String filePath = files[i].path;
-      if (filePath.contains('.mp4')) {
+      if (filePath.contains('.mp4') && !filePath.contains('temp')) {
         if (fullPath) {
           mp4Files.add(filePath);
         } else {

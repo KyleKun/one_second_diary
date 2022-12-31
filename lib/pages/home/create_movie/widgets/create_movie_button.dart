@@ -1,6 +1,10 @@
+import 'dart:convert';
+
 import 'package:ffmpeg_kit_flutter_full_gpl/return_code.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:open_file/open_file.dart';
+import 'package:wakelock/wakelock.dart';
 
 import '../../../../controllers/video_count_controller.dart';
 import '../../../../enums/export_date_range.dart';
@@ -35,14 +39,14 @@ class CreateMovieButton extends StatefulWidget {
 class _CreateMovieButtonState extends State<CreateMovieButton> {
   final VideoCountController _movieCount = Get.find();
   bool isProcessing = false;
-  bool isCustom = false;
+  String progress = '';
 
-  // void _openVideo(String filePath) async {
-  //   Get.back();
-  //   await OpenFile.open(filePath);
-  // }
+  void _openVideo(String filePath) async {
+    await OpenFile.open(filePath);
+  }
 
   void _createMovie() async {
+    Wakelock.enable();
     // Creates the folder if it is not created yet
     StorageUtils.createFolder();
 
@@ -55,10 +59,9 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
       List<String> selectedVideos = [];
 
       if (customSelectedVideos != null && customSelectedVideos.isNotEmpty) {
-        isCustom = true;
         for (int i = 0; i < customSelectedVideos.length; i++) {
           if (widget.customSelectedVideosIsSelected![i]) {
-            selectedVideos.add(customSelectedVideos[i]);
+            selectedVideos.add(customSelectedVideos[i].split('/').last);
           }
         }
       } else {
@@ -82,97 +85,255 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
         );
       } else {
         // Utils().logInfo('Creating movie with the following files: $allVideos');
-        final String today = DateFormatUtils.getToday();
 
-        // Creating txt that will be used with ffmpeg
-        final String txtPath = await Utils.writeTxt(selectedVideos, isCustom);
-        // Utils().logInfo('Saved txt');
-        final String outputPath =
-            '${SharedPrefsUtil.getString('moviesPath')}OneSecondDiary-Movie-${_movieCount.movieCount.value}-$today.mp4';
-        // Utils().logInfo('It will be saved in: $outputPath');
+        final snackBar = SnackBar(
+          margin: const EdgeInsets.all(10.0),
+          behavior: SnackBarBehavior.floating,
+          backgroundColor: Colors.black54,
+          duration: const Duration(seconds: 6),
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(
+              Radius.circular(25),
+            ),
+          ),
+          content: Text(
+            'creatingMovie'.tr,
+            textAlign: TextAlign.center,
+            style: const TextStyle(color: Colors.white),
+          ),
+        );
 
-        // Make sure all selected videos have a subtitles stream before creating movie
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
+        // Videos folder
+        final String videosFolder = SharedPrefsUtil.getString('appPath');
+
+        // Create a dummy m4a for adding audio stream if necessary
+        // final String dummyM4a = await Utils.writeM4a();
+
+        // Create a dummy srt for adding subtitles stream if necessary
+        final String dummySubtitles = await Utils.writeSrt('', 0);
+
+        // Start checking all videos
         for (String video in selectedVideos) {
+          bool isV1point5 = true;
+          final String currentVideo = '$videosFolder$video';
+          final String tempVideo =
+              '${currentVideo.split('.mp4').first}_temp.mp4';
+
+          // ffmpeg command to get title tag from video metadata
+
+          // TODO: this (in special) will need a good refactor for next version
+          // Check if video was recorded before v1.5 so we can process what is needed
           await executeFFprobe(
-                  '-v quiet -select_streams s -show_streams $video')
+                  '-v quiet -show_entries format_tags=artist -of default=nw=1:nk=1 $currentVideo')
               .then((session) async {
             final returnCode = await session.getReturnCode();
             if (ReturnCode.isSuccess(returnCode)) {
-              final sessionLog = await session.getAllLogsAsString();
-              debugPrint('\n\nStream info for $video --> $sessionLog\n\n');
-              if (sessionLog == null || sessionLog.isEmpty) {
-                debugPrint('No subtitles stream for $video, adding one...');
-                final String tempPath = '${video.split('.mp4').first}_temp.mp4';
-                final String subtitles = await Utils.writeSrt('', 0);
-                final command =
-                    '-i $video -i $subtitles -c copy -c:s mov_text $tempPath -y';
-                await executeFFmpeg(command).then((session) async {
-                  final returnCode = await session.getReturnCode();
-                  if (ReturnCode.isSuccess(returnCode)) {
-                    StorageUtils.deleteFile(video);
-                    StorageUtils.renameFile(tempPath, video);
-                    debugPrint('Added empty subtitles stream to $video');
-                  } else {
-                    debugPrint('Error adding subtitles stream to $video');
-                  }
-                });
+              final sessionLog = await session.getOutput();
+              if (sessionLog == null ||
+                  sessionLog.isEmpty ||
+                  !sessionLog.contains(Constants.artist)) {
+                debugPrint(
+                    '$currentVideo was not recorded on v1.5. Processing it...');
+                isV1point5 = false;
               }
+            } else {
+              final sessionLog = await session.getAllLogsAsString();
+              debugPrint(returnCode.toString());
+              debugPrint(
+                  'Error checking if $currentVideo was recorded on v1.5');
+              debugPrint(sessionLog);
             }
           });
+
+          // Make sure all selected videos have a subtitles and audio stream before creating movie, and finally check their resolution, resizes if necessary.
+          if (!isV1point5) {
+            // Make sure it is 1080p, h264
+            await executeFFmpeg(
+                    '-i $currentVideo -vf "scale=1920:1080" -r 30  -map 0 -c copy -c:v libx264 -crf 18 $tempVideo -y')
+                .then((session) async {
+              final returnCode = await session.getReturnCode();
+              if (ReturnCode.isSuccess(returnCode)) {
+                StorageUtils.deleteFile(currentVideo);
+                StorageUtils.renameFile(tempVideo, currentVideo);
+                debugPrint('Converted $currentVideo to 1080p, h264');
+              } else {
+                final sessionLog = await session.getLogsAsString();
+                debugPrint('Error converting $currentVideo to 1080p, h264');
+                debugPrint('Error: $sessionLog');
+              }
+            });
+
+            print('Checking streams for $currentVideo');
+            bool hasSubs = false;
+            bool hasAudio = false;
+
+            // Streams check
+            await executeFFprobe(
+                    '-v quiet -print_format json -show_format -show_streams $currentVideo')
+                .then((session) async {
+              final returnCode = await session.getReturnCode();
+              if (ReturnCode.isSuccess(returnCode)) {
+                final sessionLog = await session.getOutput();
+                if (sessionLog == null) return;
+                final List<dynamic> streams = jsonDecode(sessionLog)['streams'];
+                debugPrint('Streams info for $currentVideo --> $sessionLog');
+                for (var stream in streams) {
+                  if (stream['codec_type'] == 'audio') {
+                    debugPrint('$currentVideo already has audio');
+                    hasAudio = true;
+                  }
+                  if (stream['codec_type'] == 'subtitle') {
+                    debugPrint('$currentVideo already has subs');
+                    hasSubs = true;
+                  }
+                }
+              }
+            });
+
+            // Add audio stream if necessary
+            if (!hasAudio) {
+              debugPrint('No audio stream for $currentVideo, adding one...');
+              // final command =
+              //     '-i $currentVideo -i $dummyM4a -c copy -c:s copy -map 0:v -map 1:a -shortest $tempVideo -y';
+              // final command =
+              //     '-i $currentVideo -i $dummyM4a -af apad -shortest -c:s copy $tempVideo -y';
+              final command =
+                  '-i $currentVideo -f lavfi -i anullsrc=channel_layout=mono:sample_rate=48000 -shortest -b:a 256k -c:v copy -c:a aac $tempVideo -y';
+              await executeFFmpeg(command).then((session) async {
+                final returnCode = await session.getReturnCode();
+                if (ReturnCode.isSuccess(returnCode)) {
+                  StorageUtils.deleteFile(currentVideo);
+                  StorageUtils.renameFile(tempVideo, currentVideo);
+                  debugPrint('Added empty audio stream to $currentVideo');
+                } else {
+                  debugPrint('Error adding audio stream to $currentVideo');
+                }
+              });
+            }
+
+            // Add subtitles stream if necessary
+            if (!hasSubs) {
+              debugPrint(
+                  'No subtitles stream for $currentVideo, adding one...');
+              final command =
+                  '-i $currentVideo -i $dummySubtitles -c copy -c:s mov_text $tempVideo -y';
+              await executeFFmpeg(command).then((session) async {
+                final returnCode = await session.getReturnCode();
+                if (ReturnCode.isSuccess(returnCode)) {
+                  StorageUtils.deleteFile(currentVideo);
+                  StorageUtils.renameFile(tempVideo, currentVideo);
+                  debugPrint('Added empty subtitles stream to $currentVideo');
+                } else {
+                  debugPrint('Error adding subtitles stream to $currentVideo');
+                }
+              });
+            }
+
+            // Add artist metadata to avoid redoing all that in this video in the future since it was already processed
+            await executeFFmpeg(
+                    '-i $currentVideo -metadata artist="${Constants.artist}" -c:v copy -c:a copy -c:s copy $tempVideo -y')
+                .then((session) async {
+              final returnCode = await session.getReturnCode();
+              if (ReturnCode.isSuccess(returnCode)) {
+                StorageUtils.deleteFile(currentVideo);
+                StorageUtils.renameFile(tempVideo, currentVideo);
+                debugPrint('Added artist metadata to $currentVideo');
+              } else {
+                debugPrint('Error adding artist metadata to $currentVideo');
+              }
+            });
+          }
+
+          if (mounted) {
+            setState(() {
+              progress =
+                  '${selectedVideos.indexOf(video) + 1} / ${selectedVideos.length}';
+            });
+          } else {
+            debugPrint('Aborted');
+            break;
+          }
+
+          debugPrint('Progress: $progress');
         }
 
-        await executeFFmpeg(
-                '-f concat -safe 0 -i $txtPath -map 0 -c copy $outputPath -y')
-            .then(
-          (session) async {
-            final returnCode = await session.getReturnCode();
-            if (ReturnCode.isSuccess(returnCode)) {
-              _movieCount.updateMovieCount();
-              showDialog(
-                barrierDismissible: false,
-                context: Get.context!,
-                builder: (context) => CustomDialog(
-                  isDoubleAction: false,
-                  title: 'movieCreatedTitle'.tr,
-                  content: 'movieCreatedDesc'.tr,
-                  actionText: 'Ok',
-                  actionColor: Colors.green,
-                  // TODO: Video player screen showing movie
-                  action: () => Get.offAllNamed(Routes.HOME),
-                ),
-              );
-              // Utils().logInfo('Video saved in gallery in the folder OSD-Movies!');
+        if (mounted) {
+          debugPrint('Finished checking videos... creating movie...');
 
-            } else if (ReturnCode.isCancel(returnCode)) {
-              debugPrint('Execution was cancelled');
-            } else {
-              // Utils().logError('$result');
-              debugPrint(
-                  'Error editing video: Return code is ${await session.getReturnCode()}');
-              final sessionLog = await session.getAllLogsAsString();
-              final failureStackTrace = await session.getFailStackTrace();
-              debugPrint(
-                  'Session lasted for ${await session.getDuration()} ms');
-              debugPrint(session.getArguments().toString());
-              debugPrint('Session log is $sessionLog');
-              debugPrint('Failure stacktrace - $failureStackTrace');
+          final String today = DateFormatUtils.getToday();
 
-              showDialog(
-                barrierDismissible: false,
-                context: Get.context!,
-                builder: (context) => CustomDialog(
-                  isDoubleAction: false,
-                  title: 'movieError'.tr,
-                  content:
-                      '${'tryAgainMsg'.tr}\nCode error: ${session.getFailStackTrace()}',
-                  actionText: 'Ok',
-                  actionColor: Colors.red,
-                  action: () => Get.offAllNamed(Routes.HOME),
-                ),
-              );
-            }
-          },
-        );
+          // Creating txt that will be used with ffmpeg
+          final String txtPath = await Utils.writeTxt(selectedVideos);
+          // Utils().logInfo('Saved txt');
+          final String outputPath =
+              '${SharedPrefsUtil.getString('moviesPath')}OneSecondDiary-Movie-${_movieCount.movieCount.value}-$today.mp4';
+          // Utils().logInfo('It will be saved in: $outputPath');
+
+          setState(() {
+            progress = '${'creatingMovie'.tr.split('...')[0]}...';
+          });
+
+          // Create movie by concatenating all videos
+          await executeFFmpeg(
+                  '-f concat -safe 0 -i $txtPath -vsync vfr -async 1 -map 0 -c copy $outputPath -y')
+              .then(
+            (session) async {
+              final returnCode = await session.getReturnCode();
+              if (ReturnCode.isSuccess(returnCode)) {
+                _movieCount.updateMovieCount();
+                showDialog(
+                  barrierDismissible: false,
+                  context: Get.context!,
+                  builder: (context) => CustomDialog(
+                    isDoubleAction: false,
+                    title: 'movieCreatedTitle'.tr,
+                    content: 'movieCreatedDesc'.tr,
+                    actionText: 'Ok',
+                    actionColor: Colors.green,
+                    action: () {
+                      Get.offAllNamed(Routes.HOME);
+                      Future.delayed(
+                        const Duration(milliseconds: 500),
+                        () => _openVideo(outputPath),
+                      );
+                    },
+                  ),
+                );
+                // Utils().logInfo('Video saved in gallery in the folder OSD-Movies!');
+
+              } else if (ReturnCode.isCancel(returnCode)) {
+                debugPrint('Execution was cancelled');
+              } else {
+                // Utils().logError('$result');
+                debugPrint(
+                    'Error editing video: Return code is ${await session.getReturnCode()}');
+                final sessionLog = await session.getAllLogsAsString();
+                final failureStackTrace = await session.getFailStackTrace();
+                debugPrint(
+                    'Session lasted for ${await session.getDuration()} ms');
+                debugPrint(session.getArguments().toString());
+                debugPrint('Session log is $sessionLog');
+                debugPrint('Failure stacktrace - $failureStackTrace');
+
+                showDialog(
+                  barrierDismissible: false,
+                  context: Get.context!,
+                  builder: (context) => CustomDialog(
+                    isDoubleAction: false,
+                    title: 'movieError'.tr,
+                    content:
+                        '${'tryAgainMsg'.tr}\nCode error: ${session.getFailStackTrace()}',
+                    actionText: 'Ok',
+                    actionColor: Colors.red,
+                    action: () => Get.offAllNamed(Routes.HOME),
+                  ),
+                );
+              }
+            },
+          );
+        }
       }
     } catch (e) {
       // Utils().logError('$e');
@@ -189,6 +350,7 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
         ),
       );
     } finally {
+      Wakelock.disable();
       setState(() {
         isProcessing = false;
       });
@@ -198,8 +360,8 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: MediaQuery.of(context).size.width * 0.4,
-      height: MediaQuery.of(context).size.height * 0.08,
+      width: MediaQuery.of(context).size.width * 0.6,
+      height: MediaQuery.of(context).size.height * 0.11,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
           backgroundColor: AppColors.mainColor,
@@ -219,10 +381,21 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
                   fontSize: MediaQuery.of(context).size.width * 0.055,
                 ),
               )
-            : const CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(
-                  Colors.white,
-                ),
+            : Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const SizedBox(
+                    width: 30,
+                    height: 30,
+                    child: CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                        Colors.white,
+                      ),
+                    ),
+                  ),
+                  Text(progress),
+                  Text('doNotCloseTheApp'.tr),
+                ],
               ),
       ),
     );

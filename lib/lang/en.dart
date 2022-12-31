@@ -17,14 +17,17 @@ const Map<String, String> en = {
   'movieCreatedTitle': 'Movie created!',
   'movieCreatedDesc': 'Movie saved to storage inside OSD-Movies folder',
   'movieError': 'Error saving the movie!',
-  'tryAgainMsg': 'Please try again. If the problem persists, contact the developer.',
+  'tryAgainMsg':
+      'Please try again. If the problem persists, contact the developer.',
   'create': 'Create',
   'days': 'days',
   'day': 'day',
   'totalRecordedTitle': 'You have recorded:',
-  'tapBelowToGenerate': 'Tap the button below to generate\na single video file:',
+  'tapBelowToGenerate':
+      'Tap the button below to generate\na single video file:',
   'editQuestionTitle': 'Edit video?',
-  'editQuestion': 'Your previous recording will be deleted, do you want to continue?',
+  'editQuestion':
+      'Your previous recording will be deleted, do you want to continue?',
   'yes': 'Yes',
   'no': 'No',
   'edit': 'Edit',
@@ -47,7 +50,8 @@ const Map<String, String> en = {
   'introTitle2': 'Create the movie of your life',
   'introDesc2': 'Generate a compilation of all your recorded videos.',
   'introTitle3': 'No ads and totally free',
-  'introDesc3': 'If you like the app, consider supporting the development with a donation.',
+  'introDesc3':
+      'If you like the app, consider supporting the development with a donation.',
   'skip': 'Skip',
   'done': 'Done',
   'futureUpdates': 'Future Updates',
@@ -110,4 +114,8 @@ const Map<String, String> en = {
       'All videos associated with this profile will also be permanently deleted. Are you sure to continue?',
   'profileNameCannotBeEmpty': 'Profile name cannot be empty',
   'reservedProfileName': 'This is a reserved profile name',
+  'creatingMovie': 'Processing... Please wait.\nThis can take several minutes.',
+  'doNotCloseTheApp': 'Do not close the app.',
+  'cancelMovieCreation': 'Cancel movie creation',
+  'cancelMovieDesc': 'Are you sure you want to cancel the movie creation?',
 };

@@ -114,13 +114,13 @@ class StorageUtils {
   }
 
   /// Rename file
-  static bool renameFile(String oldPath, String newPath) {
-    try {
-      io.File(oldPath).renameSync(newPath);
-      return true;
-    } catch (e) {
-      debugPrint(e.toString());
-      return false;
+  static void renameFile(String oldPath, String newPath) {
+    if (checkFileExists(oldPath)) {
+      try {
+        io.File(oldPath).renameSync(newPath);
+      } catch (e) {
+        debugPrint(e.toString());
+      }
     }
   }
 
@@ -131,6 +131,8 @@ class StorageUtils {
 
   /// Delete old video if user is editing daily entry
   static void deleteFile(String filePath) {
-    io.File(filePath).deleteSync(recursive: true);
+    if (checkFileExists(filePath)) {
+      io.File(filePath).deleteSync(recursive: true);
+    }
   }
 }

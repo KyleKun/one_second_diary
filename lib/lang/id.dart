@@ -114,4 +114,9 @@ const Map<String, String> id = {
       'Semua video yang terkait dengan profil ini juga akan dihapus secara permanen.Apakah kamu pasti akan melanjutkan? ',
   'profileNameCannotBeEmpty': 'Nama profil tidak bisa kosong',
   'reservedProfileName': 'Ini adalah nama profil yang dipesan',
+  'creatingMovie':
+      'Memproses ... tunggu sebentar.\nIni bisa memakan waktu beberapa menit.',
+  'doNotCloseTheApp': 'Jangan tutup aplikasi ini.',
+  'cancelMovieCreation': 'Batalkan pembuatan video',
+  'cancelMovieDesc': 'Apakah Anda yakin ingin membatalkan pembuatan video?',
 };
