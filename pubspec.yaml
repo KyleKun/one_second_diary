@@ -51,6 +51,7 @@ dependencies:
   url_launcher: ^6.1.7
   video_player: ^2.4.9
   video_thumbnail: ^0.5.3
+  wakelock: ^0.6.2
 #logger:
 dev_dependencies:
   flutter_test:

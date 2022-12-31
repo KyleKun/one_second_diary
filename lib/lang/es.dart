@@ -113,4 +113,10 @@ const Map<String, String> es = {
       'Todos los videos asociados con este perfil también se eliminarán permanentemente.¿Estás seguro de continuar?',
   'profileNameCannotBeEmpty': 'El nombre del perfil no puede estar vacío',
   'reservedProfileName': 'Este es un nombre de perfil reservado',
+  'creatingMovie':
+      'Procesando... Por favor espera.\nEsto puede tomar varios minutos.',
+  'doNotCloseTheApp': 'No cierres la aplicación.',
+  'cancelMovieCreation': 'Cancelar creación de película',
+  'cancelMovieDesc':
+      '¿Estás seguro de que quieres cancelar la creación de la película?',
 };

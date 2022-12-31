@@ -15,6 +15,7 @@ class HomePage extends GetView<BottomAppBarIndexController> {
     return Scaffold(
       appBar: CustomAppBar(),
       bottomNavigationBar: CustomBottomAppBar(),
+      resizeToAvoidBottomInset: false,
       body: SizedBox(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,

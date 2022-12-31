@@ -9,6 +9,7 @@ import 'package:video_player/video_player.dart';
 import '../../../controllers/daily_entry_controller.dart';
 import '../../../controllers/video_count_controller.dart';
 import '../../../routes/app_pages.dart';
+import '../../../utils/constants.dart';
 import '../../../utils/custom_dialog.dart';
 import '../../../utils/date_format_utils.dart';
 import '../../../utils/ffmpeg_api_wrapper.dart';
@@ -126,7 +127,8 @@ class _SaveButtonState extends State<SaveButton> {
     final String defaultOutputPath =
         '${SharedPrefsUtil.getString('appPath')}${DateFormatUtils.getToday()}.mp4';
 
-    final selectedProfileIndex = SharedPrefsUtil.getInt('selectedProfileIndex') ?? 0;
+    final selectedProfileIndex =
+        SharedPrefsUtil.getInt('selectedProfileIndex') ?? 0;
     if (selectedProfileIndex == 0) {
       // If this is true, it means we are using the default profile, so the output folder would be the default output path
       videoOutputPath = defaultOutputPath;
@@ -142,7 +144,8 @@ class _SaveButtonState extends State<SaveButton> {
     return videoOutputPath;
   }
 
-  Future<void> _editWithFFmpeg(bool isGeotaggingEnabled, BuildContext context) async {
+  Future<void> _editWithFFmpeg(
+      bool isGeotaggingEnabled, BuildContext context) async {
     // Positions to render texts for the (x, y co-ordinates)
     // According to the ffmpeg docs, the x, y positions are relative to the top-left side of the output frame.
     final String datePosY = widget.isTextDate ? 'h-th-40' : '40';
@@ -200,14 +203,17 @@ class _SaveButtonState extends State<SaveButton> {
     } else {
       subtitlesPath = await Utils.writeSrt('', 0);
     }
+
     final subtitles = '-i $subtitlesPath -c copy -c:s mov_text';
+    const metadata = '-metadata artist="${Constants.artist}"';
 
     // Caches the default font to save texts in ffmpeg.
     // The edit may fail unexpectedly in some devices if this is not done.
     await FFmpegKitConfig.setFontDirectory(fontPath);
 
+    // Edit and save video
     await executeFFmpeg(
-      '-i $videoPath $subtitles -vf [in]drawtext="$fontPath:text=\'${widget.dateFormat}\':fontsize=$dateTextSize:fontcolor=\'$parsedDateColor\':borderw=${widget.textOutlineWidth}:bordercolor=$parsedTextOutlineColor:x=$datePosX:y=$datePosY$locOutput[out]" -codec:v libx264 -pix_fmt yuv420p $finalPath -y',
+      '-i $videoPath $subtitles $metadata -vf [in]drawtext="$fontPath:text=\'${widget.dateFormat}\':fontsize=$dateTextSize:fontcolor=\'$parsedDateColor\':borderw=${widget.textOutlineWidth}:bordercolor=$parsedTextOutlineColor:x=$datePosX:y=$datePosY$locOutput[out]" -c:a aac -b:a 256k -codec:v libx264 -pix_fmt yuv420p $finalPath -y',
     ).then((session) async {
       debugPrint(session.getCommand().toString());
       final returnCode = await session.getReturnCode();
