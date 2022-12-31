@@ -150,8 +150,9 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
           // Make sure all selected videos have a subtitles and audio stream before creating movie, and finally check their resolution, resizes if necessary.
           if (!isV1point5) {
             // Make sure it is 1080p, h264
+            // Also set the framerate to 30 and copy all the streams
             await executeFFmpeg(
-                    '-i $currentVideo -vf "scale=1920:1080" -r 30  -map 0 -c copy -c:v libx264 -crf 18 $tempVideo -y')
+                    '-i $currentVideo -vf "scale=1920:1080" -r 30 -map 0 -c copy -c:v libx264 -crf 18 $tempVideo -y')
                 .then((session) async {
               final returnCode = await session.getReturnCode();
               if (ReturnCode.isSuccess(returnCode)) {
@@ -199,6 +200,9 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
               //     '-i $currentVideo -i $dummyM4a -c copy -c:s copy -map 0:v -map 1:a -shortest $tempVideo -y';
               // final command =
               //     '-i $currentVideo -i $dummyM4a -af apad -shortest -c:s copy $tempVideo -y';
+
+              // Creates an empty audio stream that matches video duration
+              // Set the audio bitrate to 256k and sample rate to 48k (aac codec)
               final command =
                   '-i $currentVideo -f lavfi -i anullsrc=channel_layout=mono:sample_rate=48000 -shortest -b:a 256k -c:v copy -c:a aac $tempVideo -y';
               await executeFFmpeg(command).then((session) async {
@@ -276,6 +280,7 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
           });
 
           // Create movie by concatenating all videos
+          // -vsync vfr -async 1 are used to avoid video and audio desync, audio is delayed in longer videos if this option is not used
           await executeFFmpeg(
                   '-f concat -safe 0 -i $txtPath -vsync vfr -async 1 -map 0 -c copy $outputPath -y')
               .then(
