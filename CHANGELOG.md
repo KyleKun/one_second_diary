@@ -1,10 +1,12 @@
 ## v1.5 - 01/2023
-- Added subtitles feature
+- Added Profiles feature
+- Added Subtitles feature
 - Added Calendar page
 - Added Edit Subtitles and Add Video options in Calendar page
 - Added automatic and manual geotagging in recording
 - Added options to create a movie by period or only with selected videos
 - Added option to schedule notifications time
+- Added routine to save logs to txt files
 - Added Chinese, Deutsch, Indonesian, and French localization
 - Fixed issues where video recording could not be saved
 

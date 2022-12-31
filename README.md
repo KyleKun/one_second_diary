@@ -18,40 +18,37 @@ Record one second of your day, everyday. [WATCH DEMO](https://youtu.be/aufjN9URL
 
 This app was inspired by this [TED Talk](https://www.ted.com/talks/cesar_kuriyama_one_second_every_day).
 
-After installing many apps and not being satisfied with any of them, I decided to create my own, featuring the two aspects that I wanted the most: Minimalist and 100% Private. 
+After installing some related apps and not being fully satisfied with any of them, I decided to create my own, featuring the two aspects that I wanted the most: Minimalist and 100% Private. 
 
-Therefore, this app that will never collect any kind of data and is completely free to use and without ads. 
+Therefore, this app that will never collect any kind of data, display annoying ads or ask you to pay for anything. It's just a simple app that will help you to remember your life.
 
 The idea itself is pretty simple:
- - Open the app at the moment of your day that you would like to remember in the future
+ - Open the app in the moment of your day that you would like to remember in the future
  - Tap the Record button and save the video
  - That's it, open the app the next day and repeat the process
 
 Then, after a couple months or even years:
- - Tap the button to generate a compilation of all those videos, creating the movie of your life
+ - Generate a compilation of all those videos, creating the movie of your life
 
 
-Last but not least:
-  ```
-   It comes with Dark Mode set as default 😉
-  ```
+## Features
 
-
-## Next Steps
+- [X] Record up to 10 seconds of video (1080p resolution)
+- [X] Add or edit subtitles in the videos
+- [X] Add automatic or manual geotagging in the videos
+- [X] Choose the date format and color to show in video
+- [X] Create profiles to save videos separately
+- [X] View all recorded days in a calendar
+- [X] Generate custom movies with all videos or selected videos only
+- [X] Receive scheduled daily notifications
+- [X] Dark Mode
+- [X] Available in 7 languages
+- [X] No ads ;)
+- [X] No data collection ;)
+- [X] No in-app purchases ;)
+- [X] Open source ;)
 
 If you have any suggestions or want to contribute, feel free to open a PR or contact me!
-
-The future plans include:
-
-- [ ] Login with Google account
-- [ ] Integration with Google Drive for videos backup
-- [ ] Select videos from gallery
-- [ ] Edit any day by selecting it from calendar
-- [X] Record special days with up to 10 seconds duration
-- [X] Change date color and format in the videos
-- [ ] Add a title to the video 
-- [ ] Add a short description to the video as subtitles
-- [ ] Generate custom movies with selected videos only
 
 ## Support my work
 
