@@ -124,7 +124,7 @@ class _SaveButtonState extends State<SaveButton> {
   String getVideoOutputPath() {
     String videoOutputPath = '';
     final String defaultOutputPath =
-        '${SharedPrefsUtil.getString('appPath')}${DateFormatUtils.getToday()}.mp4';
+        '${SharedPrefsUtil.getString('appPath')}${widget.dateFormat}.mp4';
 
     final selectedProfileIndex =
         SharedPrefsUtil.getInt('selectedProfileIndex') ?? 0;

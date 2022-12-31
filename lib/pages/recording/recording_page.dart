@@ -318,7 +318,10 @@ class _RecordingPageState extends State<RecordingPage>
 
           Get.offNamed(
             Routes.SAVE_VIDEO,
-            arguments: event.file.path,
+            arguments: {
+              'videoPath': event.file.path,
+              'isFromRecordingPage': true,
+            },
           );
         } catch (e) {
           showDialog(

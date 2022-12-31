@@ -29,8 +29,13 @@ class DateFormatUtils {
   }
 
   /// Get current date for editting video with date in text format
-  static String getWrittenToday({String lang = ''}) {
-    final date = getToday().split('-');
+  static String getWrittenToday({DateTime? customDate, String lang = ''}) {
+    List<String> date = [];
+    if (customDate == null) {
+      date = getToday().split('-');
+    } else {
+      date = getDate(customDate).split('-');
+    }
 
     final String year = date.first;
     // Used to get month index in list
@@ -122,11 +127,9 @@ class DateFormatUtils {
   static DateTime parseToDateTime(String date, {bool? isDayFirst}) {
     isDayFirst ??= isDayFirstPattern();
 
-    final String day =
-        isDayFirst ? date.split('-').first : date.split('-').last;
+    final String day = isDayFirst ? date.split('-').first : date.split('-').last;
     final String month = date.split('-')[1];
-    final String year =
-        isDayFirst ? date.split('-').last : date.split('-').first;
+    final String year = isDayFirst ? date.split('-').last : date.split('-').first;
 
     return DateTime(year.toInt(), month.toInt(), day.toInt());
   }
