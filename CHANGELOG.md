@@ -1,8 +1,8 @@
 ## v1.5 - 01/2023
+- Audio is now also recorded
 - Added Profiles feature
 - Added Subtitles feature
 - Added Calendar page
-- Added Edit Subtitles and Add Video options in Calendar page
 - Added automatic and manual geotagging in recording
 - Added options to create a movie by period or only with selected videos
 - Added option to schedule notifications time
