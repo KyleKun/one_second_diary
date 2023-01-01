@@ -7,7 +7,7 @@
 
 Record one second of your day, everyday. [WATCH DEMO](https://youtu.be/aufjN9URLFI)
 
-<img src="/screenshots/Screenshot_1.png" width="250" height="500"> <img src="/screenshots/Screenshot_2.png" width="250" height="500"> <img src="/screenshots/Screenshot_3.png" width="250" height="500">
+<img src="/fastlane/metadata/android/en-US/images/phoneScreenshots/1.png" width="250" height="500"> <img src="/fastlane/metadata/android/en-US/images/phoneScreenshots/2.png" width="250" height="500"> <img src="/fastlane/metadata/android/en-US/images/phoneScreenshots/3.png" width="250" height="500">
 
 ## Download Now
 
