@@ -12,6 +12,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 
 import '../../../controllers/lang_controller.dart';
+import '../../../controllers/video_count_controller.dart';
 import '../../../routes/app_pages.dart';
 import '../../../utils/constants.dart';
 import '../../../utils/date_format_utils.dart';
@@ -149,6 +150,9 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
             onPressed: () async {
               // Delete current video from storage
               await File(currentVideo).delete();
+
+              // Reduce the video count recorded by the app
+              VideoCountController().reduceVideoCount();
 
               // Refresh the UI
               setState(() {
