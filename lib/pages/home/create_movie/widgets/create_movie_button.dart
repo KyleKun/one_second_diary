@@ -137,7 +137,7 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
 
           // ffmpeg command to get title tag from video metadata
 
-          // TODO: this (in special) will need a good refactor for next version
+          // TODO(KyleKun): this (in special) will need a good refactor for next version
           // Check if video was recorded before v1.5 so we can process what is needed
           await executeFFprobe(
                   '-v quiet -show_entries format_tags=artist -of default=nw=1:nk=1 $currentVideo')

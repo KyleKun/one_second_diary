@@ -11,7 +11,8 @@ class ProfilesButton extends StatelessWidget {
         InkWell(
           onTap: () => Get.toNamed(Routes.PROFILES),
           child: Ink(
-            padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
+            padding:
+                const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -23,9 +24,7 @@ class ProfilesButton extends StatelessWidget {
                 ),
                 const Padding(
                   padding: EdgeInsets.only(right: 12.0),
-                  child: Icon(
-                    Icons.person
-                  ),
+                  child: Icon(Icons.person),
                 ),
               ],
             ),

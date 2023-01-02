@@ -136,7 +136,7 @@ class Utils {
   static Future<String> writeTxt(List<String> files) async {
     final io.Directory directory = await getApplicationDocumentsDirectory();
     final String txtPath = '${directory.path}/videos.txt';
-    
+
     logInfo('[Utils.writeTxt()] - Writing txt file to $txtPath');
 
     // Get current profile
