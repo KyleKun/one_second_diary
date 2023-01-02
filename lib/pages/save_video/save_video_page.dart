@@ -27,7 +27,6 @@ class SaveVideoPage extends StatefulWidget {
 class _SaveVideoPageState extends State<SaveVideoPage> {
   final Map<String, dynamic> routeArguments = Get.arguments;
 
-  double _opacity = 1.0;
   late String _tempVideoPath;
   final Trimmer _trimmer = Trimmer();
 
@@ -215,17 +214,13 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
   }
 
   void videoPlay() async {
-    if (!(_trimmer.videoPlayerController?.value.isPlaying ?? false)) {
-      await _trimmer.videoPlayerController?.play();
-      setState(() {
-        _opacity = 0.0;
-      });
-    } else {
-      await _trimmer.videoPlayerController?.pause();
-      setState(() {
-        _opacity = 1.0;
-      });
-    }
+    final bool playbackState = await _trimmer.videoPlaybackControl(
+      startValue: _videoStartValue,
+      endValue: _videoEndValue,
+    );
+    setState(() {
+      _isVideoPlaying = playbackState;
+    });
   }
 
   void closePopupAndPushToRecording(String cacheVideoPath) {
@@ -255,7 +250,7 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
             ),
             Center(
               child: Opacity(
-                opacity: _opacity,
+                opacity: _isVideoPlaying ? 0.0 : 1.0,
                 child: Container(
                   width: MediaQuery.of(context).size.width * 0.25,
                   height: MediaQuery.of(context).size.width * 0.25,
