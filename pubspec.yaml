@@ -47,7 +47,10 @@ dependencies:
   url_launcher: ^6.1.7
   video_player: ^2.4.9
   video_thumbnail: ^0.5.3
-  video_trimmer: ^2.0.1
+  video_trimmer:
+    git:
+      url: https://github.com/daoxve/video_trimmer.git
+      ref: main
   wakelock: ^0.6.2
   logger: ^1.1.0
   stack_trace: ^1.10.0

@@ -143,13 +143,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.1"
-  ffmpeg_kit_flutter:
-    dependency: transitive
-    description:
-      name: ffmpeg_kit_flutter
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "5.1.0"
   ffmpeg_kit_flutter_full_gpl:
     dependency: "direct main"
     description:
@@ -409,7 +402,7 @@ packages:
       name: introduction_screen
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.1.1"
+    version: "3.1.2"
   js:
     dependency: transitive
     description:
@@ -614,7 +607,7 @@ packages:
       name: quiver
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.1.0"
+    version: "3.2.1"
   rive:
     dependency: "direct main"
     description:
@@ -677,7 +670,7 @@ packages:
       name: shared_preferences_linux
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.1.1"
+    version: "2.1.2"
   shared_preferences_macos:
     dependency: transitive
     description:
@@ -705,7 +698,7 @@ packages:
       name: shared_preferences_windows
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.1.1"
+    version: "2.1.2"
   simple_mustache:
     dependency: transitive
     description:
@@ -780,7 +773,7 @@ packages:
       name: timezone
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.9.0"
+    version: "0.9.1"
   transparent_image:
     dependency: transitive
     description:
@@ -871,35 +864,35 @@ packages:
       name: video_player
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.4.9"
+    version: "2.4.10"
   video_player_android:
     dependency: transitive
     description:
       name: video_player_android
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.3.9"
+    version: "2.3.10"
   video_player_avfoundation:
     dependency: transitive
     description:
       name: video_player_avfoundation
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.3.7"
+    version: "2.3.8"
   video_player_platform_interface:
     dependency: transitive
     description:
       name: video_player_platform_interface
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "5.1.4"
+    version: "6.0.1"
   video_player_web:
     dependency: transitive
     description:
       name: video_player_web
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.12"
+    version: "2.0.13"
   video_thumbnail:
     dependency: "direct main"
     description:
@@ -910,9 +903,11 @@ packages:
   video_trimmer:
     dependency: "direct main"
     description:
-      name: video_trimmer
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: "."
+      ref: main
+      resolved-ref: dd6288220c266737fe7b63082343b7fb40cd0c50
+      url: "https://github.com/daoxve/video_trimmer.git"
+    source: git
     version: "2.0.1"
   wakelock:
     dependency: "direct main"
@@ -955,7 +950,7 @@ packages:
       name: win32
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.1.2"
+    version: "3.1.3"
   xdg_directories:
     dependency: transitive
     description:

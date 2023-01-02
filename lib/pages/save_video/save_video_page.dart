@@ -6,7 +6,8 @@ import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:group_radio_button/group_radio_button.dart';
-import 'package:video_player/video_player.dart';
+// import 'package:video_player/video_player.dart';
+import 'package:video_trimmer/video_trimmer.dart';
 
 import '../../routes/app_pages.dart';
 import '../../utils/constants.dart';
@@ -28,7 +29,7 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
 
   double _opacity = 1.0;
   late String _tempVideoPath;
-  late VideoPlayerController _videoController;
+  final Trimmer _trimmer = Trimmer();
 
   final TextEditingController customLocationTextController = TextEditingController();
 
@@ -54,6 +55,9 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
   Position? _currentPosition;
   bool isGeotaggingEnabled = SharedPrefsUtil.getBool('isGeotaggingEnabled') ?? false;
   String? _subtitles;
+  double _videoStartValue = 0.0;
+  double _videoEndValue = 0.0;
+  bool _isVideoPlaying = false;
 
   void _initCorrectDates() {
     final DateTime? _determinedDate = routeArguments['currentDate'];
@@ -194,27 +198,30 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
 
   @override
   void dispose() {
-    _videoController.dispose();
+    _trimmer.videoPlayerController?.dispose();
     super.dispose();
   }
 
   void _initVideoPlayerController() {
-    _videoController = VideoPlayerController.file(File(_tempVideoPath))
-      ..initialize().then((_) {
-        _videoController.setLooping(true);
-        // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
-        setState(() {});
-      });
+    _trimmer
+        .loadVideo(
+      videoFile: File(routeArguments['videoPath']),
+    )
+        .then((_) {
+      _trimmer.videoPlayerController?.setLooping(true);
+      // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
+      setState(() {});
+    });
   }
 
   void videoPlay() async {
-    if (!_videoController.value.isPlaying) {
-      await _videoController.play();
+    if (!(_trimmer.videoPlayerController?.value.isPlaying ?? false)) {
+      await _trimmer.videoPlayerController?.play();
       setState(() {
         _opacity = 0.0;
       });
     } else {
-      await _videoController.pause();
+      await _trimmer.videoPlayerController?.pause();
       setState(() {
         _opacity = 1.0;
       });
@@ -243,7 +250,9 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
         aspectRatio: 16 / 9,
         child: Stack(
           children: [
-            VideoPlayer(_videoController),
+            VideoViewer(
+              trimmer: _trimmer,
+            ),
             Center(
               child: Opacity(
                 opacity: _opacity,
@@ -364,7 +373,7 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
         ),
         floatingActionButton: SaveButton(
           videoPath: _tempVideoPath,
-          videoController: _videoController,
+          videoController: _trimmer.videoPlayerController!,
           dateColor: currentColor,
           dateFormat: _dateFormatValue,
           isTextDate: isTextDate,
@@ -372,7 +381,7 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
               ? _currentAddress ?? ''
               : customLocationTextController.text,
           subtitles: _subtitles,
-          videoDuration: _videoController.value.duration.inSeconds,
+          videoDuration: _trimmer.videoPlayerController!.value.duration.inSeconds,
           isGeotaggingEnabled: isGeotaggingEnabled,
           textOutlineColor: invert(currentColor),
           textOutlineWidth: textOutlineStrokeWidth,
@@ -383,6 +392,16 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
             child: Column(
               children: [
                 _dailyVideoPlayer(),
+                Center(
+                  child: TrimViewer(
+                    trimmer: _trimmer,
+                    viewerHeight: 50.0,
+                    viewerWidth: MediaQuery.of(context).size.width,
+                    onChangeStart: (value) => _videoStartValue = value,
+                    onChangeEnd: (value) => _videoEndValue = value,
+                    onChangePlaybackState: (value) => setState(() => _isVideoPlaying = value),
+                  ),
+                ),
                 Expanded(child: videoProperties()),
               ],
             ),
