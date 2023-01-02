@@ -70,59 +70,28 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          Container(
-            margin: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: CalendarCarousel<Event>(
-              childAspectRatio: 1.2,
-              onDayPressed: (DateTime date, List<Event> events) {
-                setState(
-                  () => _currentDate = date,
-                );
-                final currentVideoExists = allVideos.any(
-                  (a) => a.contains(
-                    DateFormatUtils.getDate(
-                      date,
-                      isDayFirst: false,
-                    ),
+    return Column(
+      children: [
+        Container(
+          margin: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: CalendarCarousel<Event>(
+            childAspectRatio: 1.2,
+            onDayPressed: (DateTime date, List<Event> events) {
+              setState(
+                () => _currentDate = date,
+              );
+              final currentVideoExists = allVideos.any(
+                (a) => a.contains(
+                  DateFormatUtils.getDate(
+                    date,
+                    isDayFirst: false,
                   ),
-                );
-                if (currentVideoExists) {
-                  setState(() {
-                    wasDateRecorded = true;
-                    currentVideo = allVideos.firstWhere(
-                      (a) => a.contains(
-                        DateFormatUtils.getDate(
-                          date,
-                          isDayFirst: false,
-                        ),
-                      ),
-                    );
-                  });
-                } else {
-                  setState(() {
-                    wasDateRecorded = false;
-                  });
-                }
-              },
-              customDayBuilder: (
-                bool isSelectable,
-                int index,
-                bool isSelectedDay,
-                bool isToday,
-                bool isPrevMonthDay,
-                TextStyle textStyle,
-                bool isNextMonthDay,
-                bool isThisMonthDay,
-                DateTime date,
-              ) {
-                if (allVideos.isNotEmpty) {
-                  final firstRecVideoDate = DateTime.parse(
-                    allVideos.first.split('/').last.split('.').first,
-                  );
-                  final hasVideo = allVideos.any(
+                ),
+              );
+              if (currentVideoExists) {
+                setState(() {
+                  wasDateRecorded = true;
+                  currentVideo = allVideos.firstWhere(
                     (a) => a.contains(
                       DateFormatUtils.getDate(
                         date,
@@ -130,182 +99,207 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
                       ),
                     ),
                   );
-                  if (DateTime.now().compareTo(date) != -1 &&
-                      firstRecVideoDate.compareTo(date) != 1) {
-                    return Center(
-                      child: Text(
-                        date.day.toString(),
-                        style: TextStyle(
-                          color:
-                              hasVideo ? AppColors.green : AppColors.mainColor,
-                          fontFamily: 'Magic',
-                        ),
+                });
+              } else {
+                setState(() {
+                  wasDateRecorded = false;
+                });
+              }
+            },
+            customDayBuilder: (
+              bool isSelectable,
+              int index,
+              bool isSelectedDay,
+              bool isToday,
+              bool isPrevMonthDay,
+              TextStyle textStyle,
+              bool isNextMonthDay,
+              bool isThisMonthDay,
+              DateTime date,
+            ) {
+              if (allVideos.isNotEmpty) {
+                final firstRecVideoDate = DateTime.parse(
+                  allVideos.first.split('/').last.split('.').first,
+                );
+                final hasVideo = allVideos.any(
+                  (a) => a.contains(
+                    DateFormatUtils.getDate(
+                      date,
+                      isDayFirst: false,
+                    ),
+                  ),
+                );
+                if (DateTime.now().compareTo(date) != -1 &&
+                    firstRecVideoDate.compareTo(date) != 1) {
+                  return Center(
+                    child: Text(
+                      date.day.toString(),
+                      style: TextStyle(
+                        color: hasVideo ? AppColors.green : AppColors.mainColor,
+                        fontFamily: 'Magic',
                       ),
-                    );
-                  } else {
-                    return null;
-                  }
+                    ),
+                  );
+                } else {
+                  return null;
                 }
-                return null;
-              },
-              selectedDayBorderColor: mainColor,
-              selectedDayButtonColor: Colors.transparent,
-              weekendTextStyle: TextStyle(
-                color: mainColor,
-                fontFamily: 'Magic',
-              ),
-              thisMonthDayBorderColor: Colors.transparent,
-              todayButtonColor: Colors.transparent,
-              todayBorderColor: Colors.grey,
-              todayTextStyle: TextStyle(
-                fontFamily: 'Magic',
-                color: mainColor,
-              ),
-              inactiveDaysTextStyle: const TextStyle(
-                fontFamily: 'Magic',
-              ),
-              weekdayTextStyle: TextStyle(
-                fontFamily: 'Magic',
-                color: mainColor,
-                fontWeight: FontWeight.w900,
-              ),
-              weekFormat: false,
-              iconColor:
-                  ThemeService().isDarkTheme() ? Colors.white : Colors.black,
-              headerTextStyle: TextStyle(
-                fontFamily: 'Magic',
-                fontSize: 20.0,
-                color: mainColor,
-              ),
-              locale: _languageController.selectedLanguage.value,
-              shouldShowTransform: false,
-              showOnlyCurrentMonthDate: true,
-              height: 350.0,
-              selectedDateTime: _currentDate,
-              daysHaveCircularBorder: true,
-              daysTextStyle: TextStyle(
-                fontFamily: 'Magic',
-                color: mainColor,
-              ),
+              }
+              return null;
+            },
+            selectedDayBorderColor: mainColor,
+            selectedDayButtonColor: Colors.transparent,
+            weekendTextStyle: TextStyle(
+              color: mainColor,
+              fontFamily: 'Magic',
+            ),
+            thisMonthDayBorderColor: Colors.transparent,
+            todayButtonColor: Colors.transparent,
+            todayBorderColor: Colors.grey,
+            todayTextStyle: TextStyle(
+              fontFamily: 'Magic',
+              color: mainColor,
+            ),
+            inactiveDaysTextStyle: const TextStyle(
+              fontFamily: 'Magic',
+            ),
+            weekdayTextStyle: TextStyle(
+              fontFamily: 'Magic',
+              color: mainColor,
+              fontWeight: FontWeight.w900,
+            ),
+            weekFormat: false,
+            iconColor:
+                ThemeService().isDarkTheme() ? Colors.white : Colors.black,
+            headerTextStyle: TextStyle(
+              fontFamily: 'Magic',
+              fontSize: 20.0,
+              color: mainColor,
+            ),
+            locale: _languageController.selectedLanguage.value,
+            shouldShowTransform: false,
+            height: MediaQuery.of(context).size.height * 0.42,
+            showOnlyCurrentMonthDate: true,
+            selectedDateTime: _currentDate,
+            daysHaveCircularBorder: true,
+            daysTextStyle: TextStyle(
+              fontFamily: 'Magic',
+              color: mainColor,
             ),
           ),
-          const SizedBox(
-            height: 20.0,
-          ),
-          if (wasDateRecorded) ...{
-            Row(
-              children: [
-                Expanded(
-                  flex: 2,
-                  child: AspectRatio(
-                    aspectRatio: 16 / 8,
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 20.0),
-                      child: FutureBuilder(
-                        future: getThumbnail(currentVideo),
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return Center(
-                              child: SizedBox(
-                                height: 30,
-                                width: 30,
-                                child: CircularProgressIndicator(
-                                  color: mainColor,
-                                ),
-                              ),
-                            );
-                          }
-
-                          if (snapshot.hasError) {
-                            return Text(
-                              '${snapshot.error}',
-                            );
-                          }
-                          return Image.memory(snapshot.data as Uint8List);
-                        },
-                      ),
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.purple,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30.0),
-                        ),
-                      ),
-                      onPressed: () async {
-                        final Directory directory =
-                            await getApplicationDocumentsDirectory();
-                        final String srtPath = '${directory.path}/temp.srt';
-                        final getSubsFile =
-                            await executeFFmpeg('-i $currentVideo $srtPath -y');
-                        final resultCode = await getSubsFile.getReturnCode();
-                        if (ReturnCode.isSuccess(resultCode)) {
-                          final srtFile = await File(srtPath).readAsString();
-                          setState(() {
-                            subtitles = srtFile.trim().split(',000').last;
-                          });
-                        } else {
-                          setState(() {
-                            subtitles = null;
-                          });
-                        }
-                        Get.to(
-                          VideoSubtitlesEditorPage(
-                            videoPath: currentVideo,
-                            subtitles: subtitles,
-                          ),
-                        );
-                      },
+        ),
+        const SizedBox(
+          height: 20.0,
+        ),
+        Expanded(
+          child: wasDateRecorded
+              ? Column(
+                  children: [
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.25,
                       child: Padding(
-                        padding: const EdgeInsets.all(4.0),
-                        child: Text(
-                          'editSubtitles'.tr,
-                          textAlign: TextAlign.center,
+                        padding: const EdgeInsets.all(5.0),
+                        child: FutureBuilder(
+                          future: getThumbnail(currentVideo),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return Center(
+                                child: SizedBox(
+                                  height: 30,
+                                  width: 30,
+                                  child: CircularProgressIndicator(
+                                    color: mainColor,
+                                  ),
+                                ),
+                              );
+                            }
+
+                            if (snapshot.hasError) {
+                              return Text(
+                                '${snapshot.error}',
+                              );
+                            }
+                            return Image.memory(snapshot.data as Uint8List);
+                          },
                         ),
                       ),
                     ),
-                  ),
-                ),
-              ],
-            )
-          } else ...{
-            Column(
-              children: [
-                Text('noVideoRecorded'.tr),
-                const SizedBox(
-                  height: 10.0,
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.mainColor,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30.0),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 20.0),
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.purple,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30.0),
+                          ),
+                        ),
+                        onPressed: () async {
+                          final Directory directory =
+                              await getApplicationDocumentsDirectory();
+                          final String srtPath = '${directory.path}/temp.srt';
+                          final getSubsFile = await executeFFmpeg(
+                              '-i $currentVideo $srtPath -y');
+                          final resultCode = await getSubsFile.getReturnCode();
+                          if (ReturnCode.isSuccess(resultCode)) {
+                            final srtFile = await File(srtPath).readAsString();
+                            setState(() {
+                              subtitles = srtFile.trim().split(',000').last;
+                            });
+                          } else {
+                            setState(() {
+                              subtitles = null;
+                            });
+                          }
+                          Get.to(
+                            VideoSubtitlesEditorPage(
+                              videoPath: currentVideo,
+                              subtitles: subtitles,
+                            ),
+                          );
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(4.0),
+                          child: Text(
+                            'editSubtitles'.tr,
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
                       ),
                     ),
-                    // TODO(daoxve): implement
-                    onPressed: () {},
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        'addVideo'.tr,
-                        textAlign: TextAlign.center,
-                      ),
+                  ],
+                )
+              : Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text('noVideoRecorded'.tr),
+                    const SizedBox(
+                      height: 10.0,
                     ),
-                  ),
+                    if (!_currentDate.isAfter(DateTime.now()))
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.mainColor,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30.0),
+                            ),
+                          ),
+                          // TODO(daoxve): implement
+                          onPressed: () {},
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              'addVideo'.tr,
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ),
+                      ),
+                  ],
                 ),
-              ],
-            ),
-          }
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

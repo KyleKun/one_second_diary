@@ -94,7 +94,7 @@ const Map<String, String> id = {
   'enterSubtitles': 'Masukkan subjudul',
   'totalSelected': 'Total dipilih: ',
   'selectVideos': 'Pilih video',
-  'editSubtitles': 'Ubah\nsubjudul',
+  'editSubtitles': 'Ubah subjudul',
   'noVideoRecorded': 'Tidak ada video yang direkam',
   'subtitles': 'Subjudul',
   'addVideo': 'Tambah video',

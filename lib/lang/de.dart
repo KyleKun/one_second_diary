@@ -93,7 +93,7 @@ const Map<String, String> de = {
   'enterSubtitles': 'Untertitel eingeben',
   'totalSelected': 'Gesamt ausgewählt: ',
   'selectVideos': 'Videos auswählen',
-  'editSubtitles': 'Untertitel\nbearbeiten',
+  'editSubtitles': 'Untertitel bearbeiten',
   'noVideoRecorded': 'Kein Video aufgenommen',
   'subtitles': 'Untertitel',
   'addVideo': 'Video hinzufügen',

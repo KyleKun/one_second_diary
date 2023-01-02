@@ -38,8 +38,8 @@ class _CreateMovieOptionsButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: MediaQuery.of(context).size.width * 0.45,
-      height: MediaQuery.of(context).size.height * 0.08,
+      width: MediaQuery.of(context).size.width * 0.40,
+      height: MediaQuery.of(context).size.height * 0.07,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
           backgroundColor: AppColors.mainColor,
@@ -54,7 +54,7 @@ class _CreateMovieOptionsButton extends StatelessWidget {
           textAlign: TextAlign.center,
           style: TextStyle(
             color: Colors.white,
-            fontSize: MediaQuery.of(context).size.width * 0.055,
+            fontSize: MediaQuery.of(context).size.width * 0.050,
           ),
         ),
       ),
