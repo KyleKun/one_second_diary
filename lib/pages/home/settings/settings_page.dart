@@ -13,19 +13,21 @@ class SettingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: MediaQuery.of(context).size.width * 0.8,
-      height: MediaQuery.of(context).size.height * 0.7,
-      child: Column(
-        children: [
-          SwitchThemeComponent(),
-          NotificationsButton(),
-          ProfilesButton(),
-          LanguageChooser(),
-          BackupTutorial(),
-          GithubButton(),
-          ContactButton(),
-          AboutButton(),
-        ],
+      width: MediaQuery.of(context).size.width * 0.85,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 40.0),
+        child: Column(
+          children: [
+            SwitchThemeComponent(),
+            NotificationsButton(),
+            ProfilesButton(),
+            LanguageChooser(),
+            BackupTutorial(),
+            GithubButton(),
+            ContactButton(),
+            AboutButton(),
+          ],
+        ),
       ),
     );
   }

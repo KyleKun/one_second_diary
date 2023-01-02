@@ -22,10 +22,7 @@ class ProfilesButton extends StatelessWidget {
                     fontSize: MediaQuery.of(context).size.width * 0.045,
                   ),
                 ),
-                const Padding(
-                  padding: EdgeInsets.only(right: 12.0),
-                  child: Icon(Icons.person),
-                ),
+                const Icon(Icons.person),
               ],
             ),
           ),

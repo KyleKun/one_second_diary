@@ -22,10 +22,7 @@ class NotificationsButton extends StatelessWidget {
                     fontSize: MediaQuery.of(context).size.width * 0.045,
                   ),
                 ),
-                const Padding(
-                  padding: EdgeInsets.only(right: 12.0),
-                  child: Icon(Icons.notifications),
-                ),
+                const Icon(Icons.notifications),
               ],
             ),
           ),

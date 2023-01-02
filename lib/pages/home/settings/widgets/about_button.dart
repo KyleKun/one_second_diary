@@ -42,31 +42,26 @@ class AboutButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        InkWell(
-          onTap: () => showAbout(context),
-          child: Ink(
-            child: Container(
-              height: MediaQuery.of(context).size.height * 0.065,
-              padding: const EdgeInsets.symmetric(horizontal: 15.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'about'.tr,
-                    style: TextStyle(
-                      fontSize: MediaQuery.of(context).size.width * 0.045,
-                    ),
-                  ),
-                  const Icon(Icons.info),
-                ],
+    return InkWell(
+      onTap: () => showAbout(context),
+      child: Ink(
+        child: Container(
+          height: MediaQuery.of(context).size.height * 0.065,
+          padding: const EdgeInsets.symmetric(horizontal: 15.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'about'.tr,
+                style: TextStyle(
+                  fontSize: MediaQuery.of(context).size.width * 0.045,
+                ),
               ),
-            ),
+              const Icon(Icons.info),
+            ],
           ),
         ),
-        const Divider(),
-      ],
+      ),
     );
   }
 }
