@@ -29,6 +29,8 @@ class SaveButton extends StatefulWidget {
     required this.isGeotaggingEnabled,
     required this.textOutlineColor,
     required this.textOutlineWidth,
+    required this.videoStartInMilliseconds,
+    required this.videoEndInMilliseconds,
   });
 
   // Finding controllers
@@ -43,6 +45,8 @@ class SaveButton extends StatefulWidget {
   final bool isGeotaggingEnabled;
   final Color textOutlineColor;
   final double textOutlineWidth;
+  final double videoStartInMilliseconds;
+  final double videoEndInMilliseconds;
 
   @override
   _SaveButtonState createState() => _SaveButtonState();
@@ -126,8 +130,7 @@ class _SaveButtonState extends State<SaveButton> {
     final String defaultOutputPath =
         '${SharedPrefsUtil.getString('appPath')}${widget.dateFormat}.mp4';
 
-    final selectedProfileIndex =
-        SharedPrefsUtil.getInt('selectedProfileIndex') ?? 0;
+    final selectedProfileIndex = SharedPrefsUtil.getInt('selectedProfileIndex') ?? 0;
     if (selectedProfileIndex == 0) {
       // If this is true, it means we are using the default profile, so the output folder would be the default output path
       videoOutputPath = defaultOutputPath;
@@ -146,8 +149,7 @@ class _SaveButtonState extends State<SaveButton> {
     return videoOutputPath;
   }
 
-  Future<void> _editWithFFmpeg(
-      bool isGeotaggingEnabled, BuildContext context) async {
+  Future<void> _editWithFFmpeg(bool isGeotaggingEnabled, BuildContext context) async {
     // Positions to render texts for the (x, y co-ordinates)
     // According to the ffmpeg docs, the x, y positions are relative to the top-left side of the output frame.
     final String datePosY = widget.isTextDate ? 'h-th-40' : '40';
@@ -179,15 +181,13 @@ class _SaveButtonState extends State<SaveButton> {
 
     // Check if video already exists and delete it if so (Edit daily feature)
     if (StorageUtils.checkFileExists(finalPath)) {
-      Utils.logInfo(
-          '${logTag}Video already exists, deleting it to perform edit.');
+      Utils.logInfo('${logTag}Video already exists, deleting it to perform edit.');
       isEdit = true;
       StorageUtils.deleteFile(finalPath);
     }
 
     // Checks to ensure special read/write permissions with storage access framework
-    final hasSafDirPerms =
-        await Saf.isPersistedPermissionDirectoryFor(finalPath) ?? false;
+    final hasSafDirPerms = await Saf.isPersistedPermissionDirectoryFor(finalPath) ?? false;
     if (hasSafDirPerms) {
       await Saf(finalPath).getDirectoryPermission(isDynamic: true);
     }
@@ -206,8 +206,7 @@ class _SaveButtonState extends State<SaveButton> {
         widget.videoDuration,
       );
     } else {
-      Utils.logInfo(
-          '${logTag}Subtitles TextField was left empty. Adding empty subtitles...');
+      Utils.logInfo('${logTag}Subtitles TextField was left empty. Adding empty subtitles...');
       subtitlesPath = await Utils.writeSrt('', 0);
     }
     Utils.logInfo('${logTag}Subtitles file path: $subtitlesPath');
@@ -215,6 +214,7 @@ class _SaveButtonState extends State<SaveButton> {
     final subtitles = '-i $subtitlesPath -c copy -c:s mov_text';
     final metadata =
         '-metadata artist="${Constants.artist}" -metadata album="$currentProfileName"';
+    final trimCommand = '-ss ${widget.videoStartInMilliseconds}ms -to ${widget.videoEndInMilliseconds}ms';
 
     // Caches the default font to save texts in ffmpeg.
     // The edit may fail unexpectedly in some devices if this is not done.
@@ -222,7 +222,7 @@ class _SaveButtonState extends State<SaveButton> {
 
     // Edit and save video
     final command =
-        '-i $videoPath $subtitles $metadata -vf [in]drawtext="$fontPath:text=\'${widget.dateFormat}\':fontsize=$dateTextSize:fontcolor=\'$parsedDateColor\':borderw=${widget.textOutlineWidth}:bordercolor=$parsedTextOutlineColor:x=$datePosX:y=$datePosY$locOutput[out]" -c:a aac -b:a 256k -codec:v libx264 -pix_fmt yuv420p $finalPath -y';
+        '-i $videoPath $subtitles $metadata -vf [in]drawtext="$fontPath:text=\'${widget.dateFormat}\':fontsize=$dateTextSize:fontcolor=\'$parsedDateColor\':borderw=${widget.textOutlineWidth}:bordercolor=$parsedTextOutlineColor:x=$datePosX:y=$datePosY$locOutput[out]" $trimCommand -c:a aac -b:a 256k -codec:v libx264 -pix_fmt yuv420p $finalPath -y';
     await executeFFmpeg(command).then((session) async {
       final returnCode = await session.getReturnCode();
       if (ReturnCode.isSuccess(returnCode)) {

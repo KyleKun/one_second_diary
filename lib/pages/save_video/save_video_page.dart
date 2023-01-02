@@ -376,6 +376,8 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
               ? _currentAddress ?? ''
               : customLocationTextController.text,
           subtitles: _subtitles,
+          videoStartInMilliseconds: _videoStartValue,
+          videoEndInMilliseconds: _videoEndValue,
           videoDuration: _trimmer.videoPlayerController!.value.duration.inSeconds,
           isGeotaggingEnabled: isGeotaggingEnabled,
           textOutlineColor: invert(currentColor),
