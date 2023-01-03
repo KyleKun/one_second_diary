@@ -3,6 +3,8 @@
 - Added Profiles feature
 - Added Subtitles feature
 - Added Calendar page
+- Added feature to allow videos from gallery
+- Added functionality to trim videos
 - Added automatic and manual geotagging in recording
 - Added options to create a movie by period or only with selected videos
 - Added option to schedule notifications time
