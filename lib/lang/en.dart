@@ -122,4 +122,8 @@ const Map<String, String> en = {
   'errorMailSubject': '[One Second Diary - v1.5] App Error Report',
   'errorMailBody':
       'Please describe the error you encountered and steps to reproduce it. Thank you!',
+  'oops': 'Oops!',
+  'videoResolutionTitle': 'Video resolution',
+  'videoResolutionWarning': 'Appropriate video formats have a 16:9 aspect ratio, for example: 720p, 1080p, 1440p, 4k, etc. Do you want to automatically scale the video to fit this format?',
+  'unsupportedPortraitMode': 'Portrait mode videos are not supported at this time. Please select another video',
 };

@@ -121,4 +121,8 @@ const Map<String, String> fr = {
   'cancelMovieCreation': 'Annuler la création du film',
   'cancelMovieDesc': 'Voulez-vous vraiment annuler la création du film ?',
   'reportError': 'Signaler une erreur',
+  'oops': 'Oops!',
+  'videoResolutionTitle': 'Résolution vidéo',
+  'videoResolutionWarning': 'Les formats vidéo appropriés ont un rapport d\'aspect 16:9, par exemple: 720p, 1080p, 1440p, 4k, etc. Souhaitez-vous faire évoluer automatiquement la vidéo pour s\'adapter à ce format?',
+  'unsupportedPortraitMode': 'Les vidéos en mode portrait ne sont pas prises en charge pour le moment. Veuillez sélectionner une autre vidéo',
 };

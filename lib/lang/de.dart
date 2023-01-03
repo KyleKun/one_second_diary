@@ -119,4 +119,8 @@ const Map<String, String> de = {
   'cancelMovieCreation': 'Film erstellen abbrechen',
   'cancelMovieDesc': 'Möchtest Du wirklich abbrechen?',
   'reportError': 'Fehler melden',
+  'oops': 'Hoppla!',
+  'videoResolutionTitle': 'Video Auflösung',
+  'videoResolutionWarning': 'Geeignete Videoformate haben ein Seitenverhältnis von 16: 9, zum Beispiel: 720p, 1080p, 1440p, 4K usw. Möchten Sie das Video automatisch skalieren, um dieses Format anzupassen?',
+  'unsupportedPortraitMode': 'Videos im Hochformat werden derzeit nicht unterstützt. Bitte wählen Sie ein anderes video',
 };

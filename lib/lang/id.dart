@@ -120,4 +120,8 @@ const Map<String, String> id = {
   'cancelMovieCreation': 'Batalkan pembuatan video',
   'cancelMovieDesc': 'Apakah Anda yakin ingin membatalkan pembuatan video?',
   'reportError': 'Laporkan kesalahan',
+  'oops': 'Ups!',
+  'videoResolutionTitle': 'Resolusi video',
+  'videoResolutionWarning': 'Format video yang sesuai memiliki rasio aspek 16:9, misalnya: 720p, 1080p, 1440p, 4k, dll. Apakah Anda ingin secara otomatis mengukur video agar sesuai dengan format ini?',
+  'unsupportedPortraitMode': 'Video mode potret tidak didukung saat ini. Pilih video lain',
 };
