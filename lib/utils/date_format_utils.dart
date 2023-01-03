@@ -95,10 +95,7 @@ class DateFormatUtils {
   }
 
   /// Get the given date and format it properly
-  static String getDate(DateTime date, {bool? isDayFirst}) {
-    // If no default value is given, we check directly in the function
-    isDayFirst ??= isDayFirstPattern();
-
+  static String getDate(DateTime date, {bool isDayFirst = false}) {
     // Adding a leading zero on Days and Months <= 9
     final String day = date.day <= 9 ? '0${date.day}' : '${date.day}';
     final String month = date.month <= 9 ? '0${date.month}' : '${date.month}';
