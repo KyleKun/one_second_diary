@@ -99,30 +99,6 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
           'isFromRecordingPage': false,
         },
       );
-
-      // // Path of the cached selected video
-      // final String filePath = rawFile.path;
-
-      // // Write file to new output directory
-      // if (filePath.isNotEmpty) {
-      //   final cachedFile = File(filePath);
-      //   final String chosenDate =
-      //       '${_currentDate.year}-${_currentDate.month}-${_currentDate.day}';
-      //   final appPath = SharedPrefsUtil.getString('appPath');
-      //   final newFilePath = '$appPath$chosenDate.mp4';
-
-      //   // Copy the cached file to the videos directory, then delete it
-      //   await cachedFile.copy(newFilePath);
-      //   await cachedFile.delete();
-
-      //   // Refresh the UI
-      //   setState(() {
-      //     allVideos = Utils.getAllVideos(fullPath: true);
-      //     getCurrentDateThumbnail();
-      //   });
-      //   print('New file path is $newFilePath');
-      // }
-      // print('Custom selected video is - > $filePath');
     }
   }
 
@@ -272,8 +248,7 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
               fontWeight: FontWeight.w900,
             ),
             weekFormat: false,
-            iconColor:
-                ThemeService().isDarkTheme() ? Colors.white : Colors.black,
+            iconColor: ThemeService().isDarkTheme() ? Colors.white : Colors.black,
             headerTextStyle: TextStyle(
               fontFamily: 'Magic',
               fontSize: 20.0,
@@ -305,8 +280,7 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
                         child: FutureBuilder(
                           future: getThumbnail(currentVideo),
                           builder: (context, snapshot) {
-                            if (snapshot.connectionState ==
-                                ConnectionState.waiting) {
+                            if (snapshot.connectionState == ConnectionState.waiting) {
                               return Center(
                                 child: SizedBox(
                                   height: 30,
@@ -329,45 +303,59 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(top: 20.0),
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.purple,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30.0),
-                          ),
-                        ),
-                        onPressed: () async {
-                          final Directory directory =
-                              await getApplicationDocumentsDirectory();
-                          final String srtPath = '${directory.path}/temp.srt';
-                          final getSubsFile = await executeFFmpeg(
-                              '-i $currentVideo $srtPath -y');
-                          final resultCode = await getSubsFile.getReturnCode();
-                          if (ReturnCode.isSuccess(resultCode)) {
-                            final srtFile = await File(srtPath).readAsString();
-                            setState(() {
-                              subtitles = srtFile.trim().split(',000').last;
-                            });
-                          } else {
-                            setState(() {
-                              subtitles = null;
-                            });
-                          }
-                          Get.to(
-                            VideoSubtitlesEditorPage(
-                              videoPath: currentVideo,
-                              subtitles: subtitles,
+                            padding: const EdgeInsets.only(top: 20.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColors.purple,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(30.0),
+                              ),
                             ),
-                          );
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.all(4.0),
-                          child: Text(
-                            'editSubtitles'.tr,
-                            textAlign: TextAlign.center,
+                            onPressed: () async {
+                              final Directory directory =
+                                  await getApplicationDocumentsDirectory();
+                              final String srtPath = '${directory.path}/temp.srt';
+                              final getSubsFile =
+                                  await executeFFmpeg('-i $currentVideo $srtPath -y');
+                              final resultCode = await getSubsFile.getReturnCode();
+                              if (ReturnCode.isSuccess(resultCode)) {
+                                final srtFile = await File(srtPath).readAsString();
+                                setState(() {
+                                  subtitles = srtFile.trim().split(',000').last;
+                                });
+                              } else {
+                                setState(() {
+                                  subtitles = null;
+                                });
+                              }
+                              Get.to(
+                                VideoSubtitlesEditorPage(
+                                  videoPath: currentVideo,
+                                  subtitles: subtitles,
+                                ),
+                              );
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.all(4.0),
+                              child: Text(
+                                'editSubtitles'.tr,
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
                           ),
-                        ),
+                          IconButton(
+                            onPressed: () async {
+                              await deleteVideoDialog();
+                            },
+                            icon: const Icon(
+                              Icons.delete,
+                              color: AppColors.mainColor,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ],
@@ -389,8 +377,9 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
                               borderRadius: BorderRadius.circular(30.0),
                             ),
                           ),
-                          // TODO(daoxve): implement
-                          onPressed: () {},
+                          onPressed: () async {
+                            await selectVideoFromGallery();
+                          },
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Text(

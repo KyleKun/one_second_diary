@@ -102,7 +102,7 @@ class _SaveButtonState extends State<SaveButton> {
       );
     } finally {
       // Deleting video from cache
-      // StorageUtils.deleteFile(widget.videoPath);
+      StorageUtils.deleteFile(widget.videoPath);
     }
   }
 
