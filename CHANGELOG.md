@@ -11,6 +11,7 @@
 - Added routine to save logs to txt files
 - Added Chinese, Deutsch, Indonesian, and French localization
 - Fixed issues where video recording could not be saved
+- Added optional support for force scaling videos of different aspect ratios and validation checks for unsupported videos
 
 ## v1.1 - 05/2021
 - Added feature to receive daily notifications
