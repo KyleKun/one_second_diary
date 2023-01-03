@@ -136,7 +136,7 @@ class Utils {
   static Future<String> writeTxt(List<String> files) async {
     final io.Directory directory = await getApplicationDocumentsDirectory();
     final String txtPath = '${directory.path}/videos.txt';
-    
+
     logInfo('[Utils.writeTxt()] - Writing txt file to $txtPath');
 
     // Get current profile
@@ -284,8 +284,18 @@ class Utils {
     logInfo(
         '[Utils.getAllVideos()] - Getting all videos inside ${directory.path}');
     for (int i = 0; i < files.length; i++) {
+      // Full path of the file
       final String filePath = files[i].path;
-      if (filePath.contains('.mp4') && !filePath.contains('temp')) {
+
+      // Grab only file name without extension and directory path
+      final String fileNameCheck = filePath.split('/').last.split('.').first;
+
+      // Check if file is a video and if it is in the right format
+      final bool isProperVideoFile =
+          RegExp(r'^\d{4}-\d{2}-\d{2}$').hasMatch(fileNameCheck) &&
+              filePath.endsWith('.mp4');
+
+      if (isProperVideoFile) {
         // Make sure we are not counting in videos from other profiles if default is selected
         if (currentProfileName.isEmpty && filePath.contains('Profiles')) {
           continue;

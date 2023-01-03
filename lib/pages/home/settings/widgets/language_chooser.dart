@@ -28,6 +28,7 @@ class LanguageChooser extends StatelessWidget {
                 iconSize: MediaQuery.of(context).size.width * 0.045,
                 isExpanded: false,
                 isDense: false,
+                alignment: Alignment.center,
                 value: _languageController.selectedLanguage.value,
                 onChanged: (symbol) {
                   _languageController.changeLanguage = symbol!;

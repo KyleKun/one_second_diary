@@ -131,79 +131,77 @@ class _VideoSubtitlesEditorPageState extends State<VideoSubtitlesEditorPage> {
           ),
           Padding(
             padding: const EdgeInsets.all(15.0),
-            child: SizedBox(
-              width: MediaQuery.of(context).size.width * 0.45,
-              height: MediaQuery.of(context).size.height * 0.08,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  elevation: 5.0,
-                  backgroundColor: Colors.green,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(80.0),
-                  ),
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                elevation: 5.0,
+                backgroundColor: Colors.green,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(80.0),
                 ),
-                onPressed: () async {
-                  setState(() {
-                    isProcessing = true;
-                  });
-                  final subtitles = await Utils.writeSrt(
-                    _subtitles,
-                    _videoController.value.duration.inSeconds,
-                  );
+              ),
+              onPressed: () async {
+                setState(() {
+                  isProcessing = true;
+                });
+                final subtitles = await Utils.writeSrt(
+                  _subtitles,
+                  _videoController.value.duration.inSeconds,
+                );
 
-                  String command = '';
-                  final String tempPath =
-                      '${widget.videoPath.split('.mp4').first}_temp.mp4';
+                String command = '';
+                final String tempPath =
+                    '${widget.videoPath.split('.mp4').first}_temp.mp4';
 
-                  if (isEdit) {
+                if (isEdit) {
+                  Utils.logInfo(
+                      '${logTag}Editing subtitles for ${widget.videoPath}');
+                  command =
+                      '-i ${widget.videoPath} -i $subtitles -c:s mov_text -c:v copy -c:a copy -map 0:v -map 0:a? -map 1 -disposition:s:0 default $tempPath -y';
+                } else {
+                  Utils.logInfo(
+                      '${logTag}Adding brand new subtitles for ${widget.videoPath}');
+                  command =
+                      '-i ${widget.videoPath} -i $subtitles -c copy -c:s mov_text $tempPath -y';
+                }
+
+                await executeFFmpeg(command).then((session) async {
+                  final returnCode = await session.getReturnCode();
+                  if (ReturnCode.isSuccess(returnCode)) {
                     Utils.logInfo(
-                        '${logTag}Editing subtitles for ${widget.videoPath}');
-                    command =
-                        '-i ${widget.videoPath} -i $subtitles -c:s mov_text -c:v copy -c:a copy -map 0:v -map 0:a? -map 1 -disposition:s:0 default $tempPath -y';
+                        '${logTag}Video subtitles updated successfully!');
+                    StorageUtils.deleteFile(widget.videoPath);
+                    StorageUtils.renameFile(tempPath, widget.videoPath);
                   } else {
-                    Utils.logInfo(
-                        '${logTag}Adding brand new subtitles for ${widget.videoPath}');
-                    command =
-                        '-i ${widget.videoPath} -i $subtitles -c copy -c:s mov_text $tempPath -y';
+                    Utils.logError('${logTag}Video subtitles update failed!');
+                    final sessionLog = await session.getLogsAsString();
+                    final failureStackTrace = await session.getFailStackTrace();
+                    Utils.logError('${logTag}Session log: $sessionLog');
+                    Utils.logError(
+                        '${logTag}Failure stacktrace: $failureStackTrace');
                   }
+                });
 
-                  await executeFFmpeg(command).then((session) async {
-                    final returnCode = await session.getReturnCode();
-                    if (ReturnCode.isSuccess(returnCode)) {
-                      Utils.logInfo(
-                          '${logTag}Video subtitles updated successfully!');
-                      StorageUtils.deleteFile(widget.videoPath);
-                      StorageUtils.renameFile(tempPath, widget.videoPath);
-                    } else {
-                      Utils.logError('${logTag}Video subtitles update failed!');
-                      final sessionLog = await session.getLogsAsString();
-                      final failureStackTrace =
-                          await session.getFailStackTrace();
-                      Utils.logError('${logTag}Session log: $sessionLog');
-                      Utils.logError(
-                          '${logTag}Failure stacktrace: $failureStackTrace');
-                    }
-                  });
-
-                  setState(() {
-                    isProcessing = false;
-                  });
-                  Get.back();
-                },
-                child: !isProcessing
-                    ? Text(
+                setState(() {
+                  isProcessing = false;
+                });
+                Get.back();
+              },
+              child: !isProcessing
+                  ? Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Text(
                         'save'.tr,
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: MediaQuery.of(context).size.width * 0.07,
                         ),
-                      )
-                    : const CircularProgressIndicator(
-                        valueColor: AlwaysStoppedAnimation<Color>(
-                          Colors.white,
-                        ),
                       ),
-              ),
+                    )
+                  : const CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                        Colors.white,
+                      ),
+                    ),
             ),
           ),
         ],

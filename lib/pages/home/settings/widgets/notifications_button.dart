@@ -11,7 +11,8 @@ class NotificationsButton extends StatelessWidget {
         InkWell(
           onTap: () => Get.toNamed(Routes.NOTIFICATION),
           child: Ink(
-            padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
+            padding:
+                const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -21,10 +22,7 @@ class NotificationsButton extends StatelessWidget {
                     fontSize: MediaQuery.of(context).size.width * 0.045,
                   ),
                 ),
-                const Padding(
-                  padding: EdgeInsets.only(right: 12.0),
-                  child: Icon(Icons.notifications),
-                ),
+                const Icon(Icons.notifications),
               ],
             ),
           ),

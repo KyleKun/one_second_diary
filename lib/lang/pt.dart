@@ -93,7 +93,7 @@ const Map<String, String> pt = {
   'enterSubtitles': 'Digite uma legenda',
   'totalSelected': 'Total selecionado: ',
   'selectVideos': 'Escolha os vídeos',
-  'editSubtitles': 'Editar\nlegendas',
+  'editSubtitles': 'Editar legendas',
   'noVideoRecorded': 'Nenhum vídeo gravado',
   'subtitles': 'Legendas',
   'addVideo': 'Adicionar vídeo',

@@ -118,7 +118,7 @@ class _RecordingPageState extends State<RecordingPage>
     _currentScale = (_baseScale * details.scale)
         .clamp(_minAvailableZoom, _maxAvailableZoom);
 
-    // TODO: this works only in preview for some reason, recording doesn't apply zoom
+    // TODO(KyleKun): this works only in preview for some reason, recording doesn't apply zoom
     await _cameraController.setZoomLevel(_currentScale);
   }
 

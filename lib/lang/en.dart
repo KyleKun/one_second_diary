@@ -94,7 +94,7 @@ const Map<String, String> en = {
   'enterSubtitles': 'Enter subtitles',
   'totalSelected': 'Total Selected: ',
   'selectVideos': 'Select videos',
-  'editSubtitles': 'Edit\nsubtitles',
+  'editSubtitles': 'Edit subtitles',
   'noVideoRecorded': 'No video recorded',
   'subtitles': 'Subtitles',
   'addVideo': 'Add video',

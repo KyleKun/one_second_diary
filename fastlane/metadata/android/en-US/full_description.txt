@@ -1,0 +1,37 @@
+Record one second of your day, everyday.
+
+This app was inspired by this <a href='https://www.ted.com/talks/cesar_kuriyama_one_second_every_day'>TED Talk</a>.
+
+After installing some related apps and not being fully satisfied with any of them, I decided to create my own, featuring the two aspects that I wanted the most: Minimalist and 100% Private. 
+
+Therefore, this app that will never collect any kind of data, display annoying ads or ask you to pay for anything. It's just a simple app that will help you to remember your life.
+
+The idea itself is pretty simple:
+ - Open the app in the moment of your day that you would like to remember in the future
+ - Tap the Record button and save the video
+ - That's it, open the app the next day and repeat the process
+
+Then, after a couple months or even years:
+ - Generate a compilation of all those videos, creating the movie of your life
+
+
+## Features
+
+- Record up to 10 seconds of video (1080p resolution)
+- Add or edit subtitles in the videos
+- Add automatic or manual geotagging in the videos
+- Choose the date format and color to show in video
+- Create profiles to save videos separately
+- View all recorded days in a calendar
+- Generate custom movies with all videos or selected videos only
+- Receive scheduled daily notifications
+- Dark Mode
+- Available in 7 languages
+- No ads ;)
+- No data collection ;)
+- No in-app purchases ;)
+- Open source ;)
+
+If you have any suggestions or want to contribute, feel free to open a PR or contact me!
+
+Support my work - https://www.buymeacoffee.com/kylekun

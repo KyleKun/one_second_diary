@@ -277,11 +277,13 @@ class _ProfilesPageState extends State<ProfilesPage> {
               const SizedBox(height: 15),
               Expanded(
                 child: ListView.separated(
+                  physics: const ClampingScrollPhysics(),
                   itemCount: profiles.length,
                   separatorBuilder: (_, __) => const SizedBox(height: 12),
                   itemBuilder: (context, index) {
                     return Material(
                       child: RadioListTile(
+                        activeColor: AppColors.green,
                         value: index,
                         groupValue: groupValue,
                         onChanged: (val) {
@@ -309,7 +311,7 @@ class _ProfilesPageState extends State<ProfilesPage> {
                                   await _showDeleteProfileDialog(index);
                                 },
                                 icon: const Icon(
-                                  Icons.delete,
+                                  Icons.delete_forever_rounded,
                                   color: AppColors.mainColor,
                                 ),
                               ),
@@ -324,7 +326,7 @@ class _ProfilesPageState extends State<ProfilesPage> {
                 },
                 icon: const Icon(Icons.add),
                 style: TextButton.styleFrom(
-                  foregroundColor: AppColors.mainColor,
+                  foregroundColor: AppColors.green,
                 ),
                 label: Text('createNewProfile'.tr),
               )

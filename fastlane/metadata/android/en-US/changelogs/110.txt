@@ -1,0 +1,5 @@
+- Added feature to receive daily notifications
+- Added feature to record up to 10 seconds video 
+- Added feature to change date format and color
+- Added feature to display a timer before recording
+- Minor layout and performance improvements
