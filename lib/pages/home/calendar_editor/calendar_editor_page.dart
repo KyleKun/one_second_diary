@@ -17,7 +17,6 @@ import '../../../routes/app_pages.dart';
 import '../../../utils/constants.dart';
 import '../../../utils/date_format_utils.dart';
 import '../../../utils/ffmpeg_api_wrapper.dart';
-import '../../../utils/shared_preferences_util.dart';
 import '../../../utils/theme.dart';
 import '../../../utils/utils.dart';
 import 'video_subtitles_editor_page.dart';
