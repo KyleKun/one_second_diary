@@ -58,20 +58,10 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
   double _videoStartValue = 0.0;
   double _videoEndValue = 0.0;
   bool _isVideoPlaying = false;
+  bool _isLocationProcessing = false;
 
   void _initCorrectDates() {
     final DateTime? _determinedDate = routeArguments['currentDate'];
-
-    final todayLog = DateFormatUtils.getWrittenToday(
-      lang: Get.locale!.languageCode,
-    );
-
-    final dateLog = DateFormatUtils.getWrittenToday(
-      customDate: _determinedDate!,
-      lang: Get.locale!.languageCode,
-    );
-
-    log('written dates are $todayLog and other is $dateLog');
 
     if (_determinedDate != null) {
       _dateFormatValue = DateFormatUtils.getDate(
@@ -91,7 +81,13 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
   Future<void> checkGeotaggingStatus() async {
     isGeotaggingEnabled = SharedPrefsUtil.getBool('isGeotaggingEnabled') ?? false;
     if (isGeotaggingEnabled) {
+      setState(() {
+        _isLocationProcessing = true;
+      });
       await _getCurrentPosition();
+      setState(() {
+        _isLocationProcessing = false;
+      });
     }
   }
 
@@ -383,23 +379,33 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
         appBar: AppBar(
           title: Text('saveVideo'.tr),
         ),
-        floatingActionButton: SaveButton(
-          videoPath: _tempVideoPath,
-          videoController: _trimmer.videoPlayerController!,
-          dateColor: currentColor,
-          dateFormat: _dateFormatValue,
-          isTextDate: isTextDate,
-          userLocation: customLocationTextController.text.isEmpty
-              ? _currentAddress ?? ''
-              : customLocationTextController.text,
-          subtitles: _subtitles,
-          videoStartInMilliseconds: _videoStartValue,
-          videoEndInMilliseconds: _videoEndValue,
-          videoDuration: _trimmer.videoPlayerController!.value.duration.inSeconds,
-          isGeotaggingEnabled: isGeotaggingEnabled,
-          textOutlineColor: invert(currentColor),
-          textOutlineWidth: textOutlineStrokeWidth,
-          determinedDate: routeArguments['currentDate'],
+        floatingActionButton: Visibility(
+          visible: !_isLocationProcessing,
+          replacement: const FloatingActionButton(
+            onPressed: null,
+            child: CircularProgressIndicator(
+              color: Colors.white,
+            ),
+            backgroundColor: Colors.green,
+          ),
+          child: SaveButton(
+            videoPath: _tempVideoPath,
+            videoController: _trimmer.videoPlayerController!,
+            dateColor: currentColor,
+            dateFormat: _dateFormatValue,
+            isTextDate: isTextDate,
+            userLocation: customLocationTextController.text.isEmpty
+                ? _currentAddress ?? ''
+                : customLocationTextController.text,
+            subtitles: _subtitles,
+            videoStartInMilliseconds: _videoStartValue,
+            videoEndInMilliseconds: _videoEndValue,
+            videoDuration: _trimmer.videoPlayerController!.value.duration.inSeconds,
+            isGeotaggingEnabled: isGeotaggingEnabled,
+            textOutlineColor: invert(currentColor),
+            textOutlineWidth: textOutlineStrokeWidth,
+            determinedDate: routeArguments['currentDate'],
+          ),
         ),
         body: SingleChildScrollView(
           child: SizedBox(
