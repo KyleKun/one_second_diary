@@ -266,7 +266,7 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
           ),
         ),
         const SizedBox(
-          height: 20.0,
+          height: 10.0,
         ),
         Expanded(
           child: wasDateRecorded
@@ -301,8 +301,7 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
                         ),
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 10.0),
+                    Flexible(
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
