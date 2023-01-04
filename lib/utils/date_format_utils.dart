@@ -95,18 +95,20 @@ class DateFormatUtils {
   }
 
   /// Get the given date and format it properly
-  static String getDate(DateTime date, {bool isDayFirst = false}) {
+  static String getDate(DateTime date, {bool allowCheckFormattingDayFirst = false}) {
     // Adding a leading zero on Days and Months <= 9
     final String day = date.day <= 9 ? '0${date.day}' : '${date.day}';
     final String month = date.month <= 9 ? '0${date.month}' : '${date.month}';
     final String year = '${date.year}';
 
     // Brazilian pattern
-    if (isDayFirst) {
-      return '$day-$month-$year';
-    } else {
-      return '$year-$month-$day';
+    if (allowCheckFormattingDayFirst) {
+      if (isDayFirstPattern()) {
+        return '$day-$month-$year';
+      }
     }
+
+    return '$year-$month-$day';
   }
 
   static String parseDateStringAccordingLocale(String date) {

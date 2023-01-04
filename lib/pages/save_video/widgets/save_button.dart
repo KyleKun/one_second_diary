@@ -35,6 +35,7 @@ class SaveButton extends StatefulWidget {
     required this.textOutlineWidth,
     required this.videoStartInMilliseconds,
     required this.videoEndInMilliseconds,
+    required this.determinedDate,
   });
 
   // Finding controllers
@@ -51,6 +52,7 @@ class SaveButton extends StatefulWidget {
   final double textOutlineWidth;
   final double videoStartInMilliseconds;
   final double videoEndInMilliseconds;
+  final DateTime determinedDate;
 
   @override
   _SaveButtonState createState() => _SaveButtonState();
@@ -74,6 +76,7 @@ class _SaveButtonState extends State<SaveButton> {
 
     try {
       final bool isVideoValid = await _validateInputVideo(context);
+      log('Is video valid? $isVideoValid');
       if (isVideoValid) {
         log('Video is valid! 🎉');
         await _editWithFFmpeg(widget.isGeotaggingEnabled, context);
@@ -100,9 +103,6 @@ class _SaveButtonState extends State<SaveButton> {
           sendLogs: true,
         ),
       );
-    } finally {
-      // Deleting video from cache
-      StorageUtils.deleteFile(widget.videoPath);
     }
   }
 
@@ -135,8 +135,9 @@ class _SaveButtonState extends State<SaveButton> {
   // Check if user is using a custom profile to determine the output path of the video
   String getVideoOutputPath() {
     String videoOutputPath = '';
+    final determinedDate = widget.determinedDate;
     final String defaultOutputPath =
-        '${SharedPrefsUtil.getString('appPath')}${widget.dateFormat}.mp4';
+        '${SharedPrefsUtil.getString('appPath')}${DateFormatUtils.getDate(determinedDate)}.mp4';
 
     final selectedProfileIndex = SharedPrefsUtil.getInt('selectedProfileIndex') ?? 0;
     if (selectedProfileIndex == 0) {
@@ -307,7 +308,11 @@ class _SaveButtonState extends State<SaveButton> {
             content: 'videoSavedDesc'.tr,
             actionText: 'Ok',
             actionColor: Colors.green,
-            action: () => Get.offAllNamed(Routes.HOME),
+            action: () {
+              // Deleting video from cache
+              StorageUtils.deleteFile(widget.videoPath);
+              Get.offAllNamed(Routes.HOME);
+            },
           ),
         );
       } else if (ReturnCode.isCancel(returnCode)) {
@@ -355,8 +360,7 @@ class _SaveButtonState extends State<SaveButton> {
               setState(() {
                 canDistortVideo = false;
               });
-              Navigator.pop(context);
-              return Future.value(false);
+              return Navigator.pop(context, false);
             },
             style: TextButton.styleFrom(
               foregroundColor: ThemeService().isDarkTheme() ? AppColors.light : AppColors.dark,
@@ -368,8 +372,7 @@ class _SaveButtonState extends State<SaveButton> {
               setState(() {
                 canDistortVideo = true;
               });
-              Navigator.pop(context);
-              return Future.value(true);
+              return Navigator.pop(context, true);
             },
             style: TextButton.styleFrom(
               foregroundColor: AppColors.green,

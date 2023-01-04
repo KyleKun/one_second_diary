@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -61,10 +62,24 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
   void _initCorrectDates() {
     final DateTime? _determinedDate = routeArguments['currentDate'];
 
+    final todayLog = DateFormatUtils.getWrittenToday(
+      lang: Get.locale!.languageCode,
+    );
+
+    final dateLog = DateFormatUtils.getWrittenToday(
+      customDate: _determinedDate!,
+      lang: Get.locale!.languageCode,
+    );
+
+    log('written dates are $todayLog and other is $dateLog');
+
     if (_determinedDate != null) {
-      _dateFormatValue = DateFormatUtils.getDate(_determinedDate);
+      _dateFormatValue = DateFormatUtils.getDate(
+        _determinedDate,
+        allowCheckFormattingDayFirst: true,
+      );
       _dateFormats = [
-        DateFormatUtils.getDate(_determinedDate),
+        DateFormatUtils.getDate(_determinedDate, allowCheckFormattingDayFirst: true),
         DateFormatUtils.getWrittenToday(
           customDate: _determinedDate,
           lang: Get.locale!.languageCode,
@@ -342,6 +357,8 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
         // Prevent showing the option to re-record video if not coming from the recording page
         final isFromRecordingPage = routeArguments['isFromRecordingPage'];
         if (!isFromRecordingPage) {
+          // Deleting video from cache
+          StorageUtils.deleteFile(_tempVideoPath);
           Get.back();
         } else {
           showDialog(
@@ -382,6 +399,7 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
           isGeotaggingEnabled: isGeotaggingEnabled,
           textOutlineColor: invert(currentColor),
           textOutlineWidth: textOutlineStrokeWidth,
+          determinedDate: routeArguments['currentDate'],
         ),
         body: SingleChildScrollView(
           child: SizedBox(

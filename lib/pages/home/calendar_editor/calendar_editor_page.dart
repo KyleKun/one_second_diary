@@ -163,7 +163,7 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
                 (a) => a.contains(
                   DateFormatUtils.getDate(
                     date,
-                    isDayFirst: false,
+                    allowCheckFormattingDayFirst: false,
                   ),
                 ),
               );
@@ -174,7 +174,7 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
                     (a) => a.contains(
                       DateFormatUtils.getDate(
                         date,
-                        isDayFirst: false,
+                        allowCheckFormattingDayFirst: false,
                       ),
                     ),
                   );
@@ -204,7 +204,7 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
                   (a) => a.contains(
                     DateFormatUtils.getDate(
                       date,
-                      isDayFirst: false,
+                      allowCheckFormattingDayFirst: false,
                     ),
                   ),
                 );
