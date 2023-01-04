@@ -129,9 +129,9 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
 
     if (!hasPermission) return;
     await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
-        .then((Position position) {
+        .then((Position position) async {
       setState(() => _currentPosition = position);
-      _getAddressFromLatLng(_currentPosition!);
+      await _getAddressFromLatLng(_currentPosition!);
     }).catchError((e) {
       Utils.logError('[Geolocation] - Failed to get location: $e');
     });
@@ -198,9 +198,7 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
     _initCorrectDates();
     _initVideoPlayerController();
     checkGeotaggingStatus().whenComplete(
-      () {
-        setState(() {});
-      },
+      () => setState(() {}),
     );
     super.initState();
   }
