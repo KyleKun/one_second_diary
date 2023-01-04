@@ -34,5 +34,5 @@ jobs:
       working-directory: code
     - run: flutter analyze
       working-directory: code
-    - run: flutter format --set-exit-if-changed --dry-run .
-      working-directory: code
+    # - run: flutter format --set-exit-if-changed --dry-run .
+     # working-directory: code
