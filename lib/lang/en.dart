@@ -123,7 +123,6 @@ const Map<String, String> en = {
   'errorMailBody':
       'Please describe the error you encountered and steps to reproduce it. Thank you!',
   'oops': 'Oops!',
-  'videoResolutionTitle': 'Video resolution',
-  'videoResolutionWarning': 'Appropriate video formats have a 16:9 aspect ratio, for example: 720p, 1080p, 1440p, 4k, etc. Do you want to automatically scale the video to fit this format?',
+  'videoResolutionWarning': 'This video resolution is not supported at this time. Please make sure it was recorded in landscape (16:9 aspect ratio)',
   'unsupportedPortraitMode': 'Portrait mode videos are not supported at this time. Please select another video',
 };

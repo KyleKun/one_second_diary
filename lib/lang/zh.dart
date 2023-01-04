@@ -111,7 +111,6 @@ const Map<String, String> zh = {
   'cancelMovieDesc': '您确定要取消电影创建吗?',
   'reportError': '报告错误',
   'oops': '哎呀！',
-  'videoResolutionTitle': '视频分辨率',
-  'videoResolutionWarning': '合适的视频格式具有16:9的宽高比:720p,1080p,1440p,4k等。您是否想自动扩展视频以适合这种格式?',
+  'videoResolutionWarning': '目前不支持此视频分辨率。请确保将其记录为景观 (16:9宽高比)',
   'unsupportedPortraitMode': '肖像模式视频目前不受支持。请选择另一个视频',
 };
