@@ -5,6 +5,7 @@ import 'package:ffmpeg_kit_flutter_full_gpl/ffmpeg_kit_config.dart';
 import 'package:ffmpeg_kit_flutter_full_gpl/ffmpeg_session.dart';
 import 'package:ffmpeg_kit_flutter_full_gpl/ffprobe_kit.dart';
 import 'package:ffmpeg_kit_flutter_full_gpl/ffprobe_session.dart';
+import 'package:ffmpeg_kit_flutter_full_gpl/log.dart';
 import 'package:ffmpeg_kit_flutter_full_gpl/log_callback.dart';
 import 'package:ffmpeg_kit_flutter_full_gpl/media_information_session.dart';
 import 'package:ffmpeg_kit_flutter_full_gpl/session.dart';
@@ -38,12 +39,16 @@ Future<FFmpegSession> executeFFmpeg(String command) async {
 }
 
 Future<FFmpegSession> executeAsyncFFmpeg(
-    String command, void Function(FFmpegSession)? completeCallback) async {
-  return await FFmpegKit.executeAsync(command, completeCallback);
+  String command, {
+  void Function(FFmpegSession)? completeCallback,
+  void Function(Log)? logCallback,
+  void Function(Statistics)? statisticsCallback,
+}) async {
+  return await FFmpegKit.executeAsync(
+      command, completeCallback, logCallback, statisticsCallback);
 }
 
-Future<FFprobeSession> executeFFprobeWithArguments(
-    List<String> arguments) async {
+Future<FFprobeSession> executeFFprobeWithArguments(List<String> arguments) async {
   return await FFprobeKit.executeWithArguments(arguments);
 }
 
@@ -94,8 +99,7 @@ Future<void> setFontconfigConfigurationPath(String path) async {
   return await FFmpegKitConfig.setFontconfigConfigurationPath(path);
 }
 
-Future<void> setFontDirectory(
-    String fontDirectory, Map<String, String> fontNameMap) async {
+Future<void> setFontDirectory(String fontDirectory, Map<String, String> fontNameMap) async {
   return await FFmpegKitConfig.setFontDirectory(fontDirectory, fontNameMap);
 }
 
@@ -115,10 +119,8 @@ Future<String?> registerNewFFmpegPipe() async {
   return await FFmpegKitConfig.registerNewFFmpegPipe();
 }
 
-Future<void> setEnvironmentVariable(
-    String variableName, String variableValue) async {
-  return await FFmpegKitConfig.setEnvironmentVariable(
-      variableName, variableValue);
+Future<void> setEnvironmentVariable(String variableName, String variableValue) async {
+  return await FFmpegKitConfig.setEnvironmentVariable(variableName, variableValue);
 }
 
 Future<List<FFmpegSession>> listFFmpegSessions() async {

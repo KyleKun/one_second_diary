@@ -125,4 +125,5 @@ const Map<String, String> en = {
   'oops': 'Oops!',
   'videoResolutionWarning': 'This video resolution is not supported at this time. Please make sure it was recorded in landscape (16:9 aspect ratio)',
   'unsupportedPortraitMode': 'Portrait mode videos are not supported at this time. Please select another video',
+  'processingVideo': 'Processing video',
 };

@@ -122,4 +122,5 @@ const Map<String, String> de = {
   'oops': 'Hoppla!',
   'videoResolutionWarning': 'Diese Videoauflösung wird derzeit nicht unterstützt. Bitte stellen Sie sicher, dass es in Landschaft (16:9 -Seitenverhältnis) aufgezeichnet wurde.',
   'unsupportedPortraitMode': 'Videos im Hochformat werden derzeit nicht unterstützt. Bitte wählen Sie ein anderes video',
+  'processingVideo': 'Video verarbeiten',
 };

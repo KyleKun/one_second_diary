@@ -122,4 +122,5 @@ const Map<String, String> pt = {
   'oops': 'Opa!',
   'videoResolutionWarning': 'Esta resolução de vídeo não é suportada no momento. Certifique -se de que foi registrado na paisagem (proporção de 16:9)',
   'unsupportedPortraitMode': 'Os vídeos do modo retrato não são suportados no momento. Selecione outro vídeo',
+  'processingVideo': 'Vídeo de processamento',
 };

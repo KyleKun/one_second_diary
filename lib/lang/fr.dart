@@ -124,4 +124,5 @@ const Map<String, String> fr = {
   'oops': 'Oops!',
   'videoResolutionWarning': 'Cette résolution vidéo n\'est pas prise en charge pour le moment. Veuillez vous assurer qu\'il a été enregistré dans le paysage (rapport d\'aspect 16:9)',
   'unsupportedPortraitMode': 'Les vidéos en mode portrait ne sont pas prises en charge pour le moment. Veuillez sélectionner une autre vidéo',
+  'processingVideo': 'Traitement de la vidéo',
 };
