@@ -165,7 +165,7 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
             // Make sure it is 1080p, h264
             // Also set the framerate to 30 and copy all the streams
             await executeFFmpeg(
-                    '-i $currentVideo -vf "scale=1920:1080" -r 30 -map 0 -c copy -c:v libx264 -crf 18 $tempVideo -y')
+                    '-i $currentVideo -vf "scale=1920:1080" -r 30 -map 0 -c:v libx264 -r 30 -c:a copy $tempVideo -y')
                 .then((session) async {
               final returnCode = await session.getReturnCode();
               if (ReturnCode.isSuccess(returnCode)) {
@@ -312,7 +312,7 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
           // Create movie by concatenating all videos
           // -vsync vfr -async 1 are used to avoid video and audio desync, audio is delayed in longer videos if this option is not used
           await executeFFmpeg(
-                  '-f concat -safe 0 -i $txtPath -vsync vfr -async 1 -map 0 -c copy $outputPath -y')
+                  '-f concat -safe 0 -i $txtPath -vsync 1 -map 0 -c copy $outputPath -y')
               .then(
             (session) async {
               final returnCode = await session.getReturnCode();
