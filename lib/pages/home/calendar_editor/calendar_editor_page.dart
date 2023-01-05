@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:ffmpeg_kit_flutter_full_gpl/return_code.dart';
@@ -7,10 +8,13 @@ import 'package:flutter_calendar_carousel/classes/event.dart';
 import 'package:flutter_calendar_carousel/flutter_calendar_carousel.dart'
     show CalendarCarousel;
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 
 import '../../../controllers/lang_controller.dart';
+import '../../../controllers/video_count_controller.dart';
+import '../../../routes/app_pages.dart';
 import '../../../utils/constants.dart';
 import '../../../utils/date_format_utils.dart';
 import '../../../utils/ffmpeg_api_wrapper.dart';
@@ -59,6 +63,18 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
     });
   }
 
+  void getCurrentDateThumbnail() {
+    final parsedCurrentDate = DateFormatUtils.getDate(_currentDate);
+    setState(() {
+      wasDateRecorded = allVideos.any((a) => a.contains(parsedCurrentDate));
+      if (wasDateRecorded) {
+        currentVideo = allVideos.firstWhere(
+          (a) => a.contains(parsedCurrentDate),
+        );
+      }
+    });
+  }
+
   Future<Uint8List?> getThumbnail(String video) async {
     final thumbnail = await VideoThumbnail.thumbnailData(
       video: File(video).path,
@@ -66,6 +82,168 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
       quality: 15,
     );
     return thumbnail;
+  }
+
+  Future<void> selectVideoFromGallery() async {
+    final rawFile = await ImagePicker().pickVideo(
+      source: ImageSource.gallery,
+    );
+
+    if (rawFile != null) {
+      // Video validation before navigation to the video editing page
+      final bool isVideoValid = await _validateInputVideo(rawFile.path, context);
+
+      // Go to the save video page
+      if (isVideoValid) {
+        Get.toNamed(
+          Routes.SAVE_VIDEO,
+          arguments: {
+            'videoPath': rawFile.path,
+            'currentDate': _currentDate,
+            'isFromRecordingPage': false,
+          },
+        );
+      }
+    }
+  }
+
+  // Ensure the video passes all validations before processing
+  Future<bool> _validateInputVideo(String videoPath, BuildContext context) async {
+    return await executeFFprobe(
+            '-v error -print_format json -show_format -select_streams v:0 -show_streams $videoPath')
+        .then((session) async {
+      final returnCode = await session.getReturnCode();
+      if (ReturnCode.isSuccess(returnCode)) {
+        final sessionLog = await session.getOutput();
+        if (sessionLog == null) return false;
+        final Map<String, dynamic> videoStreamDetails = jsonDecode(sessionLog)['streams'][0];
+
+        final num videoWidth = videoStreamDetails['width'];
+        final num videoHeight = videoStreamDetails['height'];
+
+        // Check for video orientation before saving video.
+        // In some videos, the rotation property is not explicity defined which will cause ffprobe to return a null value,
+        // so the workaround here compares the values of video width & height to determine the orientation
+
+        // The orientation is always portrait whenever the video height is greater than the video width
+        if (videoHeight > videoWidth) {
+          await _showPortraitModeErrorDialog();
+          return false;
+        }
+
+        // Check for video aspect ratio before saving video.
+        // In some videos, the DAP/SAP (display/sample aspect ratio) properties are not explicity defined which will cause ffprobe to return a null value,
+        // so the workaround here uses the video width & height to determine the aspect ratio
+        final num videoAspectRatio = (videoWidth / videoHeight).toPrecision(2);
+
+        // 1.78 is the decimal equivalent of 16:9 aspect ratio videos
+        if (videoAspectRatio != 1.78) {
+          await _showAspectRatioErrorDialog();
+          return false;
+        }
+
+        return true;
+      }
+      return false;
+    });
+  }
+
+  Future<void> _showPortraitModeErrorDialog() async {
+    return await showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        title: Text(
+          'oops'.tr,
+        ),
+        content: Text(
+          'unsupportedPortraitMode'.tr,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () async => Navigator.pop(context),
+            style: TextButton.styleFrom(
+              foregroundColor: AppColors.green,
+            ),
+            child: Text('ok'.tr),
+          )
+        ],
+      ),
+    );
+  }
+
+  Future<void> _showAspectRatioErrorDialog() async {
+    return await showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        title: Text(
+          'oops'.tr,
+        ),
+        content: Text(
+          'videoResolutionWarning'.tr,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () async => Navigator.pop(context),
+            style: TextButton.styleFrom(
+              foregroundColor: AppColors.green,
+            ),
+            child: Text('ok'.tr),
+          )
+        ],
+      ),
+    );
+  }
+
+  Future<void> deleteVideoDialog() async {
+    return await showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        title: Text(
+          'discardVideoTitle'.tr,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () async {
+              Navigator.pop(context);
+            },
+            style: TextButton.styleFrom(
+              foregroundColor: ThemeService().isDarkTheme() ? AppColors.light : AppColors.dark,
+            ),
+            child: Text('no'.tr),
+          ),
+          TextButton(
+            onPressed: () async {
+              // Delete current video from storage
+              await File(currentVideo).delete();
+
+              // Reduce the video count recorded by the app
+              VideoCountController().reduceVideoCount();
+
+              // Refresh the UI
+              setState(() {
+                allVideos = Utils.getAllVideos(fullPath: true);
+                getCurrentDateThumbnail();
+              });
+
+              Navigator.pop(context);
+            },
+            style: TextButton.styleFrom(
+              foregroundColor: Colors.red,
+            ),
+            child: Text('yes'.tr),
+          )
+        ],
+      ),
+    );
   }
 
   @override
@@ -84,7 +262,7 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
                 (a) => a.contains(
                   DateFormatUtils.getDate(
                     date,
-                    isDayFirst: false,
+                    allowCheckFormattingDayFirst: false,
                   ),
                 ),
               );
@@ -95,7 +273,7 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
                     (a) => a.contains(
                       DateFormatUtils.getDate(
                         date,
-                        isDayFirst: false,
+                        allowCheckFormattingDayFirst: false,
                       ),
                     ),
                   );
@@ -125,7 +303,7 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
                   (a) => a.contains(
                     DateFormatUtils.getDate(
                       date,
-                      isDayFirst: false,
+                      allowCheckFormattingDayFirst: false,
                     ),
                   ),
                 );
@@ -168,8 +346,7 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
               fontWeight: FontWeight.w900,
             ),
             weekFormat: false,
-            iconColor:
-                ThemeService().isDarkTheme() ? Colors.white : Colors.black,
+            iconColor: ThemeService().isDarkTheme() ? Colors.white : Colors.black,
             headerTextStyle: TextStyle(
               fontFamily: 'Magic',
               fontSize: 20.0,
@@ -188,7 +365,7 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
           ),
         ),
         const SizedBox(
-          height: 20.0,
+          height: 10.0,
         ),
         Expanded(
           child: wasDateRecorded
@@ -201,8 +378,7 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
                         child: FutureBuilder(
                           future: getThumbnail(currentVideo),
                           builder: (context, snapshot) {
-                            if (snapshot.connectionState ==
-                                ConnectionState.waiting) {
+                            if (snapshot.connectionState == ConnectionState.waiting) {
                               return Center(
                                 child: SizedBox(
                                   height: 30,
@@ -224,46 +400,59 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
                         ),
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 20.0),
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.purple,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30.0),
-                          ),
-                        ),
-                        onPressed: () async {
-                          final Directory directory =
-                              await getApplicationDocumentsDirectory();
-                          final String srtPath = '${directory.path}/temp.srt';
-                          final getSubsFile = await executeFFmpeg(
-                              '-i $currentVideo $srtPath -y');
-                          final resultCode = await getSubsFile.getReturnCode();
-                          if (ReturnCode.isSuccess(resultCode)) {
-                            final srtFile = await File(srtPath).readAsString();
-                            setState(() {
-                              subtitles = srtFile.trim().split(',000').last;
-                            });
-                          } else {
-                            setState(() {
-                              subtitles = null;
-                            });
-                          }
-                          Get.to(
-                            VideoSubtitlesEditorPage(
-                              videoPath: currentVideo,
-                              subtitles: subtitles,
+                    Flexible(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColors.purple,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(30.0),
+                              ),
                             ),
-                          );
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.all(4.0),
-                          child: Text(
-                            'editSubtitles'.tr,
-                            textAlign: TextAlign.center,
+                            onPressed: () async {
+                              final Directory directory =
+                                  await getApplicationDocumentsDirectory();
+                              final String srtPath = '${directory.path}/temp.srt';
+                              final getSubsFile =
+                                  await executeFFmpeg('-i $currentVideo $srtPath -y');
+                              final resultCode = await getSubsFile.getReturnCode();
+                              if (ReturnCode.isSuccess(resultCode)) {
+                                final srtFile = await File(srtPath).readAsString();
+                                setState(() {
+                                  subtitles = srtFile.trim().split(',000').last;
+                                });
+                              } else {
+                                setState(() {
+                                  subtitles = null;
+                                });
+                              }
+                              Get.to(
+                                VideoSubtitlesEditorPage(
+                                  videoPath: currentVideo,
+                                  subtitles: subtitles,
+                                ),
+                              );
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.all(4.0),
+                              child: Text(
+                                'editSubtitles'.tr,
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
                           ),
-                        ),
+                          IconButton(
+                            onPressed: () async {
+                              await deleteVideoDialog();
+                            },
+                            icon: const Icon(
+                              Icons.delete,
+                              color: AppColors.mainColor,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ],
@@ -285,8 +474,9 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
                               borderRadius: BorderRadius.circular(30.0),
                             ),
                           ),
-                          // TODO(daoxve): implement
-                          onPressed: () {},
+                          onPressed: () async {
+                            await selectVideoFromGallery();
+                          },
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Text(

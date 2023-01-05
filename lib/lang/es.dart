@@ -120,4 +120,8 @@ const Map<String, String> es = {
   'cancelMovieDesc':
       '¿Estás seguro de que quieres cancelar la creación de la película?',
   'reportError': 'Reportar error',
+  'oops': '¡Ups!',
+  'videoResolutionWarning': 'Esta resolución de video no es compatible en este momento. Asegúrese de que se registre en el paisaje (relación de aspecto 16:9)',
+  'unsupportedPortraitMode': 'Los videos del modo de retrato no son compatibles en este momento. Seleccione otro video',
+  'processingVideo': 'Video de procesamiento',
 };

@@ -3,7 +3,7 @@ description: Record one second of your day, everyday.
 
 publish_to: "none"
 
-version: 1.5.0+8
+version: 1.5.0+9
 
 environment:
   sdk: ">=2.18.2 <3.0.0"
@@ -28,6 +28,7 @@ dependencies:
   geolocator: ^9.0.2
   get: ^4.6.5
   group_radio_button: ^1.3.0
+  image_picker: ^0.8.6
   intl: ^0.17.0
   introduction_screen: ^3.1.1
   native_device_orientation: ^1.1.4
@@ -46,6 +47,10 @@ dependencies:
   url_launcher: ^6.1.7
   video_player: ^2.4.9
   video_thumbnail: ^0.5.3
+  video_trimmer:
+    git:
+      url: https://github.com/KyleKun/video_trimmer.git
+      ref: main
   wakelock: ^0.6.2
   logger: ^1.1.0
   stack_trace: ^1.10.0

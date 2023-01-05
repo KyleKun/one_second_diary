@@ -29,8 +29,13 @@ class DateFormatUtils {
   }
 
   /// Get current date for editting video with date in text format
-  static String getWrittenToday({String lang = ''}) {
-    final date = getToday().split('-');
+  static String getWrittenToday({DateTime? customDate, String lang = ''}) {
+    List<String> date = [];
+    if (customDate == null) {
+      date = getToday().split('-');
+    } else {
+      date = getDate(customDate).split('-');
+    }
 
     final String year = date.first;
     // Used to get month index in list
@@ -90,21 +95,20 @@ class DateFormatUtils {
   }
 
   /// Get the given date and format it properly
-  static String getDate(DateTime date, {bool? isDayFirst}) {
-    // If no default value is given, we check directly in the function
-    isDayFirst ??= isDayFirstPattern();
-
+  static String getDate(DateTime date, {bool allowCheckFormattingDayFirst = false}) {
     // Adding a leading zero on Days and Months <= 9
     final String day = date.day <= 9 ? '0${date.day}' : '${date.day}';
     final String month = date.month <= 9 ? '0${date.month}' : '${date.month}';
     final String year = '${date.year}';
 
     // Brazilian pattern
-    if (isDayFirst) {
-      return '$day-$month-$year';
-    } else {
-      return '$year-$month-$day';
+    if (allowCheckFormattingDayFirst) {
+      if (isDayFirstPattern()) {
+        return '$day-$month-$year';
+      }
     }
+
+    return '$year-$month-$day';
   }
 
   static String parseDateStringAccordingLocale(String date) {
@@ -122,11 +126,9 @@ class DateFormatUtils {
   static DateTime parseToDateTime(String date, {bool? isDayFirst}) {
     isDayFirst ??= isDayFirstPattern();
 
-    final String day =
-        isDayFirst ? date.split('-').first : date.split('-').last;
+    final String day = isDayFirst ? date.split('-').first : date.split('-').last;
     final String month = date.split('-')[1];
-    final String year =
-        isDayFirst ? date.split('-').last : date.split('-').first;
+    final String year = isDayFirst ? date.split('-').last : date.split('-').first;
 
     return DateTime(year.toInt(), month.toInt(), day.toInt());
   }

@@ -121,4 +121,8 @@ const Map<String, String> fr = {
   'cancelMovieCreation': 'Annuler la création du film',
   'cancelMovieDesc': 'Voulez-vous vraiment annuler la création du film ?',
   'reportError': 'Signaler une erreur',
+  'oops': 'Oops!',
+  'videoResolutionWarning': 'Cette résolution vidéo n\'est pas prise en charge pour le moment. Veuillez vous assurer qu\'il a été enregistré dans le paysage (rapport d\'aspect 16:9)',
+  'unsupportedPortraitMode': 'Les vidéos en mode portrait ne sont pas prises en charge pour le moment. Veuillez sélectionner une autre vidéo',
+  'processingVideo': 'Traitement de la vidéo',
 };

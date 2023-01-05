@@ -6,7 +6,8 @@ import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:group_radio_button/group_radio_button.dart';
-import 'package:video_player/video_player.dart';
+// import 'package:video_player/video_player.dart';
+import 'package:video_trimmer/video_trimmer.dart';
 
 import '../../routes/app_pages.dart';
 import '../../utils/constants.dart';
@@ -24,12 +25,12 @@ class SaveVideoPage extends StatefulWidget {
 }
 
 class _SaveVideoPageState extends State<SaveVideoPage> {
-  double _opacity = 1.0;
-  late String _tempVideoPath;
-  late VideoPlayerController _videoController;
+  final Map<String, dynamic> routeArguments = Get.arguments;
 
-  final TextEditingController customLocationTextController =
-      TextEditingController();
+  late String _tempVideoPath;
+  final Trimmer _trimmer = Trimmer();
+
+  final TextEditingController customLocationTextController = TextEditingController();
 
   Color pickerColor = const Color(0xff000000);
   Color currentColor = const Color(0xff000000);
@@ -40,7 +41,7 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
     allowCheckFormattingDayFirst: true,
   );
 
-  final List<String> _dateFormats = [
+  List<String> _dateFormats = [
     DateFormatUtils.getToday(
       allowCheckFormattingDayFirst: true,
     ),
@@ -51,15 +52,41 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
 
   String? _currentAddress;
   Position? _currentPosition;
-  bool isGeotaggingEnabled =
-      SharedPrefsUtil.getBool('isGeotaggingEnabled') ?? false;
+  bool isGeotaggingEnabled = SharedPrefsUtil.getBool('isGeotaggingEnabled') ?? false;
   String? _subtitles;
+  double _videoStartValue = 0.0;
+  double _videoEndValue = 0.0;
+  bool _isVideoPlaying = false;
+  bool _isLocationProcessing = false;
+
+  void _initCorrectDates() {
+    final DateTime? _determinedDate = routeArguments['currentDate'];
+
+    if (_determinedDate != null) {
+      _dateFormatValue = DateFormatUtils.getDate(
+        _determinedDate,
+        allowCheckFormattingDayFirst: true,
+      );
+      _dateFormats = [
+        DateFormatUtils.getDate(_determinedDate, allowCheckFormattingDayFirst: true),
+        DateFormatUtils.getWrittenToday(
+          customDate: _determinedDate,
+          lang: Get.locale!.languageCode,
+        ),
+      ];
+    }
+  }
 
   Future<void> checkGeotaggingStatus() async {
-    isGeotaggingEnabled =
-        SharedPrefsUtil.getBool('isGeotaggingEnabled') ?? false;
+    isGeotaggingEnabled = SharedPrefsUtil.getBool('isGeotaggingEnabled') ?? false;
     if (isGeotaggingEnabled) {
+      setState(() {
+        _isLocationProcessing = true;
+      });
       await _getCurrentPosition();
+      setState(() {
+        _isLocationProcessing = false;
+      });
     }
   }
 
@@ -76,16 +103,15 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text(
-              'Location services are disabled. Please enable the services')));
+          content: Text('Location services are disabled. Please enable the services')));
       return false;
     }
     permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
-        ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Location permissions are denied')));
+        ScaffoldMessenger.of(context)
+            .showSnackBar(const SnackBar(content: Text('Location permissions are denied')));
         return false;
       }
     }
@@ -103,17 +129,16 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
 
     if (!hasPermission) return;
     await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
-        .then((Position position) {
+        .then((Position position) async {
       setState(() => _currentPosition = position);
-      _getAddressFromLatLng(_currentPosition!);
+      await _getAddressFromLatLng(_currentPosition!);
     }).catchError((e) {
       Utils.logError('[Geolocation] - Failed to get location: $e');
     });
   }
 
   Future<void> _getAddressFromLatLng(Position position) async {
-    await placemarkFromCoordinates(
-            _currentPosition!.latitude, _currentPosition!.longitude)
+    await placemarkFromCoordinates(_currentPosition!.latitude, _currentPosition!.longitude)
         .then((List<Placemark> placemarks) {
       final Placemark place = placemarks[0];
       String city = '';
@@ -169,43 +194,41 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
 
   @override
   void initState() {
-    _tempVideoPath = Get.arguments;
+    _tempVideoPath = routeArguments['videoPath'];
+    _initCorrectDates();
     _initVideoPlayerController();
     checkGeotaggingStatus().whenComplete(
-      () {
-        setState(() {});
-      },
+      () => setState(() {}),
     );
     super.initState();
   }
 
   @override
   void dispose() {
-    _videoController.dispose();
+    _trimmer.videoPlayerController?.dispose();
     super.dispose();
   }
 
   void _initVideoPlayerController() {
-    _videoController = VideoPlayerController.file(File(_tempVideoPath))
-      ..initialize().then((_) {
-        _videoController.setLooping(true);
-        // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
-        setState(() {});
-      });
+    _trimmer
+        .loadVideo(
+      videoFile: File(routeArguments['videoPath']),
+    )
+        .then((_) {
+      _trimmer.videoPlayerController?.setLooping(true);
+      // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
+      setState(() {});
+    });
   }
 
   void videoPlay() async {
-    if (!_videoController.value.isPlaying) {
-      await _videoController.play();
-      setState(() {
-        _opacity = 0.0;
-      });
-    } else {
-      await _videoController.pause();
-      setState(() {
-        _opacity = 1.0;
-      });
-    }
+    final bool playbackState = await _trimmer.videoPlaybackControl(
+      startValue: _videoStartValue,
+      endValue: _videoEndValue,
+    );
+    setState(() {
+      _isVideoPlaying = playbackState;
+    });
   }
 
   void closePopupAndPushToRecording(String cacheVideoPath) {
@@ -230,10 +253,12 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
         aspectRatio: 16 / 9,
         child: Stack(
           children: [
-            VideoPlayer(_videoController),
+            VideoViewer(
+              trimmer: _trimmer,
+            ),
             Center(
               child: Opacity(
-                opacity: _opacity,
+                opacity: _isVideoPlaying ? 0.0 : 1.0,
                 child: Container(
                   width: MediaQuery.of(context).size.width * 0.25,
                   height: MediaQuery.of(context).size.width * 0.25,
@@ -288,8 +313,7 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
                     children: [
                       Text(
                         customLocationTextController.text.isEmpty
-                            ? _currentAddress ??
-                                customLocationTextController.text
+                            ? _currentAddress ?? customLocationTextController.text
                             : customLocationTextController.text,
                         style: TextStyle(
                           fontSize: MediaQuery.of(context).size.width * 0.032,
@@ -301,8 +325,7 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
                       ),
                       Text(
                         customLocationTextController.text.isEmpty
-                            ? _currentAddress ??
-                                customLocationTextController.text
+                            ? _currentAddress ?? customLocationTextController.text
                             : customLocationTextController.text,
                         style: TextStyle(
                           fontSize: MediaQuery.of(context).size.width * 0.032,
@@ -324,41 +347,62 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        showDialog(
-          barrierDismissible: false,
-          context: Get.context!,
-          builder: (context) => CustomDialog(
-            isDoubleAction: true,
-            title: 'discardVideoTitle'.tr,
-            content: 'discardVideoDesc'.tr,
-            actionText: 'yes'.tr,
-            actionColor: Colors.green,
-            action: () => closePopupAndPushToRecording(_tempVideoPath),
-            action2Text: 'no'.tr,
-            action2Color: Colors.red,
-            action2: () => Get.back(),
-          ),
-        );
+        // Prevent showing the option to re-record video if not coming from the recording page
+        final isFromRecordingPage = routeArguments['isFromRecordingPage'];
+        if (!isFromRecordingPage) {
+          // Deleting video from cache
+          StorageUtils.deleteFile(_tempVideoPath);
+          Get.back();
+        } else {
+          showDialog(
+            barrierDismissible: false,
+            context: Get.context!,
+            builder: (context) => CustomDialog(
+              isDoubleAction: true,
+              title: 'discardVideoTitle'.tr,
+              content: 'discardVideoDesc'.tr,
+              actionText: 'yes'.tr,
+              actionColor: Colors.green,
+              action: () => closePopupAndPushToRecording(_tempVideoPath),
+              action2Text: 'no'.tr,
+              action2Color: Colors.red,
+              action2: () => Get.back(),
+            ),
+          );
+        }
         return true;
       },
       child: Scaffold(
         appBar: AppBar(
           title: Text('saveVideo'.tr),
         ),
-        floatingActionButton: SaveButton(
-          videoPath: _tempVideoPath,
-          videoController: _videoController,
-          dateColor: currentColor,
-          dateFormat: _dateFormatValue,
-          isTextDate: isTextDate,
-          userLocation: customLocationTextController.text.isEmpty
-              ? _currentAddress ?? ''
-              : customLocationTextController.text,
-          subtitles: _subtitles,
-          videoDuration: _videoController.value.duration.inSeconds,
-          isGeotaggingEnabled: isGeotaggingEnabled,
-          textOutlineColor: invert(currentColor),
-          textOutlineWidth: textOutlineStrokeWidth,
+        floatingActionButton: Visibility(
+          visible: !_isLocationProcessing,
+          replacement: const FloatingActionButton(
+            onPressed: null,
+            child: CircularProgressIndicator(
+              color: Colors.white,
+            ),
+            backgroundColor: Colors.green,
+          ),
+          child: SaveButton(
+            videoPath: _tempVideoPath,
+            videoController: _trimmer.videoPlayerController!,
+            dateColor: currentColor,
+            dateFormat: _dateFormatValue,
+            isTextDate: isTextDate,
+            userLocation: customLocationTextController.text.isEmpty
+                ? _currentAddress ?? ''
+                : customLocationTextController.text,
+            subtitles: _subtitles,
+            videoStartInMilliseconds: _videoStartValue,
+            videoEndInMilliseconds: _videoEndValue,
+            videoDuration: _trimmer.videoPlayerController!.value.duration.inSeconds,
+            isGeotaggingEnabled: isGeotaggingEnabled,
+            textOutlineColor: invert(currentColor),
+            textOutlineWidth: textOutlineStrokeWidth,
+            determinedDate: routeArguments['currentDate'],
+          ),
         ),
         body: SingleChildScrollView(
           child: SizedBox(
@@ -366,6 +410,19 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
             child: Column(
               children: [
                 _dailyVideoPlayer(),
+                Center(
+                  child: TrimViewer(
+                    trimmer: _trimmer,
+                    viewerHeight: 50.0,
+                    type: ViewerType.fixed,
+                    durationStyle: DurationStyle.FORMAT_MM_SS,
+                    maxVideoLength: const Duration(seconds: 10),
+                    viewerWidth: MediaQuery.of(context).size.width,
+                    onChangeStart: (value) => _videoStartValue = value,
+                    onChangeEnd: (value) => _videoEndValue = value,
+                    onChangePlaybackState: (value) => setState(() => _isVideoPlaying = value),
+                  ),
+                ),
                 Expanded(child: videoProperties()),
               ],
             ),
@@ -409,8 +466,7 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.only(
-                    left: MediaQuery.of(context).size.width * 0.04),
+                padding: EdgeInsets.only(left: MediaQuery.of(context).size.width * 0.04),
                 child: Container(
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
@@ -451,9 +507,7 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
                 onChanged: (value) => setState(() {
                   _dateFormatValue = value!;
                   // Place date in the bottom if it is text format
-                  _dateFormatValue == _dateFormats[0]
-                      ? isTextDate = false
-                      : isTextDate = true;
+                  _dateFormatValue == _dateFormats[0] ? isTextDate = false : isTextDate = true;
                 }),
                 items: _dateFormats,
                 itemBuilder: (item) => RadioButtonBuilder(
@@ -475,8 +529,7 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
             }
             setState(() {});
           },
-          padding: EdgeInsets.symmetric(
-              horizontal: MediaQuery.of(context).size.width * 0.04),
+          padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * 0.04),
           title: Text(
             'enableGeotagging'.tr,
             style: TextStyle(
