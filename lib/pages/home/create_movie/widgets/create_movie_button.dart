@@ -194,11 +194,28 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
                 final sessionLog = await session.getOutput();
                 if (sessionLog == null) return;
                 final List<dynamic> streams = jsonDecode(sessionLog)['streams'];
-                Utils.logInfo(
+                debugPrint(
                     '${logTag}Streams info for $currentVideo --> $sessionLog');
                 for (var stream in streams) {
                   if (stream['codec_type'] == 'audio') {
                     Utils.logWarning('$logTag$currentVideo already has audio!');
+                    // Make sure the audio stream is mono
+                    await executeFFmpeg(
+                            '-i $currentVideo -map 0 -c:v copy -c:a aac -ac 1 -c:s copy $tempVideo -y')
+                        .then((session) async {
+                      final returnCode = await session.getReturnCode();
+                      if (ReturnCode.isSuccess(returnCode)) {
+                        StorageUtils.deleteFile(currentVideo);
+                        StorageUtils.renameFile(tempVideo, currentVideo);
+                        Utils.logInfo(
+                            '${logTag}Made sure $currentVideo is mono');
+                      } else {
+                        final sessionLog = await session.getLogsAsString();
+                        Utils.logError(
+                            '${logTag}Error converting $currentVideo to mono audio');
+                        Utils.logError('${logTag}Error: $sessionLog');
+                      }
+                    });
                     hasAudio = true;
                   }
                   if (stream['codec_type'] == 'subtitle') {

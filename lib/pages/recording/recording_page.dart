@@ -321,6 +321,7 @@ class _RecordingPageState extends State<RecordingPage>
             arguments: {
               'videoPath': event.file.path,
               'isFromRecordingPage': true,
+              'currentDate': DateTime.now(),
             },
           );
         } catch (e) {
@@ -340,9 +341,13 @@ class _RecordingPageState extends State<RecordingPage>
       });
 
       /// Start video recording with max duration
+      final int milliseconds =
+          _recordingSettingsController.recordingSeconds.value * 1000;
       await _cameraController.startVideoRecording(
         maxVideoDuration: Duration(
-          seconds: _recordingSettingsController.recordingSeconds.value,
+          // 400 milliseconds more than selected for 1 second literal, since it's too short
+          milliseconds:
+              milliseconds == 1000 ? milliseconds + 400 : milliseconds,
         ),
       );
     } on CameraException catch (e) {
@@ -600,9 +605,9 @@ class _RecordingPageState extends State<RecordingPage>
                           child: RotatedBox(
                             quarterTurns: 1,
 
-                            /// 1.1 seconds instead of 1.0 to prevent some bugs
+                            /// 1.6 seconds instead of 1.0 to prevent some bugs
                             child: TimerBuilder.periodic(
-                                const Duration(milliseconds: 1100),
+                                const Duration(milliseconds: 1600),
                                 alignment: Duration.zero, builder: (context) {
                               final int remaining =
                                   _cameraController.value.isRecordingVideo

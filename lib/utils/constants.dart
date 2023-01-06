@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class Constants {
   // Added in video metadata so we can differentiate from previous versions
-  static const String artist = 'One Second Diary - v1.5';
+  static const String artist = 'One Second Diary v1.5';
   static const String donationUrl = 'https://www.buymeacoffee.com/kylekun';
   static const String backupTutorialUrl = 'https://youtu.be/DTvKktkQ4MU';
   static const String email = 'mailto:kylekundev@gmail.com';
