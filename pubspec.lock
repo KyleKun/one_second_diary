@@ -905,7 +905,7 @@ packages:
     description:
       path: "."
       ref: main
-      resolved-ref: "638041ed5351ec28661a9f2a1153e1a47f06580e"
+      resolved-ref: b208d97053a3583aceecec88ab4001354633683a
       url: "https://github.com/KyleKun/video_trimmer.git"
     source: git
     version: "2.0.1"
