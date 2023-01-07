@@ -12,6 +12,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 
+import '../../../controllers/daily_entry_controller.dart';
 import '../../../controllers/lang_controller.dart';
 import '../../../controllers/video_count_controller.dart';
 import '../../../routes/app_pages.dart';
@@ -34,10 +35,12 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
   late String? subtitles;
   String currentVideo = '';
   bool wasDateRecorded = false;
-  DateTime _currentDate = DateTime.now();
+  DateTime _selectedDate = DateTime.now();
   late Color mainColor;
   final String _currentDateStr = DateFormatUtils.getToday();
   final LanguageController _languageController = Get.find();
+  final VideoCountController _videoCountController = Get.find();
+  final DailyEntryController _dailyEntryController = Get.find();
 
   @override
   void initState() {
@@ -64,7 +67,7 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
   }
 
   void getCurrentDateThumbnail() {
-    final parsedCurrentDate = DateFormatUtils.getDate(_currentDate);
+    final parsedCurrentDate = DateFormatUtils.getDate(_selectedDate);
     setState(() {
       wasDateRecorded = allVideos.any((a) => a.contains(parsedCurrentDate));
       if (wasDateRecorded) {
@@ -91,7 +94,8 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
 
     if (rawFile != null) {
       // Video validation before navigation to the video editing page
-      final bool isVideoValid = await _validateInputVideo(rawFile.path, context);
+      final bool isVideoValid =
+          await _validateInputVideo(rawFile.path, context);
 
       // Go to the save video page
       if (isVideoValid) {
@@ -99,7 +103,7 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
           Routes.SAVE_VIDEO,
           arguments: {
             'videoPath': rawFile.path,
-            'currentDate': _currentDate,
+            'currentDate': _selectedDate,
             'isFromRecordingPage': false,
           },
         );
@@ -108,7 +112,8 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
   }
 
   // Ensure the video passes all validations before processing
-  Future<bool> _validateInputVideo(String videoPath, BuildContext context) async {
+  Future<bool> _validateInputVideo(
+      String videoPath, BuildContext context) async {
     return await executeFFprobe(
             '-v error -print_format json -show_format -select_streams v:0 -show_streams $videoPath')
         .then((session) async {
@@ -116,7 +121,8 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
       if (ReturnCode.isSuccess(returnCode)) {
         final sessionLog = await session.getOutput();
         if (sessionLog == null) return false;
-        final Map<String, dynamic> videoStreamDetails = jsonDecode(sessionLog)['streams'][0];
+        final Map<String, dynamic> videoStreamDetails =
+            jsonDecode(sessionLog)['streams'][0];
 
         final num videoWidth = videoStreamDetails['width'];
         final num videoHeight = videoStreamDetails['height'];
@@ -210,13 +216,18 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
         title: Text(
           'discardVideoTitle'.tr,
         ),
+        content: Text(
+          'deleteVideoWarning'.tr,
+        ),
         actions: [
           TextButton(
             onPressed: () async {
               Navigator.pop(context);
             },
             style: TextButton.styleFrom(
-              foregroundColor: ThemeService().isDarkTheme() ? AppColors.light : AppColors.dark,
+              foregroundColor: ThemeService().isDarkTheme()
+                  ? AppColors.light
+                  : AppColors.dark,
             ),
             child: Text('no'.tr),
           ),
@@ -226,7 +237,12 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
               await File(currentVideo).delete();
 
               // Reduce the video count recorded by the app
-              VideoCountController().reduceVideoCount();
+              _videoCountController.reduceVideoCount();
+
+              // If deleted video was today, reset daily recording status
+              if (currentVideo.contains(_currentDateStr)) {
+                _dailyEntryController.updateDaily(value: false);
+              }
 
               // Refresh the UI
               setState(() {
@@ -256,7 +272,7 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
             childAspectRatio: 1.2,
             onDayPressed: (DateTime date, List<Event> events) {
               setState(
-                () => _currentDate = date,
+                () => _selectedDate = date,
               );
               final currentVideoExists = allVideos.any(
                 (a) => a.contains(
@@ -346,7 +362,8 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
               fontWeight: FontWeight.w900,
             ),
             weekFormat: false,
-            iconColor: ThemeService().isDarkTheme() ? Colors.white : Colors.black,
+            iconColor:
+                ThemeService().isDarkTheme() ? Colors.white : Colors.black,
             headerTextStyle: TextStyle(
               fontFamily: 'Magic',
               fontSize: 20.0,
@@ -356,7 +373,7 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
             shouldShowTransform: false,
             height: MediaQuery.of(context).size.height * 0.42,
             showOnlyCurrentMonthDate: true,
-            selectedDateTime: _currentDate,
+            selectedDateTime: _selectedDate,
             daysHaveCircularBorder: true,
             daysTextStyle: TextStyle(
               fontFamily: 'Magic',
@@ -378,7 +395,8 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
                         child: FutureBuilder(
                           future: getThumbnail(currentVideo),
                           builder: (context, snapshot) {
-                            if (snapshot.connectionState == ConnectionState.waiting) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
                               return Center(
                                 child: SizedBox(
                                   height: 30,
@@ -414,12 +432,15 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
                             onPressed: () async {
                               final Directory directory =
                                   await getApplicationDocumentsDirectory();
-                              final String srtPath = '${directory.path}/temp.srt';
-                              final getSubsFile =
-                                  await executeFFmpeg('-i $currentVideo $srtPath -y');
-                              final resultCode = await getSubsFile.getReturnCode();
+                              final String srtPath =
+                                  '${directory.path}/temp.srt';
+                              final getSubsFile = await executeFFmpeg(
+                                  '-i $currentVideo $srtPath -y');
+                              final resultCode =
+                                  await getSubsFile.getReturnCode();
                               if (ReturnCode.isSuccess(resultCode)) {
-                                final srtFile = await File(srtPath).readAsString();
+                                final srtFile =
+                                    await File(srtPath).readAsString();
                                 setState(() {
                                   subtitles = srtFile.trim().split(',000').last;
                                 });
@@ -464,7 +485,7 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
                     const SizedBox(
                       height: 10.0,
                     ),
-                    if (!_currentDate.isAfter(DateTime.now()))
+                    if (!_selectedDate.isAfter(DateTime.now()))
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: ElevatedButton(

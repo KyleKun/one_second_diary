@@ -120,7 +120,11 @@ const Map<String, String> pt = {
   'cancelMovieDesc': 'Você tem certeza que deseja cancelar a criação do filme?',
   'reportError': 'Relatar erro',
   'oops': 'Opa!',
-  'videoResolutionWarning': 'Esta resolução de vídeo não é suportada no momento. Certifique -se de que foi registrado na paisagem (proporção de 16:9)',
-  'unsupportedPortraitMode': 'Os vídeos do modo retrato não são suportados no momento. Selecione outro vídeo',
+  'videoResolutionWarning':
+      'Esta resolução de vídeo não é suportada no momento. Certifique -se de que foi registrado na paisagem (proporção de 16:9)',
+  'unsupportedPortraitMode':
+      'Os vídeos do modo retrato não são suportados no momento. Selecione outro vídeo',
   'processingVideo': 'Vídeo de processamento',
+  'deleteVideoWarning':
+      'Tem certeza que deseja excluir permanentemente este vídeo?',
 };

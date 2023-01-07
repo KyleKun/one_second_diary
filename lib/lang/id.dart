@@ -121,7 +121,11 @@ const Map<String, String> id = {
   'cancelMovieDesc': 'Apakah Anda yakin ingin membatalkan pembuatan video?',
   'reportError': 'Laporkan kesalahan',
   'oops': 'Ups!',
-  'videoResolutionWarning': 'Resolusi video ini tidak didukung saat ini. Pastikan itu dicatat dalam lanskap (rasio aspek 16:9)',
-  'unsupportedPortraitMode': 'Video mode potret tidak didukung saat ini. Pilih video lain',
+  'videoResolutionWarning':
+      'Resolusi video ini tidak didukung saat ini. Pastikan itu dicatat dalam lanskap (rasio aspek 16:9)',
+  'unsupportedPortraitMode':
+      'Video mode potret tidak didukung saat ini. Pilih video lain',
   'processingVideo': 'Memproses video',
+  'deleteVideoWarning':
+      'Apakah Anda yakin ingin menghapus video ini secara permanen?',
 };

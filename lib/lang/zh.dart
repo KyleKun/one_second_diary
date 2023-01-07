@@ -114,4 +114,5 @@ const Map<String, String> zh = {
   'videoResolutionWarning': '目前不支持此视频分辨率。请确保将其记录为景观 (16:9宽高比)',
   'unsupportedPortraitMode': '肖像模式视频目前不受支持。请选择另一个视频',
   'processingVideo': '处理视频',
+  'deleteVideoWarning': '您确定要永久删除此视频吗?',
 };
