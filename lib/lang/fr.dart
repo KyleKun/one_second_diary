@@ -76,8 +76,8 @@ const Map<String, String> fr = {
   'dateFormat': 'Format de date :',
   'dateColor': 'Couleur de la date :',
   'selectColor': 'Choisir une couleur',
-  'enableGeotagging': 'Activer la géotagging',
-  'setCustomLocation': 'Définir l\'emplacement personnalisé',
+  'enableGeotagging': 'Activer la géotagging (facultative)',
+  'setCustomLocation': 'Définir l\'emplacement personnalisé (facultative)',
   'ok': 'D\'accord',
   'reset': 'Réinitialiser',
   'enterLocation': 'Entrer l\'emplacement',
@@ -92,7 +92,7 @@ const Map<String, String> fr = {
   'custom': 'Personnalisé',
   'dateRange': 'Date Range',
   'clipsFound': 'Clips trouvés',
-  'enterSubtitles': 'Entrer le sous-titre',
+  'enterSubtitles': 'Entrer le sous-titre (facultative)',
   'totalSelected': 'Total sélectionné: ',
   'selectVideos': 'Sélectionnez les vidéos',
   'editSubtitles': 'Editer les sous-titres',
@@ -128,4 +128,15 @@ const Map<String, String> fr = {
       'Les vidéos en mode portrait ne sont pas prises en charge pour le moment. Veuillez sélectionner une autre vidéo',
   'processingVideo': 'Traitement de la vidéo',
   'deleteVideoWarning': 'Voulez-vous vraiment supprimer cette vidéo ?',
+  'deleteVideo': 'Supprimer la vidéo',
+  'addSubtitles': 'Ajouter des sous-titres',
+  'dateColorAndFormat': 'Couleur et format de date',
+  'locationServicesDisabled':
+      'Les services de localisation sont désactivés sur votre appareil. Veuillez les activer et réessayer.',
+  'locationPermissionDenied':
+      'Les autorisations de localisation ont été refusées.',
+  'locationPermissionPermanentlyDenied':
+      'Les autorisations de localisation sont refusées de manière permanente. Veuillez les activer manuellement dans les paramètres de votre appareil.',
+  'locationServiceError':
+      'Une erreur s\'est produite lors de la tentative de récupération de votre emplacement. Veuillez essayer d\'ajouter un emplacement personnalisé manuellement.',
 };

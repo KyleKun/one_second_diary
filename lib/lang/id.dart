@@ -75,11 +75,11 @@ const Map<String, String> id = {
   'dateFormat': 'Format Tanggal:',
   'dateColor': 'Warna Hari:',
   'selectColor': 'Pilih warna',
-  'enableGeotagging': 'Aktifkan geotagging',
-  'setCustomLocation': 'Setel lokasi khusus',
+  'enableGeotagging': 'Aktifkan geotagging (opsional)',
+  'setCustomLocation': 'Setel lokasi khusus (opsional)',
   'ok': 'Oke',
   'reset': 'Mengatur ulang',
-  'enterLocation': 'Masukkan lokasi',
+  'enterLocation': 'Masukkan lokasi (opsional)',
   'allTime': 'Sepanjang waktu',
   'last7Days': '7 hari terakhir',
   'last30Days': '30 hari terakhir',
@@ -128,4 +128,14 @@ const Map<String, String> id = {
   'processingVideo': 'Memproses video',
   'deleteVideoWarning':
       'Apakah Anda yakin ingin menghapus video ini secara permanen?',
+  'deleteVideo': 'Hapus video',
+  'addSubtitles': 'Tambahkan subjudul',
+  'dateColorAndFormat': 'Warna dan format tanggal',
+  'locationServicesDisabled':
+      'Layanan lokasi dinonaktifkan pada perangkat Anda. Mohon aktifkan dan coba lagi.',
+  'locationPermissionDenied': 'Izin lokasi ditolak.',
+  'locationPermissionPermanentlyDenied':
+      'Izin lokasi ditolak secara permanen. Mohon aktifkan secara manual di pengaturan perangkat Anda.',
+  'locationServiceError':
+      'Terjadi kesalahan saat mencoba mendapatkan lokasi Anda. Mohon coba tambahkan lokasi kustom secara manual.'
 };

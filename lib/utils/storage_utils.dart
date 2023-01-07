@@ -19,6 +19,12 @@ class StorageUtils {
             'Looks like some permissions were not granted');
       }
 
+      // Set internal appDirectoryPath
+      final io.Directory internalDirectoryPath =
+          await getApplicationDocumentsDirectory();
+      SharedPrefsUtil.putString(
+          'internalDirectoryPath', internalDirectoryPath.path);
+
       io.Directory? appDirectory;
       io.Directory? moviesDirectory;
 

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'constants.dart';
+
 class CustomCheckboxListTile extends StatelessWidget {
   const CustomCheckboxListTile({
     super.key,
@@ -40,6 +42,7 @@ class CustomCheckboxListTile extends StatelessWidget {
               child: Transform.scale(
                 scale: checkboxSize ?? 1.4,
                 child: Checkbox(
+                  activeColor: AppColors.green,
                   value: isChecked,
                   onChanged: onChanged,
                 ),

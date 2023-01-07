@@ -74,8 +74,8 @@ const Map<String, String> es = {
   'dateFormat': 'Formato de la fecha:',
   'dateColor': 'Color de la fecha:',
   'selectColor': 'Selecciona un color',
-  'enableGeotagging': 'Habilitar geotagging',
-  'setCustomLocation': 'Establecer ubicación personalizada',
+  'enableGeotagging': 'Habilitar localización (opcional)',
+  'setCustomLocation': 'Establecer ubicación personalizada (opcional)',
   'ok': 'OK',
   'reset': 'Reiniciar',
   'enterLocation': 'Ingrese la ubicación',
@@ -90,7 +90,7 @@ const Map<String, String> es = {
   'custom': 'Disfraz',
   'dateRange': 'Rango de fechas',
   'clipsFound': 'Clips encontrados',
-  'enterSubtitles': 'Introducir subtítulos',
+  'enterSubtitles': 'Introducir subtítulos (opcional)',
   'totalSelected': 'Total seleccionado: ',
   'selectVideos': 'Seleccionar videos',
   'editSubtitles': 'Editar subtítulos',
@@ -125,6 +125,16 @@ const Map<String, String> es = {
       'Esta resolución de video no es compatible en este momento. Asegúrese de que se registre en el paisaje (relación de aspecto 16:9)',
   'unsupportedPortraitMode':
       'Los videos del modo de retrato no son compatibles en este momento. Seleccione otro video',
-  'processingVideo': 'Video de procesamiento',
+  'processingVideo': 'Procesando video',
   'deleteVideoWarning': '¿Estás seguro de que quieres eliminar este video?',
+  'deleteVideo': 'Eliminar video',
+  'addSubtitles': 'Agregar subtítulos',
+  'dateColorAndFormat': 'Color y formato de fecha',
+  'locationServicesDisabled':
+      'Los servicios de ubicación están deshabilitados en su dispositivo. Por favor, habilítelo e inténtelo de nuevo.',
+  'locationPermissionDenied': 'Los permisos de ubicación fueron denegados.',
+  'locationPermissionPermanentlyDenied':
+      'Los permisos de ubicación están denegados de forma permanente. Por favor, habilítelo manualmente en la configuración de su dispositivo.',
+  'locationServiceError':
+      'Ocurrió un error al intentar obtener su ubicación. Por favor, intente agregar una ubicación personalizada manualmente.'
 };

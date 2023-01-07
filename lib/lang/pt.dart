@@ -38,7 +38,7 @@ const Map<String, String> pt = {
   'saveVideoErrorTitle': 'Erro ao salvar o vídeo!',
   'videoSavedTitle': 'Vídeo salvo!',
   'videoSavedDesc': 'Até amanhã!',
-  'editVideoProperties': 'Ajustes de vídeo',
+  'editVideoProperties': 'Editar propriedades',
   'comingSoon': ' Em breve... ',
   'saveVideo': 'Salvar vídeo',
   'discardVideoTitle': 'Descartar gravação?',
@@ -74,8 +74,8 @@ const Map<String, String> pt = {
   'dateFormat': 'Formato de Data:',
   'dateColor': 'Cor de Data:',
   'selectColor': 'Selecione uma cor',
-  'enableGeotagging': 'Ativar geotagging',
-  'setCustomLocation': 'Definir local personalizado',
+  'enableGeotagging': 'Incluir localização (opcional)',
+  'setCustomLocation': 'Definir local personalizado (opcional)',
   'ok': 'OK',
   'reset': 'Redefinir',
   'enterLocation': 'Digite o local',
@@ -90,7 +90,7 @@ const Map<String, String> pt = {
   'custom': 'Personalizado',
   'dateRange': 'Período',
   'clipsFound': 'Clipes encontrados',
-  'enterSubtitles': 'Digite uma legenda',
+  'enterSubtitles': 'Digite uma legenda (opcional)',
   'totalSelected': 'Total selecionado: ',
   'selectVideos': 'Escolha os vídeos',
   'editSubtitles': 'Editar legendas',
@@ -108,9 +108,9 @@ const Map<String, String> pt = {
   'deleteProfile': 'Excluir perfil',
   'enterProfileName': 'Digite o nome do perfil',
   'newProfileTooltip':
-      'Criar um novo perfil configurará um diretório separado para vídeos criados enquanto esse perfil é selecionado',
+      'Adicionar um novo perfil criará uma pasta separada para vídeos salvos enquanto esse perfil estiver selecionado',
   'deleteProfileTooltip':
-      'Todos os vídeos associados a este perfil também serão excluídos permanentemente. Você tem certeza de continuar?',
+      'Todos os vídeos associados a este perfil também serão excluídos permanentemente. Você tem certeza que deseja continuar?',
   'profileNameCannotBeEmpty': 'O nome do perfil não pode estar vazio',
   'reservedProfileName': 'Este é um nome de perfil reservado',
   'creatingMovie':
@@ -119,12 +119,22 @@ const Map<String, String> pt = {
   'cancelMovieCreation': 'Cancelar criação de filme',
   'cancelMovieDesc': 'Você tem certeza que deseja cancelar a criação do filme?',
   'reportError': 'Relatar erro',
-  'oops': 'Opa!',
+  'oops': 'Oops!',
   'videoResolutionWarning':
-      'Esta resolução de vídeo não é suportada no momento. Certifique -se de que foi registrado na paisagem (proporção de 16:9)',
+      'Esta resolução de vídeo não é suportada no momento. Certifique-se de que foi gravado em modo paisagem (proporção 16:9)',
   'unsupportedPortraitMode':
-      'Os vídeos do modo retrato não são suportados no momento. Selecione outro vídeo',
-  'processingVideo': 'Vídeo de processamento',
+      'Vídeos em modo retrato não são suportados no momento. Selecione outro vídeo.',
+  'processingVideo': 'Processando vídeo',
   'deleteVideoWarning':
       'Tem certeza que deseja excluir permanentemente este vídeo?',
+  'deleteVideo': 'Excluir vídeo',
+  'addSubtitles': 'Adicionar legendas',
+  'dateColorAndFormat': 'Cor e formato de data',
+  'locationServicesDisabled':
+      'O GPS está desativado em seu dispositivo. Por favor, ative-o e tente novamente.',
+  'locationPermissionDenied': 'As permissões de localização foram negadas.',
+  'locationPermissionPermanentlyDenied':
+      'As permissões de localização foram negadas de forma permanente. Por favor, ative-as manualmente nas configurações do seu dispositivo.',
+  'locationServiceError':
+      'Ocorreu um erro ao tentar obter sua localização. Por favor, tente adicionar uma localização personalizada manualmente.'
 };

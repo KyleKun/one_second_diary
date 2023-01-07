@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:video_player/video_player.dart';
 
+import '../../../routes/app_pages.dart';
 import '../../../utils/ffmpeg_api_wrapper.dart';
 import '../../../utils/storage_utils.dart';
 import '../../../utils/utils.dart';
@@ -17,7 +18,7 @@ class VideoSubtitlesEditorPage extends StatefulWidget {
   });
 
   final String videoPath;
-  final String? subtitles;
+  final String subtitles;
 
   @override
   State<VideoSubtitlesEditorPage> createState() =>
@@ -36,8 +37,8 @@ class _VideoSubtitlesEditorPageState extends State<VideoSubtitlesEditorPage> {
   @override
   void initState() {
     _initVideoPlayerController();
-    if (widget.subtitles != null) {
-      _subtitles = widget.subtitles!
+    if (widget.subtitles.isNotEmpty) {
+      _subtitles = widget.subtitles
           .trim()
           .replaceAll('\n', ' ')
           .replaceAll(RegExp(r'\s+'), ' ');
@@ -116,7 +117,7 @@ class _VideoSubtitlesEditorPageState extends State<VideoSubtitlesEditorPage> {
                     _subtitles = value;
                   }),
                   decoration: InputDecoration(
-                    hintText: 'enterSubtitles'.tr,
+                    hintText: ('enterSubtitles'.tr).split('(').first,
                     filled: true,
                     border: const OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.green),
@@ -153,16 +154,15 @@ class _VideoSubtitlesEditorPageState extends State<VideoSubtitlesEditorPage> {
                     '${widget.videoPath.split('.mp4').first}_temp.mp4';
 
                 if (isEdit) {
-                  Utils.logInfo(
+                  Utils.logWarning(
                       '${logTag}Editing subtitles for ${widget.videoPath}');
-                  command =
-                      '-i ${widget.videoPath} -i $subtitles -c:s mov_text -c:v copy -c:a copy -map 0:v -map 0:a? -map 1 -disposition:s:0 default $tempPath -y';
                 } else {
-                  Utils.logInfo(
+                  Utils.logWarning(
                       '${logTag}Adding brand new subtitles for ${widget.videoPath}');
-                  command =
-                      '-i ${widget.videoPath} -i $subtitles -c copy -c:s mov_text $tempPath -y';
                 }
+
+                command =
+                    '-i ${widget.videoPath} -i $subtitles -c:s mov_text -c:v copy -c:a copy -map 0:v -map 0:a? -map 1 -disposition:s:0 default $tempPath -y';
 
                 await executeFFmpeg(command).then((session) async {
                   final returnCode = await session.getReturnCode();
@@ -184,7 +184,8 @@ class _VideoSubtitlesEditorPageState extends State<VideoSubtitlesEditorPage> {
                 setState(() {
                   isProcessing = false;
                 });
-                Get.back();
+
+                Get.offAllNamed(Routes.HOME)?.then((_) => setState(() {}));
               },
               child: !isProcessing
                   ? Padding(

@@ -80,7 +80,8 @@ class _SaveButtonState extends State<SaveButton> {
           content: '${'tryAgainMsg'.tr}\n\nError: ${e.toString()}',
           actionText: 'Ok',
           actionColor: Colors.red,
-          action: () => Get.offAllNamed(Routes.HOME),
+          action: () =>
+              Get.offAllNamed(Routes.HOME)?.then((_) => setState(() {})),
           sendLogs: true,
         ),
       );
@@ -282,7 +283,7 @@ class _SaveButtonState extends State<SaveButton> {
               action: () {
                 // Deleting video from cache
                 StorageUtils.deleteFile(widget.videoPath);
-                Get.offAllNamed(Routes.HOME);
+                Get.offAllNamed(Routes.HOME)?.then((_) => setState(() {}));
               },
             ),
           );
@@ -304,8 +305,8 @@ class _SaveButtonState extends State<SaveButton> {
               content: '${'tryAgainMsg'.tr}\n\nError: $sessionLog',
               actionText: 'Ok',
               actionColor: Colors.red,
-              action: () => Get.offAllNamed(Routes.HOME),
-              sendLogs: true,
+              action: () =>
+                  Get.offAllNamed(Routes.HOME)?.then((_) => setState(() {})),
             ),
           );
         }

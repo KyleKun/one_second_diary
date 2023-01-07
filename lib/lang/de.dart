@@ -74,8 +74,8 @@ const Map<String, String> de = {
   'dateFormat': 'Datumsformat:',
   'dateColor': 'Datumsfarbe:',
   'selectColor': 'Wähle eine Farbe',
-  'enableGeotagging': 'Geotagging aktivieren',
-  'setCustomLocation': 'Setzen Sie den benutzerdefinierten Standort',
+  'enableGeotagging': 'Geotagging aktivieren (optional)',
+  'setCustomLocation': 'Setzen Sie den benutzerdefinierten Standort (optional)',
   'ok': 'OK',
   'reset': 'Zurücksetzen',
   'enterLocation': 'Ort eingeben',
@@ -90,7 +90,7 @@ const Map<String, String> de = {
   'custom': 'Brauch',
   'dateRange': 'Datumsbereich',
   'clipsFound': 'Clips gefunden',
-  'enterSubtitles': 'Untertitel eingeben',
+  'enterSubtitles': 'Untertitel eingeben (optional)',
   'totalSelected': 'Gesamt ausgewählt: ',
   'selectVideos': 'Videos auswählen',
   'editSubtitles': 'Untertitel bearbeiten',
@@ -124,6 +124,16 @@ const Map<String, String> de = {
       'Diese Videoauflösung wird derzeit nicht unterstützt. Bitte stellen Sie sicher, dass es in Landschaft (16:9 -Seitenverhältnis) aufgezeichnet wurde.',
   'unsupportedPortraitMode':
       'Videos im Hochformat werden derzeit nicht unterstützt. Bitte wählen Sie ein anderes video',
-  'processingVideo': 'Video verarbeiten',
+  'processingVideo': 'Video wird verarbeitet',
   'deleteVideoWarning': 'Möchtest Du dieses Video wirklich löschen?',
+  'deleteVideo': 'Video löschen',
+  'addSubtitles': 'Untertitel hinzufügen',
+  'dateColorAndFormat': 'Datumsfarbe und -format',
+  'locationServicesDisabled':
+      'Die Standortdienste sind auf Ihrem Gerät deaktiviert. Bitte aktivieren Sie sie und versuchen Sie es erneut.',
+  'locationPermissionDenied': 'Die Standortberechtigungen wurden verweigert.',
+  'locationPermissionPermanentlyDenied':
+      'Die Standortberechtigungen sind dauerhaft verweigert. Bitte aktivieren Sie sie manuell in den Einstellungen Ihres Geräts.',
+  'locationServiceError':
+      'Beim Versuch, Ihren Standort zu ermitteln, ist ein Fehler aufgetreten. Bitte versuchen Sie, ein benutzerdefiniertes Gebiet manuell hinzuzufügen.'
 };

@@ -75,8 +75,8 @@ const Map<String, String> en = {
   'dateFormat': 'Date Format:',
   'dateColor': 'Date Color:',
   'selectColor': 'Select a color',
-  'enableGeotagging': 'Enable Geotagging',
-  'setCustomLocation': 'Set custom location',
+  'enableGeotagging': 'Enable Geotagging (optional)',
+  'setCustomLocation': 'Set custom location (optional)',
   'ok': 'OK',
   'reset': 'Reset',
   'enterLocation': 'Enter location',
@@ -91,7 +91,7 @@ const Map<String, String> en = {
   'custom': 'Custom',
   'dateRange': 'Date Range',
   'clipsFound': 'Clips Found',
-  'enterSubtitles': 'Enter subtitles',
+  'enterSubtitles': 'Enter subtitles (optional)',
   'totalSelected': 'Total Selected: ',
   'selectVideos': 'Select videos',
   'editSubtitles': 'Edit subtitles',
@@ -130,4 +130,14 @@ const Map<String, String> en = {
   'processingVideo': 'Processing video',
   'deleteVideoWarning':
       'Are you sure you want to permanently delete this video?',
+  'deleteVideo': 'Delete video',
+  'addSubtitles': 'Add subtitles',
+  'dateColorAndFormat': 'Date Color & Format',
+  'locationServicesDisabled':
+      'Location services are disabled on your device. Please enable it and try again.',
+  'locationPermissionDenied': 'Location permissions were denied.',
+  'locationPermissionPermanentlyDenied':
+      'Location permissions are permanently denied. Please enable it manually in the settings of your device.',
+  'locationServiceError':
+      'An error occurred while trying to get your location. Please try adding a custom locale manually.',
 };

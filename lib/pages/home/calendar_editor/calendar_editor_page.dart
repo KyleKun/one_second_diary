@@ -9,7 +9,6 @@ import 'package:flutter_calendar_carousel/flutter_calendar_carousel.dart'
     show CalendarCarousel;
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 
 import '../../../controllers/daily_entry_controller.dart';
@@ -19,6 +18,7 @@ import '../../../routes/app_pages.dart';
 import '../../../utils/constants.dart';
 import '../../../utils/date_format_utils.dart';
 import '../../../utils/ffmpeg_api_wrapper.dart';
+import '../../../utils/shared_preferences_util.dart';
 import '../../../utils/theme.dart';
 import '../../../utils/utils.dart';
 import 'video_subtitles_editor_page.dart';
@@ -32,11 +32,13 @@ class CalendarEditorPage extends StatefulWidget {
 
 class _CalendarEditorPageState extends State<CalendarEditorPage> {
   late List<String> allVideos;
-  late String? subtitles;
+  String? subtitles;
   String currentVideo = '';
   bool wasDateRecorded = false;
   DateTime _selectedDate = DateTime.now();
   late Color mainColor;
+  late String appDocDir;
+  late String srtFilePath;
   final String _currentDateStr = DateFormatUtils.getToday();
   final LanguageController _languageController = Get.find();
   final VideoCountController _videoCountController = Get.find();
@@ -46,6 +48,7 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
   void initState() {
     mainColor = ThemeService().isDarkTheme() ? Colors.white : Colors.black;
     allVideos = Utils.getAllVideos(fullPath: true);
+    getSubtitlesPath();
     getTodaysThumbnail();
     super.initState();
   }
@@ -55,7 +58,33 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
     super.dispose();
   }
 
-  void getTodaysThumbnail() {
+  void getSubtitlesPath() {
+    appDocDir = SharedPrefsUtil.getString('internalDirectoryPath');
+    srtFilePath = '$appDocDir/temp.srt';
+  }
+
+  Future<void> getSubtitlesForSelectedDate() async {
+    final getSubsFile = await executeFFmpeg('-i $currentVideo $srtFilePath -y');
+    final resultCode = await getSubsFile.getReturnCode();
+    if (ReturnCode.isSuccess(resultCode)) {
+      final srtFileContent = await File(srtFilePath).readAsString();
+      subtitles = srtFileContent.isEmpty
+          ? ''
+          : srtFileContent.trim().split(',000').last;
+    } else {
+      subtitles = '';
+    }
+
+    if (subtitles?.isNotEmpty == true) {
+      debugPrint('Subtitles found in $currentVideo: $subtitles');
+    } else {
+      debugPrint('No subtitles found in $currentVideo');
+    }
+
+    setState(() {});
+  }
+
+  Future<void> getTodaysThumbnail() async {
     setState(() {
       wasDateRecorded = allVideos.any((a) => a.contains(_currentDateStr));
       if (wasDateRecorded) {
@@ -64,9 +93,10 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
         );
       }
     });
+    await getSubtitlesForSelectedDate();
   }
 
-  void getSelectedDateThumbnail() {
+  Future<void> getSelectedDateThumbnail() async {
     final parsedDate = DateFormatUtils.getDate(_selectedDate);
     setState(() {
       wasDateRecorded = allVideos.any((a) => a.contains(parsedDate));
@@ -76,6 +106,7 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
         );
       }
     });
+    await getSubtitlesForSelectedDate();
   }
 
   Future<Uint8List?> getThumbnail(String video) async {
@@ -221,7 +252,7 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
         ),
         actions: [
           TextButton(
-            onPressed: () async {
+            onPressed: () {
               Navigator.pop(context);
             },
             style: TextButton.styleFrom(
@@ -247,8 +278,9 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
               // Refresh the UI
               setState(() {
                 allVideos = Utils.getAllVideos(fullPath: true);
-                getSelectedDateThumbnail();
               });
+
+              await getSelectedDateThumbnail();
 
               Navigator.pop(context);
             },
@@ -270,7 +302,7 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
           margin: const EdgeInsets.symmetric(horizontal: 16.0),
           child: CalendarCarousel<Event>(
             childAspectRatio: 1.2,
-            onDayPressed: (DateTime date, List<Event> events) {
+            onDayPressed: (DateTime date, List<Event> events) async {
               setState(
                 () => _selectedDate = date,
               );
@@ -294,6 +326,7 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
                     ),
                   );
                 });
+                await getSubtitlesForSelectedDate();
               } else {
                 setState(() {
                   wasDateRecorded = false;
@@ -420,57 +453,51 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
                     ),
                     Flexible(
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: AppColors.purple,
+                              backgroundColor: AppColors.mainColor,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(30.0),
                               ),
                             ),
                             onPressed: () async {
-                              final Directory directory =
-                                  await getApplicationDocumentsDirectory();
-                              final String srtPath =
-                                  '${directory.path}/temp.srt';
-                              final getSubsFile = await executeFFmpeg(
-                                  '-i $currentVideo $srtPath -y');
-                              final resultCode =
-                                  await getSubsFile.getReturnCode();
-                              if (ReturnCode.isSuccess(resultCode)) {
-                                final srtFile =
-                                    await File(srtPath).readAsString();
-                                setState(() {
-                                  subtitles = srtFile.trim().split(',000').last;
-                                });
-                              } else {
-                                setState(() {
-                                  subtitles = null;
-                                });
-                              }
+                              await deleteVideoDialog();
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.all(4.0),
+                              child: Text(
+                                'deleteVideo'.tr,
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ),
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: subtitles?.isEmpty == true
+                                  ? AppColors.green
+                                  : AppColors.purple,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(30.0),
+                              ),
+                            ),
+                            onPressed: () async {
                               Get.to(
                                 VideoSubtitlesEditorPage(
                                   videoPath: currentVideo,
-                                  subtitles: subtitles,
+                                  subtitles: subtitles ?? '',
                                 ),
                               );
                             },
                             child: Padding(
                               padding: const EdgeInsets.all(4.0),
                               child: Text(
-                                'editSubtitles'.tr,
+                                subtitles?.isEmpty == true
+                                    ? 'addSubtitles'.tr
+                                    : 'editSubtitles'.tr,
                                 textAlign: TextAlign.center,
                               ),
-                            ),
-                          ),
-                          IconButton(
-                            onPressed: () async {
-                              await deleteVideoDialog();
-                            },
-                            icon: const Icon(
-                              Icons.delete,
-                              color: AppColors.mainColor,
                             ),
                           ),
                         ],
@@ -490,7 +517,7 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
                         padding: const EdgeInsets.all(8.0),
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.mainColor,
+                            backgroundColor: AppColors.green,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(30.0),
                             ),

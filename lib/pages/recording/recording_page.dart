@@ -544,39 +544,10 @@ class _RecordingPageState extends State<RecordingPage>
                           ),
                         ),
 
-                        /// Close recording button
+                        /// Recording settings button
                         Positioned(
                           left: 15.0,
                           bottom: 15.0,
-                          child: GestureDetector(
-                            child: Container(
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: !_isRecording
-                                    ? Colors.red.withOpacity(0.8)
-                                    : Colors.grey.withOpacity(0.4),
-                              ),
-                              width: MediaQuery.of(context).size.width * 0.12,
-                              height: MediaQuery.of(context).size.height * 0.12,
-                              child: Center(
-                                child: Icon(
-                                  Icons.close,
-                                  color: Colors.white,
-                                  size:
-                                      MediaQuery.of(context).size.width * 0.06,
-                                ),
-                              ),
-                            ),
-                            onTap: () {
-                              if (!_isRecording) Get.offAllNamed(Routes.HOME);
-                            },
-                          ),
-                        ),
-
-                        /// Recording Settings
-                        Positioned(
-                          right: 15.0,
-                          top: 15.0,
                           child: GestureDetector(
                             child: Container(
                               decoration: BoxDecoration(
