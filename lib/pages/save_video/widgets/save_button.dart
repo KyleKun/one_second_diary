@@ -267,7 +267,7 @@ class _SaveButtonState extends State<SaveButton> {
 
           // Updates the controller: videoCount += 1
           if (!isEdit) {
-            _videoCountController.updateVideoCount();
+            _videoCountController.increaseVideoCount();
           }
 
           // Showing confirmation popup
