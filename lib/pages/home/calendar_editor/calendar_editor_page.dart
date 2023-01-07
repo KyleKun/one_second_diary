@@ -67,12 +67,12 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
   }
 
   void getSelectedDateThumbnail() {
-    final parsedCurrentDate = DateFormatUtils.getDate(_selectedDate);
+    final parsedDate = DateFormatUtils.getDate(_selectedDate);
     setState(() {
-      wasDateRecorded = allVideos.any((a) => a.contains(parsedCurrentDate));
+      wasDateRecorded = allVideos.any((a) => a.contains(parsedDate));
       if (wasDateRecorded) {
         currentVideo = allVideos.firstWhere(
-          (a) => a.contains(parsedCurrentDate),
+          (a) => a.contains(parsedDate),
         );
       }
     });
