@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:video_player/video_player.dart';
 
 import '../../../routes/app_pages.dart';
+import '../../../utils/constants.dart';
 import '../../../utils/ffmpeg_api_wrapper.dart';
 import '../../../utils/storage_utils.dart';
 import '../../../utils/utils.dart';
@@ -135,7 +136,7 @@ class _VideoSubtitlesEditorPageState extends State<VideoSubtitlesEditorPage> {
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
                 elevation: 5.0,
-                backgroundColor: Colors.green,
+                backgroundColor: AppColors.green,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(80.0),
                 ),
