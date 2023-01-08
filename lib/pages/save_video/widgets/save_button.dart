@@ -263,7 +263,9 @@ class _SaveButtonState extends State<SaveButton> {
         if (ReturnCode.isSuccess(returnCode)) {
           Utils.logInfo('${logTag}Video edited successfully');
 
-          _dayController.updateDaily();
+          if (widget.determinedDate.difference(DateTime.now()).inDays == 0) {
+            _dayController.updateDaily();
+          }
 
           // Updates the controller: videoCount += 1
           if (!isEdit) {

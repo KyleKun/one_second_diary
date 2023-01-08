@@ -40,13 +40,9 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
 
   final double textOutlineStrokeWidth = 1;
 
-  String _dateFormatValue = DateFormatUtils.getToday(
-    allowCheckFormattingDayFirst: true,
-  );
+  late String _dateFormatValue;
 
-  final String _dateWrittenValue = DateFormatUtils.getWrittenToday(
-    lang: Get.locale!.languageCode,
-  );
+  late String _dateWrittenValue;
 
   List<String> _dateFormats = [
     DateFormatUtils.getToday(
@@ -69,23 +65,23 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
   void _initCorrectDates() {
     final DateTime _determinedDate = routeArguments['currentDate'];
 
+    final String _dateCommonValue = DateFormatUtils.getDate(
+      _determinedDate,
+      allowCheckFormattingDayFirst: true,
+    );
+
+    _dateWrittenValue = DateFormatUtils.getWrittenToday(
+      customDate: _determinedDate,
+      lang: Get.locale!.languageCode,
+    );
+
     _recordingSettingsController.dateFormat.value == 0
-        ? _dateFormatValue = DateFormatUtils.getDate(
-            _determinedDate,
-            allowCheckFormattingDayFirst: true,
-          )
-        : _dateFormatValue = DateFormatUtils.getWrittenToday(
-            customDate: _determinedDate,
-            lang: Get.locale!.languageCode,
-          );
+        ? _dateFormatValue = _dateCommonValue
+        : _dateFormatValue = _dateWrittenValue;
 
     _dateFormats = [
-      DateFormatUtils.getDate(_determinedDate,
-          allowCheckFormattingDayFirst: true),
-      DateFormatUtils.getWrittenToday(
-        customDate: _determinedDate,
-        lang: Get.locale!.languageCode,
-      ),
+      _dateCommonValue,
+      _dateWrittenValue,
     ];
   }
 
@@ -539,7 +535,7 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
             child: Text(
               'editVideoProperties'.tr,
               style: TextStyle(
-                fontSize: MediaQuery.of(context).size.height * 0.020,
+                fontSize: MediaQuery.of(context).size.height * 0.019,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -569,6 +565,7 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
                           children: [
                             Padding(
                               padding: EdgeInsets.only(
+                                left: MediaQuery.of(context).size.height * 0.02,
                                 bottom:
                                     MediaQuery.of(context).size.height * 0.02,
                               ),
@@ -576,7 +573,7 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
                                 'dateColorAndFormat'.tr,
                                 style: TextStyle(
                                   fontSize: MediaQuery.of(context).size.height *
-                                      0.020,
+                                      0.019,
                                 ),
                               ),
                             ),
@@ -592,6 +589,7 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
                                 color: invert(currentColor),
                               ),
                             ),
+                            const SizedBox(height: 5.0),
                           ],
                         ),
                       ),
@@ -674,7 +672,7 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
                       title: Text(
                         'enableGeotagging'.tr,
                         style: TextStyle(
-                          fontSize: MediaQuery.of(context).size.height * 0.020,
+                          fontSize: MediaQuery.of(context).size.height * 0.019,
                         ),
                       ),
                     ),
@@ -693,7 +691,7 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
                                 'setCustomLocation'.tr,
                                 style: TextStyle(
                                   fontSize: MediaQuery.of(context).size.height *
-                                      0.020,
+                                      0.019,
                                 ),
                               ),
                             ),
@@ -707,6 +705,7 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
                         ],
                       ),
                     ),
+                    const SizedBox(height: 5.0),
                   ],
                 ),
               ),
@@ -753,13 +752,14 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
                       Text(
                         'subtitles'.tr,
                         style: TextStyle(
-                          fontSize: MediaQuery.of(context).size.height * 0.020,
+                          fontSize: MediaQuery.of(context).size.height * 0.019,
                         ),
                       ),
                       TextField(
                         cursorColor: Colors.green,
                         maxLines: null,
                         onChanged: (value) => setState(() {
+                          print(value);
                           _subtitles = value;
                         }),
                         decoration: InputDecoration(
