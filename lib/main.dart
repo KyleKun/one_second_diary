@@ -25,14 +25,24 @@ class MyApp extends StatelessWidget {
       translations: TranslationService(),
       getPages: AppPages.pages,
       initialBinding: InitialBinding(),
-      initialRoute: SharedPrefsUtil.getBool('showIntro') == false
-          ? Routes.HOME
-          : Routes.INTRO,
+      initialRoute: getInitialRoute(),
       debugShowCheckedModeBanner: false,
       title: 'One Second Diary',
       themeMode: ThemeService().theme,
       theme: Themes.light,
       darkTheme: Themes.dark,
     );
+  }
+
+  String getInitialRoute() {
+    if (SharedPrefsUtil.getBool('showIntro') == false) {
+      if (SharedPrefsUtil.getBool('showChangelogV15') == false) {
+        return Routes.HOME;
+      } else {
+        return Routes.NEW_FEATURES_V15;
+      }
+    } else {
+      return Routes.INTRO;
+    }
   }
 }

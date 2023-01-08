@@ -64,7 +64,7 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
   double _videoStartValue = 0.0;
   double _videoEndValue = 0.0;
   bool _isVideoPlaying = false;
-  final bool _isLocationProcessing = false;
+  bool _isLocationProcessing = false;
 
   void _initCorrectDates() {
     final DateTime _determinedDate = routeArguments['currentDate'];
@@ -94,12 +94,17 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
       return Colors.white;
     }
     final List<String> colorStringList = colorString.split(',');
-    return Color.fromARGB(
-      int.parse(colorStringList[3]),
-      int.parse(colorStringList[0]),
-      int.parse(colorStringList[1]),
-      int.parse(colorStringList[2]),
-    );
+    try {
+      return Color.fromARGB(
+        int.parse(colorStringList[3]),
+        int.parse(colorStringList[0]),
+        int.parse(colorStringList[1]),
+        int.parse(colorStringList[2]),
+      );
+    } catch (e) {
+      Utils.logError(e);
+      return Colors.white;
+    }
   }
 
   void toggleGeotaggingStatus() {
@@ -153,10 +158,14 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
 
   Future<void> _getCurrentPosition() async {
     final hasPermission = await _handleLocationPermission();
-
     if (!hasPermission) return;
-    await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
-        .then((Position position) async {
+    setState(() {
+      _isLocationProcessing = true;
+    });
+    await Geolocator.getCurrentPosition(
+      desiredAccuracy: LocationAccuracy.medium,
+      timeLimit: const Duration(seconds: 20),
+    ).then((Position position) async {
       setState(() => _currentPosition = position);
       await _getAddressFromLatLng(_currentPosition!);
     }).catchError((e) {
@@ -172,12 +181,18 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
         ),
       );
     });
+
+    setState(() {
+      _isLocationProcessing = false;
+    });
   }
 
   Future<void> _getAddressFromLatLng(Position position) async {
     await placemarkFromCoordinates(
-            _currentPosition!.latitude, _currentPosition!.longitude)
-        .then((List<Placemark> placemarks) {
+      _currentPosition!.latitude,
+      _currentPosition!.longitude,
+      localeIdentifier: Get.locale!.languageCode,
+    ).then((List<Placemark> placemarks) {
       final Placemark place = placemarks[0];
       String city = '';
       if (place.locality?.isNotEmpty == true) {
@@ -194,6 +209,19 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
       Utils.logError('[Geolocation] - Location obtained successfully!');
     }).catchError((e) {
       Utils.logError('[Geolocation] - Failed to decode location: $e');
+      if (isGeotaggingEnabled) {
+        toggleGeotaggingStatus();
+      }
+      setState(() {
+        _isLocationProcessing = false;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'locationServiceError'.tr,
+          ),
+        ),
+      );
     });
   }
 
@@ -430,7 +458,7 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
             child: CircularProgressIndicator(
               color: Colors.white,
             ),
-            backgroundColor: Colors.green,
+            backgroundColor: AppColors.green,
           ),
           child: SaveButton(
             videoPath: _tempVideoPath,
@@ -541,7 +569,6 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
                           children: [
                             Padding(
                               padding: EdgeInsets.only(
-                                left: MediaQuery.of(context).size.width * 0.04,
                                 bottom:
                                     MediaQuery.of(context).size.height * 0.02,
                               ),
@@ -553,22 +580,16 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
                                 ),
                               ),
                             ),
-                            Padding(
-                              padding: EdgeInsets.only(
-                                  left:
-                                      MediaQuery.of(context).size.width * 0.04),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: currentColor,
-                                ),
-                                width: MediaQuery.of(context).size.width * 0.09,
-                                height:
-                                    MediaQuery.of(context).size.width * 0.09,
-                                child: Icon(
-                                  Icons.edit,
-                                  color: invert(currentColor),
-                                ),
+                            Container(
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: currentColor,
+                              ),
+                              width: MediaQuery.of(context).size.width * 0.09,
+                              height: MediaQuery.of(context).size.width * 0.09,
+                              child: Icon(
+                                Icons.edit,
+                                color: invert(currentColor),
                               ),
                             ),
                           ],

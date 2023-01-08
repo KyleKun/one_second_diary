@@ -93,7 +93,7 @@ class _SaveButtonState extends State<SaveButton> {
     bool _pressedSave = false;
 
     return FloatingActionButton(
-      backgroundColor: Colors.green,
+      backgroundColor: AppColors.green,
       child: const Icon(
         Icons.save,
         color: Colors.white,

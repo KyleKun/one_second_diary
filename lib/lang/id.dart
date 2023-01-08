@@ -137,5 +137,28 @@ const Map<String, String> id = {
   'locationPermissionPermanentlyDenied':
       'Izin lokasi ditolak secara permanen. Mohon aktifkan secara manual di pengaturan perangkat Anda.',
   'locationServiceError':
-      'Terjadi kesalahan saat mencoba mendapatkan lokasi Anda. Mohon coba tambahkan lokasi kustom secara manual.'
+      'Terjadi kesalahan saat mencoba mendapatkan lokasi Anda. Mohon coba tambahkan lokasi kustom secara manual.',
+  'whatsNew': 'Apa yang Baru',
+  'whatsNewDescv15':
+      'Versi ini membawa banyak fitur dan peningkatan baru!\n\nPeriksa di halaman-halaman berikutnya 😊',
+  'feat1v15': 'Galeri',
+  'featDesc1v15': 'Tambahkan video dari galeri ke koleksimu dengan mudah 🤩',
+  'feat2v15': 'Subtitle',
+  'featDesc2v15':
+      'Tambahkan atau sunting subtitle untuk memasukkan lebih banyak detail hari mu 📝',
+  'feat3v15': 'Geotagging',
+  'featDesc3v15':
+      'Tambahkan geotagging otomatis atau manual ke video-video mu untuk membantumu mengingat tempat di mana setiap saat terjadi 📍',
+  'feat4v15': 'Profil',
+  'featDesc4v15':
+      'Buat beberapa profil untuk menyimpan video-video mu secara terpisah dan mudah beralih antar profil 🤗',
+  'feat5v15': 'Kalender',
+  'featDesc5v15':
+      'Lihat dan sunting hari-hari yang sudah direkam di kalender 📅',
+  'feat6v15': 'Film',
+  'featDesc6v15':
+      'Buat film kustom dengan periode-periode terpilih atau video-video tertentu 🎥',
+  'feat7v15': 'Notifikasi',
+  'featDesc7v15':
+      'Atur notifikasi harian yang terjadwal untuk mengingatkanmu untuk merekam saat spesial mu 🔔'
 };

@@ -139,4 +139,28 @@ const Map<String, String> fr = {
       'Les autorisations de localisation sont refusées de manière permanente. Veuillez les activer manuellement dans les paramètres de votre appareil.',
   'locationServiceError':
       'Une erreur s\'est produite lors de la tentative de récupération de votre emplacement. Veuillez essayer d\'ajouter un emplacement personnalisé manuellement.',
+  'whatsNew': 'Quoi de neuf',
+  'whatsNewDescv15':
+      'Cette version a apporté de nombreuses nouvelles fonctionnalités et améliorations!\n\nJetez un coup d\'œil aux prochaines pages 😊',
+  'feat1v15': 'Galerie',
+  'featDesc1v15':
+      'Ajoutez facilement des vidéos de la galerie à votre collection 🤩',
+  'feat2v15': 'Sous-titres',
+  'featDesc2v15':
+      'Ajoutez ou modifiez des sous-titres pour inclure plus de détails sur votre journée 📝',
+  'feat3v15': 'Geotagging',
+  'featDesc3v15':
+      'Ajoutez du geotagging automatique ou manuel à vos vidéos pour vous aider à vous souvenir où chaque moment s\'est déroulé 📍',
+  'feat4v15': 'Profils',
+  'featDesc4v15':
+      'Créez plusieurs profils pour enregistrer vos vidéos séparément et basculer facilement entre eux 🤗',
+  'feat5v15': 'Calendrier',
+  'featDesc5v15':
+      'Affichez et modifiez tous les jours enregistrés dans un calendrier 📅',
+  'feat6v15': 'Films',
+  'featDesc6v15':
+      'Générez des films personnalisés avec des périodes sélectionnées ou des vidéos spécifiques 🎥',
+  'feat7v15': 'Notifications',
+  'featDesc7v15':
+      'Configurez des notifications quotidiennes programmées pour vous rappeler d\'enregistrer votre moment spécial 🔔',
 };

@@ -136,5 +136,28 @@ const Map<String, String> pt = {
   'locationPermissionPermanentlyDenied':
       'As permissões de localização foram negadas de forma permanente. Por favor, ative-as manualmente nas configurações do seu dispositivo.',
   'locationServiceError':
-      'Ocorreu um erro ao tentar obter sua localização. Por favor, tente adicionar uma localização personalizada manualmente.'
+      'Ocorreu um erro ao tentar obter sua localização. Por favor, tente adicionar uma localização personalizada manualmente.',
+  'whatsNew': 'Novidades',
+  'whatsNewDescv15':
+      'Esta versão trouxe várias funcionalidades novas e melhorias!\n\nConfira nas próximas páginas 😊',
+  'feat1v15': 'Galeria',
+  'featDesc1v15': 'Adicione facilmente vídeos da galeria à sua coleção 🤩',
+  'feat2v15': 'Legendas',
+  'featDesc2v15':
+      'Adicione ou edite legendas para incluir mais detalhes do seu dia 📝',
+  'feat3v15': 'Geotagging',
+  'featDesc3v15':
+      'Adicione localização automática ou manual aos seus vídeos para se lembrar onde cada momento aconteceu 📍',
+  'feat4v15': 'Perfis',
+  'featDesc4v15':
+      'Crie perfis diferentes para salvar seus vídeos separadamente e alterne facilmente entre eles 🤗',
+  'feat5v15': 'Calendário',
+  'featDesc5v15':
+      'Veja e edite qualquer um dos seus dias gravados em um calendário 📅',
+  'feat6v15': 'Filmes',
+  'featDesc6v15':
+      'Crie filmes personalizados com períodos selecionados ou vídeos específicos 🎥',
+  'feat7v15': 'Notificações',
+  'featDesc7v15':
+      'Defina notificações personalizadas, escolhendo o melhor horário para te lembrar de gravar seu momento especial 🔔'
 };

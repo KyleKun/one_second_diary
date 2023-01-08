@@ -140,4 +140,26 @@ const Map<String, String> en = {
       'Location permissions are permanently denied. Please enable it manually in the settings of your device.',
   'locationServiceError':
       'An error occurred while trying to get your location. Please try adding a custom locale manually.',
+  'whatsNew': 'What\'s new',
+  'whatsNewDescv15':
+      'This version brought lots of the new features and improvements!\n\nCheck it out in the next pages 😊',
+  'feat1v15': 'Gallery',
+  'featDesc1v15': 'Easily add videos from the gallery to your collection 🤩',
+  'feat2v15': 'Subtitles',
+  'featDesc2v15':
+      'Add or edit subtitles to include more details of your day 📝',
+  'feat3v15': 'Geotagging',
+  'featDesc3v15':
+      'Add automatic or manual geotagging to your videos to help you remember where each moment took place 📍',
+  'feat4v15': 'Profiles',
+  'featDesc4v15':
+      'Create multiple profiles to save your videos separately and easily switch between them 🤗',
+  'feat5v15': 'Calendar',
+  'featDesc5v15': 'View and edit any of your recorded days in a calendar 📅',
+  'feat6v15': 'Movies',
+  'featDesc6v15':
+      'Generate custom movies with select periods or specific videos 🎥',
+  'feat7v15': 'Notifications',
+  'featDesc7v15':
+      'Set up scheduled daily notifications to remind you to record your special moment 🔔',
 };

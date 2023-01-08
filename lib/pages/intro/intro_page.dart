@@ -7,6 +7,8 @@ import '../../utils/constants.dart';
 import '../../utils/shared_preferences_util.dart';
 
 class IntroPage extends StatelessWidget {
+  IntroPage({Key? key}) : super(key: key);
+
   final introKey = GlobalKey<IntroductionScreenState>();
 
   void _onIntroEnd() async {
@@ -16,7 +18,7 @@ class IntroPage extends StatelessWidget {
     await SharedPrefsUtil.putBool('dailyEntry', false);
     await SharedPrefsUtil.putInt('videoCount', 0);
     await SharedPrefsUtil.putInt('movieCount', 1);
-    Get.offNamed(Routes.HOME);
+    Get.offNamed(Routes.NEW_FEATURES_V15);
   }
 
   Widget _buildImage(String assetName) {

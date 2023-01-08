@@ -135,5 +135,29 @@ const Map<String, String> de = {
   'locationPermissionPermanentlyDenied':
       'Die Standortberechtigungen sind dauerhaft verweigert. Bitte aktivieren Sie sie manuell in den Einstellungen Ihres Geräts.',
   'locationServiceError':
-      'Beim Versuch, Ihren Standort zu ermitteln, ist ein Fehler aufgetreten. Bitte versuchen Sie, ein benutzerdefiniertes Gebiet manuell hinzuzufügen.'
+      'Beim Versuch, Ihren Standort zu ermitteln, ist ein Fehler aufgetreten. Bitte versuchen Sie, ein benutzerdefiniertes Gebiet manuell hinzuzufügen.',
+  'whatsNew': 'Was gibt es Neues',
+  'whatsNewDescv15':
+      'Diese Version brachte viele neue Funktionen und Verbesserungen!\n\nSehen Sie es sich in den nächsten Seiten an 😊',
+  'feat1v15': 'Galerie',
+  'featDesc1v15':
+      'Fügen Sie ganz einfach Videos aus der Galerie zu Ihrer Sammlung hinzu 🤩',
+  'feat2v15': 'Untertitel',
+  'featDesc2v15':
+      'Fügen Sie Untertitel hinzu, um mehr Details über Ihren Tag zu erfahren 📝',
+  'feat3v15': 'Geotagging',
+  'featDesc3v15':
+      'Fügen Sie Ihren Videos automatische oder manuelle Geotagging-Informationen hinzu, um sich an den Ort jedes Moments erinnern zu können 📍',
+  'feat4v15': 'Profile',
+  'featDesc4v15':
+      'Erstellen Sie mehrere Profile, um Ihre Videos separat zu speichern und einfach zwischen ihnen zu wechseln 🤗',
+  'feat5v15': 'Kalender',
+  'featDesc5v15':
+      'Anzeige und Bearbeitung von jedem Ihrer aufgezeichneten Tage im Kalender 📅',
+  'feat6v15': 'Filme',
+  'featDesc6v15':
+      'Erstellen Sie benutzerdefinierte Filme mit ausgewählten Zeiträumen oder spezifischen Videos 🎥',
+  'feat7v15': 'Benachrichtigungen',
+  'featDesc7v15':
+      'Einrichten von täglichen Benachrichtigungen, um Sie daran zu erinnern, Ihren besonderen Moment aufzuzeichnen 🔔',
 };
