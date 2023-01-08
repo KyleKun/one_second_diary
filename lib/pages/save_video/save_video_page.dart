@@ -759,7 +759,6 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
                         cursorColor: Colors.green,
                         maxLines: null,
                         onChanged: (value) => setState(() {
-                          print(value);
                           _subtitles = value;
                         }),
                         decoration: InputDecoration(
