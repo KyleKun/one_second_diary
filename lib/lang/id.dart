@@ -137,7 +137,7 @@ const Map<String, String> id = {
   'locationPermissionPermanentlyDenied':
       'Izin lokasi ditolak secara permanen. Mohon aktifkan secara manual di pengaturan perangkat Anda.',
   'locationServiceError':
-      'Terjadi kesalahan saat mencoba mendapatkan lokasi Anda. Mohon coba tambahkan lokasi kustom secara manual.',
+      'Terjadi kesalahan saat mencoba mendapatkan lokasi Anda. Mohon tambahkan lokasi secara manual.',
   'whatsNew': 'Apa yang Baru',
   'whatsNewDescv15':
       'Versi ini membawa banyak fitur dan peningkatan baru!\n\nPeriksa di halaman-halaman berikutnya 😊',
