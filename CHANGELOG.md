@@ -13,7 +13,8 @@
 - Fixed issues where video recording could not be saved
 - Added validation checks for unsupported videos
 - Added video save percentage & progress indicators
-- Increased video quality to 1080p
+- Increased video recording quality to 1080p
+- Added logs routines that are saved to txt files
 
 ## v1.1 - 05/2021
 - Added feature to receive daily notifications
