@@ -24,12 +24,13 @@ class _SwitchNotificationsComponentState
   final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
   final int notificationId = 1;
-
+  late bool isSwitchToggled;
   TimeOfDay scheduledTimeOfDay = const TimeOfDay(hour: 20, minute: 00);
 
   @override
   void initState() {
     super.initState();
+    isSwitchToggled = NotificationService().isNotificationActivated();
 
     // Sets the default values for scheduled time
     getScheduledTime();
@@ -137,74 +138,70 @@ class _SwitchNotificationsComponentState
                     fontSize: MediaQuery.of(context).size.width * 0.045,
                   ),
                 ),
-                ValueBuilder<bool?>(
-                  initialValue: NotificationService().isNotificationActivated(),
-                  builder: (isChecked, updateFn) => Switch(
-                    value: isChecked!,
-                    onChanged: (value) async {
-                      /// Save notification on SharedPrefs
-                      NotificationService().switchNotification();
+                Switch(
+                  value: isSwitchToggled,
+                  onChanged: (value) async {
+                    if (value) {
+                      Utils.logInfo(
+                        '[NOTIFICATIONS] - Notifications were enabled',
+                      );
 
-                      /// Update switch value
-                      updateFn(NotificationService().isNotificationActivated());
+                      /// Schedule notification if switch in ON
+                      await Utils.requestPermission(Permission.notification);
+                      await scheduleNotification();
+                    } else {
+                      Utils.logInfo(
+                        '[NOTIFICATIONS] - Notifications were disabled',
+                      );
 
-                      if (NotificationService().isNotificationActivated()) {
-                        Utils.logInfo(
-                          '[NOTIFICATIONS] - Notifications were enabled',
-                        );
+                      /// Cancel notification if switch is OFF
+                      flutterLocalNotificationsPlugin.cancelAll();
+                    }
 
-                        /// Schedule notification if switch in ON
-                        await Utils.requestPermission(Permission.notification);
-                        await scheduleNotification();
-                      } else {
-                        Utils.logInfo(
-                          '[NOTIFICATIONS] - Notifications were disabled',
-                        );
+                    /// Save notification on SharedPrefs
+                    NotificationService().switchNotification();
 
-                        /// Cancel notification if switch is OFF
-                        flutterLocalNotificationsPlugin.cancelAll();
-                      }
-
-                      // Set state should be called for the test widget to revalidate the notification toggle
-                      setState(() {});
-                    },
-                    activeTrackColor: AppColors.mainColor.withOpacity(0.4),
-                    activeColor: AppColors.mainColor,
-                  ),
+                    /// Update switch value
+                    setState(() {
+                      isSwitchToggled = !isSwitchToggled;
+                    });
+                  },
+                  activeTrackColor: AppColors.mainColor.withOpacity(0.4),
+                  activeColor: AppColors.mainColor,
                 ),
               ],
             ),
           ),
         ),
         const Divider(),
-        if (NotificationService().isNotificationActivated()) ...{
-          InkWell(
-            onTap: showTestNotification,
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 15.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'test'.tr,
-                    style: TextStyle(
-                      fontSize: MediaQuery.of(context).size.width * 0.045,
-                    ),
-                  ),
-                  IconButton(
-                    onPressed: showTestNotification,
-                    splashRadius: 24,
-                    icon: const Icon(
-                      Icons.play_arrow,
-                      color: Colors.green,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          const Divider(),
-        },
+        // if (NotificationService().isNotificationActivated()) ...{
+        //   InkWell(
+        //     onTap: showTestNotification,
+        //     child: Container(
+        //       padding: const EdgeInsets.symmetric(horizontal: 15.0),
+        //       child: Row(
+        //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        //         children: [
+        //           Text(
+        //             'test'.tr,
+        //             style: TextStyle(
+        //               fontSize: MediaQuery.of(context).size.width * 0.045,
+        //             ),
+        //           ),
+        //           IconButton(
+        //             onPressed: showTestNotification,
+        //             splashRadius: 24,
+        //             icon: const Icon(
+        //               Icons.play_arrow,
+        //               color: Colors.green,
+        //             ),
+        //           ),
+        //         ],
+        //       ),
+        //     ),
+        //   ),
+        //   const Divider(),
+        // },
         InkWell(
           onTap: () async {
             final TimeOfDay? newTimeOfDay = await showTimePicker(
@@ -229,11 +226,21 @@ class _SwitchNotificationsComponentState
             /// If the 'Cancel' button is pressed or the user quits without setting a time, `newTime` becomes null
             if (newTimeOfDay == null) return;
 
+            // Enable notification if it's disabled
+            if (!isSwitchToggled) {
+              print('here');
+              await Utils.requestPermission(Permission.notification);
+              NotificationService().switchNotification();
+              setState(() {
+                isSwitchToggled = true;
+              });
+            }
+
+            SharedPrefsUtil.putInt('scheduledTimeHour', newTimeOfDay.hour);
+            SharedPrefsUtil.putInt('scheduledTimeMinute', newTimeOfDay.minute);
+
             setState(() {
               scheduledTimeOfDay = newTimeOfDay;
-              SharedPrefsUtil.putInt('scheduledTimeHour', newTimeOfDay.hour);
-              SharedPrefsUtil.putInt(
-                  'scheduledTimeMinute', newTimeOfDay.minute);
             });
 
             await scheduleNotification();

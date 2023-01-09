@@ -40,11 +40,11 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
 
   final double textOutlineStrokeWidth = 1;
 
-  late String _dateFormatValue;
+  late String _dateFinalFormatValueForVideoEdit;
 
-  late String _dateWrittenValue;
+  late String _dateWrittenValueForVideoEdit;
 
-  List<String> _dateFormats = [
+  List<String> _dateFormatsForVideoEdit = [
     DateFormatUtils.getToday(
       allowCheckFormattingDayFirst: true,
     ),
@@ -63,25 +63,25 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
   bool _isLocationProcessing = false;
 
   void _initCorrectDates() {
-    final DateTime _determinedDate = routeArguments['currentDate'];
+    final DateTime selectedDate = routeArguments['currentDate'];
 
-    final String _dateCommonValue = DateFormatUtils.getDate(
-      _determinedDate,
+    final String dateCommonValue = DateFormatUtils.getDate(
+      selectedDate,
       allowCheckFormattingDayFirst: true,
     );
 
-    _dateWrittenValue = DateFormatUtils.getWrittenToday(
-      customDate: _determinedDate,
+    _dateWrittenValueForVideoEdit = DateFormatUtils.getWrittenToday(
+      customDate: selectedDate,
       lang: Get.locale!.languageCode,
     );
 
-    _recordingSettingsController.dateFormat.value == 0
-        ? _dateFormatValue = _dateCommonValue
-        : _dateFormatValue = _dateWrittenValue;
+    _recordingSettingsController.dateFormatId.value == 0
+        ? _dateFinalFormatValueForVideoEdit = dateCommonValue
+        : _dateFinalFormatValueForVideoEdit = _dateWrittenValueForVideoEdit;
 
-    _dateFormats = [
-      _dateCommonValue,
-      _dateWrittenValue,
+    _dateFormatsForVideoEdit = [
+      dateCommonValue,
+      _dateWrittenValueForVideoEdit,
     ];
   }
 
@@ -266,7 +266,7 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
         parseColorString(_recordingSettingsController.dateColor.value);
     currentColor = pickerColor;
     _tempVideoPath = routeArguments['videoPath'];
-    isTextDate = _recordingSettingsController.dateFormat.value == 1;
+    isTextDate = _recordingSettingsController.dateFormatId.value == 1;
     _initCorrectDates();
     _initVideoPlayerController();
     super.initState();
@@ -352,7 +352,9 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
                 child: Stack(
                   children: [
                     Text(
-                      isTextDate ? _dateWrittenValue : _dateFormatValue,
+                      isTextDate
+                          ? _dateFormatsForVideoEdit.last
+                          : _dateFormatsForVideoEdit.first,
                       style: TextStyle(
                         fontSize: MediaQuery.of(context).size.width * 0.03,
                         foreground: Paint()
@@ -362,7 +364,9 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
                       ),
                     ),
                     Text(
-                      isTextDate ? _dateWrittenValue : _dateFormatValue,
+                      isTextDate
+                          ? _dateFormatsForVideoEdit.last
+                          : _dateFormatsForVideoEdit.first,
                       style: TextStyle(
                         fontSize: MediaQuery.of(context).size.width * 0.03,
                         color: currentColor,
@@ -460,7 +464,7 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
             videoPath: _tempVideoPath,
             videoController: _trimmer.videoPlayerController!,
             dateColor: currentColor,
-            dateFormat: _dateFormatValue,
+            dateFormat: _dateFinalFormatValueForVideoEdit,
             isTextDate: isTextDate,
             userLocation: customLocationTextController.text.isEmpty
                 ? _currentAddress ?? ''
@@ -598,22 +602,27 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
                           direction: Axis.vertical,
                           horizontalAlignment: MainAxisAlignment.start,
                           groupValue:
-                              _recordingSettingsController.dateFormat.value == 0
-                                  ? _dateFormatValue
-                                  : _dateWrittenValue,
+                              _recordingSettingsController.dateFormatId.value ==
+                                      0
+                                  ? _dateFormatsForVideoEdit.first
+                                  : _dateFormatsForVideoEdit.last,
                           fillColor: AppColors.yellow,
                           onChanged: (value) => setState(() {
-                            _dateFormatValue = value!;
+                            _dateFinalFormatValueForVideoEdit = value!;
                             // Place date in the bottom if it is text format
-                            _dateFormatValue == _dateFormats[0]
+                            _dateFinalFormatValueForVideoEdit ==
+                                    _dateFormatsForVideoEdit.first
                                 ? isTextDate = false
                                 : isTextDate = true;
 
                             // Save the date format in shared preferences
                             _recordingSettingsController.setDateFormat(
-                                _dateFormatValue == _dateFormats[0] ? 0 : 1);
+                                _dateFinalFormatValueForVideoEdit ==
+                                        _dateFormatsForVideoEdit.first
+                                    ? 0
+                                    : 1);
                           }),
-                          items: _dateFormats,
+                          items: _dateFormatsForVideoEdit,
                           itemBuilder: (item) => RadioButtonBuilder(
                             item,
                           ),
@@ -744,7 +753,8 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
                 ),
                 child: Padding(
                   padding: EdgeInsets.symmetric(
-                      horizontal: MediaQuery.of(context).size.width * 0.04),
+                    horizontal: MediaQuery.of(context).size.width * 0.04,
+                  ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [

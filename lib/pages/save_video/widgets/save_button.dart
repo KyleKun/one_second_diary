@@ -6,7 +6,6 @@ import 'package:saf/saf.dart';
 import 'package:video_player/video_player.dart';
 
 import '../../../controllers/daily_entry_controller.dart';
-import '../../../controllers/video_count_controller.dart';
 import '../../../routes/app_pages.dart';
 import '../../../utils/constants.dart';
 import '../../../utils/custom_dialog.dart';
@@ -60,8 +59,6 @@ class _SaveButtonState extends State<SaveButton> {
   ValueNotifier<num> saveProgressPercentage = ValueNotifier(0);
 
   final DailyEntryController _dayController = Get.find();
-
-  final VideoCountController _videoCountController = Get.find();
 
   void _saveVideo() async {
     Utils.logInfo('${logTag}Starting to edit ${widget.videoPath} with ffmpeg');
@@ -129,19 +126,19 @@ class _SaveButtonState extends State<SaveButton> {
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text('doNotCloseTheApp'.tr),
-                const SizedBox(height: 10),
                 Text(
                   '$value%',
                   textAlign: TextAlign.center,
                 ),
-                const SizedBox(height: 10),
+                const SizedBox(height: 5),
                 LinearProgressIndicator(
                   backgroundColor: AppColors.green.withOpacity(0.2),
                   color: AppColors.green,
                   minHeight: 16,
                   value: (value / 100).toDouble(),
                 ),
+                const SizedBox(height: 15),
+                Text('doNotCloseTheApp'.tr),
               ],
             ),
           ),
@@ -153,9 +150,9 @@ class _SaveButtonState extends State<SaveButton> {
   // Check if user is using a custom profile to determine the output path of the video
   String getVideoOutputPath() {
     String videoOutputPath = '';
-    final determinedDate = widget.determinedDate;
+    final String videoName = DateFormatUtils.getDate(widget.determinedDate);
     final String defaultOutputPath =
-        '${SharedPrefsUtil.getString('appPath')}${DateFormatUtils.getDate(determinedDate)}.mp4';
+        '${SharedPrefsUtil.getString('appPath')}$videoName.mp4';
 
     final selectedProfileIndex =
         SharedPrefsUtil.getInt('selectedProfileIndex') ?? 0;
@@ -171,7 +168,7 @@ class _SaveButtonState extends State<SaveButton> {
         });
 
         videoOutputPath =
-            '${SharedPrefsUtil.getString('appPath')}Profiles/$currentProfileName/${DateFormatUtils.getToday()}.mp4';
+            '${SharedPrefsUtil.getString('appPath')}Profiles/$currentProfileName/$videoName.mp4';
       }
     }
     return videoOutputPath;
@@ -191,9 +188,6 @@ class _SaveButtonState extends State<SaveButton> {
 
     String locOutput = '';
 
-    // Used to not increment videoCount controller
-    bool isEdit = false;
-
     // Copies text font for ffmpeg to storage if it was not copied yet
     final String fontPath = await Utils.copyFontToStorage();
     final String videoPath = widget.videoPath;
@@ -212,7 +206,6 @@ class _SaveButtonState extends State<SaveButton> {
     if (StorageUtils.checkFileExists(finalPath)) {
       Utils.logInfo(
           '${logTag}Video already exists, deleting it to perform edit.');
-      isEdit = true;
       StorageUtils.deleteFile(finalPath);
     }
 
@@ -231,7 +224,7 @@ class _SaveButtonState extends State<SaveButton> {
 
     // If subtitles TextBox were not left empty, we can allow the command to render the subtitles into the video, otherwise we add empty subtitles to populate the streams with a subtitle stream, so that concat demuxer can work properly when creating a movie
     String subtitlesPath = '';
-    if (widget.subtitles != null && widget.subtitles != '') {
+    if (widget.subtitles?.isEmpty == false) {
       subtitlesPath = await Utils.writeSrt(
         widget.subtitles!,
         widget.videoDuration,
@@ -243,7 +236,7 @@ class _SaveButtonState extends State<SaveButton> {
     }
     Utils.logInfo('${logTag}Subtitles file path: $subtitlesPath');
 
-    final subtitles = '-i $subtitlesPath -c copy -c:s mov_text';
+    final subtitles = '-i $subtitlesPath -c:s mov_text';
     final metadata =
         '-metadata artist="${Constants.artist}" -metadata album="$currentProfileName"';
     final trimCommand =
@@ -255,7 +248,7 @@ class _SaveButtonState extends State<SaveButton> {
 
     // Edit and save video
     final command =
-        '-i $videoPath $subtitles $metadata -vf [in]scale=1920:1080,drawtext="$fontPath:text=\'${widget.dateFormat}\':fontsize=$dateTextSize:fontcolor=\'$parsedDateColor\':borderw=${widget.textOutlineWidth}:bordercolor=$parsedTextOutlineColor:x=$datePosX:y=$datePosY$locOutput[out]" $trimCommand -r 30 -ac 1 -c:a aac -b:a 256k -codec:v libx264 -pix_fmt yuv420p $finalPath -y';
+        '-i $videoPath $subtitles $metadata -vf [in]scale=1920:1080,drawtext="$fontPath:text=\'${widget.dateFormat}\':fontsize=$dateTextSize:fontcolor=\'$parsedDateColor\':borderw=${widget.textOutlineWidth}:bordercolor=$parsedTextOutlineColor:x=$datePosX:y=$datePosY$locOutput[out]" $trimCommand -r 30 -ac 1 -c:a aac -b:a 256k -c:v libx264 -pix_fmt yuv420p $finalPath -y';
     await executeAsyncFFmpeg(
       command,
       completeCallback: (session) async {
@@ -267,10 +260,7 @@ class _SaveButtonState extends State<SaveButton> {
             _dayController.updateDaily();
           }
 
-          // Updates the controller: videoCount += 1
-          if (!isEdit) {
-            _videoCountController.increaseVideoCount();
-          }
+          Utils.updateVideoCount(showSnackBar: false);
 
           // Showing confirmation popup
           showDialog(

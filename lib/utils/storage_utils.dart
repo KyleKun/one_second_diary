@@ -114,6 +114,8 @@ class StorageUtils {
           await io.File(file.path).delete();
         }
       }
+
+      Utils.logInfo('[App Started] - ' + 'Log file created');
     } catch (e) {
       Utils.logError('[StorageUtils] - $e');
     }

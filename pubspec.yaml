@@ -56,6 +56,7 @@ dependencies:
   stack_trace: ^1.10.0
   flutter_archive: ^5.0.0
   flutter_email_sender: ^5.2.0
+  synchronized: ^3.0.0+3
 dev_dependencies:
   flutter_test:
     sdk: flutter

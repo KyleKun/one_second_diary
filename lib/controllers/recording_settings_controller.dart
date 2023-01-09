@@ -9,7 +9,7 @@ class RecordingSettingsController extends GetxController {
 
   // Edit video page properties
   Rx<String> dateColor = SharedPrefsUtil.getString('dateColor').obs;
-  Rx<int> dateFormat = SharedPrefsUtil.getInt('dateFormat')?.obs ?? 0.obs;
+  Rx<int> dateFormatId = SharedPrefsUtil.getInt('dateFormatId')?.obs ?? 0.obs;
 
   void setDateColor(String colorString) {
     dateColor.value = colorString;
@@ -18,9 +18,9 @@ class RecordingSettingsController extends GetxController {
   }
 
   void setDateFormat(int format) {
-    dateFormat.value = format;
-    dateFormat.refresh();
-    SharedPrefsUtil.putInt('dateFormat', format);
+    dateFormatId.value = format;
+    dateFormatId.refresh();
+    SharedPrefsUtil.putInt('dateFormatId', format);
   }
 
   void enableTimer() {

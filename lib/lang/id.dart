@@ -38,7 +38,7 @@ const Map<String, String> id = {
   'save': 'Save',
   'saveVideoErrorTitle': 'Terjadi kesalahan saat menyimpan video',
   'videoSavedTitle': 'Video disimpan!',
-  'videoSavedDesc': 'Sampai jumpa besok!',
+  'videoSavedDesc': 'Sampai jumpa besok :)',
   'editVideoProperties': 'Ubah detail video',
   'comingSoon': 'Akan segera datang... ',
   'saveVideo': 'Simpan video',

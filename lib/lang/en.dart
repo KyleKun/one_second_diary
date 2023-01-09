@@ -38,7 +38,7 @@ const Map<String, String> en = {
   'save': 'Save',
   'saveVideoErrorTitle': 'Error saving video!',
   'videoSavedTitle': 'Video saved!',
-  'videoSavedDesc': 'See you tomorrow!',
+  'videoSavedDesc': 'See you later :)',
   'editVideoProperties': 'Edit video properties',
   'comingSoon': ' Coming soon... ',
   'saveVideo': 'Save video',

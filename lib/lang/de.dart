@@ -38,7 +38,7 @@ const Map<String, String> de = {
   'save': 'Speichern',
   'saveVideoErrorTitle': 'Fehler beim Speichern!',
   'videoSavedTitle': 'Video gespeichert!',
-  'videoSavedDesc': 'Bis morgen!',
+  'videoSavedDesc': 'Bis morgen :)',
   'editVideoProperties': 'Video-Eigenschaften bearbeiten',
   'comingSoon': 'Kommt demnächst...',
   'saveVideo': 'Video speichern',

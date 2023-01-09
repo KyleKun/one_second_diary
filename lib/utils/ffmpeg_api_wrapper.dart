@@ -33,8 +33,13 @@ Future<FFmpegSession> executeFFmpegWithArguments(List<String> arguments) async {
   return await FFmpegKit.executeWithArguments(arguments);
 }
 
-Future<FFmpegSession> executeFFmpeg(String command) async {
-  Utils.logInfo('[ffmpeg] - Executing FFmpeg command: $command');
+Future<FFmpegSession> executeFFmpeg(
+  String command, {
+  bool showInLogs = true,
+}) async {
+  if (showInLogs) {
+    Utils.logInfo('[ffmpeg] - Executing FFmpeg command: $command');
+  }
   return await FFmpegKit.execute(command);
 }
 
@@ -48,7 +53,8 @@ Future<FFmpegSession> executeAsyncFFmpeg(
       command, completeCallback, logCallback, statisticsCallback);
 }
 
-Future<FFprobeSession> executeFFprobeWithArguments(List<String> arguments) async {
+Future<FFprobeSession> executeFFprobeWithArguments(
+    List<String> arguments) async {
   return await FFprobeKit.executeWithArguments(arguments);
 }
 
@@ -99,7 +105,8 @@ Future<void> setFontconfigConfigurationPath(String path) async {
   return await FFmpegKitConfig.setFontconfigConfigurationPath(path);
 }
 
-Future<void> setFontDirectory(String fontDirectory, Map<String, String> fontNameMap) async {
+Future<void> setFontDirectory(
+    String fontDirectory, Map<String, String> fontNameMap) async {
   return await FFmpegKitConfig.setFontDirectory(fontDirectory, fontNameMap);
 }
 
@@ -119,8 +126,10 @@ Future<String?> registerNewFFmpegPipe() async {
   return await FFmpegKitConfig.registerNewFFmpegPipe();
 }
 
-Future<void> setEnvironmentVariable(String variableName, String variableValue) async {
-  return await FFmpegKitConfig.setEnvironmentVariable(variableName, variableValue);
+Future<void> setEnvironmentVariable(
+    String variableName, String variableValue) async {
+  return await FFmpegKitConfig.setEnvironmentVariable(
+      variableName, variableValue);
 }
 
 Future<List<FFmpegSession>> listFFmpegSessions() async {

@@ -4,9 +4,9 @@ import '../utils/storage_utils.dart';
 
 class StorageController extends GetxController {
   @override
-  void onInit() {
-    StorageUtils.createFolder();
-    StorageUtils.createLogFile();
+  void onInit() async {
+    await StorageUtils.createFolder();
+    await StorageUtils.createLogFile();
     super.onInit();
   }
 }

@@ -18,7 +18,7 @@ class VideoCountController extends GetxController {
     SharedPrefsUtil.putInt('videoCount', videoCount.value);
   }
 
-  void updateMovieCount() {
+  void increaseMovieCount() {
     movieCount.value++;
     movieCount.refresh();
     SharedPrefsUtil.putInt('movieCount', movieCount.value);

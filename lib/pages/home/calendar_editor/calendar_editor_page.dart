@@ -64,7 +64,10 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
   }
 
   Future<void> getSubtitlesForSelectedDate() async {
-    final getSubsFile = await executeFFmpeg('-i $currentVideo $srtFilePath -y');
+    final getSubsFile = await executeFFmpeg(
+      '-i $currentVideo $srtFilePath -y',
+      showInLogs: false,
+    );
     final resultCode = await getSubsFile.getReturnCode();
     if (ReturnCode.isSuccess(resultCode)) {
       final srtFileContent = await File(srtFilePath).readAsString();
@@ -113,7 +116,7 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
     final thumbnail = await VideoThumbnail.thumbnailData(
       video: File(video).path,
       imageFormat: ImageFormat.JPEG,
-      quality: 15,
+      quality: 12,
     );
     return thumbnail;
   }
@@ -124,6 +127,14 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
     );
 
     if (rawFile != null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'processingVideo'.tr,
+          ),
+        ),
+      );
+
       // Video validation before navigation to the video editing page
       final bool isVideoValid =
           await _validateInputVideo(rawFile.path, context);
@@ -266,6 +277,8 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
             onPressed: () async {
               // Delete current video from storage
               await File(currentVideo).delete();
+              Utils.logInfo(
+                  '[CALENDAR] - Deleted video from $_currentDateStr: $currentVideo');
 
               // Reduce the video count recorded by the app
               _videoCountController.reduceVideoCount();
@@ -523,6 +536,8 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
                             ),
                           ),
                           onPressed: () async {
+                            Utils.logInfo(
+                                '[CALENDAR] add video button pressed for date $_currentDateStr');
                             await selectVideoFromGallery();
                           },
                           child: Padding(
