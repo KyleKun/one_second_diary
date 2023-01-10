@@ -103,7 +103,7 @@ const Map<String, String> pt = {
   'landscape': 'Paisagem',
   'profiles': 'Perfis',
   'tapToSwitch': 'Toque em um perfil para mudar',
-  'createNewProfile': 'Crie novo perfil',
+  'createNewProfile': 'Criar novo perfil',
   'newProfile': 'Novo perfil',
   'deleteProfile': 'Excluir perfil',
   'enterProfileName': 'Digite o nome do perfil',
