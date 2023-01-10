@@ -5,7 +5,9 @@
 
 # One Second Diary
 
-Record one second of your day, everyday. [WATCH DEMO](https://youtu.be/aufjN9URLFI)
+<blockquote style="font-size: larger">
+  Record one second of your day, everyday.
+</blockquote>
 
 <img src="/fastlane/metadata/android/en-US/images/phoneScreenshots/1.png" width="250" height="500"> <img src="/fastlane/metadata/android/en-US/images/phoneScreenshots/2.png" width="250" height="500"> <img src="/fastlane/metadata/android/en-US/images/phoneScreenshots/3.png" width="250" height="500">
 
@@ -34,12 +36,13 @@ Then, after a couple months or even years:
 ## Features
 
 - [X] Record up to 10 seconds of video (1080p resolution)
+- [X] Pick videos from gallery
 - [X] Add or edit subtitles in the videos
-- [X] Add automatic or manual geotagging in the videos
-- [X] Choose the date format and color to show in video
+- [X] Add automatic or manual geotagging on top of the videos
+- [X] Choose the date format and color to show on top of the videos
 - [X] Create profiles to save videos separately
 - [X] View all recorded days in a calendar
-- [X] Generate custom movies with all videos or selected videos only
+- [X] Generate custom movies by periods or selected videos only
 - [X] Receive scheduled daily notifications
 - [X] Dark Mode
 - [X] Available in 7 languages
