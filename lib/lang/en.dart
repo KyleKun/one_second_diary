@@ -163,4 +163,5 @@ const Map<String, String> en = {
   'featDesc7v15':
       'Set up scheduled daily notifications to remind you to record your special moment 🔔',
   'default': 'Default',
+  'profileNameAlreadyExists': 'Profile name already exists',
 };

@@ -161,4 +161,5 @@ const Map<String, String> pt = {
   'featDesc7v15':
       'Defina notificações personalizadas, escolhendo o melhor horário para te lembrar de gravar seu momento especial 🔔',
   'default': 'Padrão',
+  'profileNameAlreadyExists': 'O nome do perfil já existe',
 };

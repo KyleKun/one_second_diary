@@ -100,7 +100,13 @@ class _ProfilesPageState extends State<ProfilesPage> {
                       return 'profileNameCannotBeEmpty'.tr;
                     }
 
-                    if (value.toLowerCase() == 'default') {
+                    if (profiles
+                        .any((profile) => profile.label == value.trim())) {
+                      return 'profileNameAlreadyExists'.tr;
+                    }
+
+                    if (value.toLowerCase().trim() == 'default' ||
+                        value.trim() == 'default'.tr) {
                       return 'reservedProfileName'.tr;
                     }
 
@@ -140,7 +146,7 @@ class _ProfilesPageState extends State<ProfilesPage> {
                   if (isTextValid) {
                     // Create the profile directory for the new profile
                     await StorageUtils.createSpecificProfileFolder(
-                      _profileNameController.text,
+                      _profileNameController.text.trim(),
                     );
 
                     Utils.logInfo(

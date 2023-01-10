@@ -161,4 +161,5 @@ const Map<String, String> de = {
   'featDesc7v15':
       'Einrichten von täglichen Benachrichtigungen, um Sie daran zu erinnern, Ihren besonderen Moment aufzuzeichnen 🔔',
   'default': 'Standard',
+  'profileNameAlreadyExists': 'Profilname existiert bereits',
 };

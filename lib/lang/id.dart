@@ -162,4 +162,5 @@ const Map<String, String> id = {
   'featDesc7v15':
       'Atur notifikasi harian yang terjadwal untuk mengingatkanmu untuk merekam saat spesial mu 🔔',
   'default': 'Asali',
+  'profileNameAlreadyExists': 'Nama profil sudah ada',
 };
