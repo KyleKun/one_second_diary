@@ -160,4 +160,5 @@ const Map<String, String> es = {
   'feat7v15': 'Notificacion',
   'featDesc7v15':
       'Configura notificaciones diarias programadas para recordarte grabar tu momento especial 🔔',
+  'default': 'Patrón',
 };

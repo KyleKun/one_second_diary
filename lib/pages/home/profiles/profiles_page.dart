@@ -303,7 +303,11 @@ class _ProfilesPageState extends State<ProfilesPage> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
-                        title: Text(profiles[index].label),
+                        title: Text(
+                          profiles[index].isDefault
+                              ? 'default'.tr
+                              : profiles[index].label,
+                        ),
                         secondary: profiles[index].isDefault
                             ? null
                             : IconButton(

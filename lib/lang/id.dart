@@ -160,5 +160,6 @@ const Map<String, String> id = {
       'Buat film kustom dengan periode-periode terpilih atau video-video tertentu 🎥',
   'feat7v15': 'Notifikasi',
   'featDesc7v15':
-      'Atur notifikasi harian yang terjadwal untuk mengingatkanmu untuk merekam saat spesial mu 🔔'
+      'Atur notifikasi harian yang terjadwal untuk mengingatkanmu untuk merekam saat spesial mu 🔔',
+  'default': 'Asali',
 };

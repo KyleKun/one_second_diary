@@ -159,5 +159,6 @@ const Map<String, String> pt = {
       'Crie filmes personalizados com períodos selecionados ou vídeos específicos 🎥',
   'feat7v15': 'Notificações',
   'featDesc7v15':
-      'Defina notificações personalizadas, escolhendo o melhor horário para te lembrar de gravar seu momento especial 🔔'
+      'Defina notificações personalizadas, escolhendo o melhor horário para te lembrar de gravar seu momento especial 🔔',
+  'default': 'Padrão',
 };

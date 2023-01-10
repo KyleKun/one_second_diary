@@ -160,4 +160,5 @@ const Map<String, String> de = {
   'feat7v15': 'Benachrichtigungen',
   'featDesc7v15':
       'Einrichten von täglichen Benachrichtigungen, um Sie daran zu erinnern, Ihren besonderen Moment aufzuzeichnen 🔔',
+  'default': 'Standard',
 };

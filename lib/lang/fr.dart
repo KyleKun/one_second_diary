@@ -163,4 +163,5 @@ const Map<String, String> fr = {
   'feat7v15': 'Notifications',
   'featDesc7v15':
       'Configurer des notifications quotidiennes programmées pour vous rappeler d\'enregistrer votre moment spécial 🔔',
+  'default': 'Défaut',
 };
