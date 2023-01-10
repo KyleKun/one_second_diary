@@ -7,9 +7,9 @@
 
 > Record one second of your day, everyday.
 
-<img src="/fastlane/metadata/android/en-US/images/phoneScreenshots/1.png" width="250" height="500"> <img src="/fastlane/metadata/android/en-US/images/phoneScreenshots/2.png" width="250" height="500"> 
+<img src="/fastlane/metadata/android/en-US/images/phoneScreenshots/1.png" width="300" height="600"> <img src="/fastlane/metadata/android/en-US/images/phoneScreenshots/2.png" width="300" height="600"> 
 
-<img src="/fastlane/metadata/android/en-US/images/phoneScreenshots/3.png" width="250" height="500"> <img src="/fastlane/metadata/android/en-US/images/phoneScreenshots/4.png" width="250" height="500">
+<img src="/fastlane/metadata/android/en-US/images/phoneScreenshots/3.png" width="300" height="600"> <img src="/fastlane/metadata/android/en-US/images/phoneScreenshots/4.png" width="300" height="600">
 
 ## Download Now
 
