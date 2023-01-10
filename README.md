@@ -5,7 +5,7 @@
 
 # One Second Diary
 
-<blockquote style="font-size: larger">
+<blockquote style="font-size: 28pt">
   Record one second of your day, everyday.
 </blockquote>
 
