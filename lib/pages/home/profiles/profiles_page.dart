@@ -100,14 +100,16 @@ class _ProfilesPageState extends State<ProfilesPage> {
                       return 'profileNameCannotBeEmpty'.tr;
                     }
 
-                    if (profiles
-                        .any((profile) => profile.label == value.trim())) {
-                      return 'profileNameAlreadyExists'.tr;
+                    if (value.toLowerCase().trim() == 'default' ||
+                        value.toLowerCase().trim() ==
+                            'default'.tr.toLowerCase()) {
+                      return 'reservedProfileName'.tr;
                     }
 
-                    if (value.toLowerCase().trim() == 'default' ||
-                        value.trim() == 'default'.tr) {
-                      return 'reservedProfileName'.tr;
+                    if (profiles.any((profile) =>
+                        profile.label.toLowerCase() ==
+                        value.toLowerCase().trim())) {
+                      return 'profileNameAlreadyExists'.tr;
                     }
 
                     return null;
