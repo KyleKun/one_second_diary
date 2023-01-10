@@ -17,6 +17,7 @@
 - Gabriel Oliveira
 - Jana Souza
 - Samuel Santos
+- Matheus Almeida
 
 ## Localization
 - Greily Campusano - Spanish
