@@ -1,21 +1,25 @@
 ## v1.5 - 01/2023
-- Audio is now also recorded
-- Added Profiles feature
-- Added Subtitles feature
-- Added Calendar page
-- Added feature to upload videos from gallery
-- Vertical videos are now supported
-- Added functionality to trim videos
-- Added automatic and manual geotagging in recording
-- Added options to create a movie by period or only with selected videos
-- Added option to schedule notifications time
-- Added routine to save logs to txt files
-- Added Chinese, Deutsch, Indonesian, and French localization
-- Fixed issues where video recording could not be saved
-- Added video save percentage & progress indicators
-- Increased video recording quality to 1080p
-- Added routine to save logs in txt files
-- Improvements in recording screen
+- New features:
+    - Upload from gallery
+    - Vertical video support
+    - Calendar page
+    - Profiles
+    - Subtitles
+    - Video trimming
+    - Automatic and manual geotagging
+    - Option to create a movie by time period or with selected videos
+    - Scheduled notifications
+    - Chinese, German, Indonesian, and French localization
+- Fixed issues:
+    - Resolved issue where video recordings could not be saved
+- Improvements:
+    - Increased video recording quality to 1080p
+    - Audio is now also recorded
+    - Video save percentage indicator
+    - Movie progress indicator
+    - Routine to save logs in txt files
+    - Enhanced recording screen to support all orientations
+    - Date editing preferences are now saved
 
 ## v1.1 - 05/2021
 - Added feature to receive daily notifications
