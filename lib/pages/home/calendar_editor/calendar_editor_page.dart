@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:ffmpeg_kit_flutter_full_gpl/return_code.dart';
@@ -127,126 +126,119 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
     );
 
     if (rawFile != null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            'processingVideo'.tr,
-          ),
-        ),
-      );
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   SnackBar(
+      //     content: Text(
+      //       'processingVideo'.tr,
+      //     ),
+      //   ),
+      // );
 
       // Video validation before navigation to the video editing page
-      final bool isVideoValid =
-          await _validateInputVideo(rawFile.path, context);
+      // final bool isVideoValid =
+      //     await _validateInputVideo(rawFile.path, context);
 
       // Go to the save video page
-      if (isVideoValid) {
-        Get.toNamed(
-          Routes.SAVE_VIDEO,
-          arguments: {
-            'videoPath': rawFile.path,
-            'currentDate': _selectedDate,
-            'isFromRecordingPage': false,
-          },
-        );
-      }
+      // if (isVideoValid) {
+      Get.toNamed(
+        Routes.SAVE_VIDEO,
+        arguments: {
+          'videoPath': rawFile.path,
+          'currentDate': _selectedDate,
+          'isFromRecordingPage': false,
+        },
+      );
+      // }
     }
   }
 
   // Ensure the video passes all validations before processing
-  Future<bool> _validateInputVideo(
-      String videoPath, BuildContext context) async {
-    return await executeFFprobe(
-            '-v error -print_format json -show_format -select_streams v:0 -show_streams $videoPath')
-        .then((session) async {
-      final returnCode = await session.getReturnCode();
-      if (ReturnCode.isSuccess(returnCode)) {
-        final sessionLog = await session.getOutput();
-        if (sessionLog == null) return false;
-        final Map<String, dynamic> videoStreamDetails =
-            jsonDecode(sessionLog)['streams'][0];
+  // Future<bool> _validateInputVideo(
+  //     String videoPath, BuildContext context) async {
+  //   return await executeFFprobe(
+  //           '-v error -print_format json -show_format -select_streams v:0 -show_streams $videoPath')
+  //       .then((session) async {
+  //     final returnCode = await session.getReturnCode();
+  //     if (ReturnCode.isSuccess(returnCode)) {
+  //       final sessionLog = await session.getOutput();
+  //       if (sessionLog == null) return false;
+  //       final Map<String, dynamic> videoStreamDetails =
+  //           jsonDecode(sessionLog)['streams'][0];
 
-        final num videoWidth = videoStreamDetails['width'];
-        final num videoHeight = videoStreamDetails['height'];
+  //       final num videoWidth = videoStreamDetails['width'];
+  //       final num videoHeight = videoStreamDetails['height'];
 
-        // Check for video orientation before saving video.
-        // In some videos, the rotation property is not explicity defined which will cause ffprobe to return a null value,
-        // so the workaround here compares the values of video width & height to determine the orientation
+  //       print('videoWidth: $videoWidth');
+  //       print('videoHeight: $videoHeight');
 
-        // The orientation is always portrait whenever the video height is greater than the video width
-        if (videoHeight > videoWidth) {
-          await _showPortraitModeErrorDialog();
-          return false;
-        }
+  //       // Check for video aspect ratio before saving video.
+  //       // In some videos, the DAP/SAP (display/sample aspect ratio) properties are not explicity defined which will cause ffprobe to return a null value,
+  //       // so the workaround here uses the video width & height to determine the aspect ratio
+  //       final num videoAspectRatio = (videoWidth / videoHeight).toPrecision(2);
 
-        // Check for video aspect ratio before saving video.
-        // In some videos, the DAP/SAP (display/sample aspect ratio) properties are not explicity defined which will cause ffprobe to return a null value,
-        // so the workaround here uses the video width & height to determine the aspect ratio
-        final num videoAspectRatio = (videoWidth / videoHeight).toPrecision(2);
+  //       // 1.78 is the decimal equivalent of 16:9 aspect ratio videos
+  //       if (videoAspectRatio != 1.78) {
+  //         // await _showAspectRatioErrorDialog();
+  //         // return false;
+  //       }
 
-        // 1.78 is the decimal equivalent of 16:9 aspect ratio videos
-        if (videoAspectRatio != 1.78) {
-          await _showAspectRatioErrorDialog();
-          return false;
-        }
+  //       return true;
+  //     }
+  //     return false;
+  //   });
+  // }
 
-        return true;
-      }
-      return false;
-    });
-  }
+  // Future<void> _showPortraitModeErrorDialog() async {
+  //   return await showDialog(
+  //     context: context,
+  //     builder: (context) => AlertDialog(
+  //       shape: RoundedRectangleBorder(
+  //         borderRadius: BorderRadius.circular(10),
+  //       ),
+  //       title: Text(
+  //         'oops'.tr,
+  //       ),
+  //       content: Text(
+  //         'unsupportedPortraitMode'.tr,
+  //       ),
+  //       actions: [
+  //         TextButton(
+  //           onPressed: () async => Navigator.pop(context),
+  //           style: TextButton.styleFrom(
+  //             foregroundColor: AppColors.green,
+  //           ),
+  //           child: Text('ok'.tr),
+  //         )
+  //       ],
+  //     ),
+  //   );
+  // }
 
-  Future<void> _showPortraitModeErrorDialog() async {
-    return await showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
-        title: Text(
-          'oops'.tr,
-        ),
-        content: Text(
-          'unsupportedPortraitMode'.tr,
-        ),
-        actions: [
-          TextButton(
-            onPressed: () async => Navigator.pop(context),
-            style: TextButton.styleFrom(
-              foregroundColor: AppColors.green,
-            ),
-            child: Text('ok'.tr),
-          )
-        ],
-      ),
-    );
-  }
-
-  Future<void> _showAspectRatioErrorDialog() async {
-    return await showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
-        title: Text(
-          'oops'.tr,
-        ),
-        content: Text(
-          'videoResolutionWarning'.tr,
-        ),
-        actions: [
-          TextButton(
-            onPressed: () async => Navigator.pop(context),
-            style: TextButton.styleFrom(
-              foregroundColor: AppColors.green,
-            ),
-            child: Text('ok'.tr),
-          )
-        ],
-      ),
-    );
-  }
+  // Future<void> _showAspectRatioErrorDialog() async {
+  //   return await showDialog(
+  //     context: context,
+  //     builder: (context) => AlertDialog(
+  //       shape: RoundedRectangleBorder(
+  //         borderRadius: BorderRadius.circular(10),
+  //       ),
+  //       title: Text(
+  //         'oops'.tr,
+  //       ),
+  //       content: Text(
+  //         'videoResolutionWarning'.tr,
+  //       ),
+  //       actions: [
+  //         TextButton(
+  //           onPressed: () async => Navigator.pop(context),
+  //           style: TextButton.styleFrom(
+  //             foregroundColor: AppColors.green,
+  //           ),
+  //           child: Text('ok'.tr),
+  //         )
+  //       ],
+  //     ),
+  //   );
+  // }
 
   Future<void> deleteVideoDialog() async {
     return await showDialog(

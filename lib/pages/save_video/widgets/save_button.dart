@@ -74,7 +74,7 @@ class _SaveButtonState extends State<SaveButton> {
         builder: (context) => CustomDialog(
           isDoubleAction: false,
           title: 'saveVideoErrorTitle'.tr,
-          content: '${'tryAgainMsg'.tr}\n\nError: ${e.toString()}',
+          content: '${'tryAgainMsg'.tr}',
           actionText: 'Ok',
           actionColor: Colors.red,
           action: () =>
@@ -241,6 +241,8 @@ class _SaveButtonState extends State<SaveButton> {
         '-metadata artist="${Constants.artist}" -metadata album="$currentProfileName"';
     final trimCommand =
         '-ss ${widget.videoStartInMilliseconds}ms -to ${widget.videoEndInMilliseconds}ms';
+    const scale =
+        'scale=1920:1080:force_original_aspect_ratio=decrease,pad=1920:1080:(ow-iw)/2:(oh-ih)/2:black';
 
     // Caches the default font to save texts in ffmpeg.
     // The edit may fail unexpectedly in some devices if this is not done.
@@ -248,7 +250,7 @@ class _SaveButtonState extends State<SaveButton> {
 
     // Edit and save video
     final command =
-        '-i $videoPath $subtitles $metadata -vf [in]scale=1920:1080,drawtext="$fontPath:text=\'${widget.dateFormat}\':fontsize=$dateTextSize:fontcolor=\'$parsedDateColor\':borderw=${widget.textOutlineWidth}:bordercolor=$parsedTextOutlineColor:x=$datePosX:y=$datePosY$locOutput[out]" $trimCommand -r 30 -ac 1 -c:a aac -b:a 256k -c:v libx264 -pix_fmt yuv420p $finalPath -y';
+        '-i $videoPath $subtitles $metadata -vf [in]$scale,drawtext="$fontPath:text=\'${widget.dateFormat}\':fontsize=$dateTextSize:fontcolor=\'$parsedDateColor\':borderw=${widget.textOutlineWidth}:bordercolor=$parsedTextOutlineColor:x=$datePosX:y=$datePosY$locOutput[out]" $trimCommand -r 30 -ac 1 -c:a aac -b:a 256k -c:v libx264 -pix_fmt yuv420p $finalPath -y';
     await executeAsyncFFmpeg(
       command,
       completeCallback: (session) async {
@@ -288,15 +290,20 @@ class _SaveButtonState extends State<SaveButton> {
           final failureStackTrace = await session.getFailStackTrace();
           Utils.logError('${logTag}Session log is: $sessionLog');
           Utils.logError('${logTag}Failure stacktrace: $failureStackTrace');
+
+          // Make sure no incomplete file was left in the folder
+          StorageUtils.deleteFile(finalPath);
+
           await showDialog(
             barrierDismissible: false,
             context: Get.context!,
             builder: (context) => CustomDialog(
               isDoubleAction: false,
               title: 'saveVideoErrorTitle'.tr,
-              content: '${'tryAgainMsg'.tr}\n\nError: $sessionLog',
+              content: '${'tryAgainMsg'.tr}',
               actionText: 'Ok',
               actionColor: Colors.red,
+              sendLogs: true,
               action: () =>
                   Get.offAllNamed(Routes.HOME)?.then((_) => setState(() {})),
             ),

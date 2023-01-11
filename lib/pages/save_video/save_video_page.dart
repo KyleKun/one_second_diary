@@ -284,7 +284,6 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
       videoFile: File(routeArguments['videoPath']),
     )
         .then((_) {
-      _trimmer.videoPlayerController?.setLooping(true);
       // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
       setState(() {});
     });
@@ -628,6 +627,7 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
                           ),
                         ),
                       ),
+                      const SizedBox(width: 10),
                     ],
                   ),
                 ),

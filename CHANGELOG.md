@@ -4,6 +4,7 @@
 - Added Subtitles feature
 - Added Calendar page
 - Added feature to upload videos from gallery
+- Vertical videos are now supported
 - Added functionality to trim videos
 - Added automatic and manual geotagging in recording
 - Added options to create a movie by period or only with selected videos
@@ -14,7 +15,8 @@
 - Added validation checks for unsupported videos
 - Added video save percentage & progress indicators
 - Increased video recording quality to 1080p
-- Added logs routines that are saved to txt files
+- Added routine to save logs in txt files
+- Improvements in recording screen
 
 ## v1.1 - 05/2021
 - Added feature to receive daily notifications
