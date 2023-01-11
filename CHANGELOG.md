@@ -12,7 +12,6 @@
 - Added routine to save logs to txt files
 - Added Chinese, Deutsch, Indonesian, and French localization
 - Fixed issues where video recording could not be saved
-- Added validation checks for unsupported videos
 - Added video save percentage & progress indicators
 - Increased video recording quality to 1080p
 - Added routine to save logs in txt files

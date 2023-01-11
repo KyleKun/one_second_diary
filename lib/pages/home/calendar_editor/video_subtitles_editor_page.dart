@@ -83,7 +83,10 @@ class _VideoSubtitlesEditorPageState extends State<VideoSubtitlesEditorPage> {
                   aspectRatio: 16 / 9,
                   child: Stack(
                     children: [
-                      VideoPlayer(_videoController),
+                      VideoPlayer(
+                        key: UniqueKey(),
+                        _videoController,
+                      ),
                       Center(
                         child: Opacity(
                           opacity: _opacity,
