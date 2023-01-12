@@ -39,12 +39,24 @@ packages:
   camera:
     dependency: "direct main"
     description:
-      path: "packages/camera/camera"
-      ref: HEAD
-      resolved-ref: f19bd829eea3a660c555d80053b72511b545f995
-      url: "https://github.com/KyleKun/plugins.git"
-    source: git
-    version: "0.8.1+1"
+      name: camera
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.10.1"
+  camera_android:
+    dependency: transitive
+    description:
+      name: camera_android
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.10.2+1"
+  camera_avfoundation:
+    dependency: transitive
+    description:
+      name: camera_avfoundation
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.9.10+1"
   camera_platform_interface:
     dependency: transitive
     description:
@@ -52,6 +64,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.3.2"
+  camera_web:
+    dependency: transitive
+    description:
+      name: camera_web
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.3.1"
   characters:
     dependency: transitive
     description:
@@ -531,13 +550,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.3"
-  pedantic:
-    dependency: transitive
-    description:
-      name: pedantic
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.11.1"
   permission_handler:
     dependency: "direct main"
     description:

@@ -509,7 +509,7 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
                       durationTextStyle: ThemeService().isDarkTheme()
                           ? const TextStyle(color: Colors.white)
                           : const TextStyle(color: Colors.black),
-                      maxVideoLength: const Duration(seconds: 10),
+                      maxVideoLength: const Duration(milliseconds: 10900),
                       viewerWidth: MediaQuery.of(context).size.width,
                       onChangeStart: (value) => _videoStartValue = value,
                       onChangeEnd: (value) => _videoEndValue = value,

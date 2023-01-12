@@ -6,7 +6,6 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:native_device_orientation/native_device_orientation.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:timer_builder/timer_builder.dart';
 
 import '../../controllers/recording_settings_controller.dart';
 import '../../routes/app_pages.dart';
@@ -42,6 +41,11 @@ class _RecordingPageState extends State<RecordingPage>
   double _baseScale = 1.0;
   // Counting pointers (number of user fingers on screen)
   int _pointers = 0;
+  int previewQuarterTurns = 0;
+  String elapsedSeconds = '00';
+
+  // Create a Stopwatch to track elapsed recording time
+  Stopwatch stopwatch = Stopwatch();
 
   DeviceOrientation currentOrientation = DeviceOrientation.portraitUp;
   DateTime timeOfLastChange = DateTime.now();
@@ -63,15 +67,11 @@ class _RecordingPageState extends State<RecordingPage>
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
+    stopwatch.stop();
+    stopwatch.reset();
     _timer?.cancel();
     _cameraController.dispose();
     super.dispose();
-  }
-
-  /// Prevent negative numbers showing up sometimes
-  String formatDuration(int remaining) {
-    if (remaining <= 0) return '0';
-    return remaining.toString();
   }
 
   /// Start countdown timer if it is actived
@@ -82,11 +82,13 @@ class _RecordingPageState extends State<RecordingPage>
       (Timer timer) {
         if (_timerSeconds == 0) {
           setState(() {
-            // Only to remove countdown from screen since this is a local flag
+            // Remove  countdown from screen
             _isTimerEnable = false;
             timer.cancel();
           });
-          startVideoRecording();
+          Future.delayed(const Duration(milliseconds: 500), () {
+            startVideoRecording();
+          });
         } else {
           setState(() {
             _timerSeconds--;
@@ -124,7 +126,6 @@ class _RecordingPageState extends State<RecordingPage>
     _currentScale = (_baseScale * details.scale)
         .clamp(_minAvailableZoom, _maxAvailableZoom);
 
-    // TODO(KyleKun): this works only in preview for some reason, recording doesn't apply zoom
     await _cameraController.setZoomLevel(_currentScale);
   }
 
@@ -133,6 +134,19 @@ class _RecordingPageState extends State<RecordingPage>
       details.localPosition.dx / constraints.maxWidth,
       details.localPosition.dy / constraints.maxHeight,
     );
+    final _overlayEntry = OverlayEntry(builder: (context) {
+      return Positioned(
+        left: details.globalPosition.dx,
+        top: details.globalPosition.dy,
+        child: const Material(
+          color: Colors.transparent,
+          child: Icon(Icons.brightness_7_rounded),
+        ),
+      );
+    });
+    Overlay.of(context)?.insert(_overlayEntry);
+    Future.delayed(const Duration(seconds: 1), _overlayEntry.remove);
+
     _cameraController.setExposurePoint(offset);
     _cameraController.setFocusPoint(offset);
   }
@@ -166,14 +180,9 @@ class _RecordingPageState extends State<RecordingPage>
             .getMinZoomLevel()
             .then((value) => _minAvailableZoom = value),
       ]);
-      if (currentOrientation == DeviceOrientation.landscapeLeft)
-        await _cameraController
-            .lockCaptureOrientation(DeviceOrientation.landscapeRight);
-      else if (currentOrientation == DeviceOrientation.landscapeRight)
-        await _cameraController
-            .lockCaptureOrientation(DeviceOrientation.landscapeLeft);
-      else
-        await _cameraController.lockCaptureOrientation(currentOrientation);
+
+      await _cameraController
+          .lockCaptureOrientation(DeviceOrientation.portraitUp);
     } catch (e) {
       Utils.logError('$logTag${e.toString()}');
     }
@@ -256,9 +265,7 @@ class _RecordingPageState extends State<RecordingPage>
                             activeColor: AppColors.mainColor.withOpacity(0.9),
                             inactiveColor: AppColors.mainColor.withOpacity(0.2),
                             onChanged: (double value) {
-                              setState(() {
-                                _recordingSeconds = value.round();
-                              });
+                              _recordingSeconds = value.round();
 
                               /// Save on SharedPrefs
                               _recordingSettingsController
@@ -294,7 +301,10 @@ class _RecordingPageState extends State<RecordingPage>
           ),
           actions: [
             TextButton(
-              onPressed: () => Navigator.pop(context),
+              onPressed: () {
+                setState(() {});
+                Get.back();
+              },
               child: const Text(
                 'OK',
                 style: TextStyle(
@@ -320,12 +330,31 @@ class _RecordingPageState extends State<RecordingPage>
     }
 
     try {
-      /// Listener to save video when max duration reached
-      _cameraController
-          .onVideoRecordedEvent()
-          .listen((VideoRecordedEvent event) {
-        try {
-          Utils.logInfo('${logTag}Video recorded to ${event.file.path}');
+      setState(() {
+        previewQuarterTurns = getQuarterTurns();
+      });
+      await _cameraController.lockCaptureOrientation(currentOrientation);
+
+      /// Start video recording with max duration
+      final int milliseconds = _recordingSeconds * 1000;
+
+      stopwatch.start();
+      await _cameraController.startVideoRecording();
+
+      // Don't ask me
+      Stream.periodic(const Duration(milliseconds: 200)).listen((_) async {
+        if (mounted)
+          setState(() {
+            elapsedSeconds = stopwatch.elapsed.inMilliseconds >= milliseconds &&
+                    milliseconds < 10000
+                ? '0${milliseconds ~/ 1000}'
+                : stopwatch.elapsed.inMilliseconds >= 10000
+                    ? '10'
+                    : '0${stopwatch.elapsed.inSeconds}';
+          });
+        if (stopwatch.elapsed.inMilliseconds >= milliseconds + 800) {
+          final file = await _cameraController.stopVideoRecording();
+          Utils.logInfo('${logTag}Video recorded to ${file.path}');
           setState(() {
             _isRecording = false;
           });
@@ -333,39 +362,28 @@ class _RecordingPageState extends State<RecordingPage>
           Get.offNamed(
             Routes.SAVE_VIDEO,
             arguments: {
-              'videoPath': event.file.path,
+              'videoPath': file.path,
               'isFromRecordingPage': true,
               'currentDate': DateTime.now(),
             },
           );
-        } catch (e) {
-          showDialog(
-            barrierDismissible: false,
-            context: Get.context!,
-            builder: (context) => CustomDialog(
-              isDoubleAction: false,
-              title: 'recordingErrorTitle'.tr,
-              content: 'tryAgainMsg'.tr,
-              actionText: 'Ok',
-              actionColor: Colors.red,
-              action: () => Get.back(),
-            ),
-          );
         }
       });
-
-      /// Start video recording with max duration
-      final int milliseconds =
-          _recordingSettingsController.recordingSeconds.value * 1000;
-      await _cameraController.startVideoRecording(
-        maxVideoDuration: Duration(
-          // 400 milliseconds more than selected for 1 second literal, since it's too short
-          milliseconds:
-              milliseconds == 1000 ? milliseconds + 400 : milliseconds,
-        ),
-      );
     } on CameraException catch (e) {
       Utils.logError('$logTag${e.toString()}');
+      showDialog(
+        barrierDismissible: false,
+        context: Get.context!,
+        builder: (context) => CustomDialog(
+          isDoubleAction: false,
+          title: 'recordingErrorTitle'.tr,
+          content: 'tryAgainMsg'.tr,
+          actionText: 'Ok',
+          actionColor: Colors.red,
+          sendLogs: true,
+          action: () => Get.back(),
+        ),
+      );
       return null;
     }
   }
@@ -414,301 +432,216 @@ class _RecordingPageState extends State<RecordingPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _isRecording && _isTimerEnable
-          ? timerPopup(getQuarterTurns())
-          : NativeDeviceOrientedWidget(
-              useSensor: true,
-              fallback: (BuildContext context) {
-                lockCameraOrientation(DeviceOrientation.landscapeLeft);
-                return cameraPreview(1);
-              },
-              portraitUp: (context) {
-                lockCameraOrientation(DeviceOrientation.portraitUp);
-                return cameraPreview(0);
-              },
-              portraitDown: (context) {
-                lockCameraOrientation(DeviceOrientation.portraitDown);
-                return cameraPreview(2);
-              },
-              landscapeLeft: (context) {
-                lockCameraOrientation(DeviceOrientation.landscapeLeft);
-                return cameraPreview(1);
-              },
-              landscapeRight: (context) {
-                lockCameraOrientation(DeviceOrientation.landscapeRight);
-                return cameraPreview(-1);
-              },
+      body: Stack(
+        children: [
+          NativeDeviceOrientedWidget(
+            useSensor: true,
+            fallback: (BuildContext context) {
+              setCurrentOrientation(DeviceOrientation.landscapeLeft);
+              return cameraPreview(1, _cameraController);
+            },
+            portraitUp: (context) {
+              setCurrentOrientation(DeviceOrientation.portraitUp);
+              return cameraPreview(0, _cameraController);
+            },
+            portraitDown: (context) {
+              setCurrentOrientation(DeviceOrientation.portraitDown);
+              return cameraPreview(2, _cameraController);
+            },
+            landscapeLeft: (context) {
+              setCurrentOrientation(DeviceOrientation.landscapeLeft);
+              return cameraPreview(1, _cameraController);
+            },
+            landscapeRight: (context) {
+              setCurrentOrientation(DeviceOrientation.landscapeRight);
+              return cameraPreview(-1, _cameraController);
+            },
+          ),
+
+          /// Remaining time counter
+          Align(
+            alignment: Alignment.topCenter,
+            child: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Padding(
+                padding: const EdgeInsets.all(40.0),
+                child: Text(
+                  !_isRecording
+                      ? _recordingSeconds >= 10
+                          ? '00:10'
+                          : '00:0$_recordingSeconds'
+                      : '00:$elapsedSeconds',
+                  style: const TextStyle(
+                    color: Colors.red,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 1.2,
+                    shadows: [
+                      Shadow(
+                        blurRadius: 15.0,
+                        color: Colors.black,
+                        offset: Offset(0, 0),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ),
+          ),
+        ],
+      ),
     );
   }
 
-  Future<void> lockCameraOrientation(DeviceOrientation orientation) async {
+  Future<void> setCurrentOrientation(DeviceOrientation orientation) async {
     if (_isRecording) return;
     timeOfLastChange = DateTime.now();
-    Future.delayed(const Duration(milliseconds: 200), () async {
-      if (DateTime.now().difference(timeOfLastChange).inMilliseconds > 200) {
+    Future.delayed(const Duration(milliseconds: 500), () async {
+      if (DateTime.now().difference(timeOfLastChange).inMilliseconds > 500) {
         if (orientation != currentOrientation) {
-          if (orientation == DeviceOrientation.landscapeLeft) {
-            await _cameraController
-                .lockCaptureOrientation(DeviceOrientation.landscapeRight);
-          } else if (orientation == DeviceOrientation.landscapeRight) {
-            await _cameraController
-                .lockCaptureOrientation(DeviceOrientation.landscapeLeft);
-          } else if (orientation == DeviceOrientation.portraitUp) {
-            await _cameraController
-                .lockCaptureOrientation(DeviceOrientation.portraitUp);
-          } else if (orientation == DeviceOrientation.portraitDown) {
-            await _cameraController
-                .lockCaptureOrientation(DeviceOrientation.portraitDown);
-          }
-
-          WidgetsBinding.instance.addPostFrameCallback(
-            (_) {
-              setState(() {
-                currentOrientation = orientation;
-              });
-            },
-          );
+          setState(() {
+            currentOrientation = orientation;
+          });
         }
       }
     });
   }
 
-  Widget cameraPreview(int quarterTurns) {
-    return FutureBuilder(
-      future: Future.delayed(
-        Duration(
-          milliseconds: _isRecording ? 600 : 200,
-        ),
-        () {},
-      ),
-      builder: (BuildContext context, AsyncSnapshot snapshot) {
-        if (snapshot.connectionState == ConnectionState.done) {
-          return SafeArea(
-            child: SizedBox(
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height,
-              child: Stack(
-                fit: StackFit.expand,
-                children: [
-                  /// Camera preview
-                  RotatedBox(
-                    quarterTurns: quarterTurns,
-                    child: _addCameraScreen(context),
-                  ),
+  Widget cameraPreview(int quarterTurns, CameraController controller) {
+    return SafeArea(
+      child: SizedBox(
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height,
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            /// Camera preview
+            RotatedBox(
+              quarterTurns: previewQuarterTurns,
+              child: _addCameraScreen(context),
+            ),
 
-                  // /// Countdown timer
-                  // Opacity(
-                  //   opacity: _isTimerEnable ? 1.0 : 0.0,
-                  //   child: Align(
-                  //     alignment: Alignment.center,
-                  //     child: RotatedBox(
-                  //       quarterTurns: 1,
-                  //       child: Container(
-                  //         height: MediaQuery.of(context).size.width * 0.35,
-                  //         decoration: const BoxDecoration(
-                  //           color: Colors.black26,
-                  //           shape: BoxShape.circle,
-                  //         ),
-                  //         child: Center(
-                  //           child: Text(
-                  //             /// Avoid showing 0 in countdown
-                  //             _timerSeconds == 0
-                  //                 ? r'\(*v*)/'
-                  //                 : '$_timerSeconds',
-                  //             style: TextStyle(
-                  //               color: Colors.white.withOpacity(0.8),
-                  //               fontSize: 56.0,
-                  //             ),
-                  //           ),
-                  //         ),
-                  //       ),
-                  //     ),
-                  //   ),
-                  // ),
-
-                  /// Record button
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Padding(
-                      padding: const EdgeInsets.all(30.0),
-                      child: ElevatedButton(
-                        child: SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.2,
-                          height: MediaQuery.of(context).size.width * 0.2,
-                          child: Center(
-                            child: Icon(
-                              Icons.circle,
-                              color: !_isRecording ? Colors.red : Colors.grey,
-                              size: MediaQuery.of(context).size.width * 0.1,
-                            ),
-                          ),
+            /// Countdown timer
+            Opacity(
+              opacity: _isTimerEnable ? 1.0 : 0.0,
+              child: Align(
+                alignment: Alignment.center,
+                child: RotatedBox(
+                  quarterTurns: quarterTurns,
+                  child: Container(
+                    height: MediaQuery.of(context).size.width * 0.35,
+                    decoration: const BoxDecoration(
+                      color: Colors.black26,
+                      shape: BoxShape.circle,
+                    ),
+                    child: Center(
+                      child: Text(
+                        /// Avoid showing 0 in countdown
+                        _timerSeconds == 0 ? r'\(*v*)/' : '$_timerSeconds',
+                        style: TextStyle(
+                          color: Colors.white.withOpacity(0.8),
+                          fontSize: 56.0,
                         ),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: !_isRecording
-                              ? Colors.white.withOpacity(0.8)
-                              : Colors.grey.withOpacity(0.5),
-                          elevation: 8.0,
-                          shape: const CircleBorder(),
-                        ),
-                        onPressed: () {
-                          if (!_isRecording) {
-                            setState(() {
-                              _isRecording = true;
-                            });
-
-                            _isTimerEnable
-                                ? startTimer()
-                                : startVideoRecording();
-                          }
-                        },
                       ),
                     ),
                   ),
-
-                  /// Change camera button
-                  Positioned(
-                    right: 15.0,
-                    bottom: 15.0,
-                    child: GestureDetector(
-                      child: Container(
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: !_isRecording
-                              ? Colors.green.withOpacity(0.8)
-                              : Colors.grey.withOpacity(0.4),
-                        ),
-                        width: MediaQuery.of(context).size.width * 0.12,
-                        height: MediaQuery.of(context).size.height * 0.12,
-                        child: Icon(
-                          Icons.cameraswitch,
-                          color: Colors.white,
-                          size: MediaQuery.of(context).size.width * 0.06,
-                        ),
-                      ),
-                      onTap: () async {
-                        if (!_isRecording) {
-                          _handleCameraLens(
-                            desc: _cameraController.description,
-                            toggle: true,
-                          );
-                        }
-                      },
-                    ),
-                  ),
-
-                  /// Recording settings button
-                  Positioned(
-                    left: 15.0,
-                    bottom: 15.0,
-                    child: GestureDetector(
-                      child: Container(
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: !_isRecording
-                              ? Colors.blueGrey.withOpacity(0.8)
-                              : Colors.grey.withOpacity(0.4),
-                        ),
-                        width: MediaQuery.of(context).size.width * 0.12,
-                        height: MediaQuery.of(context).size.height * 0.12,
-                        child: Icon(
-                          Icons.settings,
-                          color: Colors.white,
-                          size: MediaQuery.of(context).size.width * 0.06,
-                        ),
-                      ),
-                      onTap: () {
-                        if (!_isRecording) _openRecordingSettings(quarterTurns);
-                      },
-                    ),
-                  ),
-
-                  /// Remaining time counter
-                  Align(
-                    alignment: quarterTurns % 2 == 0
-                        ? Alignment.topCenter
-                        : Alignment.centerLeft,
-                    child: RotatedBox(
-                      quarterTurns: quarterTurns,
-
-                      /// 1.6 seconds instead of 1.0 to prevent some bugs
-                      child: TimerBuilder.periodic(
-                          const Duration(milliseconds: 1600),
-                          alignment: Duration.zero, builder: (context) {
-                        final int remaining =
-                            _cameraController.value.isRecordingVideo
-                                ? _recordingSeconds--
-                                : _recordingSeconds;
-
-                        /// Show remaining recording time
-                        return Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: Text(
-                            remaining == 10
-                                ? '00:10 '
-                                : '00:0${formatDuration(remaining)} ',
-                            style: const TextStyle(
-                              color: Colors.red,
-                              fontWeight: FontWeight.bold,
-                              letterSpacing: 1.2,
-                              shadows: [
-                                Shadow(
-                                  blurRadius: 15.0,
-                                  color: Colors.black,
-                                  offset: Offset(0, 0),
-                                ),
-                              ],
-                            ),
-                          ),
-                        );
-                      }),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          );
-        } else {
-          return Center(
-            child: RotatedBox(
-              quarterTurns: quarterTurns,
-              child: Icon(
-                _isRecording ? Icons.camera : Icons.hourglass_bottom_rounded,
-                color: AppColors.mainColor,
-                size: 50.0,
-              ),
-            ),
-          );
-        }
-      },
-    );
-  }
-
-  Opacity timerPopup(int quarterTurns) {
-    /// Countdown timer
-    return Opacity(
-      opacity: _isTimerEnable ? 1.0 : 0.0,
-      child: Align(
-        alignment: Alignment.center,
-        child: RotatedBox(
-          quarterTurns: quarterTurns,
-          child: Container(
-            height: MediaQuery.of(context).size.width * 0.35,
-            decoration: const BoxDecoration(
-              color: Colors.black26,
-              shape: BoxShape.circle,
-            ),
-            child: Center(
-              child: Text(
-                /// Avoid showing 0 in countdown
-                _timerSeconds == 0 ? r'\(*v*)/' : '$_timerSeconds',
-                style: TextStyle(
-                  color: Colors.white.withOpacity(0.8),
-                  fontSize: 56.0,
                 ),
               ),
             ),
-          ),
+
+            /// Record button
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Padding(
+                padding: const EdgeInsets.all(30.0),
+                child: ElevatedButton(
+                  child: SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.2,
+                    height: MediaQuery.of(context).size.width * 0.2,
+                    child: Center(
+                      child: Icon(
+                        Icons.circle,
+                        color: !_isRecording ? Colors.red : Colors.grey,
+                        size: MediaQuery.of(context).size.width * 0.1,
+                      ),
+                    ),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: !_isRecording
+                        ? Colors.white.withOpacity(0.8)
+                        : Colors.grey.withOpacity(0.5),
+                    elevation: 8.0,
+                    shape: const CircleBorder(),
+                  ),
+                  onPressed: () {
+                    if (!_isRecording) {
+                      setState(() {
+                        _isRecording = true;
+                      });
+
+                      _isTimerEnable ? startTimer() : startVideoRecording();
+                    }
+                  },
+                ),
+              ),
+            ),
+
+            /// Change camera button
+            Positioned(
+              right: 15.0,
+              bottom: 15.0,
+              child: GestureDetector(
+                child: Container(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: !_isRecording
+                        ? Colors.green.withOpacity(0.8)
+                        : Colors.grey.withOpacity(0.4),
+                  ),
+                  width: MediaQuery.of(context).size.width * 0.12,
+                  height: MediaQuery.of(context).size.height * 0.12,
+                  child: Icon(
+                    Icons.cameraswitch,
+                    color: Colors.white,
+                    size: MediaQuery.of(context).size.width * 0.06,
+                  ),
+                ),
+                onTap: () async {
+                  if (!_isRecording) {
+                    _handleCameraLens(
+                      desc: _cameraController.description,
+                      toggle: true,
+                    );
+                  }
+                },
+              ),
+            ),
+
+            /// Recording settings button
+            Positioned(
+              left: 15.0,
+              bottom: 15.0,
+              child: GestureDetector(
+                child: Container(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: !_isRecording
+                        ? Colors.blueGrey.withOpacity(0.8)
+                        : Colors.grey.withOpacity(0.4),
+                  ),
+                  width: MediaQuery.of(context).size.width * 0.12,
+                  height: MediaQuery.of(context).size.height * 0.12,
+                  child: Icon(
+                    Icons.settings,
+                    color: Colors.white,
+                    size: MediaQuery.of(context).size.width * 0.06,
+                  ),
+                ),
+                onTap: () {
+                  if (!_isRecording) _openRecordingSettings(quarterTurns);
+                },
+              ),
+            ),
+          ],
         ),
       ),
     );
