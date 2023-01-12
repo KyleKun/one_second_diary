@@ -222,7 +222,7 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
         Container(
           margin: const EdgeInsets.symmetric(horizontal: 16.0),
           child: CalendarCarousel<Event>(
-            childAspectRatio: 1.25,
+            childAspectRatio: 1.2,
             onDayPressed: (DateTime date, List<Event> events) async {
               if (_selectedDate == date) return;
               await _controller?.pause();
