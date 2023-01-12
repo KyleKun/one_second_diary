@@ -18,7 +18,7 @@
     - Video save percentage indicator
     - Movie progress indicator
     - Routine to save logs in txt files
-    - Enhanced recording screen to support all orientations
+    - Recording page now supports portrait mode, zoom and focus controls
     - Date editing preferences are now saved
 
 ## v1.1 - 05/2021
