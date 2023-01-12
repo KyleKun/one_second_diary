@@ -94,6 +94,8 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
 
   /// Initializes the video playback for the current date (today)
   Future<void> initializeTodaysVideoPlayback() async {
+    final autoPlay = SharedPrefsUtil.getBool('calendarAutoPlay') ?? true;
+    final autoSound = SharedPrefsUtil.getBool('calendarAutoSound') ?? true;
     setState(() {
       wasDateRecorded = allVideos.any((a) => a.contains(_currentDateStr));
       if (wasDateRecorded) {
@@ -103,7 +105,8 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
         _controller = VideoPlayerController.file(File(currentVideo))
           ..initialize().then((_) async {
             await _controller?.setLooping(true);
-            await _controller?.play();
+            await _controller?.setVolume(autoSound ? 1.0 : 0.0);
+            if (autoPlay) await _controller?.play();
             setState(() {});
           });
       }
@@ -114,6 +117,8 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
   /// Initializes the video playback for the selected date
   Future<void> initializeVideoPlayback(String video) async {
     if (lastSelectedDate != _selectedDate) {
+      final autoPlay = SharedPrefsUtil.getBool('calendarAutoPlay') ?? true;
+      final autoSound = SharedPrefsUtil.getBool('calendarAutoSound') ?? true;
       WidgetsBinding.instance.addPostFrameCallback((_) async {
         // Disposing old controller
         await _controller?.dispose();
@@ -123,7 +128,8 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
         _controller = VideoPlayerController.file(File(video))
           ..initialize().then((_) async {
             await _controller?.setLooping(true);
-            await _controller?.play();
+            await _controller?.setVolume(autoSound ? 1.0 : 0.0);
+            if (autoPlay) await _controller?.play();
             setState(() {
               lastSelectedDate = _selectedDate;
             });
@@ -216,7 +222,7 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
         Container(
           margin: const EdgeInsets.symmetric(horizontal: 16.0),
           child: CalendarCarousel<Event>(
-            childAspectRatio: 1.2,
+            childAspectRatio: 1.25,
             onDayPressed: (DateTime date, List<Event> events) async {
               if (_selectedDate == date) return;
               await _controller?.pause();
@@ -312,11 +318,10 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
           child: wasDateRecorded
               ? Column(
                   children: [
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.25,
-                      width: MediaQuery.of(context).size.width * 0.86,
-                      child: Padding(
-                        padding: const EdgeInsets.all(5.0),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                      child: AspectRatio(
+                        aspectRatio: 16 / 9,
                         child: Container(
                           decoration: BoxDecoration(
                             border: Border.all(color: mainColor),
@@ -362,25 +367,22 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
                                       _controller!.value.isInitialized) {
                                     return Align(
                                       alignment: Alignment.center,
-                                      child: IntrinsicHeight(
-                                        child: Stack(
-                                          fit: StackFit.passthrough,
-                                          children: [
-                                            Align(
-                                              alignment: Alignment.center,
-                                              child: AspectRatio(
-                                                aspectRatio: 16 / 9,
-                                                child: VideoPlayer(
-                                                  key: _videoPlayerKey,
-                                                  _controller!,
-                                                ),
+                                      child: Stack(
+                                        fit: StackFit.passthrough,
+                                        children: [
+                                          Align(
+                                            alignment: Alignment.center,
+                                            child: ClipRect(
+                                              child: VideoPlayer(
+                                                key: _videoPlayerKey,
+                                                _controller!,
                                               ),
                                             ),
-                                            Controls(
-                                              controller: _controller,
-                                            ),
-                                          ],
-                                        ),
+                                          ),
+                                          Controls(
+                                            controller: _controller,
+                                          ),
+                                        ],
                                       ),
                                     );
                                   } else {
@@ -537,8 +539,10 @@ Future<void> pauseOrResumeVideoPlayback(
 
   if (!controller!.value.isPlaying && !forcePause) {
     await controller.play();
+    SharedPrefsUtil.putBool('calendarAutoPlay', true);
   } else {
     await controller.pause();
+    SharedPrefsUtil.putBool('calendarAutoPlay', false);
   }
 }
 
@@ -578,10 +582,9 @@ class _ControlsState extends State<Controls> {
       behavior: HitTestBehavior.opaque,
       onTap: () async {
         await pauseOrResumeVideoPlayback(widget.controller);
+        final isPlaying = widget.controller!.value.isPlaying;
         setState(() {
-          playIcon = widget.controller!.value.isPlaying
-              ? Icons.pause
-              : Icons.play_arrow;
+          playIcon = isPlaying ? Icons.pause : Icons.play_arrow;
         });
       },
       child: Stack(
@@ -589,15 +592,20 @@ class _ControlsState extends State<Controls> {
         children: [
           GestureDetector(
             onTap: () {
-              setState(() {
-                if (widget.controller!.value.volume == 0) {
-                  widget.controller!.setVolume(1);
+              final bool isMuted = widget.controller!.value.volume == 0;
+              if (isMuted) {
+                SharedPrefsUtil.putBool('calendarAutoSound', true);
+                widget.controller!.setVolume(1);
+                setState(() {
                   soundIcon = Icons.volume_up;
-                } else {
-                  widget.controller!.setVolume(0);
+                });
+              } else {
+                SharedPrefsUtil.putBool('calendarAutoSound', false);
+                widget.controller!.setVolume(0);
+                setState(() {
                   soundIcon = Icons.volume_off;
-                }
-              });
+                });
+              }
             },
             child: Align(
               alignment: Alignment.topLeft,

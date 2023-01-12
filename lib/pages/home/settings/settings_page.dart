@@ -16,17 +16,20 @@ class SettingPage extends StatelessWidget {
       width: MediaQuery.of(context).size.width * 0.85,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 40.0),
-        child: Column(
-          children: [
-            SwitchThemeComponent(),
-            NotificationsButton(),
-            ProfilesButton(),
-            LanguageChooser(),
-            BackupTutorial(),
-            GithubButton(),
-            ContactButton(),
-            AboutButton(),
-          ],
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Column(
+            children: [
+              SwitchThemeComponent(),
+              NotificationsButton(),
+              ProfilesButton(),
+              LanguageChooser(),
+              BackupTutorial(),
+              GithubButton(),
+              ContactButton(),
+              AboutButton(),
+            ],
+          ),
         ),
       ),
     );
