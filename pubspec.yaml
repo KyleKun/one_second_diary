@@ -11,7 +11,11 @@ environment:
 dependencies:
   about: ^2.1.1
   avatar_glow: ^2.0.2
-  camera: ^0.10.1
+  camera: 
+    git:
+      url: https://github.com/KyleKun/plugins.git
+      path: packages/camera/camera
+      ref: fix_fail_get_dimensions_on_profile
   device_info_plus: ^8.0.0
   ffmpeg_kit_flutter_full_gpl: ^5.1.0
   file_picker: ^5.2.4

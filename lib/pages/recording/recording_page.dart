@@ -184,7 +184,20 @@ class _RecordingPageState extends State<RecordingPage>
       await _cameraController
           .lockCaptureOrientation(DeviceOrientation.portraitUp);
     } catch (e) {
-      Utils.logError('$logTag${e.toString()}');
+      Utils.logError('${logTag}failed to initialize camera: ${e.toString()}');
+      showDialog(
+        barrierDismissible: false,
+        context: Get.context!,
+        builder: (context) => CustomDialog(
+          isDoubleAction: false,
+          title: 'recordingErrorTitle'.tr,
+          content: 'tryAgainMsg'.tr,
+          actionText: 'Ok',
+          actionColor: Colors.red,
+          sendLogs: true,
+          action: () => Get.back(),
+        ),
+      );
     }
   }
 
@@ -338,7 +351,10 @@ class _RecordingPageState extends State<RecordingPage>
       /// Start video recording with max duration
       final int milliseconds = _recordingSeconds * 1000;
 
+      Utils.logInfo('${logTag}Started recording video with $milliseconds ms');
+
       stopwatch.start();
+
       await _cameraController.startVideoRecording();
 
       // Don't ask me
@@ -358,6 +374,8 @@ class _RecordingPageState extends State<RecordingPage>
           setState(() {
             _isRecording = false;
           });
+          stopwatch.stop();
+          stopwatch.reset();
 
           Get.offNamed(
             Routes.SAVE_VIDEO,
@@ -371,6 +389,11 @@ class _RecordingPageState extends State<RecordingPage>
       });
     } on CameraException catch (e) {
       Utils.logError('$logTag${e.toString()}');
+      stopwatch.stop();
+      stopwatch.reset();
+      setState(() {
+        _isRecording = false;
+      });
       showDialog(
         barrierDismissible: false,
         context: Get.context!,
