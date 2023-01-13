@@ -4,9 +4,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import '../../../../utils/constants.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 
+import '../../../../utils/constants.dart';
 import '../../../../utils/date_format_utils.dart';
 import '../../../../utils/lazy_future_builder.dart';
 import '../../../../utils/utils.dart';
