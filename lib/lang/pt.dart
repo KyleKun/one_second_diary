@@ -52,7 +52,7 @@ const Map<String, String> pt = {
   'introDesc3':
       'Se gostar do app, considere apoiar o desenvolvimento com uma doação.',
   'skip': 'Pular',
-  'done': 'Feito',
+  'done': 'Pronto',
   'futureUpdates': 'Atualizações Futuras',
   'licenses': 'Licenças',
   'contact': 'Contato',
@@ -139,7 +139,7 @@ const Map<String, String> pt = {
       'Ocorreu um erro ao tentar obter sua localização. Por favor, tente adicionar uma localização personalizada manualmente.',
   'whatsNew': 'Novidades',
   'whatsNewDescv15':
-      'Esta versão trouxe várias funcionalidades novas e melhorias!\n\nConfira nas próximas páginas 😊',
+      'Esta versão traz várias novas funcionalidades e melhorias!\n\nConfira nas próximas páginas 😊',
   'feat1v15': 'Galeria',
   'featDesc1v15': 'Adicione facilmente vídeos da galeria à sua coleção 🤩',
   'feat2v15': 'Legendas',
