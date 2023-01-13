@@ -115,7 +115,6 @@ class _VideoSubtitlesEditorPageState extends State<VideoSubtitlesEditorPage> {
                 padding: const EdgeInsets.all(8.0),
                 child: TextField(
                   controller: subtitlesController,
-                  cursorColor: Colors.green,
                   maxLines: null,
                   onChanged: (value) => setState(() {
                     _subtitles = value;
@@ -124,10 +123,10 @@ class _VideoSubtitlesEditorPageState extends State<VideoSubtitlesEditorPage> {
                     hintText: ('enterSubtitles'.tr).split('(').first,
                     filled: true,
                     border: const OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.green),
+                      borderSide: BorderSide(color: AppColors.green),
                     ),
                     focusedBorder: const OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.green),
+                      borderSide: BorderSide(color: AppColors.green),
                     ),
                   ),
                 ),
@@ -150,7 +149,7 @@ class _VideoSubtitlesEditorPageState extends State<VideoSubtitlesEditorPage> {
                 });
                 final subtitles = await Utils.writeSrt(
                   _subtitles,
-                  _videoController.value.duration.inSeconds,
+                  _videoController.value.duration.inMilliseconds.toDouble(),
                 );
 
                 String command = '';

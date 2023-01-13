@@ -164,4 +164,6 @@ const Map<String, String> en = {
       'Set up scheduled daily notifications to remind you to record your special moment 🔔',
   'default': 'Default',
   'profileNameAlreadyExists': 'Profile name already exists',
+  'profileNameCannotContainSpecialChars':
+      'Profile name cannot contain\nspecial characters',
 };

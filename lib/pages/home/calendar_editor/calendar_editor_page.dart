@@ -78,7 +78,11 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
       final srtFileContent = await File(srtFilePath).readAsString();
       subtitles = srtFileContent.isEmpty
           ? ''
-          : srtFileContent.trim().split(',000').last;
+          : srtFileContent
+              .trim()
+              .split('00:00:00,000 --> 00:00:')
+              .last
+              .substring(6);
     } else {
       subtitles = '';
     }

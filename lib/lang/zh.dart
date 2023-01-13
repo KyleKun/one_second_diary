@@ -140,4 +140,5 @@ const Map<String, String> zh = {
   'featDesc7v15': '设置每日定时通知，提醒您记录特殊时刻 🔔',
   'default': '默认',
   'profileNameAlreadyExists': '配置文件名称已存在',
+  'profileNameCannotContainSpecialChars': '配置文件名称不能包含特殊字符',
 };

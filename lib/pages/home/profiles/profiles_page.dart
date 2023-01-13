@@ -91,13 +91,15 @@ class _ProfilesPageState extends State<ProfilesPage> {
                 const SizedBox(height: 12),
                 TextFormField(
                   controller: _profileNameController,
-                  cursorColor: Colors.green,
                   inputFormatters: [
                     LengthLimitingTextInputFormatter(45),
                   ],
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'profileNameCannotBeEmpty'.tr;
+                    }
+                    if (!value.contains(RegExp(r'^[\w\d _-]+$'))) {
+                      return 'profileNameCannotContainSpecialChars'.tr;
                     }
 
                     if (value.toLowerCase().trim() == 'default' ||
@@ -120,13 +122,13 @@ class _ProfilesPageState extends State<ProfilesPage> {
                       color: AppColors.mainColor,
                     ),
                     border: const UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.green),
+                      borderSide: BorderSide(color: AppColors.green),
                     ),
                     enabledBorder: UnderlineInputBorder(
                       borderSide: BorderSide(color: mainColor),
                     ),
                     focusedBorder: const UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.green),
+                      borderSide: BorderSide(color: AppColors.green),
                     ),
                     focusedErrorBorder: const UnderlineInputBorder(
                       borderSide: BorderSide(color: AppColors.mainColor),
@@ -159,7 +161,7 @@ class _ProfilesPageState extends State<ProfilesPage> {
                     setState(() {
                       profiles.insert(
                         profiles.length,
-                        Profile(label: _profileNameController.text),
+                        Profile(label: _profileNameController.text.trim()),
                       );
                       _profileNameController.clear();
                     });

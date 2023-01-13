@@ -162,4 +162,6 @@ const Map<String, String> es = {
       'Configura notificaciones diarias programadas para recordarte grabar tu momento especial 🔔',
   'default': 'Patrón',
   'profileNameAlreadyExists': 'El nombre del perfil ya existe',
+  'profileNameCannotContainSpecialChars':
+      'El nombre del perfil no puede\ncontener caracteres especiales',
 };

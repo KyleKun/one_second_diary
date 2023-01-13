@@ -436,7 +436,7 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
               title: 'discardVideoTitle'.tr,
               content: 'discardVideoDesc'.tr,
               actionText: 'yes'.tr,
-              actionColor: Colors.green,
+              actionColor: AppColors.green,
               action: () => closePopupAndPushToRecording(_tempVideoPath),
               action2Text: 'no'.tr,
               action2Color: Colors.red,
@@ -766,7 +766,6 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
                         ),
                       ),
                       TextField(
-                        cursorColor: Colors.green,
                         maxLines: null,
                         onChanged: (value) => setState(() {
                           _subtitles = value;
@@ -827,16 +826,15 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
           children: [
             TextField(
               controller: customLocationTextController,
-              cursorColor: Colors.green,
               decoration: InputDecoration(
                 hintText: 'enterLocation'.tr,
                 filled: true,
                 border: const OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.green),
+                  borderSide: BorderSide(color: AppColors.green),
                 ),
                 enabledBorder: InputBorder.none,
                 focusedBorder: const OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.green),
+                  borderSide: BorderSide(color: AppColors.green),
                 ),
               ),
             ),

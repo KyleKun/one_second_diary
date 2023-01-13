@@ -191,7 +191,8 @@ class Utils {
   // }
 
   /// Write srt file used by ffmpeg to add subtitles to the movie
-  static Future<String> writeSrt(String text, int videoDuration) async {
+  static Future<String> writeSrt(
+      String text, double videoDurationMilliseconds) async {
     final io.Directory directory = await getApplicationDocumentsDirectory();
     final String srtPath = '${directory.path}/subtitles.srt';
     logInfo('[Utils.writeSrt()] - Writing srt file to $srtPath');
@@ -202,30 +203,37 @@ class Utils {
     final io.File file = io.File(srtPath);
 
     // Add linebreaks if a line is > 45 chars
-    text = '$text\n';
-    final List<String> lines = text.split('\n');
-    text = '';
-    for (int i = 0; i < lines.length; i++) {
-      if (lines[i].length > 45) {
-        final List<String> words = lines[i].split(' ');
-        String temp = '';
-        for (int j = 0; j < words.length; j++) {
-          if (temp.length + words[j].length > 45) {
-            text += '$temp\n';
-            temp = '';
-          }
-          temp += '${words[j]} ';
+    String subsContent = '';
+    final List<String> lines = text.trim().split('\n');
+    for (String line in lines) {
+      int length = 0;
+      String newLine = '';
+      for (String word in line.split(' ')) {
+        if (length + word.length > 45) {
+          subsContent += '$newLine\n';
+          newLine = '';
+          length = 0;
         }
-        text += '$temp\n';
-      } else {
-        text += '${lines[i]}\n';
+        newLine += '$word ';
+        length += word.length;
       }
+      subsContent += '$newLine\n';
     }
 
-    final String totalSeconds = videoDuration == 10 ? '10' : '0$videoDuration';
-    logInfo('[Utils.writeSrt()] - Subtitles total duration $videoDuration');
+    subsContent = subsContent.trim();
+
+    // Calculate subtitles duration and format it
+    final Duration duration =
+        Duration(milliseconds: videoDurationMilliseconds.floor());
+    final int seconds = duration.inSeconds % 60;
+    final int milliseconds = (duration.inMilliseconds % 1000).round();
+    final String secondsAndMilliseconds =
+        "${seconds.toString().padLeft(2, '0')},${milliseconds.toString().padLeft(3, '0')}";
+    logInfo(
+        '[Utils.writeSrt()] - Subtitles total duration $secondsAndMilliseconds');
+
     final String subtitles =
-        '1\r\n00:00:00,000 --> 00:00:$totalSeconds,000\r\n$text\r\n';
+        '1\r\n00:00:00,000 --> 00:00:$secondsAndMilliseconds\r\n$subsContent\r\n';
 
     // Writing file
     await file.writeAsString(subtitles, mode: io.FileMode.write);

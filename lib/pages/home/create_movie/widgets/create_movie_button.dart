@@ -86,7 +86,7 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
             title: 'movieErrorTitle'.tr,
             content: 'movieInsufficientVideos'.tr,
             actionText: 'Ok',
-            actionColor: Colors.green,
+            actionColor: AppColors.green,
             action: () => Get.back(),
           ),
         );
@@ -343,7 +343,7 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
                     title: 'movieCreatedTitle'.tr,
                     content: 'movieCreatedDesc'.tr,
                     actionText: 'Ok',
-                    actionColor: Colors.green,
+                    actionColor: AppColors.green,
                     action: () {
                       Get.offAllNamed(Routes.HOME);
                       Future.delayed(

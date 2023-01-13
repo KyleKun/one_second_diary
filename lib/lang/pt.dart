@@ -162,4 +162,6 @@ const Map<String, String> pt = {
       'Defina notificações personalizadas, escolhendo o melhor horário para te lembrar de gravar seu momento especial 🔔',
   'default': 'Padrão',
   'profileNameAlreadyExists': 'O nome do perfil já existe',
+  'profileNameCannotContainSpecialChars':
+      'O nome do perfil não pode conter\ncaracteres especiais',
 };

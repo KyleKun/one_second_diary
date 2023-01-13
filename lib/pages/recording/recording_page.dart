@@ -617,7 +617,7 @@ class _RecordingPageState extends State<RecordingPage>
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     color: !_isRecording
-                        ? Colors.green.withOpacity(0.8)
+                        ? AppColors.green.withOpacity(0.8)
                         : Colors.grey.withOpacity(0.4),
                   ),
                   width: MediaQuery.of(context).size.width * 0.12,

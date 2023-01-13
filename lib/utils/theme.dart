@@ -25,6 +25,11 @@ class Themes {
       tileColor: AppColors.light,
       iconColor: AppColors.dark,
     ),
+    textSelectionTheme: const TextSelectionThemeData(
+      cursorColor: AppColors.green,
+      selectionColor: AppColors.green,
+      selectionHandleColor: AppColors.green,
+    ),
   );
 
   static final dark = ThemeData.dark().copyWith(
@@ -45,6 +50,11 @@ class Themes {
     listTileTheme: const ListTileThemeData(
       tileColor: AppColors.dark,
       iconColor: AppColors.light,
+    ),
+    textSelectionTheme: const TextSelectionThemeData(
+      cursorColor: AppColors.green,
+      selectionColor: AppColors.green,
+      selectionHandleColor: AppColors.green,
     ),
   );
 }

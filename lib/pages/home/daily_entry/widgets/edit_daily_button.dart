@@ -33,7 +33,7 @@ class EditDailyButton extends StatelessWidget {
               title: 'editQuestionTitle'.tr,
               content: 'editQuestion'.tr,
               actionText: 'yes'.tr,
-              actionColor: Colors.green,
+              actionColor: AppColors.green,
               action: () => closePopupAndPushToRecording(),
               action2Text: 'no'.tr,
               action2Color: Colors.red,

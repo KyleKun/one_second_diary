@@ -54,7 +54,7 @@ class _CreateMovieOptionsState extends State<CreateMovieOptions> {
             title: 'cancelMovieCreation'.tr,
             content: 'cancelMovieDesc'.tr,
             actionText: 'yes'.tr,
-            actionColor: Colors.green,
+            actionColor: AppColors.green,
             action: () => Get.offAllNamed(Routes.HOME),
             action2Text: 'no'.tr,
             action2Color: Colors.red,

@@ -39,12 +39,10 @@ packages:
   camera:
     dependency: "direct main"
     description:
-      path: "packages/camera/camera"
-      ref: fix_fail_get_dimensions_on_profile
-      resolved-ref: bdd7e6ad0f99a185784eaee207085f8fb032e2cc
-      url: "https://github.com/KyleKun/plugins.git"
-    source: git
-    version: "0.10.0+5"
+      name: camera
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.10.1"
   camera_android:
     dependency: transitive
     description:

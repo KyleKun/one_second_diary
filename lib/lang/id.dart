@@ -163,4 +163,6 @@ const Map<String, String> id = {
       'Atur notifikasi harian yang terjadwal untuk mengingatkanmu untuk merekam saat spesial mu 🔔',
   'default': 'Asali',
   'profileNameAlreadyExists': 'Nama profil sudah ada',
+  'profileNameCannotContainSpecialChars':
+      'Nama profil tidak boleh\nmengandung karakter khusus',
 };

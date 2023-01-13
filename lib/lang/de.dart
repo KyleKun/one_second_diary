@@ -162,4 +162,6 @@ const Map<String, String> de = {
       'Einrichten von täglichen Benachrichtigungen, um Sie daran zu erinnern, Ihren besonderen Moment aufzuzeichnen 🔔',
   'default': 'Standard',
   'profileNameAlreadyExists': 'Profilname existiert bereits',
+  'profileNameCannotContainSpecialChars':
+      'Profilname kann keine\nSonderzeichen enthalten',
 };

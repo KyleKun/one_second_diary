@@ -227,7 +227,7 @@ class _SaveButtonState extends State<SaveButton> {
     if (widget.subtitles?.isEmpty == false) {
       subtitlesPath = await Utils.writeSrt(
         widget.subtitles!,
-        widget.videoDuration,
+        widget.videoEndInMilliseconds - widget.videoStartInMilliseconds,
       );
     } else {
       Utils.logInfo(
@@ -236,7 +236,6 @@ class _SaveButtonState extends State<SaveButton> {
     }
     Utils.logInfo('${logTag}Subtitles file path: $subtitlesPath');
 
-    final subtitles = '-i $subtitlesPath -c:s mov_text';
     final metadata =
         '-metadata artist="${Constants.artist}" -metadata album="$currentProfileName"';
     final trimCommand =
@@ -250,12 +249,31 @@ class _SaveButtonState extends State<SaveButton> {
 
     // Edit and save video
     final command =
-        '-i $videoPath $subtitles $metadata -vf [in]$scale,drawtext="$fontPath:text=\'${widget.dateFormat}\':fontsize=$dateTextSize:fontcolor=\'$parsedDateColor\':borderw=${widget.textOutlineWidth}:bordercolor=$parsedTextOutlineColor:x=$datePosX:y=$datePosY$locOutput[out]" $trimCommand -r 30 -ac 1 -c:a aac -b:a 256k -c:v libx264 -pix_fmt yuv420p $finalPath -y';
+        '-i $videoPath $metadata -vf [in]$scale,drawtext="$fontPath:text=\'${widget.dateFormat}\':fontsize=$dateTextSize:fontcolor=\'$parsedDateColor\':borderw=${widget.textOutlineWidth}:bordercolor=$parsedTextOutlineColor:x=$datePosX:y=$datePosY$locOutput[out]" $trimCommand -r 30 -ac 1 -c:a aac -b:a 256k -c:v libx264 -pix_fmt yuv420p $finalPath -y';
     await executeAsyncFFmpeg(
       command,
       completeCallback: (session) async {
         final returnCode = await session.getReturnCode();
         if (ReturnCode.isSuccess(returnCode)) {
+          final String tempPath = '${finalPath.split('.mp4').first}_noSubs.mp4';
+          final subtitles = '-i $subtitlesPath -c:s mov_text';
+          final subsCommand =
+              '-i $finalPath $subtitles -c:v copy -c:a copy -map 0:v -map 0:a? -map 1 -disposition:s:0 default $tempPath -y';
+          await executeFFmpeg(subsCommand).then((session) async {
+            final returnCode = await session.getReturnCode();
+            if (ReturnCode.isSuccess(returnCode)) {
+              Utils.logInfo('${logTag}Video subtitles updated successfully!');
+              StorageUtils.deleteFile(finalPath);
+              StorageUtils.renameFile(tempPath, finalPath);
+            } else {
+              Utils.logError('${logTag}Video subtitles update failed!');
+              final sessionLog = await session.getLogsAsString();
+              final failureStackTrace = await session.getFailStackTrace();
+              Utils.logError('${logTag}Session log: $sessionLog');
+              Utils.logError('${logTag}Failure stacktrace: $failureStackTrace');
+            }
+          });
+
           Utils.logInfo('${logTag}Video edited successfully');
 
           if (widget.determinedDate.difference(DateTime.now()).inDays == 0) {
@@ -273,7 +291,7 @@ class _SaveButtonState extends State<SaveButton> {
               title: 'videoSavedTitle'.tr,
               content: 'videoSavedDesc'.tr,
               actionText: 'Ok',
-              actionColor: Colors.green,
+              actionColor: AppColors.green,
               action: () {
                 // Deleting video from cache
                 StorageUtils.deleteFile(widget.videoPath);

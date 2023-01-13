@@ -55,7 +55,7 @@ android {
     defaultConfig {
         applicationId "com.kylekun.one_second_diary"
         minSdkVersion 24
-        targetSdkVersion 33
+        targetSdkVersion 32
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
     }
