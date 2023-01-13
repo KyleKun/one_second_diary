@@ -115,7 +115,7 @@ const Map<String, String> en = {
   'profileNameCannotBeEmpty': 'Profile name cannot be empty',
   'reservedProfileName': 'This is a reserved profile name',
   'creatingMovie': 'Processing... Please wait.\nThis can take several minutes.',
-  'doNotCloseTheApp': 'Do not close the app.',
+  'doNotCloseTheApp': 'Do not close the app',
   'cancelMovieCreation': 'Cancel movie creation',
   'cancelMovieDesc': 'Are you sure you want to cancel the movie creation?',
   'reportError': 'Report Error',

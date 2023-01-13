@@ -115,7 +115,7 @@ const Map<String, String> es = {
   'reservedProfileName': 'Este es un nombre de perfil reservado',
   'creatingMovie':
       'Procesando... Por favor espera.\nEsto puede tomar varios minutos.',
-  'doNotCloseTheApp': 'No cierres la aplicación.',
+  'doNotCloseTheApp': 'No cierres la aplicación',
   'cancelMovieCreation': 'Cancelar creación de película',
   'cancelMovieDesc':
       '¿Estás seguro de que quieres cancelar la creación de la película?',

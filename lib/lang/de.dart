@@ -115,7 +115,7 @@ const Map<String, String> de = {
   'reservedProfileName': 'Dies ist ein reservierter Profilname',
   'creatingMovie':
       'Verarbeitung... Bitte warten.\nDies kann mehrere Minuten dauern.',
-  'doNotCloseTheApp': 'Bitte schließen Sie die\nApp nicht.',
+  'doNotCloseTheApp': 'Bitte schließen Sie die\nApp nicht',
   'cancelMovieCreation': 'Film erstellen abbrechen',
   'cancelMovieDesc': 'Möchtest Du wirklich abbrechen?',
   'reportError': 'Fehler melden',

@@ -116,7 +116,7 @@ const Map<String, String> id = {
   'reservedProfileName': 'Ini adalah nama profil yang dipesan',
   'creatingMovie':
       'Memproses ... tunggu sebentar.\nIni bisa memakan waktu beberapa menit.',
-  'doNotCloseTheApp': 'Jangan tutup aplikasi ini.',
+  'doNotCloseTheApp': 'Jangan tutup aplikasi ini',
   'cancelMovieCreation': 'Batalkan pembuatan video',
   'cancelMovieDesc': 'Apakah Anda yakin ingin membatalkan pembuatan video?',
   'reportError': 'Laporkan kesalahan',
