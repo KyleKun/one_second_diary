@@ -9,7 +9,6 @@ import 'package:wakelock/wakelock.dart';
 import '../../../../controllers/video_count_controller.dart';
 import '../../../../enums/export_date_range.dart';
 import '../../../../routes/app_pages.dart';
-// import '../../../../enums/export_orientations.dart';
 import '../../../../utils/constants.dart';
 import '../../../../utils/custom_dialog.dart';
 import '../../../../utils/date_format_utils.dart';
@@ -22,13 +21,11 @@ class CreateMovieButton extends StatefulWidget {
   const CreateMovieButton({
     super.key,
     this.selectedExportDateRange,
-    // required this.selectedOrientation,
     this.customSelectedVideos,
     this.customSelectedVideosIsSelected,
   });
 
   final ExportDateRange? selectedExportDateRange;
-  // final ExportOrientation selectedOrientation;
   final List<String>? customSelectedVideos;
   final List<bool>? customSelectedVideosIsSelected;
 
@@ -122,9 +119,6 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
 
         Utils.logInfo('${logTag}Base videos folder: $videosFolder');
 
-        // Create a dummy m4a for adding audio stream if necessary
-        // final String dummyM4a = await Utils.writeM4a();
-
         // Create a dummy srt for adding subtitles stream if necessary
         final String dummySubtitles = await Utils.writeSrt('', 0);
 
@@ -134,8 +128,6 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
           final String currentVideo = '$videosFolder$video';
           final String tempVideo =
               '${currentVideo.split('.mp4').first}_temp.mp4';
-
-          // ffmpeg command to get title tag from video metadata
 
           // TODO(KyleKun): this (in special) will need a good refactor for next version
           // Check if video was recorded before v1.5 so we can process what is needed
@@ -231,10 +223,6 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
             if (!hasAudio) {
               Utils.logInfo(
                   '${logTag}No audio stream for $currentVideo, adding one...');
-              // final command =
-              //     '-i $currentVideo -i $dummyM4a -c copy -c:s copy -map 0:v -map 1:a -shortest $tempVideo -y';
-              // final command =
-              //     '-i $currentVideo -i $dummyM4a -af apad -shortest -c:s copy $tempVideo -y';
 
               // Creates an empty audio stream that matches video duration
               // Set the audio bitrate to 256k and sample rate to 48k (aac codec)
@@ -371,6 +359,7 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
                   builder: (context) => CustomDialog(
                     isDoubleAction: false,
                     title: 'movieError'.tr,
+                    sendLogs: true,
                     content:
                         '${'tryAgainMsg'.tr}\nCode error: ${session.getFailStackTrace()}',
                     actionText: 'Ok',
