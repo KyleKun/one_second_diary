@@ -203,24 +203,25 @@ class Utils {
     final io.File file = io.File(srtPath);
 
     // Add linebreaks if a line is > 45 chars
-    String subsContent = '';
-    final List<String> lines = text.trim().split('\n');
-    for (String line in lines) {
-      int length = 0;
-      String newLine = '';
-      for (String word in line.split(' ')) {
-        if (length + word.length > 45) {
-          subsContent += '$newLine\n';
-          newLine = '';
-          length = 0;
+    String subsContent = '$text\n';
+    final List<String> lines = subsContent.split('\n');
+    subsContent = '';
+    for (int i = 0; i < lines.length; i++) {
+      if (lines[i].length > 45) {
+        final List<String> words = lines[i].split(' ');
+        String temp = '';
+        for (int j = 0; j < words.length; j++) {
+          if (temp.length + words[j].length > 45) {
+            subsContent += '$temp\n';
+            temp = '';
+          }
+          temp += '${words[j]} ';
         }
-        newLine += '$word ';
-        length += word.length;
+        subsContent += '$temp\n';
+      } else {
+        subsContent += '${lines[i]}\n';
       }
-      subsContent += '$newLine\n';
     }
-
-    subsContent = subsContent.trim();
 
     // Calculate subtitles duration and format it
     final Duration duration =
