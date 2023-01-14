@@ -45,7 +45,7 @@ Then, after a couple months or even years:
 - [X] Generate custom movies by periods or selected videos only
 - [X] Receive scheduled daily notifications
 - [X] Dark Mode
-- [X] Available in 7 languages
+- [X] Available in 8 languages
 - [X] No ads ;)
 - [X] No data collection ;)
 - [X] No in-app purchases ;)

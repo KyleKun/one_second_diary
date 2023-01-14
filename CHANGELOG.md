@@ -9,7 +9,7 @@
     - Automatic and manual geotagging
     - Option to create a movie by time period or with selected videos
     - Scheduled notifications
-    - Chinese, German, Indonesian, and French localization
+    - Chinese, German, Indonesian, French and Russian localization
 - Fixed issues:
     - Resolved issue where video recordings could not be saved
 - Improvements:

@@ -1,4 +1,4 @@
-## App Logo & Play Store Banners
+## App Logo
 - Victória Marques
 
 ## Developers
@@ -25,3 +25,4 @@
 - Ardin Biganiro - French
 - Alexander ADAM - German
 - Bagas Wastu - Indonesian
+- Варвара Попова - Russian
