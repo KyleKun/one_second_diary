@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:ffmpeg_kit_flutter_full_gpl/return_code.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:open_file/open_file.dart';
+import 'package:open_filex/open_filex.dart';
 import 'package:wakelock/wakelock.dart';
 
 import '../../../../controllers/video_count_controller.dart';
@@ -40,7 +40,7 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
   String progress = '';
 
   void _openVideo(String filePath) async {
-    await OpenFile.open(filePath);
+    await OpenFilex.open(filePath);
   }
 
   void _createMovie() async {

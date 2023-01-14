@@ -485,15 +485,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.4"
-  open_file:
+  open_filex:
     dependency: "direct main"
     description:
-      path: "."
-      ref: HEAD
-      resolved-ref: fbf68e4bb5cb3e262d8f8ebe10b2f8449ff8e030
-      url: "https://github.com/KyleKun/open_file.git"
-    source: git
-    version: "3.2.2"
+      name: open_filex
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "4.3.2"
   path:
     dependency: transitive
     description:
