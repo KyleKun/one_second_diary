@@ -141,4 +141,5 @@ const Map<String, String> zh = {
   'default': '默认',
   'profileNameAlreadyExists': '配置文件名称已存在',
   'profileNameCannotContainSpecialChars': '配置文件名称不能包含特殊字符',
+  'subtitlesSaved': '字幕已保存!',
 };

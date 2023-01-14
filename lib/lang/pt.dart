@@ -164,4 +164,5 @@ const Map<String, String> pt = {
   'profileNameAlreadyExists': 'O nome do perfil já existe',
   'profileNameCannotContainSpecialChars':
       'O nome do perfil não pode conter\ncaracteres especiais',
+  'subtitlesSaved': 'Legendas salvas!',
 };

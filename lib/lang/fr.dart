@@ -167,4 +167,5 @@ const Map<String, String> fr = {
   'profileNameAlreadyExists': 'Ce nom de profil existe déjà',
   'profileNameCannotContainSpecialChars':
       'Le nom du profil ne peut pas\ncontenir de caractères spéciaux',
+  'subtitlesSaved': 'Sous-titres enregistrés!',
 };

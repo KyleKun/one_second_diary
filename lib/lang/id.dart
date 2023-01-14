@@ -165,4 +165,5 @@ const Map<String, String> id = {
   'profileNameAlreadyExists': 'Nama profil sudah ada',
   'profileNameCannotContainSpecialChars':
       'Nama profil tidak boleh\nmengandung karakter khusus',
+  'subtitlesSaved': 'Subjudul disimpan!',
 };

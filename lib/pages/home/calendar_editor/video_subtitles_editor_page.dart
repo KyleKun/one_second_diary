@@ -71,7 +71,73 @@ class _VideoSubtitlesEditorPageState extends State<VideoSubtitlesEditorPage> {
       appBar: AppBar(
         title: Text('subtitles'.tr),
       ),
-      resizeToAvoidBottomInset: false,
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: AppColors.green,
+        child: !isProcessing
+            ? const Icon(
+                Icons.save,
+                color: Colors.white,
+              )
+            : const CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(
+                  Colors.white,
+                ),
+              ),
+        onPressed: () async {
+          setState(() {
+            isProcessing = true;
+          });
+          final subtitles = await Utils.writeSrt(
+            _subtitles,
+            _videoController.value.duration.inMilliseconds.toDouble(),
+          );
+
+          String command = '';
+          final String tempPath =
+              '${widget.videoPath.split('.mp4').first}_temp.mp4';
+
+          if (isEdit) {
+            Utils.logWarning(
+                '${logTag}Editing subtitles for ${widget.videoPath}');
+          } else {
+            Utils.logWarning(
+                '${logTag}Adding brand new subtitles for ${widget.videoPath}');
+          }
+
+          command =
+              '-i ${widget.videoPath} -i $subtitles -c:s mov_text -c:v copy -c:a copy -map 0:v -map 0:a? -map 1 -disposition:s:0 default $tempPath -y';
+
+          await executeFFmpeg(command).then((session) async {
+            final returnCode = await session.getReturnCode();
+            if (ReturnCode.isSuccess(returnCode)) {
+              Utils.logInfo('${logTag}Video subtitles updated successfully!');
+              StorageUtils.deleteFile(widget.videoPath);
+              StorageUtils.renameFile(tempPath, widget.videoPath);
+
+              // Show snackbar
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(
+                    'subtitlesSaved'.tr,
+                  ),
+                ),
+              );
+            } else {
+              Utils.logError('${logTag}Video subtitles update failed!');
+              final sessionLog = await session.getLogsAsString();
+              final failureStackTrace = await session.getFailStackTrace();
+              Utils.logError('${logTag}Session log: $sessionLog');
+              Utils.logError('${logTag}Failure stacktrace: $failureStackTrace');
+            }
+          });
+
+          setState(() {
+            isProcessing = false;
+          });
+
+          Get.offAllNamed(Routes.HOME)?.then((_) => setState(() {}));
+        },
+      ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -132,81 +198,6 @@ class _VideoSubtitlesEditorPageState extends State<VideoSubtitlesEditorPage> {
                 ),
               ),
             ],
-          ),
-          Padding(
-            padding: const EdgeInsets.all(15.0),
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                elevation: 5.0,
-                backgroundColor: AppColors.green,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(80.0),
-                ),
-              ),
-              onPressed: () async {
-                setState(() {
-                  isProcessing = true;
-                });
-                final subtitles = await Utils.writeSrt(
-                  _subtitles,
-                  _videoController.value.duration.inMilliseconds.toDouble(),
-                );
-
-                String command = '';
-                final String tempPath =
-                    '${widget.videoPath.split('.mp4').first}_temp.mp4';
-
-                if (isEdit) {
-                  Utils.logWarning(
-                      '${logTag}Editing subtitles for ${widget.videoPath}');
-                } else {
-                  Utils.logWarning(
-                      '${logTag}Adding brand new subtitles for ${widget.videoPath}');
-                }
-
-                command =
-                    '-i ${widget.videoPath} -i $subtitles -c:s mov_text -c:v copy -c:a copy -map 0:v -map 0:a? -map 1 -disposition:s:0 default $tempPath -y';
-
-                await executeFFmpeg(command).then((session) async {
-                  final returnCode = await session.getReturnCode();
-                  if (ReturnCode.isSuccess(returnCode)) {
-                    Utils.logInfo(
-                        '${logTag}Video subtitles updated successfully!');
-                    StorageUtils.deleteFile(widget.videoPath);
-                    StorageUtils.renameFile(tempPath, widget.videoPath);
-                  } else {
-                    Utils.logError('${logTag}Video subtitles update failed!');
-                    final sessionLog = await session.getLogsAsString();
-                    final failureStackTrace = await session.getFailStackTrace();
-                    Utils.logError('${logTag}Session log: $sessionLog');
-                    Utils.logError(
-                        '${logTag}Failure stacktrace: $failureStackTrace');
-                  }
-                });
-
-                setState(() {
-                  isProcessing = false;
-                });
-
-                Get.offAllNamed(Routes.HOME)?.then((_) => setState(() {}));
-              },
-              child: !isProcessing
-                  ? Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Text(
-                        'save'.tr,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: MediaQuery.of(context).size.width * 0.07,
-                        ),
-                      ),
-                    )
-                  : const CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation<Color>(
-                        Colors.white,
-                      ),
-                    ),
-            ),
           ),
         ],
       ),
