@@ -431,23 +431,22 @@ class _RecordingPageState extends State<RecordingPage>
       decoration: _screenBorderDecoration(),
       child: Center(
         child: Listener(
-            onPointerDown: (_) => _pointers++,
-            onPointerUp: (_) => _pointers--,
-            child: SizedBox.expand(
-              child: CameraPreview(
-                _cameraController,
-                child: LayoutBuilder(builder:
-                    (BuildContext context, BoxConstraints constraints) {
-                  return GestureDetector(
-                    behavior: HitTestBehavior.opaque,
-                    onScaleStart: _handleScaleStart,
-                    onScaleUpdate: _handleScaleUpdate,
-                    onTapDown: (details) =>
-                        onViewFinderTap(details, constraints),
-                  );
-                }),
-              ),
-            )),
+          onPointerDown: (_) => _pointers++,
+          onPointerUp: (_) => _pointers--,
+          child: CameraPreview(
+            _cameraController,
+            child: LayoutBuilder(
+              builder: (BuildContext context, BoxConstraints constraints) {
+                return GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onScaleStart: _handleScaleStart,
+                  onScaleUpdate: _handleScaleUpdate,
+                  onTapDown: (details) => onViewFinderTap(details, constraints),
+                );
+              },
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -483,29 +482,19 @@ class _RecordingPageState extends State<RecordingPage>
 
           /// Remaining time counter
           Align(
-            alignment: Alignment.topCenter,
+            alignment: Alignment.bottomCenter,
             child: Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Padding(
-                padding: const EdgeInsets.all(40.0),
-                child: Text(
-                  !_isRecording
-                      ? _recordingSeconds >= 10
-                          ? '00:10'
-                          : '00:0$_recordingSeconds'
-                      : '00:$elapsedSeconds',
-                  style: const TextStyle(
-                    color: Colors.red,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 1.2,
-                    shadows: [
-                      Shadow(
-                        blurRadius: 15.0,
-                        color: Colors.black,
-                        offset: Offset(0, 0),
-                      ),
-                    ],
-                  ),
+              padding: const EdgeInsets.all(1.0),
+              child: Text(
+                !_isRecording
+                    ? _recordingSeconds >= 10
+                        ? '00:10'
+                        : '00:0$_recordingSeconds'
+                    : '00:$elapsedSeconds',
+                style: const TextStyle(
+                  color: Colors.red,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 1.2,
                 ),
               ),
             ),
@@ -531,7 +520,8 @@ class _RecordingPageState extends State<RecordingPage>
 
   Widget cameraPreview(int quarterTurns, CameraController controller) {
     return SafeArea(
-      child: SizedBox(
+      child: Container(
+        color: AppColors.dark,
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
         child: Stack(

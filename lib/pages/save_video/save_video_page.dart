@@ -315,81 +315,50 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
   }
 
   Widget _dailyVideoPlayer() {
-    return GestureDetector(
-      onTap: () => videoPlay(),
-      child: AspectRatio(
-        aspectRatio: 16 / 9,
-        child: Stack(
-          children: [
-            VideoViewer(
-              trimmer: _trimmer,
-            ),
-            Center(
-              child: Opacity(
-                opacity: _isVideoPlaying ? 0.0 : 1.0,
-                child: Container(
-                  width: MediaQuery.of(context).size.width * 0.25,
-                  height: MediaQuery.of(context).size.width * 0.25,
-                  decoration: const BoxDecoration(
-                    color: Colors.black45,
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Center(
-                    child: Icon(
-                      Icons.play_arrow,
-                      size: 72.0,
-                      color: Colors.white,
+    return ColoredBox(
+      color: AppColors.dark,
+      child: GestureDetector(
+        onTap: () => videoPlay(),
+        child: AspectRatio(
+          aspectRatio: 16 / 9,
+          child: Stack(
+            children: [
+              VideoViewer(
+                trimmer: _trimmer,
+              ),
+              Center(
+                child: Opacity(
+                  opacity: _isVideoPlaying ? 0.0 : 1.0,
+                  child: Container(
+                    width: MediaQuery.of(context).size.width * 0.25,
+                    height: MediaQuery.of(context).size.width * 0.25,
+                    decoration: const BoxDecoration(
+                      color: Colors.black45,
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Center(
+                      child: Icon(
+                        Icons.play_arrow,
+                        size: 72.0,
+                        color: Colors.white,
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-            Align(
-              alignment: isTextDate ? Alignment.bottomLeft : Alignment.topRight,
-              child: Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Stack(
-                  children: [
-                    Text(
-                      isTextDate
-                          ? _dateFormatsForVideoEdit.last
-                          : _dateFormatsForVideoEdit.first,
-                      style: TextStyle(
-                        fontSize: MediaQuery.of(context).size.width * 0.03,
-                        foreground: Paint()
-                          ..style = PaintingStyle.stroke
-                          ..strokeWidth = textOutlineStrokeWidth
-                          ..color = invert(currentColor),
-                      ),
-                    ),
-                    Text(
-                      isTextDate
-                          ? _dateFormatsForVideoEdit.last
-                          : _dateFormatsForVideoEdit.first,
-                      style: TextStyle(
-                        fontSize: MediaQuery.of(context).size.width * 0.03,
-                        color: currentColor,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            Visibility(
-              visible: isGeotaggingEnabled,
-              child: Align(
-                alignment: Alignment.bottomRight,
+              Align(
+                alignment:
+                    isTextDate ? Alignment.bottomLeft : Alignment.topRight,
                 child: Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: Stack(
                     children: [
                       Text(
-                        customLocationTextController.text.isEmpty
-                            ? _currentAddress ??
-                                customLocationTextController.text
-                            : customLocationTextController.text,
+                        isTextDate
+                            ? _dateFormatsForVideoEdit.last
+                            : _dateFormatsForVideoEdit.first,
                         style: TextStyle(
-                          fontSize: MediaQuery.of(context).size.width * 0.032,
+                          fontSize: MediaQuery.of(context).size.width * 0.03,
                           foreground: Paint()
                             ..style = PaintingStyle.stroke
                             ..strokeWidth = textOutlineStrokeWidth
@@ -397,12 +366,11 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
                         ),
                       ),
                       Text(
-                        customLocationTextController.text.isEmpty
-                            ? _currentAddress ??
-                                customLocationTextController.text
-                            : customLocationTextController.text,
+                        isTextDate
+                            ? _dateFormatsForVideoEdit.last
+                            : _dateFormatsForVideoEdit.first,
                         style: TextStyle(
-                          fontSize: MediaQuery.of(context).size.width * 0.032,
+                          fontSize: MediaQuery.of(context).size.width * 0.03,
                           color: currentColor,
                         ),
                       ),
@@ -410,8 +378,44 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
                   ),
                 ),
               ),
-            ),
-          ],
+              Visibility(
+                visible: isGeotaggingEnabled,
+                child: Align(
+                  alignment: Alignment.bottomRight,
+                  child: Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Stack(
+                      children: [
+                        Text(
+                          customLocationTextController.text.isEmpty
+                              ? _currentAddress ??
+                                  customLocationTextController.text
+                              : customLocationTextController.text,
+                          style: TextStyle(
+                            fontSize: MediaQuery.of(context).size.width * 0.032,
+                            foreground: Paint()
+                              ..style = PaintingStyle.stroke
+                              ..strokeWidth = textOutlineStrokeWidth
+                              ..color = invert(currentColor),
+                          ),
+                        ),
+                        Text(
+                          customLocationTextController.text.isEmpty
+                              ? _currentAddress ??
+                                  customLocationTextController.text
+                              : customLocationTextController.text,
+                          style: TextStyle(
+                            fontSize: MediaQuery.of(context).size.width * 0.032,
+                            color: currentColor,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -500,10 +504,10 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
                         sideTapSize: 21,
                         circlePaintColor: ThemeService().isDarkTheme()
                             ? Colors.white
-                            : Colors.black,
+                            : AppColors.mainColor,
                         borderPaintColor: ThemeService().isDarkTheme()
-                            ? Colors.white
-                            : Colors.black,
+                            ? AppColors.light
+                            : AppColors.mainColor.withOpacity(0.75),
                       ),
                       durationStyle: DurationStyle.FORMAT_MM_SS,
                       durationTextStyle: ThemeService().isDarkTheme()

@@ -159,12 +159,12 @@ class NewFeaturesV15 extends StatelessWidget {
         ),
       ),
       dotsContainerDecorator: const BoxDecoration(color: Colors.white),
-      dotsDecorator: DotsDecorator(
-        size: const Size(10.0, 10.0),
-        activeColor: AppColors.dark,
-        color: AppColors.dark.withOpacity(0.2),
-        activeSize: const Size(22.0, 10.0),
-        activeShape: const RoundedRectangleBorder(
+      dotsDecorator: const DotsDecorator(
+        size: Size(10.0, 10.0),
+        activeColor: AppColors.mainColor,
+        color: AppColors.rose,
+        activeSize: Size(22.0, 10.0),
+        activeShape: RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(25.0)),
         ),
       ),
