@@ -268,7 +268,7 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
 
             // Add artist metadata to avoid redoing all that in this video in the future since it was already processed
             await executeFFmpeg(
-                    '-i $currentVideo -metadata artist="${Constants.artist}" -c:v copy -c:a copy -c:s copy $tempVideo -y')
+                    '-i $currentVideo -metadata artist="${Constants.artist}" -metadata album="Default" -metadata comment="origin=osd_recording_old" -c:v copy -c:a copy -c:s copy $tempVideo -y')
                 .then((session) async {
               final returnCode = await session.getReturnCode();
               if (ReturnCode.isSuccess(returnCode)) {
@@ -315,9 +315,8 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
           });
 
           // Create movie by concatenating all videos
-          // -vsync vfr -async 1 are used to avoid video and audio desync, audio is delayed in longer videos if this option is not used
           await executeFFmpeg(
-                  '-f concat -safe 0 -i $txtPath -vsync 1 -map 0 -c copy $outputPath -y')
+                  '-f concat -safe 0 -i $txtPath -r 30 -map 0 -c copy $outputPath -y')
               .then(
             (session) async {
               final returnCode = await session.getReturnCode();

@@ -31,6 +31,7 @@ class SaveButton extends StatefulWidget {
     required this.videoStartInMilliseconds,
     required this.videoEndInMilliseconds,
     required this.determinedDate,
+    required this.isFromRecordingPage,
   });
 
   // Finding controllers
@@ -48,6 +49,7 @@ class SaveButton extends StatefulWidget {
   final double videoStartInMilliseconds;
   final double videoEndInMilliseconds;
   final DateTime determinedDate;
+  final bool isFromRecordingPage;
 
   @override
   _SaveButtonState createState() => _SaveButtonState();
@@ -222,6 +224,26 @@ class _SaveButtonState extends State<SaveButton> {
           ', drawtext=$fontPath:text=\'${widget.userLocation}\':fontsize=$locTextSize:fontcolor=\'$parsedDateColor\':borderw=${widget.textOutlineWidth}:bordercolor=$parsedTextOutlineColor:x=$locPosX:y=$locPosY';
     }
 
+    // Check if video was added from gallery and has an audio stream, adding one if not (screen recordings can be muted for example)
+    String audioStream = '';
+    String origin = 'osd_recording';
+    if (!widget.isFromRecordingPage) {
+      origin = 'gallery';
+      await executeFFprobe(
+              '-v quiet -select_streams a:0 -show_entries stream=codec_type -of default=nw=1:nk=1 $videoPath')
+          .then((session) async {
+        final returnCode = await session.getReturnCode();
+        if (ReturnCode.isSuccess(returnCode)) {
+          final sessionLog = await session.getOutput();
+          if (sessionLog == null || sessionLog.isEmpty) {
+            Utils.logWarning('${logTag}Video has no audio stream, adding one.');
+            audioStream =
+                '-f lavfi -i anullsrc=channel_layout=mono:sample_rate=48000 -shortest';
+          }
+        }
+      });
+    }
+
     // If subtitles TextBox were not left empty, we can allow the command to render the subtitles into the video, otherwise we add empty subtitles to populate the streams with a subtitle stream, so that concat demuxer can work properly when creating a movie
     String subtitlesPath = '';
     if (widget.subtitles?.isEmpty == false) {
@@ -237,7 +259,7 @@ class _SaveButtonState extends State<SaveButton> {
     Utils.logInfo('${logTag}Subtitles file path: $subtitlesPath');
 
     final metadata =
-        '-metadata artist="${Constants.artist}" -metadata album="$currentProfileName"';
+        '-metadata artist="${Constants.artist}" -metadata album="$currentProfileName" -metadata comment="origin=$origin"';
     final trimCommand =
         '-ss ${widget.videoStartInMilliseconds}ms -to ${widget.videoEndInMilliseconds}ms';
     const scale =
@@ -249,7 +271,7 @@ class _SaveButtonState extends State<SaveButton> {
 
     // Edit and save video
     final command =
-        '-i $videoPath $metadata -vf [in]$scale,drawtext="$fontPath:text=\'${widget.dateFormat}\':fontsize=$dateTextSize:fontcolor=\'$parsedDateColor\':borderw=${widget.textOutlineWidth}:bordercolor=$parsedTextOutlineColor:x=$datePosX:y=$datePosY$locOutput[out]" $trimCommand -r 30 -ac 1 -ar 48000 -c:a aac -b:a 256k -c:v libx264 -pix_fmt yuv420p $finalPath -y';
+        '-i $videoPath $audioStream $metadata -vf [in]$scale,drawtext="$fontPath:text=\'${widget.dateFormat}\':fontsize=$dateTextSize:fontcolor=\'$parsedDateColor\':borderw=${widget.textOutlineWidth}:bordercolor=$parsedTextOutlineColor:x=$datePosX:y=$datePosY$locOutput[out]" $trimCommand -r 30 -ac 1 -ar 48000 -c:a aac -b:a 256k -c:v libx264 -pix_fmt yuv420p $finalPath -y';
     await executeAsyncFFmpeg(
       command,
       completeCallback: (session) async {

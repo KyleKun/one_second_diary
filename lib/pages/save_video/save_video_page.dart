@@ -481,6 +481,7 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
             textOutlineColor: invert(currentColor),
             textOutlineWidth: textOutlineStrokeWidth,
             determinedDate: routeArguments['currentDate'],
+            isFromRecordingPage: routeArguments['isFromRecordingPage'],
           ),
         ),
         body: SingleChildScrollView(
