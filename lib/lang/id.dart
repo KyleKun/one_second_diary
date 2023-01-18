@@ -16,7 +16,7 @@ const Map<String, String> id = {
       'Anda harus memiliki lebih 2 rekaman video untuk bisa membuat video gabungan',
   'movieCreatedTitle': 'Video dibuat!',
   'movieCreatedDesc':
-      'Video disimpan ke dalam penyimpanan di dalam folder OSD-Movies folder',
+      'Video disimpan ke dalam penyimpanan di dalam folder DCIM/OneSecondDiary/Movies',
   'movieError': 'Gagal menyimpan video!',
   'tryAgainMsg':
       'Coba beberapa saaat lagi. Jika masalah masih tetap ada, hubungi pengembang.',
@@ -166,4 +166,12 @@ const Map<String, String> id = {
   'profileNameCannotContainSpecialChars':
       'Nama profil tidak boleh\nmengandung karakter khusus',
   'subtitlesSaved': 'Subjudul disimpan!',
+  'error': 'Kesalahan',
+  'migrationError':
+      'Terjadi kesalahan saat migrasi video Anda. Mohon tutup aplikasi dan salin video secara manual dari Internal Storage > OneSecondDiary ke Internal Storage > DCIM > OneSecondDiary dan hapus folder lama setelahnya.',
+  'success': 'Sukses',
+  'migrationSuccess':
+      'Migrasi berhasil! Semua video dan film sekarang disimpan di Internal Storage > DCIM > OneSecondDiary',
+  'migrationInProgress':
+      'Migrasi semua video Anda ke folder aplikasi baru, mohon tunggu ...',
 };

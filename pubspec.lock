@@ -464,6 +464,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.1.5"
+  media_store_plus:
+    dependency: "direct main"
+    description:
+      name: media_store_plus
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.2"
   meta:
     dependency: transitive
     description:
@@ -983,5 +990,5 @@ packages:
     source: hosted
     version: "6.1.0"
 sdks:
-  dart: ">=2.18.2 <3.0.0"
+  dart: ">=2.18.4 <3.0.0"
   flutter: ">=3.0.0"

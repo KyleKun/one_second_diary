@@ -15,7 +15,8 @@ const Map<String, String> de = {
   'movieInsufficientVideos':
       'Du benötigst mindestens 2 Videos, um einen Film zu erstellen',
   'movieCreatedTitle': 'Film wurde erstellt!',
-  'movieCreatedDesc': 'Der Film wurde im OSD-Movies-Verzeichnis gespeichert',
+  'movieCreatedDesc':
+      'Der Film wurde im DCIM/OneSecondDiary/Movies-Verzeichnis gespeichert',
   'movieError': 'Film wurde nicht gespeichert!',
   'tryAgainMsg':
       'Bitte versuche es erneut. Wenn das Problem weiterhin besteht, kontaktiere die Entwickler.',
@@ -165,4 +166,12 @@ const Map<String, String> de = {
   'profileNameCannotContainSpecialChars':
       'Profilname kann keine\nSonderzeichen enthalten',
   'subtitlesSaved': 'Untertitel gespeichert!',
+  'error': 'Fehler',
+  'migrationError':
+      'Beim Migrieren Ihrer Videos ist ein Fehler aufgetreten. Bitte schließen Sie die App und kopieren Sie die Videos manuell von Internal Storage > OneSecondDiary nach Internal Storage > DCIM > OneSecondDiary und löschen Sie anschließend den alten Ordner.',
+  'success': 'Erfolg',
+  'migrationSuccess':
+      'Migration erfolgreich! Alle Videos und Filme sind jetzt in Internal Storage > DCIM > OneSecondDiary gespeichert',
+  'migrationInProgress':
+      'Migrieren aller Videos in den neuen App-Ordner, bitte warten...',
 };

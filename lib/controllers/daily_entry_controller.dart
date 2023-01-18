@@ -7,7 +7,7 @@ import '../utils/utils.dart';
 class DailyEntryController extends GetxController {
   @override
   void onInit() {
-    _checkTodayEntry();
+    Future.delayed(const Duration(milliseconds: 500), () => _checkTodayEntry());
     super.onInit();
   }
 

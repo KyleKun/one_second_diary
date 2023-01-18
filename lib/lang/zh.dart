@@ -13,7 +13,7 @@ const Map<String, String> zh = {
   'movieErrorTitle': '视频未创建!',
   'movieInsufficientVideos': '您需要有 2 个或更多录制的视频才能制作视频集',
   'movieCreatedTitle': '视频集已创建!',
-  'movieCreatedDesc': '视频集已保存到 OSD-Movies 文件夹内',
+  'movieCreatedDesc': '视频集已保存到 DCIM/OneSecondDiary/Movies 文件夹内',
   'movieError': '保存出错!',
   'tryAgainMsg': '请再试一次。如果问题仍然存在，请联系开发者.',
   'create': '创建',
@@ -142,4 +142,11 @@ const Map<String, String> zh = {
   'profileNameAlreadyExists': '配置文件名称已存在',
   'profileNameCannotContainSpecialChars': '配置文件名称不能包含特殊字符',
   'subtitlesSaved': '字幕已保存!',
+  'error': '错误',
+  'migrationError':
+      '迁移视频时出错。请关闭应用程序并手动将视频从Internal Storage > OneSecondDiary复制到Internal Storage > DCIM > OneSecondDiary，然后删除旧文件夹。',
+  'success': '成功',
+  'migrationSuccess':
+      '迁移成功！所有视频和电影现在都保存在Internal Storage > DCIM > OneSecondDiary中',
+  'migrationInProgress': '正在将所有视频迁移到新的应用程序文件夹中，请稍候...',
 };

@@ -52,6 +52,7 @@ dependencies:
   flutter_email_sender: ^5.2.0
   synchronized: ^3.0.0+3
   open_filex: ^4.3.2
+  media_store_plus: ^0.0.2
 dev_dependencies:
   flutter_test:
     sdk: flutter

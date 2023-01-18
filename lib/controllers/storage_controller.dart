@@ -6,7 +6,7 @@ class StorageController extends GetxController {
   @override
   void onInit() async {
     await StorageUtils.createFolder();
-    await StorageUtils.createLogFile();
+    await StorageUtils.cleanOldLogFiles();
     super.onInit();
   }
 }

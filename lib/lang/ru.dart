@@ -15,7 +15,7 @@ const Map<String, String> ru = {
   'movieInsufficientVideos':
       'Должно быть два и более записанных видео, чтобы создать фильм',
   'movieCreatedTitle': 'Фильм создан!',
-  'movieCreatedDesc': 'Фильм сохранен в папку OSD-Movies',
+  'movieCreatedDesc': 'Фильм сохранен в папку DCIM/OneSecondDiary/Movies',
   'movieError': 'Ошибка при сохранении фильма!',
   'tryAgainMsg':
       'Пожалуйста, попробуй еще раз. Если проблема не разрешится, свяжись с разработчиком.',
@@ -164,4 +164,12 @@ const Map<String, String> ru = {
   'profileNameCannotContainSpecialChars':
       'Имя профиля не может содержать\nсимволы',
   'subtitlesSaved': 'Субтитры сохранены',
+  'error': 'Ошибка',
+  'migrationError':
+      'Произошла ошибка при миграции видео. Пожалуйста, закрой приложение и вручную скопируй видео из Internal Storage > OneSecondDiary в Internal Storage > DCIM > OneSecondDiary, а затем удалить старую папку.',
+  'success': 'Успех',
+  'migrationSuccess':
+      'Миграция прошла успешно! Все видео и фильмы теперь сохранены в Internal Storage > DCIM > OneSecondDiary',
+  'migrationInProgress':
+      'Миграция всех видео в новую папку приложения, пожалуйста, подождите...',
 };

@@ -15,7 +15,8 @@ const Map<String, String> fr = {
   'movieInsufficientVideos':
       'Vous devez avoir au moins 2 vidéos enregistrées pour créer un film.',
   'movieCreatedTitle': 'Film créé !',
-  'movieCreatedDesc': 'Film sauvegardé dans le dossier OSD-Movies.',
+  'movieCreatedDesc':
+      'Film sauvegardé dans le dossier DCIM/OneSecondDiary/Movies.',
   'movieError': 'Erreur lors de la sauvegarde du film !',
   'tryAgainMsg':
       'Veuillez réessayer. Si le problème persiste, contactez le développeur.',
@@ -168,4 +169,12 @@ const Map<String, String> fr = {
   'profileNameCannotContainSpecialChars':
       'Le nom du profil ne peut pas\ncontenir de caractères spéciaux',
   'subtitlesSaved': 'Sous-titres enregistrés!',
+  'error': 'Erreur',
+  'migrationError':
+      'Une erreur s\'est produite lors de la migration de vos vidéos. Veuillez fermer l\'application et copier manuellement les vidéos de Internal Storage > OneSecondDiary vers Internal Storage > DCIM > OneSecondDiary et supprimer le dossier ancien par la suite.',
+  'success': 'Succès',
+  'migrationSuccess':
+      'Migration réussie! Toutes les vidéos et films sont maintenant enregistrés dans Internal Storage > DCIM > OneSecondDiary',
+  'migrationInProgress':
+      'Migration de toutes vos vidéos vers le nouveau dossier d\'application, veuillez patienter...',
 };

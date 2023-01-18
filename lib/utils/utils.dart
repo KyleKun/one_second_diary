@@ -1,6 +1,5 @@
 import 'dart:io' as io;
 
-import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -58,16 +57,16 @@ class Utils {
 
   // Add a new line to txt log file
   static Future<void> appendLineToLogFile(String line) async {
-    final String appPath = SharedPrefsUtil.getString('appPath');
+    final String logFolder = SharedPrefsUtil.getString('internalDirectoryPath');
     final String fileName = SharedPrefsUtil.getString('currentLogFile');
 
     // Write the line to the file
-    final file = io.File('$appPath/Logs/$fileName');
+    final file = io.File('$logFolder/$fileName');
     await file.writeAsString('$line\n', mode: io.FileMode.writeOnlyAppend);
   }
 
   // Example 2022-01-01_12-30-45.txt
-  static String getTodaysLogFilename() {
+  static String getNewLogFilename() {
     return '${DateTime.now().toString().split('.')[0].replaceAll(':', '-').replaceAll(' ', '_')}.txt';
   }
 
@@ -92,22 +91,19 @@ class Utils {
   }
 
   /// Used to request storage-specific Android permissions due to Android 13 breaking changes
-  static Future<bool> requestStoragePermissions() async {
-    final androidDeviceInfo = await DeviceInfoPlugin().androidInfo;
+  static Future<bool> requestStoragePermissions(
+      {required int sdkVersion}) async {
     late final Map<Permission, PermissionStatus> permissionStatuses;
 
-    if (androidDeviceInfo.version.sdkInt <= 32) {
+    if (sdkVersion <= 32) {
       // For android 12 and below devices
       permissionStatuses = await [
         Permission.storage,
-        Permission.manageExternalStorage
       ].request();
     } else {
       permissionStatuses = await [
+        Permission.storage,
         Permission.videos,
-        Permission.photos,
-        Permission.audio,
-        Permission.manageExternalStorage
       ].request();
     }
 
@@ -265,7 +261,7 @@ class Utils {
     return currentProfileName;
   }
 
-  /// Get all video files inside OneSecondDiary folder
+  /// Get all video files inside DCIM/OneSecondDiary folder
   static List<String> getAllVideos({bool fullPath = false}) {
     logInfo('[Utils.getAllVideos()] - Asked for full path: $fullPath');
     // Get current profile
@@ -297,7 +293,8 @@ class Utils {
       // Check if file is a video and if it is in the right format
       final bool isProperVideoFile =
           RegExp(r'^\d{4}-\d{2}-\d{2}$').hasMatch(fileNameCheck) &&
-              filePath.endsWith('.mp4');
+              filePath.endsWith('.mp4') &&
+              !filePath.contains('Movies');
 
       if (isProperVideoFile) {
         // Make sure we are not counting in videos from other profiles if default is selected

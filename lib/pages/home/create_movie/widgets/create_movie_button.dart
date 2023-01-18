@@ -45,8 +45,6 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
 
   void _createMovie() async {
     Wakelock.enable();
-    // Creates the folder if it is not created yet
-    StorageUtils.createFolder();
 
     setState(() {
       isProcessing = true;
@@ -340,8 +338,7 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
                     },
                   ),
                 );
-                Utils.logInfo(
-                    '${logTag}Video saved in gallery in the folder OSD-Movies!');
+                Utils.logInfo('${logTag}Movie saved!');
               } else if (ReturnCode.isCancel(returnCode)) {
                 Utils.logWarning('${logTag}Execution was cancelled');
               } else {
