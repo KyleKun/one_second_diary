@@ -149,4 +149,5 @@ const Map<String, String> zh = {
   'migrationSuccess':
       '迁移成功！所有视频和电影现在都保存在Internal Storage > DCIM > OneSecondDiary中',
   'migrationInProgress': '正在将所有视频迁移到新的应用程序文件夹中，请稍候...',
+  'migrationFolderDeletionError': '迁移完成，但在删除旧文件夹时出错。请手动删除它。',
 };

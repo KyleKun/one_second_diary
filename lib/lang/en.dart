@@ -176,4 +176,6 @@ const Map<String, String> en = {
       'Migration successful! All videos and movies are now saved inside Internal Storage > DCIM > OneSecondDiary',
   'migrationInProgress':
       'Migrating all your videos to the new app folder, please wait...',
+  'migrationFolderDeletionError':
+      'Migration complete, but an error occurred while deleting the old folders. Please delete it manually.',
 };

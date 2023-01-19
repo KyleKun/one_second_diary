@@ -174,4 +174,6 @@ const Map<String, String> id = {
       'Migrasi berhasil! Semua video dan film sekarang disimpan di Internal Storage > DCIM > OneSecondDiary',
   'migrationInProgress':
       'Migrasi semua video Anda ke folder aplikasi baru, mohon tunggu ...',
+  'migrationFolderDeletionError':
+      'Migrasi selesai, tetapi terjadi kesalahan saat menghapus folder lama. Mohon hapus secara manual.',
 };

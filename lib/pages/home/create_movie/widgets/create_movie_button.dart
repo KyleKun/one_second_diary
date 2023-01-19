@@ -305,7 +305,7 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
           // Creating txt that will be used with ffmpeg to concatenate all videos
           final String txtPath = await Utils.writeTxt(selectedVideos);
           final String outputPath =
-              '${SharedPrefsUtil.getString('moviesPath')}OneSecondDiary-Movie-${_movieCount.movieCount.value}-$today.mp4';
+              '${SharedPrefsUtil.getString('moviesPath')}OSD-Movie-${_movieCount.movieCount.value}-$today.mp4';
           Utils.logInfo('${logTag}Movie will be saved as: $outputPath');
 
           setState(() {

@@ -674,12 +674,15 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
                     CustomCheckboxListTile(
                       isChecked: isGeotaggingEnabled,
                       onChanged: (_) async {
-                        toggleGeotaggingStatus();
-                        if (isGeotaggingEnabled) {
-                          Utils.logInfo('[Geolocation] - Getting location...');
-                          await _getCurrentPosition();
+                        if (!_isLocationProcessing) {
+                          toggleGeotaggingStatus();
+                          if (isGeotaggingEnabled) {
+                            Utils.logInfo(
+                                '[Geolocation] - Getting location...');
+                            await _getCurrentPosition();
+                          }
+                          setState(() {});
                         }
-                        setState(() {});
                       },
                       padding: EdgeInsets.symmetric(
                           horizontal: MediaQuery.of(context).size.width * 0.04),
