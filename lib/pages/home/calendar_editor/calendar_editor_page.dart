@@ -7,6 +7,7 @@ import 'package:flutter_calendar_carousel/flutter_calendar_carousel.dart'
     show CalendarCarousel;
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:media_store_plus/media_store_plus.dart';
 import 'package:video_player/video_player.dart';
 
 import '../../../controllers/daily_entry_controller.dart';
@@ -45,9 +46,11 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
   final DailyEntryController _dailyEntryController = Get.find();
   VideoPlayerController? _controller;
   final UniqueKey _videoPlayerKey = UniqueKey();
+  final mediaStore = MediaStore();
 
   @override
   void initState() {
+    setMediaStorePath();
     mainColor = ThemeService().isDarkTheme() ? Colors.white : Colors.black;
     allVideos = Utils.getAllVideos(fullPath: true);
     setSubtitlesPath();
@@ -59,6 +62,15 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
   void dispose() {
     _controller?.dispose();
     super.dispose();
+  }
+
+  void setMediaStorePath() {
+    final currentProfile = Utils.getCurrentProfile();
+    if (currentProfile.isEmpty || currentProfile == 'Default') {
+      MediaStore.appFolder = 'OneSecondDiary';
+    } else {
+      MediaStore.appFolder = 'OneSecondDiary/Profiles/$currentProfile';
+    }
   }
 
   /// Sets the path to save srt file for reading
@@ -189,7 +201,12 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
           TextButton(
             onPressed: () async {
               // Delete current video from storage
-              await File(currentVideo).delete();
+              await mediaStore.deleteFile(
+                fileName: currentVideo.split('/').last,
+                dirType: DirType.video,
+                dirName: DirName.dcim,
+              );
+
               Utils.logInfo(
                   '[CALENDAR] - Deleted video from $_currentDateStr: $currentVideo');
 

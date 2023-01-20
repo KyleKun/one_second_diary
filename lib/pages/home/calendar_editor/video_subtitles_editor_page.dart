@@ -104,6 +104,7 @@ class _VideoSubtitlesEditorPageState extends State<VideoSubtitlesEditorPage> {
                 '${logTag}Adding brand new subtitles for ${widget.videoPath}');
           }
 
+          // TODO(me): this will have to be saved to docsDir instead of direct path and then copied to MediaStore folder
           command =
               '-i ${widget.videoPath} -i $subtitles -c:s mov_text -c:v copy -c:a copy -map 0:v -map 0:a? -map 1 -disposition:s:0 default $tempPath -y';
 

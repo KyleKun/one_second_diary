@@ -50,12 +50,13 @@ class _CustomDialogState extends State<CustomDialog> {
     try {
       Utils.logInfo('${logTag}sending logs to developer...');
 
-      // TODO(me): test this
-      final Directory logsDirectory = await getApplicationDocumentsDirectory();
-      final String zipFilePath = '${logsDirectory.path}/logs.zip';
+      final docsDir = await getApplicationDocumentsDirectory();
+      final Directory logsDirectory = Directory('${docsDir.path}/Logs');
+      final String zipFilePath = '${docsDir.path}/logs.zip';
       final File zipFile = File(zipFilePath);
 
       // Delete any previous zip file
+      StorageUtils.deleteFile('${logsDirectory.path}/logs.zip');
       StorageUtils.deleteFile(zipFilePath);
 
       await ZipFile.createFromDirectory(

@@ -112,36 +112,39 @@ class _SaveButtonState extends State<SaveButton> {
     return await showDialog(
       context: Get.context!,
       barrierDismissible: false,
-      builder: (context) => ValueListenableBuilder(
-        valueListenable: saveProgressPercentage,
-        builder: (context, value, child) => AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          title: Text(
-            'processingVideo'.tr,
-            textAlign: TextAlign.center,
-          ),
-          content: Padding(
-            padding: const EdgeInsets.only(bottom: 21.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  '$value%',
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 5),
-                LinearProgressIndicator(
-                  backgroundColor: AppColors.green.withOpacity(0.2),
-                  color: AppColors.green,
-                  minHeight: 16,
-                  value: (value / 100).toDouble(),
-                ),
-                const SizedBox(height: 15),
-                Text('doNotCloseTheApp'.tr),
-              ],
+      builder: (context) => WillPopScope(
+        onWillPop: () async => false,
+        child: ValueListenableBuilder(
+          valueListenable: saveProgressPercentage,
+          builder: (context, value, child) => AlertDialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+            title: Text(
+              'processingVideo'.tr,
+              textAlign: TextAlign.center,
+            ),
+            content: Padding(
+              padding: const EdgeInsets.only(bottom: 21.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    '$value%',
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 5),
+                  LinearProgressIndicator(
+                    backgroundColor: AppColors.green.withOpacity(0.2),
+                    color: AppColors.green,
+                    minHeight: 16,
+                    value: (value / 100).toDouble(),
+                  ),
+                  const SizedBox(height: 15),
+                  Text('doNotCloseTheApp'.tr),
+                ],
+              ),
             ),
           ),
         ),

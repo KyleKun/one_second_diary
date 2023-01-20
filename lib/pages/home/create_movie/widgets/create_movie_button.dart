@@ -318,8 +318,8 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
               .then(
             (session) async {
               final returnCode = await session.getReturnCode();
+              _movieCount.increaseMovieCount();
               if (ReturnCode.isSuccess(returnCode)) {
-                _movieCount.increaseMovieCount();
                 showDialog(
                   barrierDismissible: false,
                   context: Get.context!,

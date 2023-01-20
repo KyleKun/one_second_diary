@@ -61,7 +61,7 @@ class Utils {
     final String fileName = SharedPrefsUtil.getString('currentLogFile');
 
     // Write the line to the file
-    final file = io.File('$logFolder/$fileName');
+    final file = io.File('$logFolder/Logs/$fileName');
     await file.writeAsString('$line\n', mode: io.FileMode.writeOnlyAppend);
   }
 
