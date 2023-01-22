@@ -97,6 +97,9 @@ class IntroPage extends StatelessWidget {
           borderRadius: BorderRadius.all(Radius.circular(25.0)),
         ),
       ),
+      baseBtnStyle: ButtonStyle(
+        overlayColor: MaterialStateProperty.all(AppColors.rose),
+      ),
     );
   }
 }
