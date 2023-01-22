@@ -42,13 +42,15 @@ packages:
       name: camera
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.10.1"
+    version: "0.10.2+1"
   camera_android:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
-      name: camera_android
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: "packages/camera/camera_android"
+      ref: "8550e0e698f3d358f42d60b090320dea7c3c0775"
+      resolved-ref: "8550e0e698f3d358f42d60b090320dea7c3c0775"
+      url: "https://github.com/OmarHatem28/plugins.git"
+    source: git
     version: "0.10.2+1"
   camera_avfoundation:
     dependency: transitive

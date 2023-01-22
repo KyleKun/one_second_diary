@@ -484,49 +484,46 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
             isFromRecordingPage: routeArguments['isFromRecordingPage'],
           ),
         ),
-        body: SingleChildScrollView(
-          child: SizedBox(
-            height: MediaQuery.of(context).size.height,
-            child: Column(
-              children: [
-                _dailyVideoPlayer(),
-                const SizedBox(height: 8),
-                Center(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 6.0),
-                    child: TrimViewer(
-                      trimmer: _trimmer,
-                      viewerHeight: 50.0,
-                      type: ViewerType.fixed,
-                      editorProperties: TrimEditorProperties(
-                        borderWidth: 4.0,
-                        circleSize: 6.0,
-                        circleSizeOnDrag: 9.0,
-                        sideTapSize: 21,
-                        circlePaintColor: ThemeService().isDarkTheme()
-                            ? Colors.white
-                            : AppColors.mainColor,
-                        borderPaintColor: ThemeService().isDarkTheme()
-                            ? AppColors.light
-                            : AppColors.mainColor.withOpacity(0.75),
-                      ),
-                      durationStyle: DurationStyle.FORMAT_MM_SS,
-                      durationTextStyle: ThemeService().isDarkTheme()
-                          ? const TextStyle(color: Colors.white)
-                          : const TextStyle(color: Colors.black),
-                      maxVideoLength: const Duration(milliseconds: 10900),
-                      viewerWidth: MediaQuery.of(context).size.width,
-                      onChangeStart: (value) => _videoStartValue = value,
-                      onChangeEnd: (value) => _videoEndValue = value,
-                      onChangePlaybackState: (value) =>
-                          setState(() => _isVideoPlaying = value),
-                    ),
+        body: ListView(
+          physics: const ClampingScrollPhysics(),
+          shrinkWrap: true,
+          children: [
+            _dailyVideoPlayer(),
+            const SizedBox(height: 8),
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 6.0),
+                child: TrimViewer(
+                  trimmer: _trimmer,
+                  viewerHeight: 50.0,
+                  type: ViewerType.fixed,
+                  editorProperties: TrimEditorProperties(
+                    borderWidth: 4.0,
+                    circleSize: 6.0,
+                    circleSizeOnDrag: 9.0,
+                    sideTapSize: 21,
+                    circlePaintColor: ThemeService().isDarkTheme()
+                        ? Colors.white
+                        : AppColors.mainColor,
+                    borderPaintColor: ThemeService().isDarkTheme()
+                        ? AppColors.light
+                        : AppColors.mainColor.withOpacity(0.75),
                   ),
+                  durationStyle: DurationStyle.FORMAT_MM_SS,
+                  durationTextStyle: ThemeService().isDarkTheme()
+                      ? const TextStyle(color: Colors.white)
+                      : const TextStyle(color: Colors.black),
+                  maxVideoLength: const Duration(milliseconds: 10900),
+                  viewerWidth: MediaQuery.of(context).size.width,
+                  onChangeStart: (value) => _videoStartValue = value,
+                  onChangeEnd: (value) => _videoEndValue = value,
+                  onChangePlaybackState: (value) =>
+                      setState(() => _isVideoPlaying = value),
                 ),
-                Expanded(child: videoProperties()),
-              ],
+              ),
             ),
-          ),
+            videoProperties(),
+          ],
         ),
       ),
     );
@@ -812,6 +809,7 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
               ),
             ],
           ),
+          const SizedBox(height: 50.0),
         ],
       ),
     );

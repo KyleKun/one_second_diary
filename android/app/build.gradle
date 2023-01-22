@@ -55,10 +55,7 @@ android {
     defaultConfig {
         applicationId "com.kylekun.one_second_diary"
         minSdkVersion 24
-        // (or maybe not) Temporary workaround for migrating videos to scoped storage
-        // (or maybe not) After update is done by all existing users, update to 32
-        // (or 33 if this Flutter camera package issue is solved: https://github.com/flutter/flutter/issues/109769)
-        targetSdkVersion 32
+        targetSdkVersion 33
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
     }

@@ -150,68 +150,6 @@ class _CreateMovieOptionsState extends State<CreateMovieOptions> {
 
                 SizedBox(height: MediaQuery.of(context).size.height * 0.025),
 
-                // Orientation
-                // Column(
-                //   crossAxisAlignment: CrossAxisAlignment.start,
-                //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                //   children: [
-                //     Padding(
-                //       padding: EdgeInsets.only(
-                //         left: MediaQuery.of(context).size.width * 0.04,
-                //         bottom: MediaQuery.of(context).size.height * 0.01,
-                //       ),
-                //       child: Text(
-                //         'orientation'.tr,
-                //         style: TextStyle(
-                //           fontSize: MediaQuery.of(context).size.height * 0.025,
-                //         ),
-                //       ),
-                //     ),
-                //     Padding(
-                //       padding: EdgeInsets.only(
-                //         left: MediaQuery.of(context).size.height * 0.025,
-                //       ),
-                //       child: Align(
-                //         alignment: Alignment.centerLeft,
-                //         child: SizedBox(
-                //           width: 300,
-                //           child: DropdownButtonFormField<ExportOrientation>(
-                //             value: _orientationDefaultValue,
-                //             icon: const Icon(Icons.expand_more),
-                //             iconSize: 24,
-                //             elevation: 16,
-                //             borderRadius: BorderRadius.circular(12),
-                //             isExpanded: true,
-                //             dropdownColor:
-                //                 ThemeService().isDarkTheme() ? AppColors.dark : AppColors.light,
-                //             decoration: InputDecoration(
-                //               enabledBorder: dropdownBorder,
-                //               focusedBorder: dropdownBorder,
-                //               border: dropdownBorder,
-                //               filled: true,
-                //               fillColor: ThemeService().isDarkTheme()
-                //                   ? AppColors.dark
-                //                   : AppColors.light,
-                //             ),
-                //             onChanged: (newValue) {
-                //               setState(() {
-                //                 _orientationDefaultValue = newValue!;
-                //               });
-                //             },
-                //             items: _orientationValues.map<DropdownMenuItem<ExportOrientation>>(
-                //               (ExportOrientation value) {
-                //                 return DropdownMenuItem<ExportOrientation>(
-                //                   value: value,
-                //                   child: Text(value.localizationLabel.tr),
-                //                 );
-                //               },
-                //             ).toList(),
-                //           ),
-                //         ),
-                //       ),
-                //     ),
-                //   ],
-                // ),
                 const Spacer(),
                 if (_exportPeriodGroupValue != ExportDateRange.custom)
                   Text(

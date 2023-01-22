@@ -225,7 +225,7 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
               // Creates an empty audio stream that matches video duration
               // Set the audio bitrate to 256k and sample rate to 48k (aac codec)
               final command =
-                  '-i $currentVideo -f lavfi -i anullsrc=channel_layout=mono:sample_rate=48000 -shortest -b:a 256k -c:v copy -c:a aac $tempVideo -y';
+                  '-i $currentVideo -f lavfi -i anullsrc=channel_layout=mono:sample_rate=48000 -shortest -b:a 256k -c:v copy -c:s copy -c:a aac $tempVideo -y';
               await executeFFmpeg(command).then((session) async {
                 final returnCode = await session.getReturnCode();
                 if (ReturnCode.isSuccess(returnCode)) {

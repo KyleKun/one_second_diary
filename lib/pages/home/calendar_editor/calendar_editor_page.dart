@@ -243,7 +243,7 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
         Container(
           margin: const EdgeInsets.symmetric(horizontal: 16.0),
           child: CalendarCarousel<Event>(
-            childAspectRatio: 1.2,
+            childAspectRatio: 1.25,
             onDayPressed: (DateTime date, List<Event> events) async {
               if (_selectedDate == date) return;
               await _controller?.pause();
@@ -322,6 +322,7 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
             ),
             locale: _languageController.selectedLanguage.value,
             shouldShowTransform: false,
+            pageSnapping: true,
             height: MediaQuery.of(context).size.height * 0.42,
             showOnlyCurrentMonthDate: true,
             selectedDateTime: _selectedDate,
@@ -331,9 +332,6 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
               color: mainColor,
             ),
           ),
-        ),
-        const SizedBox(
-          height: 10.0,
         ),
         Expanded(
           child: wasDateRecorded

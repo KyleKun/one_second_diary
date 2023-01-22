@@ -3,11 +3,13 @@ import 'dart:io';
 import 'package:ffmpeg_kit_flutter_full_gpl/return_code.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:media_store_plus/media_store_plus.dart';
 import 'package:video_player/video_player.dart';
 
 import '../../../routes/app_pages.dart';
 import '../../../utils/constants.dart';
 import '../../../utils/ffmpeg_api_wrapper.dart';
+import '../../../utils/shared_preferences_util.dart';
 import '../../../utils/storage_utils.dart';
 import '../../../utils/utils.dart';
 
@@ -34,6 +36,7 @@ class _VideoSubtitlesEditorPageState extends State<VideoSubtitlesEditorPage> {
   bool isEdit = false;
   late VideoPlayerController _videoController;
   final TextEditingController subtitlesController = TextEditingController();
+  final mediaStore = MediaStore();
 
   @override
   void initState() {
@@ -93,8 +96,11 @@ class _VideoSubtitlesEditorPageState extends State<VideoSubtitlesEditorPage> {
           );
 
           String command = '';
-          final String tempPath =
-              '${widget.videoPath.split('.mp4').first}_temp.mp4';
+
+          final String docsDir =
+              SharedPrefsUtil.getString('internalDirectoryPath');
+          final String videoTempName = widget.videoPath.split('/').last;
+          final String tempFilePath = '$docsDir/$videoTempName';
 
           if (isEdit) {
             Utils.logWarning(
@@ -104,16 +110,28 @@ class _VideoSubtitlesEditorPageState extends State<VideoSubtitlesEditorPage> {
                 '${logTag}Adding brand new subtitles for ${widget.videoPath}');
           }
 
-          // TODO(me): this will have to be saved to docsDir instead of direct path and then copied to MediaStore folder
           command =
-              '-i ${widget.videoPath} -i $subtitles -c:s mov_text -c:v copy -c:a copy -map 0:v -map 0:a? -map 1 -disposition:s:0 default $tempPath -y';
+              '-i ${widget.videoPath} -i $subtitles -c:s mov_text -c:v copy -c:a copy -map 0:v -map 0:a? -map 1 -disposition:s:0 default $tempFilePath -y';
 
           await executeFFmpeg(command).then((session) async {
             final returnCode = await session.getReturnCode();
             if (ReturnCode.isSuccess(returnCode)) {
               Utils.logInfo('${logTag}Video subtitles updated successfully!');
-              StorageUtils.deleteFile(widget.videoPath);
-              StorageUtils.renameFile(tempPath, widget.videoPath);
+              // Delete current video from storage
+              await mediaStore.deleteFile(
+                fileName: videoTempName,
+                dirType: DirType.video,
+                dirName: DirName.dcim,
+              );
+              // Save edited video to storage
+              await mediaStore.saveFile(
+                tempFilePath: tempFilePath,
+                dirType: DirType.video,
+                dirName: DirName.dcim,
+              );
+
+              // Delete temp file
+              StorageUtils.deleteFile(tempFilePath);
 
               // Show snackbar
               ScaffoldMessenger.of(context).showSnackBar(

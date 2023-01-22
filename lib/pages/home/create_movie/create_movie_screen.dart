@@ -37,9 +37,11 @@ class _CreateMovieOptionsButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: MediaQuery.of(context).size.width * 0.40,
-      height: MediaQuery.of(context).size.height * 0.07,
+    return Container(
+      constraints: BoxConstraints(
+        minHeight: MediaQuery.of(context).size.height * 0.07,
+        minWidth: MediaQuery.of(context).size.width * 0.40,
+      ),
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
           backgroundColor: AppColors.mainColor,

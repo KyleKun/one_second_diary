@@ -215,6 +215,13 @@ class StorageUtils {
                   .then((_) {
                 copiedFiles++;
                 deleteFile(copyFile);
+
+                // We try to delete the original file right away after copy to avoid increased storage usage
+                try {
+                  deleteFile(file.path);
+                } catch (e) {
+                  // Do nothing
+                }
               });
               debugPrint('[MediaStore] Copied profile video $copyFile');
             }
@@ -235,6 +242,13 @@ class StorageUtils {
                   .then((_) {
                 copiedFiles++;
                 deleteFile(copyFile);
+
+                // We try to delete the original file right away after copy to avoid increased storage usage
+                try {
+                  deleteFile(file.path);
+                } catch (e) {
+                  // Do nothing
+                }
               });
               debugPrint('[MediaStore] Copied video $copyFile');
             }
@@ -258,6 +272,13 @@ class StorageUtils {
                 )
                     .then((_) {
                   deleteFile(copyFile);
+
+                  // We try to delete the original file right away after copy to avoid increased storage usage
+                  try {
+                    deleteFile(file.path);
+                  } catch (e) {
+                    // Do nothing
+                  }
                 });
                 debugPrint('[MediaStore] Copied movie $copyFile');
               }
