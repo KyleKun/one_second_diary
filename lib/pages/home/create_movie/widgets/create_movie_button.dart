@@ -191,7 +191,7 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
                     Utils.logWarning('$logTag$currentVideo already has audio!');
                     // Make sure the audio stream is mono
                     await executeFFmpeg(
-                            '-i $currentVideo -map 0 -c:v copy -c:a aac -ac 1 -c:s copy $tempVideo -y')
+                            '-i $currentVideo -map 0 -c:v copy -c:a aac -ac 1 -ar 48000 -b:a 256k -c:s copy $tempVideo -y')
                         .then((session) async {
                       final returnCode = await session.getReturnCode();
                       if (ReturnCode.isSuccess(returnCode)) {
