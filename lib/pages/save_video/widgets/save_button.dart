@@ -274,7 +274,7 @@ class _SaveButtonState extends State<SaveButton> {
 
     // Edit and save video
     final command =
-        '-i $videoPath $audioStream $metadata -vf [in]$scale,drawtext="$fontPath:text=\'${widget.dateFormat}\':fontsize=$dateTextSize:fontcolor=\'$parsedDateColor\':borderw=${widget.textOutlineWidth}:bordercolor=$parsedTextOutlineColor:x=$datePosX:y=$datePosY$locOutput[out]" $trimCommand -r 30 -ac 1 -ar 48000 -c:a aac -b:a 256k -c:v libx264 -pix_fmt yuv420p $finalPath -y';
+        '-i $videoPath $audioStream $metadata -vf [in]$scale,drawtext="$fontPath:text=\'${widget.dateFormat}\':fontsize=$dateTextSize:fontcolor=\'$parsedDateColor\':borderw=${widget.textOutlineWidth}:bordercolor=$parsedTextOutlineColor:x=$datePosX:y=$datePosY$locOutput[out]" $trimCommand -r 30 -ac 1 -ar 48000 -c:a aac -b:a 256k -c:v libx264 -pix_fmt yuv420p -crf 20 -preset slow $finalPath -y';
     await executeAsyncFFmpeg(
       command,
       completeCallback: (session) async {
@@ -362,8 +362,8 @@ class _SaveButtonState extends State<SaveButton> {
           num tempProgressValue =
               (statistics.getTime() ~/ totalVideoDuration) / 10;
           // Ideally the value should not exceed 100%, but the output also considers milliseconds so we estimate to 100.
-          if (tempProgressValue > 100) {
-            tempProgressValue = 100;
+          if (tempProgressValue >= 100) {
+            tempProgressValue = 99.9;
           }
           saveProgressPercentage.value = tempProgressValue;
         }
