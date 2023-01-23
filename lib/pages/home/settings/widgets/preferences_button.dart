@@ -16,7 +16,7 @@ class _PreferencesButtonState extends State<PreferencesButton> {
   @override
   Widget build(BuildContext context) {
     return (sdkVersion < 29)
-        ? const SizedBox()
+        ? const SizedBox.shrink()
         : Column(
             children: [
               InkWell(

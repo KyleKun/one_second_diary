@@ -43,7 +43,7 @@ class CustomBottomAppBar extends GetView<BottomAppBarIndexController> {
             ),
             _bottomBarItem(
               icon: Icons.movie_filter_outlined,
-              title: 'createMovie'.tr,
+              title: 'movies'.tr,
               color: AppColors.mainColor,
             ),
             _bottomBarItem(

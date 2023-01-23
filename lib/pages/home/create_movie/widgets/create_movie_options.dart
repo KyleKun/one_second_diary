@@ -21,13 +21,6 @@ class _CreateMovieOptionsState extends State<CreateMovieOptions> {
   ExportDateRange _exportPeriodGroupValue = ExportDateRange.allTime;
   final List<ExportDateRange> _exportPeriods = ExportDateRange.values;
 
-  // ExportOrientation _orientationDefaultValue = ExportOrientation.landscape;
-
-  // final List<ExportOrientation> _orientationValues = [
-  //   ExportOrientation.portrait,
-  //   ExportOrientation.landscape,
-  // ];
-
   final dropdownBorder = OutlineInputBorder(
     borderSide: BorderSide(
       color: ThemeService().isDarkTheme() ? Colors.black : Colors.white,
@@ -35,15 +28,25 @@ class _CreateMovieOptionsState extends State<CreateMovieOptions> {
     ),
   );
 
+  List<String>? selectedVideos;
+
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(const Duration(milliseconds: 200), () {
+      setState(() {
+        selectedVideos =
+            Utils.getSelectedVideosFromStorage(_exportPeriodGroupValue);
+      });
+    });
+  }
+
+  String getClipsFound() {
+    return selectedVideos!.length.toString();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final selectedVideos =
-        Utils.getSelectedVideosFromStorage(_exportPeriodGroupValue);
-
-    String getClipsFound() {
-      return selectedVideos.length.toString();
-    }
-
     return WillPopScope(
       onWillPop: () async {
         showDialog(
@@ -127,10 +130,43 @@ class _CreateMovieOptionsState extends State<CreateMovieOptions> {
                               setState(() {
                                 _exportPeriodGroupValue = newValue!;
                               });
+
                               if (newValue == ExportDateRange.custom) {
-                                // await selectVideosFromStorage();
-                                Get.toNamed(Routes.SELECT_VIDEOS_FROM_STORAGE);
+                                // Needs more than 1 video to create movie
+                                if (selectedVideos!.length < 2) {
+                                  showDialog(
+                                    barrierDismissible: false,
+                                    context: Get.context!,
+                                    builder: (context) => CustomDialog(
+                                      isDoubleAction: false,
+                                      title: 'movieErrorTitle'.tr,
+                                      content: 'movieInsufficientVideos'.tr,
+                                      actionText: 'Ok',
+                                      actionColor: AppColors.green,
+                                      action: () => Get.back(),
+                                    ),
+                                  );
+                                  return;
+                                }
+                                await Get.toNamed(
+                                  Routes.SELECT_VIDEOS_FROM_STORAGE,
+                                );
+                                return;
                               }
+                              // To show loading
+                              setState(() {
+                                selectedVideos = null;
+                              });
+                              // Update values
+                              Future.delayed(const Duration(milliseconds: 100),
+                                  () {
+                                setState(() {
+                                  selectedVideos =
+                                      Utils.getSelectedVideosFromStorage(
+                                    _exportPeriodGroupValue,
+                                  );
+                                });
+                              });
                             },
                             items: _exportPeriods
                                 .map<DropdownMenuItem<ExportDateRange>>(
@@ -151,26 +187,40 @@ class _CreateMovieOptionsState extends State<CreateMovieOptions> {
                 SizedBox(height: MediaQuery.of(context).size.height * 0.025),
 
                 const Spacer(),
-                if (_exportPeriodGroupValue != ExportDateRange.custom)
+
+                if (selectedVideos != null &&
+                    _exportPeriodGroupValue != ExportDateRange.custom)
                   Text(
                     '${'clipsFound'.tr}: ${getClipsFound()}',
                     style: TextStyle(
                       fontSize: MediaQuery.of(context).size.width * 0.060,
                     ),
+                  )
+                else if (_exportPeriodGroupValue != ExportDateRange.custom)
+                  const Icon(
+                    Icons.hourglass_bottom,
+                    size: 32.0,
                   ),
                 const Spacer(),
-                Text(
-                  'tapBelowToGenerate'.tr,
-                  style: TextStyle(
-                    fontSize: MediaQuery.of(context).size.width * 0.045,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 20.0),
-                CreateMovieButton(
-                  selectedExportDateRange: _exportPeriodGroupValue,
-                  // selectedOrientation: _orientationDefaultValue,
-                ),
+                if (selectedVideos != null &&
+                    _exportPeriodGroupValue != ExportDateRange.custom)
+                  Column(
+                    children: [
+                      Text(
+                        'tapBelowToGenerate'.tr,
+                        style: TextStyle(
+                          fontSize: MediaQuery.of(context).size.width * 0.045,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 20.0),
+                      CreateMovieButton(
+                        selectedExportDateRange: _exportPeriodGroupValue,
+                      )
+                    ],
+                  )
+                else
+                  const SizedBox.shrink(),
               ],
             ),
           ),

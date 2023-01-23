@@ -18,14 +18,23 @@ class CreateMoviePage extends StatelessWidget {
               Text(
                 'totalRecordedTitle'.tr,
                 style: TextStyle(
-                    fontSize: MediaQuery.of(context).size.width * 0.07),
+                  fontSize: MediaQuery.of(context).size.width * 0.07,
+                ),
                 textAlign: TextAlign.center,
               ),
-              SizedBox(height: MediaQuery.of(context).size.height * 0.05),
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.05,
+              ),
               VideoCountCard(),
             ],
           ),
-          const _CreateMovieOptionsButton(),
+          Column(
+            children: [
+              const _CreateMovieOptionsButton(),
+              const SizedBox(height: 10.0),
+              const _ViewMoviesButton(),
+            ],
+          ),
         ],
       ),
     );
@@ -37,29 +46,89 @@ class _CreateMovieOptionsButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      constraints: BoxConstraints(
-        minHeight: MediaQuery.of(context).size.height * 0.07,
-        minWidth: MediaQuery.of(context).size.width * 0.40,
-      ),
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          backgroundColor: AppColors.mainColor,
-          elevation: 5.0,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(80.0),
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        Container(
+          constraints: BoxConstraints(
+            minHeight: MediaQuery.of(context).size.height * 0.07,
+            minWidth: MediaQuery.of(context).size.width * 0.50,
+          ),
+          child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.mainColor,
+              elevation: 5.0,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(80.0),
+              ),
+            ),
+            onPressed: () async {
+              await Get.toNamed(Routes.CREATE_MOVIE_OPTIONS);
+            },
+            child: Text(
+              'createMovie'.tr,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: MediaQuery.of(context).size.width * 0.050,
+              ),
+            ),
           ),
         ),
-        onPressed: () async => await Get.toNamed(Routes.CREATE_MOVIE_OPTIONS),
-        child: Text(
-          'createMovie'.tr,
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: MediaQuery.of(context).size.width * 0.050,
+        const Positioned(
+          top: 0.0,
+          left: 0.0,
+          child: Icon(
+            Icons.add_a_photo,
+            size: 18.0,
+          ),
+        )
+      ],
+    );
+  }
+}
+
+class _ViewMoviesButton extends StatelessWidget {
+  const _ViewMoviesButton();
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        Container(
+          constraints: BoxConstraints(
+            minHeight: MediaQuery.of(context).size.height * 0.07,
+            minWidth: MediaQuery.of(context).size.width * 0.50,
+          ),
+          child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.purple,
+              elevation: 5.0,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(80.0),
+              ),
+            ),
+            onPressed: () async => await Get.toNamed(Routes.VIEW_MOVIES),
+            child: Text(
+              'myMovies'.tr,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: MediaQuery.of(context).size.width * 0.050,
+              ),
+            ),
           ),
         ),
-      ),
+        const Positioned(
+          top: 0.0,
+          left: 0.0,
+          child: Icon(
+            Icons.collections,
+            size: 18.0,
+          ),
+        )
+      ],
     );
   }
 }

@@ -36,7 +36,7 @@ class _HeartAnimationState extends State<HeartAnimation> {
       height: MediaQuery.of(context).size.height * 0.5,
       child: Center(
         child: _riveArtboard == null
-            ? const SizedBox()
+            ? const SizedBox.shrink()
             : Rive(artboard: _riveArtboard!),
       ),
     );

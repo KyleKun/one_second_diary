@@ -20,9 +20,9 @@ class SelectVideoFromStorage extends StatefulWidget {
 }
 
 class _SelectVideoFromStorageState extends State<SelectVideoFromStorage> {
-  late List<String> allVideos;
-  late List<bool> isSelected;
-  late List<GlobalKey> globalKeys;
+  List<String>? allVideos;
+  List<bool>? isSelected;
+  List<GlobalKey>? globalKeys;
   Map<String, Uint8List?> thumbnails = {};
   final ScrollController scrollController = ScrollController();
   IconData selectIcon = Icons.select_all;
@@ -31,15 +31,19 @@ class _SelectVideoFromStorageState extends State<SelectVideoFromStorage> {
   @override
   void initState() {
     super.initState();
-    allVideos = Utils.getAllVideos(fullPath: true);
-    isSelected = List.filled(allVideos.length, false);
-    globalKeys = List.generate(allVideos.length, (index) => GlobalKey());
+    Future.delayed(const Duration(milliseconds: 250), () {
+      allVideos = Utils.getAllVideos(fullPath: true);
+      isSelected = List.filled(allVideos!.length, false);
+      globalKeys = List.generate(allVideos!.length, (index) => GlobalKey());
+      setState(() {});
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     // Count all true in isSelected and return quantity
-    final int totalSelected = isSelected.where((element) => element).length;
+    final int totalSelected =
+        isSelected?.where((element) => element).length ?? 0;
     return Scaffold(
       appBar: AppBar(
         title: Text('selectVideos'.tr),
@@ -47,6 +51,7 @@ class _SelectVideoFromStorageState extends State<SelectVideoFromStorage> {
           IconButton(
             icon: Icon(navigationIcon),
             onPressed: () {
+              if (allVideos == null) return;
               if (navigationIcon == Icons.arrow_downward) {
                 scrollController.jumpTo(
                   scrollController.position.maxScrollExtent,
@@ -67,14 +72,15 @@ class _SelectVideoFromStorageState extends State<SelectVideoFromStorage> {
           IconButton(
             icon: Icon(selectIcon),
             onPressed: () {
+              if (allVideos == null) return;
               if (selectIcon == Icons.select_all) {
                 setState(() {
-                  isSelected = List.filled(allVideos.length, true);
+                  isSelected = List.filled(allVideos!.length, true);
                   selectIcon = Icons.deselect;
                 });
               } else {
                 setState(() {
-                  isSelected = List.filled(allVideos.length, false);
+                  isSelected = List.filled(allVideos!.length, false);
                   selectIcon = Icons.select_all;
                 });
               }
@@ -82,106 +88,118 @@ class _SelectVideoFromStorageState extends State<SelectVideoFromStorage> {
           ),
         ],
       ),
-      body: Column(
-        children: [
-          const SizedBox(height: 10),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 20.0),
-            child: Text(
-              '${'totalSelected'.tr}$totalSelected',
-            ),
-          ),
-          Expanded(
-            child: GridView.builder(
-              addAutomaticKeepAlives: true,
-              cacheExtent: 99999,
-              shrinkWrap: true,
-              controller: scrollController,
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                childAspectRatio: 1.12,
+      body: allVideos == null
+          ? const Center(
+              child: Icon(
+                Icons.hourglass_bottom,
+                size: 32.0,
               ),
-              itemCount: allVideos.length,
-              itemBuilder: (context, index) {
-                return Column(
-                  children: [
-                    Text(
-                      DateFormatUtils.parseDateStringAccordingLocale(
-                        allVideos[index].split('/').last.split('.mp4').first,
-                      ),
-                      key: globalKeys[index],
+            )
+          : Column(
+              children: [
+                const SizedBox(height: 10),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 20.0),
+                  child: Text(
+                    '${'totalSelected'.tr}$totalSelected',
+                  ),
+                ),
+                Expanded(
+                  child: GridView.builder(
+                    addAutomaticKeepAlives: true,
+                    cacheExtent: 99999,
+                    shrinkWrap: true,
+                    controller: scrollController,
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      childAspectRatio: 1.12,
                     ),
-                    GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          isSelected[index] = !isSelected[index];
-                        });
-                        if (isSelected[index] &&
-                            index != allVideos.length - 1) {
-                          scrollController.position.ensureVisible(
-                            globalKeys[index + 1]
-                                .currentContext!
-                                .findRenderObject()!,
-                            duration: const Duration(milliseconds: 750),
-                          );
-                        }
-                      },
-                      child: Container(
-                        margin: const EdgeInsets.all(15.0),
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: isSelected[index]
-                                ? AppColors.green
-                                : Colors.white,
-                            width: isSelected[index] ? 4 : 1,
+                    itemCount: allVideos!.length,
+                    itemBuilder: (context, index) {
+                      return Column(
+                        children: [
+                          Text(
+                            DateFormatUtils.parseDateStringAccordingLocale(
+                              allVideos![index]
+                                  .split('/')
+                                  .last
+                                  .split('.mp4')
+                                  .first,
+                            ),
+                            key: globalKeys![index],
                           ),
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                        child: LazyFutureBuilder(
-                          future: () => getThumbnail(allVideos[index]),
-                          builder: (context, snapshot) {
-                            if (snapshot.connectionState ==
-                                ConnectionState.waiting) {
-                              return const Center(
-                                child: SizedBox(
-                                  height: 30,
-                                  width: 30,
-                                  child: Padding(
-                                    padding: EdgeInsets.all(4.0),
-                                    child: CircularProgressIndicator(),
-                                  ),
+                          GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                isSelected![index] = !isSelected![index];
+                              });
+                              if (isSelected![index] &&
+                                  index != allVideos!.length - 1) {
+                                scrollController.position.ensureVisible(
+                                  globalKeys![index + 1]
+                                      .currentContext!
+                                      .findRenderObject()!,
+                                  duration: const Duration(milliseconds: 750),
+                                );
+                              }
+                            },
+                            child: Container(
+                              margin: const EdgeInsets.all(15.0),
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: isSelected![index]
+                                      ? AppColors.green
+                                      : Colors.white,
+                                  width: isSelected![index] ? 4 : 1,
                                 ),
-                              );
-                            }
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                              child: LazyFutureBuilder(
+                                future: () => getThumbnail(allVideos![index]),
+                                builder: (context, snapshot) {
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.waiting) {
+                                    return const Center(
+                                      child: SizedBox(
+                                        height: 30,
+                                        width: 30,
+                                        child: Padding(
+                                          padding: EdgeInsets.all(4.0),
+                                          child: CircularProgressIndicator(),
+                                        ),
+                                      ),
+                                    );
+                                  }
 
-                            if (snapshot.hasError) {
-                              return Text(
-                                '${snapshot.error}',
-                              );
-                            }
-                            return Image.memory(
-                              snapshot.data as Uint8List,
-                            );
-                          },
-                        ),
-                      ),
+                                  if (snapshot.hasError) {
+                                    return Text(
+                                      '${snapshot.error}',
+                                    );
+                                  }
+                                  return Image.memory(
+                                    snapshot.data as Uint8List,
+                                  );
+                                },
+                              ),
+                            ),
+                          ),
+                        ],
+                      );
+                    },
+                  ),
+                ),
+                if (totalSelected >= 2) ...{
+                  Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: CreateMovieButton(
+                      customSelectedVideos: allVideos,
+                      customSelectedVideosIsSelected: isSelected,
                     ),
-                  ],
-                );
-              },
+                  ),
+                }
+              ],
             ),
-          ),
-          if (totalSelected >= 2) ...{
-            Padding(
-              padding: const EdgeInsets.all(20),
-              child: CreateMovieButton(
-                customSelectedVideos: allVideos,
-                customSelectedVideosIsSelected: isSelected,
-              ),
-            ),
-          }
-        ],
-      ),
     );
   }
 

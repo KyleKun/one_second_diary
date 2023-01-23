@@ -180,4 +180,6 @@ const Map<String, String> de = {
   'forceNativeCamera': 'Nur nativen Kamera-Modus verwenden',
   'forceNativeCameraDescription':
       'Verwenden Sie die native Kamera-App, um Videos aufzunehmen, anstatt die integrierte Kamera. Dies kann Probleme beim Aufzeichnen für Geräte mit geringeren Leistungsmerkmalen lösen. Diese Option funktioniert nicht auf Android 13.',
+  'movies': 'Filme',
+  'myMovies': 'Meine filme',
 };

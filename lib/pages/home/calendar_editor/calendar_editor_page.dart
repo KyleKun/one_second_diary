@@ -243,10 +243,11 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
     return allVideos == null
         ? Center(
             child: Icon(
-            Icons.hourglass_bottom,
-            size: 32.0,
-            color: mainColor,
-          ))
+              Icons.hourglass_bottom,
+              size: 32.0,
+              color: mainColor,
+            ),
+          )
         : Column(
             children: [
               Container(
@@ -376,7 +377,7 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
                                       builder: (context, snapshot) {
                                         if (snapshot.connectionState ==
                                             ConnectionState.waiting) {
-                                          return const SizedBox();
+                                          return const SizedBox.shrink();
                                         }
 
                                         if (snapshot.hasError) {
@@ -420,7 +421,7 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
                                             ),
                                           );
                                         } else {
-                                          return const SizedBox();
+                                          return const SizedBox.shrink();
                                         }
                                       },
                                     ),

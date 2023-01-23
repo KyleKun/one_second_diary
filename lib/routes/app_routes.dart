@@ -12,4 +12,5 @@ abstract class Routes {
   static const PROFILES = '/home/profiles';
   static const NEW_FEATURES_V15 = '/new_features_v15';
   static const PREFERENCES = '/preferences';
+  static const VIEW_MOVIES = '/view_movies';
 }

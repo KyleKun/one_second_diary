@@ -5,6 +5,7 @@ import '../pages/donation/donation_page.dart';
 import '../pages/home/base/home_page.dart';
 import '../pages/home/create_movie/widgets/create_movie_options.dart';
 import '../pages/home/create_movie/widgets/select_video_from_storage.dart';
+import '../pages/home/create_movie/widgets/view_movies_page.dart';
 import '../pages/home/notification/notification_page.dart';
 import '../pages/home/profiles/profiles_page.dart';
 import '../pages/home/settings/widgets/preferences_page.dart';
@@ -34,5 +35,6 @@ class AppPages {
     GetPage(name: Routes.PREFERENCES, page: () => const PreferencesPage()),
     GetPage(name: Routes.PROFILES, page: () => const ProfilesPage()),
     GetPage(name: Routes.NEW_FEATURES_V15, page: () => NewFeaturesV15()),
+    GetPage(name: Routes.VIEW_MOVIES, page: () => const ViewMovies()),
   ];
 }

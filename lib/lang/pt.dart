@@ -179,4 +179,6 @@ const Map<String, String> pt = {
   'forceNativeCamera': 'Forçar câmera nativa',
   'forceNativeCameraDescription':
       'Use o aplicativo de câmera nativo para gravar vídeos em vez da câmera do app. Isso pode resolver problemas de gravação para dispositivos com capacidades de desempenho mais baixas. Esta opção não funciona no Android 13.',
+  'movies': 'Filmes',
+  'myMovies': 'Meus filmes',
 };
