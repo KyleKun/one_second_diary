@@ -11,4 +11,5 @@ abstract class Routes {
   static const SELECT_VIDEOS_FROM_STORAGE = '/home/select_videos_from_storage';
   static const PROFILES = '/home/profiles';
   static const NEW_FEATURES_V15 = '/new_features_v15';
+  static const PREFERENCES = '/preferences';
 }

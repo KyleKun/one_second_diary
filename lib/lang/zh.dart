@@ -150,4 +150,8 @@ const Map<String, String> zh = {
       '迁移成功！所有视频和电影现在都保存在Internal Storage > DCIM > OneSecondDiary中',
   'migrationInProgress': '正在将所有视频迁移到新的应用程序文件夹中，请稍候...',
   'migrationFolderDeletionError': '迁移完成，但在删除旧文件夹时出错。请手动删除它。',
+  'preferences': '偏好设置',
+  'forceNativeCamera': '强制使用原生相机',
+  'forceNativeCameraDescription':
+      '使用原生相机应用程序记录视频，而不是内置相机。这可以解决性能能力较低的设备的录制问题。此选项在Android 13上不起作用。',
 };

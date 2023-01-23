@@ -4,6 +4,8 @@ import '../../../../utils/constants.dart';
 import '../../../../utils/utils.dart';
 
 class GithubButton extends StatelessWidget {
+  const GithubButton({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Column(

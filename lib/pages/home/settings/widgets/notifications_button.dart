@@ -4,6 +4,8 @@ import 'package:get/get.dart';
 import '../../../../routes/app_pages.dart';
 
 class NotificationsButton extends StatelessWidget {
+  const NotificationsButton({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Column(

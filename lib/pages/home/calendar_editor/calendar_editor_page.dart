@@ -31,7 +31,7 @@ class CalendarEditorPage extends StatefulWidget {
 }
 
 class _CalendarEditorPageState extends State<CalendarEditorPage> {
-  late List<String> allVideos;
+  List<String>? allVideos;
   String? subtitles;
   String currentVideo = '';
   bool wasDateRecorded = false;
@@ -52,9 +52,11 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
   void initState() {
     setMediaStorePath();
     mainColor = ThemeService().isDarkTheme() ? Colors.white : Colors.black;
-    allVideos = Utils.getAllVideos(fullPath: true);
-    setSubtitlesPath();
-    initializeTodaysVideoPlayback();
+    Future.delayed(const Duration(milliseconds: 100), () {
+      allVideos = Utils.getAllVideos(fullPath: true);
+      setSubtitlesPath();
+      initializeTodaysVideoPlayback();
+    });
     super.initState();
   }
 
@@ -113,9 +115,9 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
     final autoPlay = SharedPrefsUtil.getBool('calendarAutoPlay') ?? true;
     final autoSound = SharedPrefsUtil.getBool('calendarAutoSound') ?? true;
     setState(() {
-      wasDateRecorded = allVideos.any((a) => a.contains(_currentDateStr));
+      wasDateRecorded = allVideos!.any((a) => a.contains(_currentDateStr));
       if (wasDateRecorded) {
-        currentVideo = allVideos.firstWhere(
+        currentVideo = allVideos!.firstWhere(
           (a) => a.contains(_currentDateStr),
         );
         _controller = VideoPlayerController.file(File(currentVideo))
@@ -238,280 +240,293 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Container(
-          margin: const EdgeInsets.symmetric(horizontal: 16.0),
-          child: CalendarCarousel<Event>(
-            childAspectRatio: 1.25,
-            onDayPressed: (DateTime date, List<Event> events) async {
-              if (_selectedDate == date) return;
-              await _controller?.pause();
-              await _changeSelectedDate(date);
-            },
-            customDayBuilder: (
-              bool isSelectable,
-              int index,
-              bool isSelectedDay,
-              bool isToday,
-              bool isPrevMonthDay,
-              TextStyle textStyle,
-              bool isNextMonthDay,
-              bool isThisMonthDay,
-              DateTime date,
-            ) {
-              if (allVideos.isNotEmpty) {
-                // Get the first recorded video date to not render days before that with day color
-                final firstRecVideoDate = DateTime.parse(
-                  allVideos.first.split('/').last.split('.').first,
-                );
-                final hasVideo = allVideos.any(
-                  (a) => a.contains(
-                    DateFormatUtils.getDate(
-                      date,
-                      allowCheckFormattingDayFirst: false,
-                    ),
-                  ),
-                );
-                // Do not colorize days before first recording date or future dates
-                if (DateTime.now().compareTo(date) != -1 &&
-                    firstRecVideoDate.compareTo(date) != 1) {
-                  return Center(
-                    child: Text(
-                      date.day.toString(),
-                      style: TextStyle(
-                        color: hasVideo ? AppColors.green : AppColors.mainColor,
-                        fontFamily: 'Magic',
-                      ),
-                    ),
-                  );
-                } else {
-                  return null;
-                }
-              }
-              return null;
-            },
-            selectedDayBorderColor: mainColor,
-            selectedDayButtonColor: Colors.transparent,
-            weekendTextStyle: TextStyle(
-              color: mainColor,
-              fontFamily: 'Magic',
-            ),
-            thisMonthDayBorderColor: Colors.transparent,
-            todayButtonColor: Colors.transparent,
-            todayBorderColor: Colors.grey,
-            todayTextStyle: TextStyle(
-              fontFamily: 'Magic',
-              color: mainColor,
-            ),
-            inactiveDaysTextStyle: const TextStyle(
-              fontFamily: 'Magic',
-            ),
-            weekdayTextStyle: TextStyle(
-              fontFamily: 'Magic',
-              color: mainColor,
-              fontWeight: FontWeight.w900,
-            ),
-            weekFormat: false,
-            iconColor:
-                ThemeService().isDarkTheme() ? Colors.white : Colors.black,
-            headerTextStyle: TextStyle(
-              fontFamily: 'Magic',
-              fontSize: 20.0,
-              color: mainColor,
-            ),
-            locale: _languageController.selectedLanguage.value,
-            shouldShowTransform: false,
-            pageSnapping: true,
-            height: MediaQuery.of(context).size.height * 0.42,
-            showOnlyCurrentMonthDate: true,
-            selectedDateTime: _selectedDate,
-            daysHaveCircularBorder: true,
-            daysTextStyle: TextStyle(
-              fontFamily: 'Magic',
-              color: mainColor,
-            ),
-          ),
-        ),
-        Expanded(
-          child: wasDateRecorded
-              ? Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                      child: AspectRatio(
-                        aspectRatio: 16 / 9,
-                        child: Container(
-                          decoration: BoxDecoration(
-                            border: Border.all(color: mainColor),
-                          ),
-                          child: Stack(
-                            children: [
-                              Center(
-                                child: SizedBox(
-                                  height: 30,
-                                  width: 30,
-                                  child: Icon(
-                                    Icons.hourglass_bottom,
-                                    color: mainColor,
-                                  ),
-                                ),
-                              ),
-                              FutureBuilder(
-                                future: initializeVideoPlayback(currentVideo),
-                                builder: (context, snapshot) {
-                                  if (snapshot.connectionState ==
-                                      ConnectionState.waiting) {
-                                    return const SizedBox();
-                                  }
-
-                                  if (snapshot.hasError) {
-                                    return Text(
-                                      '"Error loading video: " + ${snapshot.error}',
-                                    );
-                                  }
-
-                                  // Not sure if it works but if the videoController fails we try to restart the page
-                                  if (_controller?.value.hasError == true) {
-                                    WidgetsBinding.instance
-                                        .addPostFrameCallback((_) {
-                                      _controller?.dispose();
-                                    });
-                                    Get.offAllNamed(Routes.HOME)
-                                        ?.then((_) => setState(() {}));
-                                  }
-
-                                  // VideoPlayer
-                                  if (_controller != null &&
-                                      _controller!.value.isInitialized) {
-                                    return Align(
-                                      alignment: Alignment.center,
-                                      child: Stack(
-                                        fit: StackFit.passthrough,
-                                        children: [
-                                          Align(
-                                            alignment: Alignment.center,
-                                            child: ClipRect(
-                                              child: VideoPlayer(
-                                                key: _videoPlayerKey,
-                                                _controller!,
-                                              ),
-                                            ),
-                                          ),
-                                          Controls(
-                                            controller: _controller,
-                                          ),
-                                        ],
-                                      ),
-                                    );
-                                  } else {
-                                    return const SizedBox();
-                                  }
-                                },
-                              ),
-                            ],
+    return allVideos == null
+        ? Center(
+            child: Icon(
+            Icons.hourglass_bottom,
+            size: 32.0,
+            color: mainColor,
+          ))
+        : Column(
+            children: [
+              Container(
+                margin: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: CalendarCarousel<Event>(
+                  childAspectRatio: 1.25,
+                  onDayPressed: (DateTime date, List<Event> events) async {
+                    if (_selectedDate == date) return;
+                    await _controller?.pause();
+                    await _changeSelectedDate(date);
+                  },
+                  customDayBuilder: (
+                    bool isSelectable,
+                    int index,
+                    bool isSelectedDay,
+                    bool isToday,
+                    bool isPrevMonthDay,
+                    TextStyle textStyle,
+                    bool isNextMonthDay,
+                    bool isThisMonthDay,
+                    DateTime date,
+                  ) {
+                    if (allVideos!.isNotEmpty) {
+                      // Get the first recorded video date to not render days before that with day color
+                      final firstRecVideoDate = DateTime.parse(
+                        allVideos!.first.split('/').last.split('.').first,
+                      );
+                      final hasVideo = allVideos!.any(
+                        (a) => a.contains(
+                          DateFormatUtils.getDate(
+                            date,
+                            allowCheckFormattingDayFirst: false,
                           ),
                         ),
-                      ),
-                    ),
-                    Flexible(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: AppColors.mainColor,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(30.0),
-                              ),
+                      );
+                      // Do not colorize days before first recording date or future dates
+                      if (DateTime.now().compareTo(date) != -1 &&
+                          firstRecVideoDate.compareTo(date) != 1) {
+                        return Center(
+                          child: Text(
+                            date.day.toString(),
+                            style: TextStyle(
+                              color: hasVideo
+                                  ? AppColors.green
+                                  : AppColors.mainColor,
+                              fontFamily: 'Magic',
                             ),
-                            onPressed: () async {
-                              await pauseOrResumeVideoPlayback(
-                                _controller,
-                                forcePause: true,
-                              );
-                              await deleteVideoDialog();
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.all(4.0),
-                              child: Text(
-                                'deleteVideo'.tr,
-                                textAlign: TextAlign.center,
+                          ),
+                        );
+                      } else {
+                        return null;
+                      }
+                    }
+                    return null;
+                  },
+                  selectedDayBorderColor: mainColor,
+                  selectedDayButtonColor: Colors.transparent,
+                  weekendTextStyle: TextStyle(
+                    color: mainColor,
+                    fontFamily: 'Magic',
+                  ),
+                  thisMonthDayBorderColor: Colors.transparent,
+                  todayButtonColor: Colors.transparent,
+                  todayBorderColor: Colors.grey,
+                  todayTextStyle: TextStyle(
+                    fontFamily: 'Magic',
+                    color: mainColor,
+                  ),
+                  inactiveDaysTextStyle: const TextStyle(
+                    fontFamily: 'Magic',
+                  ),
+                  weekdayTextStyle: TextStyle(
+                    fontFamily: 'Magic',
+                    color: mainColor,
+                    fontWeight: FontWeight.w900,
+                  ),
+                  weekFormat: false,
+                  iconColor: ThemeService().isDarkTheme()
+                      ? Colors.white
+                      : Colors.black,
+                  headerTextStyle: TextStyle(
+                    fontFamily: 'Magic',
+                    fontSize: 20.0,
+                    color: mainColor,
+                  ),
+                  locale: _languageController.selectedLanguage.value,
+                  shouldShowTransform: false,
+                  pageSnapping: true,
+                  height: MediaQuery.of(context).size.height * 0.42,
+                  showOnlyCurrentMonthDate: true,
+                  selectedDateTime: _selectedDate,
+                  daysHaveCircularBorder: true,
+                  daysTextStyle: TextStyle(
+                    fontFamily: 'Magic',
+                    color: mainColor,
+                  ),
+                ),
+              ),
+              Expanded(
+                child: wasDateRecorded
+                    ? Column(
+                        children: [
+                          Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 20.0),
+                            child: AspectRatio(
+                              aspectRatio: 16 / 9,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: mainColor),
+                                ),
+                                child: Stack(
+                                  children: [
+                                    Center(
+                                      child: SizedBox(
+                                        height: 30,
+                                        width: 30,
+                                        child: Icon(
+                                          Icons.hourglass_bottom,
+                                          color: mainColor,
+                                        ),
+                                      ),
+                                    ),
+                                    FutureBuilder(
+                                      future:
+                                          initializeVideoPlayback(currentVideo),
+                                      builder: (context, snapshot) {
+                                        if (snapshot.connectionState ==
+                                            ConnectionState.waiting) {
+                                          return const SizedBox();
+                                        }
+
+                                        if (snapshot.hasError) {
+                                          return Text(
+                                            '"Error loading video: " + ${snapshot.error}',
+                                          );
+                                        }
+
+                                        // Not sure if it works but if the videoController fails we try to restart the page
+                                        if (_controller?.value.hasError ==
+                                            true) {
+                                          WidgetsBinding.instance
+                                              .addPostFrameCallback((_) {
+                                            _controller?.dispose();
+                                          });
+                                          Get.offAllNamed(Routes.HOME)
+                                              ?.then((_) => setState(() {}));
+                                        }
+
+                                        // VideoPlayer
+                                        if (_controller != null &&
+                                            _controller!.value.isInitialized) {
+                                          return Align(
+                                            alignment: Alignment.center,
+                                            child: Stack(
+                                              fit: StackFit.passthrough,
+                                              children: [
+                                                Align(
+                                                  alignment: Alignment.center,
+                                                  child: ClipRect(
+                                                    child: VideoPlayer(
+                                                      key: _videoPlayerKey,
+                                                      _controller!,
+                                                    ),
+                                                  ),
+                                                ),
+                                                Controls(
+                                                  controller: _controller,
+                                                ),
+                                              ],
+                                            ),
+                                          );
+                                        } else {
+                                          return const SizedBox();
+                                        }
+                                      },
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ),
-                          ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: subtitles?.isEmpty == true
-                                  ? AppColors.green
-                                  : AppColors.purple,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(30.0),
-                              ),
-                            ),
-                            onPressed: () async {
-                              await pauseOrResumeVideoPlayback(
-                                _controller,
-                                forcePause: true,
-                              );
-                              Get.to(
-                                VideoSubtitlesEditorPage(
-                                  videoPath: currentVideo,
-                                  subtitles: subtitles ?? '',
+                          Flexible(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: AppColors.mainColor,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(30.0),
+                                    ),
+                                  ),
+                                  onPressed: () async {
+                                    await pauseOrResumeVideoPlayback(
+                                      _controller,
+                                      forcePause: true,
+                                    );
+                                    await deleteVideoDialog();
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(4.0),
+                                    child: Text(
+                                      'deleteVideo'.tr,
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
                                 ),
-                              );
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.all(4.0),
-                              child: Text(
-                                subtitles?.isEmpty == true
-                                    ? 'addSubtitles'.tr
-                                    : 'editSubtitles'.tr,
-                                textAlign: TextAlign.center,
-                              ),
+                                ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: subtitles?.isEmpty == true
+                                        ? AppColors.green
+                                        : AppColors.purple,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(30.0),
+                                    ),
+                                  ),
+                                  onPressed: () async {
+                                    await pauseOrResumeVideoPlayback(
+                                      _controller,
+                                      forcePause: true,
+                                    );
+                                    Get.to(
+                                      VideoSubtitlesEditorPage(
+                                        videoPath: currentVideo,
+                                        subtitles: subtitles ?? '',
+                                      ),
+                                    );
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(4.0),
+                                    child: Text(
+                                      subtitles?.isEmpty == true
+                                          ? 'addSubtitles'.tr
+                                          : 'editSubtitles'.tr,
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ],
-                      ),
-                    ),
-                  ],
-                )
-              : Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text('noVideoRecorded'.tr),
-                    const SizedBox(
-                      height: 10.0,
-                    ),
-                    if (!_selectedDate.isAfter(DateTime.now()))
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.green,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30.0),
-                            ),
+                      )
+                    : Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text('noVideoRecorded'.tr),
+                          const SizedBox(
+                            height: 10.0,
                           ),
-                          onPressed: () async {
-                            Utils.logInfo(
-                                '[CALENDAR] add video button pressed for date $_currentDateStr');
-                            await selectVideoFromGallery();
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              'addVideo'.tr,
-                              textAlign: TextAlign.center,
+                          if (!_selectedDate.isAfter(DateTime.now()))
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: AppColors.green,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(30.0),
+                                  ),
+                                ),
+                                onPressed: () async {
+                                  Utils.logInfo(
+                                      '[CALENDAR] add video button pressed for date $_currentDateStr');
+                                  await selectVideoFromGallery();
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(
+                                    'addVideo'.tr,
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
+                        ],
                       ),
-                  ],
-                ),
-        ),
-      ],
-    );
+              ),
+            ],
+          );
   }
 
   /// Sets the [_selectedDate] to the given [date] and checks if there is a video for that date
@@ -520,7 +535,7 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
       () => _selectedDate = date,
     );
 
-    final currentVideoExists = allVideos.any(
+    final currentVideoExists = allVideos!.any(
       (a) => a.contains(
         DateFormatUtils.getDate(
           date,
@@ -531,7 +546,7 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
     if (currentVideoExists) {
       setState(() {
         wasDateRecorded = true;
-        currentVideo = allVideos.firstWhere(
+        currentVideo = allVideos!.firstWhere(
           (a) => a.contains(
             DateFormatUtils.getDate(
               date,

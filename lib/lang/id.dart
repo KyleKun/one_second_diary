@@ -176,4 +176,8 @@ const Map<String, String> id = {
       'Migrasi semua video Anda ke folder aplikasi baru, mohon tunggu ...',
   'migrationFolderDeletionError':
       'Migrasi selesai, tetapi terjadi kesalahan saat menghapus folder lama. Mohon hapus secara manual.',
+  'preferences': 'Preferensi',
+  'forceNativeCamera': 'Gunakan kamera bawaan',
+  'forceNativeCameraDescription':
+      'Gunakan aplikasi kamera bawaan untuk merekam video daripada kamera yang terintegrasi. Ini dapat menyelesaikan masalah merekam untuk perangkat dengan kapabilitas performa yang lebih rendah. Opsi ini tidak berfungsi pada Android 13.',
 };

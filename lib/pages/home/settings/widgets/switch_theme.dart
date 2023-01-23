@@ -4,7 +4,13 @@ import 'package:get/get.dart';
 import '../../../../utils/constants.dart';
 import '../../../../utils/theme.dart';
 
-class SwitchThemeComponent extends StatelessWidget {
+class SwitchThemeComponent extends StatefulWidget {
+  const SwitchThemeComponent({Key? key}) : super(key: key);
+  @override
+  State<SwitchThemeComponent> createState() => _SwitchThemeComponentState();
+}
+
+class _SwitchThemeComponentState extends State<SwitchThemeComponent> {
   final String title = 'darkMode'.tr;
 
   @override

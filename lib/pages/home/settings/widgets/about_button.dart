@@ -5,6 +5,8 @@ import 'package:get/get.dart';
 import '../../../../utils/constants.dart';
 
 class AboutButton extends StatelessWidget {
+  const AboutButton({Key? key}) : super(key: key);
+
   void showAbout(BuildContext context) {
     showAboutPage(
       title: Text('about'.tr),

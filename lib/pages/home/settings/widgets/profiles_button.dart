@@ -4,6 +4,8 @@ import 'package:get/get.dart';
 import '../../../../routes/app_pages.dart';
 
 class ProfilesButton extends StatelessWidget {
+  const ProfilesButton({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Column(

@@ -5,7 +5,14 @@ import '../../../../controllers/lang_controller.dart';
 import '../../../../lang/translation_service.dart';
 import '../../../../utils/utils.dart';
 
-class LanguageChooser extends StatelessWidget {
+class LanguageChooser extends StatefulWidget {
+  const LanguageChooser({Key? key}) : super(key: key);
+
+  @override
+  State<LanguageChooser> createState() => _LanguageChooserState();
+}
+
+class _LanguageChooserState extends State<LanguageChooser> {
   final String title = 'language'.tr;
   final LanguageController _languageController = Get.find();
 

@@ -179,4 +179,8 @@ const Map<String, String> fr = {
       'Migration de toutes vos vidéos vers le nouveau dossier d\'application, veuillez patienter...',
   'migrationFolderDeletionError':
       'Migration terminée, mais une erreur s\'est produite lors de la suppression des anciens dossiers. Veuillez le supprimer manuellement.',
+  'preferences': 'Préférences',
+  'forceNativeCamera': 'Forcer l\'utilisation de la caméra native',
+  'forceNativeCameraDescription':
+      'Utilisez l\'application de caméra native pour enregistrer des vidéos au lieu de la caméra intégrée. Cela peut résoudre les problèmes d\'enregistrement pour les appareils dotés de capacités de performance inférieures. Cette option ne fonctionne pas sur Android 13.',
 };

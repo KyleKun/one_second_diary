@@ -1,14 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../../../../routes/app_pages.dart';
 import '../../../../utils/constants.dart';
 import '../../../../utils/custom_dialog.dart';
+import '../../../../utils/shared_preferences_util.dart';
 
 class EditDailyButton extends StatelessWidget {
-  void closePopupAndPushToRecording() {
+  Future<void> closePopupAndPushToRecording() async {
     Get.back();
-    Get.toNamed(Routes.RECORDING);
+
+    final sdkVersion = SharedPrefsUtil.getInt('sdkVersion');
+    final forceNativeCamera =
+        SharedPrefsUtil.getBool('forceNativeCamera') ?? false;
+    if ((sdkVersion != null && sdkVersion < 29) || forceNativeCamera) {
+      final videoFile =
+          await ImagePicker().pickVideo(source: ImageSource.camera);
+      if (videoFile != null) {
+        Get.toNamed(
+          Routes.SAVE_VIDEO,
+          arguments: {
+            'videoPath': videoFile.path,
+            'currentDate': DateTime.now(),
+            'isFromRecordingPage': true,
+          },
+        );
+      }
+    } else {
+      Get.toNamed(Routes.RECORDING);
+    }
   }
 
   @override
@@ -34,7 +55,7 @@ class EditDailyButton extends StatelessWidget {
               content: 'editQuestion'.tr,
               actionText: 'yes'.tr,
               actionColor: AppColors.green,
-              action: () => closePopupAndPushToRecording(),
+              action: () async => await closePopupAndPushToRecording(),
               action2Text: 'no'.tr,
               action2Color: Colors.red,
               action2: () => Get.back(),

@@ -9,7 +9,7 @@ import '../../utils/shared_preferences_util.dart';
 class NewFeaturesV15 extends StatelessWidget {
   final introKey = GlobalKey<IntroductionScreenState>();
 
-  void _onIntroEnd() async {
+  Future<void> _onIntroEnd() async {
     await SharedPrefsUtil.putBool('showChangelogV15', false);
     Get.offNamed(Routes.HOME);
   }

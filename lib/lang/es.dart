@@ -176,4 +176,8 @@ const Map<String, String> es = {
       'Migrando todos tus videos a la nueva carpeta de la aplicación, por favor espera...',
   'migrationFolderDeletionError':
       'Migración completa, pero ocurrió un error al eliminar las carpetas antiguas. Por favor, elimínelas manualmente.',
+  'preferences': 'Preferencias',
+  'forceNativeCamera': 'Forzar cámara nativa',
+  'forceNativeCameraDescription':
+      'Usa la aplicación de cámara nativa para grabar videos en lugar de la cámara incorporada. Esto puede solucionar problemas de grabación para dispositivos con capacidades de rendimiento más bajas. Esta opción no funciona en Android 13.',
 };

@@ -176,4 +176,8 @@ const Map<String, String> de = {
       'Migrieren aller Videos in den neuen App-Ordner, bitte warten...',
   'migrationFolderDeletionError':
       'Migration abgeschlossen, aber beim Löschen der alten Ordner ist ein Fehler aufgetreten. Bitte löschen Sie sie manuell.',
+  'preferences': 'Einstellungen',
+  'forceNativeCamera': 'Nur nativen Kamera-Modus verwenden',
+  'forceNativeCameraDescription':
+      'Verwenden Sie die native Kamera-App, um Videos aufzunehmen, anstatt die integrierte Kamera. Dies kann Probleme beim Aufzeichnen für Geräte mit geringeren Leistungsmerkmalen lösen. Diese Option funktioniert nicht auf Android 13.',
 };

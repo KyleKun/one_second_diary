@@ -34,6 +34,7 @@ class StorageUtils {
     // Get android sdk info
     final androidDeviceInfo = await DeviceInfoPlugin().androidInfo;
     final sdkVersion = androidDeviceInfo.version.sdkInt;
+    SharedPrefsUtil.putInt('sdkVersion', sdkVersion);
 
     final mediaStorePlugin = MediaStore();
 

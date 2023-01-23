@@ -11,9 +11,9 @@ class IntroPage extends StatelessWidget {
 
   final introKey = GlobalKey<IntroductionScreenState>();
 
-  void _onIntroEnd() async {
-    SharedPrefsUtil.putString('appPath', '');
-    SharedPrefsUtil.putString('moviesPath', '');
+  Future<void> _onIntroEnd() async {
+    await SharedPrefsUtil.putString('appPath', '');
+    await SharedPrefsUtil.putString('moviesPath', '');
     await SharedPrefsUtil.putBool('showIntro', false);
     await SharedPrefsUtil.putBool('dailyEntry', false);
     await SharedPrefsUtil.putInt('videoCount', 0);

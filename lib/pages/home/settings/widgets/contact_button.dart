@@ -5,6 +5,8 @@ import '../../../../utils/constants.dart';
 import '../../../../utils/utils.dart';
 
 class ContactButton extends StatelessWidget {
+  const ContactButton({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Column(
