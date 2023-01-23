@@ -52,7 +52,7 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
   void initState() {
     setMediaStorePath();
     mainColor = ThemeService().isDarkTheme() ? Colors.white : Colors.black;
-    Future.delayed(const Duration(milliseconds: 100), () {
+    Future.delayed(const Duration(milliseconds: 500), () {
       allVideos = Utils.getAllVideos(fullPath: true);
       setSubtitlesPath();
       initializeTodaysVideoPlayback();
