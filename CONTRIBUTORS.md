@@ -1,6 +1,3 @@
-## App Logo
-- Victória Marques
-
 ## Code Contributions
 - Allen (@oiolong)
 - Joseph (@jsfsarkis)
@@ -28,3 +25,10 @@
 - Alexander Adam - German
 - Bagas Wastu - Indonesian
 - Варвара Попова - Russian
+
+## App Logo (Initial Version)
+- Victória Marques
+
+## PlayStore Screenshots
+- Sajjad Bhattee
+
