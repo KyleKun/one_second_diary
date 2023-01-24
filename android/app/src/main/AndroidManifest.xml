@@ -19,6 +19,7 @@
         android:icon="@mipmap/ic_launcher"
         android:requestLegacyExternalStorage="true"
         android:preserveLegacyExternalStorage="true"
+        android:usesCleartextTraffic="true"
         android:label="One Second Diary">
         <activity
             android:name=".MainActivity"

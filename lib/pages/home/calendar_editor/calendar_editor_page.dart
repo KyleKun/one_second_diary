@@ -465,17 +465,23 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
                                       borderRadius: BorderRadius.circular(30.0),
                                     ),
                                   ),
-                                  onPressed: () async {
-                                    await pauseOrResumeVideoPlayback(
-                                      _controller,
-                                      forcePause: true,
-                                    );
-                                    Get.to(
-                                      VideoSubtitlesEditorPage(
-                                        videoPath: currentVideo,
-                                        subtitles: subtitles ?? '',
-                                      ),
-                                    );
+                                  onPressed: () {
+                                    try {
+                                      pauseOrResumeVideoPlayback(
+                                        _controller,
+                                        forcePause: true,
+                                      );
+                                    } catch (e) {}
+                                    // Avoid route not being pushed: '!_debugLocked': is not true.
+                                    WidgetsBinding.instance
+                                        .addPostFrameCallback((_) {
+                                      Get.to(
+                                        VideoSubtitlesEditorPage(
+                                          videoPath: currentVideo,
+                                          subtitles: subtitles ?? '',
+                                        ),
+                                      );
+                                    });
                                   },
                                   child: Padding(
                                     padding: const EdgeInsets.all(4.0),

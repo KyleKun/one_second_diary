@@ -148,7 +148,7 @@ class _CreateMovieOptionsState extends State<CreateMovieOptions> {
                                   );
                                   return;
                                 }
-                                await Get.toNamed(
+                                Get.toNamed(
                                   Routes.SELECT_VIDEOS_FROM_STORAGE,
                                 );
                                 return;

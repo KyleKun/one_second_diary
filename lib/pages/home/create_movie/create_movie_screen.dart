@@ -63,7 +63,7 @@ class _CreateMovieOptionsButton extends StatelessWidget {
               ),
             ),
             onPressed: () async {
-              await Get.toNamed(Routes.CREATE_MOVIE_OPTIONS);
+              Get.toNamed(Routes.CREATE_MOVIE_OPTIONS);
             },
             child: Text(
               'createMovie'.tr,
@@ -109,7 +109,7 @@ class _ViewMoviesButton extends StatelessWidget {
                 borderRadius: BorderRadius.circular(80.0),
               ),
             ),
-            onPressed: () async => await Get.toNamed(Routes.VIEW_MOVIES),
+            onPressed: () => Get.toNamed(Routes.VIEW_MOVIES),
             child: Text(
               'myMovies'.tr,
               textAlign: TextAlign.center,
