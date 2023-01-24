@@ -144,7 +144,7 @@ class _RecordingPageState extends State<RecordingPage>
         ),
       );
     });
-    Overlay.of(context)?.insert(_overlayEntry);
+    Overlay.of(context).insert(_overlayEntry);
     Future.delayed(const Duration(seconds: 1), _overlayEntry.remove);
 
     _cameraController.setExposurePoint(offset);
