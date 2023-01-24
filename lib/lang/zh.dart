@@ -156,4 +156,6 @@ const Map<String, String> zh = {
       '使用原生相机应用程序记录视频，而不是内置相机。这可以解决性能能力较低的设备的录制问题。此选项在Android 13上不起作用。',
   'movies': '电影',
   'myMovies': '我的电影',
+  'noMoviesFound': '未找到电影',
+  'play': '播放',
 };

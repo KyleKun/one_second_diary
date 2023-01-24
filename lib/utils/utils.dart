@@ -261,6 +261,34 @@ class Utils {
     return currentProfileName;
   }
 
+  /// Get all video files inside DCIM/OneSecondDiary/Movies folder
+  static List<String> getAllMovies({bool fullPath = false}) {
+    logInfo('[Utils.getAllMovies()] - Asked for full path: $fullPath');
+
+    // Default directory
+    final io.Directory directory =
+        io.Directory(SharedPrefsUtil.getString('moviesPath'));
+
+    final List<io.FileSystemEntity> files =
+        directory.listSync(recursive: true, followLinks: false);
+    final List<String> mp4Files = [];
+
+    // Get all mp4 files
+    for (int i = 0; i < files.length; i++) {
+      if (files[i].path.endsWith('.mp4')) {
+        if (fullPath) {
+          mp4Files.add(files[i].path);
+        } else {
+          mp4Files.add(files[i].path.split('/').last);
+        }
+      }
+    }
+
+    logInfo('[Utils.getAllMovies()] - Found ${mp4Files.length} movies');
+
+    return mp4Files;
+  }
+
   /// Get all video files inside DCIM/OneSecondDiary folder
   static List<String> getAllVideos({bool fullPath = false}) {
     logInfo('[Utils.getAllVideos()] - Asked for full path: $fullPath');

@@ -184,4 +184,6 @@ const Map<String, String> en = {
       'Use the native camera app to record videos instead of the built-in camera. This can solve recording issues for devices with lower performance capabilities. This option does not work on Android 13.',
   'movies': 'Movies',
   'myMovies': 'My movies',
+  'noMoviesFound': 'No movies found',
+  'play': 'Play',
 };

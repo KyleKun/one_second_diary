@@ -3,6 +3,7 @@
     - Upload from gallery
     - Vertical video support
     - Calendar page
+    - Movies viewer page
     - Profiles
     - Subtitles
     - Video trimming
@@ -20,6 +21,7 @@
     - Routine to save logs in txt files
     - Recording page now supports portrait mode, zoom and focus controls
     - Date editing preferences are now saved
+    - Added option to use native camera for in-app video recording
 
 ## v1.1 - 05/2021
 - Added feature to receive daily notifications

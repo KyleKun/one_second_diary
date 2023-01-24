@@ -185,4 +185,6 @@ const Map<String, String> fr = {
       'Utilisez l\'application de caméra native pour enregistrer des vidéos au lieu de la caméra intégrée. Cela peut résoudre les problèmes d\'enregistrement pour les appareils dotés de capacités de performance inférieures. Cette option ne fonctionne pas sur Android 13.',
   'movies': 'Films',
   'myMovies': 'Mes films',
+  'noMoviesFound': 'Aucun film trouvé',
+  'play': 'Jouer',
 };

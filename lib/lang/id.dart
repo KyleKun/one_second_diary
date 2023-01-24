@@ -182,4 +182,6 @@ const Map<String, String> id = {
       'Gunakan aplikasi kamera bawaan untuk merekam video daripada kamera yang terintegrasi. Ini dapat menyelesaikan masalah merekam untuk perangkat dengan kapabilitas performa yang lebih rendah. Opsi ini tidak berfungsi pada Android 13.',
   'movies': 'Film',
   'myMovies': 'Film saya',
+  'noMoviesFound': 'Tidak ada film yang ditemukan',
+  'play': 'Putar',
 };
