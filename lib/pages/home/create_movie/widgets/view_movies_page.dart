@@ -152,6 +152,7 @@ class _ViewMoviesState extends State<ViewMovies> {
                                         ),
                                       ],
                                     ),
+                                    const SizedBox(height: 5.0),
                                     Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceAround,
@@ -306,7 +307,7 @@ class _ViewMoviesPlayButton extends StatelessWidget {
       children: [
         Container(
           constraints: BoxConstraints(
-            minHeight: MediaQuery.of(context).size.height * 0.06,
+            minHeight: MediaQuery.of(context).size.height * 0.055,
             minWidth: MediaQuery.of(context).size.width * 0.40,
           ),
           child: ElevatedButton(

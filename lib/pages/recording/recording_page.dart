@@ -528,9 +528,12 @@ class _RecordingPageState extends State<RecordingPage>
           fit: StackFit.expand,
           children: [
             /// Camera preview
-            RotatedBox(
-              quarterTurns: previewQuarterTurns,
-              child: _addCameraScreen(context),
+            Align(
+              alignment: Alignment.center,
+              child: RotatedBox(
+                quarterTurns: previewQuarterTurns,
+                child: _addCameraScreen(context),
+              ),
             ),
 
             /// Countdown timer
