@@ -22,9 +22,9 @@
 <p align="center">🎬 Record 1 second everyday & create the movie of your life.</p>
 
 <p align="center">
-    <img src="/media/1.jpg" width="33%">
-    <img src="/media/2.jpg" width="33%">
-    <img src="/media/3.jpg" width="33%">
+    <img src="/media/1.jpg" width="32%">
+    <img src="/media/2.jpg" width="32%">
+    <img src="/media/3.jpg" width="32%">
 </p>
 
 ## About
