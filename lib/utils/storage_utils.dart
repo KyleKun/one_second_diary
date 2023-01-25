@@ -109,14 +109,22 @@ class StorageUtils {
         final oldFolderFiles =
             await oldAppFolder.list(recursive: true).toList();
 
+        // Remove files that contain Logs in path
+        oldFolderFiles.removeWhere((file) => file.path.contains('Logs'));
+
         // Avoid repeating it if the migration was already done and user forgot to delete old folder
         final newFolderFiles =
             await appDirectory.list(recursive: true).toList();
+        List<String> alreadyMigratedFiles = [];
         if (newFolderFiles.length >= oldFolderFiles.length) {
           Utils.logInfo(
             '[StorageUtils] - Old videos folder already migrated',
           );
           return;
+        } else if (newFolderFiles.isNotEmpty) {
+          alreadyMigratedFiles =
+              newFolderFiles.map((file) => file.path.split('/').last).toList();
+          debugPrint('Already migrated files: $alreadyMigratedFiles');
         }
 
         showDialog(
@@ -173,7 +181,8 @@ class StorageUtils {
             // Handle profile folders for beta users
             if (file is io.File &&
                 file.path.contains('Profiles') &&
-                file.path.endsWith('.mp4')) {
+                file.path.endsWith('.mp4') &&
+                !alreadyMigratedFiles.contains(file.path.split('/').last)) {
               validFiles++;
               final pathSplitted = file.path.split('/');
 
@@ -226,7 +235,9 @@ class StorageUtils {
             }
 
             // Copy only mp4 files to root path (default profile)
-            else if (file is io.File && file.path.endsWith('.mp4')) {
+            else if (file is io.File &&
+                file.path.endsWith('.mp4') &&
+                !alreadyMigratedFiles.contains(file.path.split('/').last)) {
               MediaStore.appFolder = 'OneSecondDiary';
               validFiles++;
               final copyFile =
