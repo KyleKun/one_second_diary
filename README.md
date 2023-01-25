@@ -68,7 +68,7 @@ If you have any suggestions or want to contribute, feel free to open a PR or con
 
 ## Support my work
 
-If you like the app, consider becoming a [sponsor](https://github.com/sponsors/KyleKun). It will allow me to stay motivated to work on open-source projects like this one.
+If you like the app, consider becoming a [sponsor](https://github.com/sponsors/KyleKun). It will allow me to stay motivated to work on open-source projects.
 
 Alternatively, you can also make a one-time donation:
 
