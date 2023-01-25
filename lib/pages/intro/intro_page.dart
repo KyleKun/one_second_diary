@@ -15,7 +15,6 @@ class IntroPage extends StatelessWidget {
     await SharedPrefsUtil.putString('appPath', '');
     await SharedPrefsUtil.putString('moviesPath', '');
     await SharedPrefsUtil.putBool('showIntro', false);
-    await SharedPrefsUtil.putBool('dailyEntry', false);
     await SharedPrefsUtil.putInt('videoCount', 0);
     await SharedPrefsUtil.putInt('movieCount', 1);
     Get.offNamed(Routes.NEW_FEATURES_V15);

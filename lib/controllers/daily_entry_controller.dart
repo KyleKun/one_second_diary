@@ -10,7 +10,7 @@ class DailyEntryController extends GetxController {
     super.onInit();
   }
 
-  final dailyEntry = SharedPrefsUtil.getBool('dailyEntry').obs;
+  final dailyEntry = SharedPrefsUtil.getBool('dailyEntry')?.obs ?? false.obs;
 
   void updateDaily({bool value = true}) {
     SharedPrefsUtil.putBool('dailyEntry', value);
