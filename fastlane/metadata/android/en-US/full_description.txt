@@ -18,6 +18,7 @@ Then, after a couple months or even years:
 ## Features
 
 - Record up to 10 seconds of video (1080p resolution)
+- Pick videos from gallery
 - Add or edit subtitles in the videos
 - Add automatic or manual geotagging in the videos
 - Choose the date format and color to show in video
@@ -26,12 +27,4 @@ Then, after a couple months or even years:
 - Generate custom movies with all videos or selected videos only
 - Receive scheduled daily notifications
 - Dark Mode
-- Available in 7 languages
-- No ads ;)
-- No data collection ;)
-- No in-app purchases ;)
-- Open source ;)
-
-If you have any suggestions or want to contribute, feel free to open a PR or contact me!
-
-Support my work - https://www.buymeacoffee.com/kylekun
+- Available in 8 languages
