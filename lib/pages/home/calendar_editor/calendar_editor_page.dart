@@ -83,6 +83,7 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
 
   /// Reads subtitles from the video file and sets the [subtitles] variable
   Future<void> getSubtitlesForSelectedDate() async {
+    if (!wasDateRecorded) return;
     final getSubsFile = await executeFFmpeg(
       '-i $currentVideo $srtFilePath -y',
       showInLogs: false,
