@@ -37,7 +37,7 @@ Therefore, this app that will never collect any kind of data, display annoying a
 
 The idea itself is pretty simple:
  - Open the app in the moment of your day that you would like to remember in the future
- - Tap the Record button and save the video
+ - Record or upload from gallery a short video (1 ~ 10 seconds)
  - That's it, open the app the next day and repeat the process
 
 Then, after a couple months or even years:
