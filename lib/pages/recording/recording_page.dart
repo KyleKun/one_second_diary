@@ -153,6 +153,7 @@ class _RecordingPageState extends State<RecordingPage>
 
   Future<void> _getAvailableCameras() async {
     WidgetsFlutterBinding.ensureInitialized();
+    await Utils.requestPermission(Permission.microphone);
     await Utils.requestPermission(Permission.camera);
     _availableCameras = await availableCameras();
     _initCamera(_availableCameras.first);
