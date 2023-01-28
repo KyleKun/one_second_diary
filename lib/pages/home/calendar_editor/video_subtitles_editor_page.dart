@@ -200,6 +200,9 @@ class _VideoSubtitlesEditorPageState extends State<VideoSubtitlesEditorPage> {
                 padding: const EdgeInsets.all(8.0),
                 child: TextField(
                   controller: subtitlesController,
+                  style: TextStyle(
+                    fontFamily: DefaultTextStyle.of(context).style.fontFamily,
+                  ),
                   maxLines: null,
                   onChanged: (value) => setState(() {
                     _subtitles = value;

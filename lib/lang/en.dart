@@ -7,7 +7,7 @@ const Map<String, String> en = {
       'Thank you so much for using the app!\n\nIf you wish to support the development,\nfeel free to make a donation ^^',
   'donationPageTitle': 'Support app development',
   'about': 'About',
-  'appVersion': 'Version 1.5',
+  'appVersion': 'Version 1.5.1',
   'record': 'Record',
   'createMovie': 'Create movie',
   'settings': 'Settings',
@@ -120,7 +120,7 @@ const Map<String, String> en = {
   'cancelMovieCreation': 'Cancel movie creation',
   'cancelMovieDesc': 'Are you sure you want to cancel the movie creation?',
   'reportError': 'Report Error',
-  'errorMailSubject': '[One Second Diary - v1.5] App Error Report',
+  'errorMailSubject': '[One Second Diary - v1.5.1] App Error Report',
   'errorMailBody':
       'Please describe the error you encountered and steps to reproduce it. Thank you!',
   'oops': 'Oops!',

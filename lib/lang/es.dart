@@ -7,7 +7,7 @@ const Map<String, String> es = {
       '¡Muchas gracias por usar la aplicación!\n\Si deseas ayudar al desarrollo y contribuir para seguir mejorando nuestros servidores, \napóyanos con una donación ^^.',
   'donationPageTitle': '¡Apóyanos!',
   'about': 'Acerca de',
-  'appVersion': 'Versión 1.5',
+  'appVersion': 'Versión 1.5.1',
   'record': 'Grabar',
   'createMovie': 'Crear película',
   'settings': 'Ajustes',

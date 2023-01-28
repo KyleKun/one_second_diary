@@ -286,7 +286,7 @@ class Utils {
 
     logInfo('[Utils.getAllMovies()] - Found ${mp4Files.length} movies');
 
-    return mp4Files;
+    return mp4Files.reversed.toList();
   }
 
   /// Get all video files inside DCIM/OneSecondDiary folder

@@ -1,3 +1,8 @@
+## v1.5.1 - xx/2023
+- Improved movies viewer page ordering movies by most recent
+- Fixed subtitles text field not recognizing some cyrillic characters
+- Fixed edit button not wrapping text correctly in some languages
+
 ## v1.5 - 01/2023
 - New features:
     - Upload from gallery

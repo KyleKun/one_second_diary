@@ -7,7 +7,6 @@ import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:group_radio_button/group_radio_button.dart';
 import 'package:image_picker/image_picker.dart';
-// import 'package:video_player/video_player.dart';
 import 'package:video_trimmer/video_trimmer.dart';
 
 import '../../controllers/recording_settings_controller.dart';
@@ -794,6 +793,10 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
                         ),
                       ),
                       TextField(
+                        style: TextStyle(
+                          fontFamily:
+                              DefaultTextStyle.of(context).style.fontFamily,
+                        ),
                         maxLines: null,
                         onChanged: (value) => setState(() {
                           _subtitles = value;

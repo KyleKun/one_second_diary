@@ -7,7 +7,7 @@ const Map<String, String> pt = {
       'Muito obrigado por usar o app!\n\nSe desejar apoiar o desenvolvimento, sinta-se livre para fazer uma doação ^^',
   'donationPageTitle': 'Apoiar o desenvolvimento',
   'about': 'Sobre',
-  'appVersion': 'Versão 1.5',
+  'appVersion': 'Versão 1.5.1',
   'record': 'Gravar',
   'createMovie': 'Criar filme',
   'settings': 'Configurações',
@@ -119,6 +119,9 @@ const Map<String, String> pt = {
   'cancelMovieCreation': 'Cancelar criação de filme',
   'cancelMovieDesc': 'Você tem certeza que deseja cancelar a criação do filme?',
   'reportError': 'Relatar erro',
+  'errorMailSubject': '[One Second Diary - v1.5.1] Relatório de erro',
+  'errorMailBody':
+      'Por favor descreva o erro e quais passos executar para reproduzir o mesmo. Obrigado!',
   'oops': 'Oops!',
   'videoResolutionWarning':
       'Esta resolução de vídeo não é suportada no momento. Certifique-se de que foi gravado em modo paisagem (proporção 16:9)',

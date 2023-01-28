@@ -34,9 +34,11 @@ class EditDailyButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: MediaQuery.of(context).size.width * 0.4,
-      height: MediaQuery.of(context).size.height * 0.08,
+    return Container(
+      constraints: BoxConstraints(
+        minWidth: MediaQuery.of(context).size.width * 0.4,
+        minHeight: MediaQuery.of(context).size.height * 0.08,
+      ),
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
           backgroundColor: AppColors.purple,
@@ -63,13 +65,14 @@ class EditDailyButton extends StatelessWidget {
           );
         },
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          mainAxisSize: MainAxisSize.min,
           children: [
             Icon(
               Icons.edit,
               size: MediaQuery.of(context).size.width * 0.07,
               color: Colors.white,
             ),
+            const SizedBox(width: 15.0),
             Text(
               'edit'.tr,
               style: TextStyle(
