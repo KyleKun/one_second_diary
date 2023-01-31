@@ -1,7 +1,8 @@
-## v1.5.1 - xx/2023
+## v1.5.1 - 02/2023
 - Improved movies viewer page ordering movies by most recent
 - Fixed subtitles text field not recognizing some cyrillic characters
 - Fixed edit button not wrapping text correctly in some languages
+- Fixed saving videos for profiles with white spaces in the name
 
 ## v1.5 - 01/2023
 - New features:

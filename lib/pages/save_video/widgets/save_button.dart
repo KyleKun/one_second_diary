@@ -274,7 +274,7 @@ class _SaveButtonState extends State<SaveButton> {
 
     // Edit and save video
     final command =
-        '-i $videoPath $audioStream $metadata -vf [in]$scale,drawtext="$fontPath:text=\'${widget.dateFormat}\':fontsize=$dateTextSize:fontcolor=\'$parsedDateColor\':borderw=${widget.textOutlineWidth}:bordercolor=$parsedTextOutlineColor:x=$datePosX:y=$datePosY$locOutput[out]" $trimCommand -r 30 -ac 1 -ar 48000 -c:a aac -b:a 256k -c:v libx264 -pix_fmt yuv420p -crf 20 -preset slow $finalPath -y';
+        '-i $videoPath $audioStream $metadata -vf [in]$scale,drawtext="$fontPath:text=\'${widget.dateFormat}\':fontsize=$dateTextSize:fontcolor=\'$parsedDateColor\':borderw=${widget.textOutlineWidth}:bordercolor=$parsedTextOutlineColor:x=$datePosX:y=$datePosY$locOutput[out]" $trimCommand -r 30 -ac 1 -ar 48000 -c:a aac -b:a 256k -c:v libx264 -pix_fmt yuv420p -crf 20 -preset slow "$finalPath" -y';
     await executeAsyncFFmpeg(
       command,
       completeCallback: (session) async {
@@ -283,7 +283,7 @@ class _SaveButtonState extends State<SaveButton> {
           final String tempPath = '${finalPath.split('.mp4').first}_noSubs.mp4';
           final subtitles = '-i $subtitlesPath -c:s mov_text';
           final subsCommand =
-              '-i $finalPath $subtitles -c:v copy -c:a copy -map 0:v -map 0:a? -map 1 -disposition:s:0 default $tempPath -y';
+              '-i "$finalPath" $subtitles -c:v copy -c:a copy -map 0:v -map 0:a? -map 1 -disposition:s:0 default "$tempPath" -y';
           await executeFFmpeg(subsCommand).then((session) async {
             final returnCode = await session.getReturnCode();
             if (ReturnCode.isSuccess(returnCode)) {
