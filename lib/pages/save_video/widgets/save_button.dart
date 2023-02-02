@@ -233,7 +233,7 @@ class _SaveButtonState extends State<SaveButton> {
     if (!widget.isFromRecordingPage) {
       origin = 'gallery';
       await executeFFprobe(
-              '-v quiet -select_streams a:0 -show_entries stream=codec_type -of default=nw=1:nk=1 $videoPath')
+              '-v quiet -select_streams a:0 -show_entries stream=codec_type -of default=nw=1:nk=1 "$videoPath"')
           .then((session) async {
         final returnCode = await session.getReturnCode();
         if (ReturnCode.isSuccess(returnCode)) {
@@ -274,7 +274,7 @@ class _SaveButtonState extends State<SaveButton> {
 
     // Edit and save video
     final command =
-        '-i $videoPath $audioStream $metadata -vf [in]$scale,drawtext="$fontPath:text=\'${widget.dateFormat}\':fontsize=$dateTextSize:fontcolor=\'$parsedDateColor\':borderw=${widget.textOutlineWidth}:bordercolor=$parsedTextOutlineColor:x=$datePosX:y=$datePosY$locOutput[out]" $trimCommand -r 30 -ac 1 -ar 48000 -c:a aac -b:a 256k -c:v libx264 -pix_fmt yuv420p -crf 20 -preset slow "$finalPath" -y';
+        '-i "$videoPath" $audioStream $metadata -vf [in]$scale,drawtext="$fontPath:text=\'${widget.dateFormat}\':fontsize=$dateTextSize:fontcolor=\'$parsedDateColor\':borderw=${widget.textOutlineWidth}:bordercolor=$parsedTextOutlineColor:x=$datePosX:y=$datePosY$locOutput[out]" $trimCommand -r 30 -ac 1 -ar 48000 -c:a aac -b:a 256k -c:v libx264 -pix_fmt yuv420p -crf 20 -preset slow "$finalPath" -y';
     await executeAsyncFFmpeg(
       command,
       completeCallback: (session) async {

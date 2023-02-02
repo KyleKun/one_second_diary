@@ -130,7 +130,7 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
           // TODO(KyleKun): this (in special) will need a good refactor for next version
           // Check if video was recorded before v1.5 so we can process what is needed
           await executeFFprobe(
-                  '-v quiet -show_entries format_tags=artist -of default=nw=1:nk=1 $currentVideo')
+                  '-v quiet -show_entries format_tags=artist -of default=nw=1:nk=1 "$currentVideo"')
               .then((session) async {
             final returnCode = await session.getReturnCode();
             if (ReturnCode.isSuccess(returnCode)) {
@@ -155,7 +155,7 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
             // Make sure it is 1080p, h264
             // Also set the framerate to 30 and copy all the streams
             await executeFFmpeg(
-                    '-i $currentVideo -vf "scale=1920:1080" -r 30 -map 0 -c:v libx264 -c:a copy -c:s copy -crf 20 -preset slow $tempVideo -y')
+                    '-i "$currentVideo" -vf "scale=1920:1080" -r 30 -map 0 -c:v libx264 -c:a copy -c:s copy -crf 20 -preset slow "$tempVideo" -y')
                 .then((session) async {
               final returnCode = await session.getReturnCode();
               if (ReturnCode.isSuccess(returnCode)) {
@@ -177,7 +177,7 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
 
             // Streams check
             await executeFFprobe(
-                    '-v quiet -print_format json -show_format -show_streams $currentVideo')
+                    '-v quiet -print_format json -show_format -show_streams "$currentVideo"')
                 .then((session) async {
               final returnCode = await session.getReturnCode();
               if (ReturnCode.isSuccess(returnCode)) {
@@ -191,7 +191,7 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
                     Utils.logWarning('$logTag$currentVideo already has audio!');
                     // Make sure the audio stream is mono
                     await executeFFmpeg(
-                            '-i $currentVideo -map 0 -c:v copy -c:a aac -ac 1 -ar 48000 -b:a 256k -c:s copy $tempVideo -y')
+                            '-i "$currentVideo" -map 0 -c:v copy -c:a aac -ac 1 -ar 48000 -b:a 256k -c:s copy "$tempVideo" -y')
                         .then((session) async {
                       final returnCode = await session.getReturnCode();
                       if (ReturnCode.isSuccess(returnCode)) {
@@ -225,7 +225,7 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
               // Creates an empty audio stream that matches video duration
               // Set the audio bitrate to 256k and sample rate to 48k (aac codec)
               final command =
-                  '-i $currentVideo -f lavfi -i anullsrc=channel_layout=mono:sample_rate=48000 -shortest -b:a 256k -c:v copy -c:s copy -c:a aac $tempVideo -y';
+                  '-i "$currentVideo" -f lavfi -i anullsrc=channel_layout=mono:sample_rate=48000 -shortest -b:a 256k -c:v copy -c:s copy -c:a aac "$tempVideo" -y';
               await executeFFmpeg(command).then((session) async {
                 final returnCode = await session.getReturnCode();
                 if (ReturnCode.isSuccess(returnCode)) {
@@ -247,7 +247,7 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
               Utils.logInfo(
                   '${logTag}No subtitles stream for $currentVideo, adding one...');
               final command =
-                  '-i $currentVideo -i $dummySubtitles -c copy -c:s mov_text $tempVideo -y';
+                  '-i "$currentVideo" -i $dummySubtitles -c copy -c:s mov_text "$tempVideo" -y';
               await executeFFmpeg(command).then((session) async {
                 final returnCode = await session.getReturnCode();
                 if (ReturnCode.isSuccess(returnCode)) {
@@ -266,7 +266,7 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
 
             // Add artist metadata to avoid redoing all that in this video in the future since it was already processed
             await executeFFmpeg(
-                    '-i $currentVideo -metadata artist="${Constants.artist}" -metadata album="Default" -metadata comment="origin=osd_recording_old" -c:v copy -c:a copy -c:s copy $tempVideo -y')
+                    '-i "$currentVideo" -metadata artist="${Constants.artist}" -metadata album="Default" -metadata comment="origin=osd_recording_old" -c:v copy -c:a copy -c:s copy "$tempVideo" -y')
                 .then((session) async {
               final returnCode = await session.getReturnCode();
               if (ReturnCode.isSuccess(returnCode)) {

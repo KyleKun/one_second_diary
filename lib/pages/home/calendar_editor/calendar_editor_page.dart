@@ -85,7 +85,7 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
   Future<void> getSubtitlesForSelectedDate() async {
     if (!wasDateRecorded) return;
     final getSubsFile = await executeFFmpeg(
-      '-i $currentVideo $srtFilePath -y',
+      '-i "$currentVideo" $srtFilePath -y',
       showInLogs: false,
     );
     final resultCode = await getSubsFile.getReturnCode();
