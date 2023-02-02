@@ -278,9 +278,9 @@ class _SaveButtonState extends State<SaveButton> {
     await executeAsyncFFmpeg(
       command,
       completeCallback: (session) async {
+        final String tempPath = '${finalPath.split('.mp4').first}_noSubs.mp4';
         final returnCode = await session.getReturnCode();
         if (ReturnCode.isSuccess(returnCode)) {
-          final String tempPath = '${finalPath.split('.mp4').first}_noSubs.mp4';
           final subtitles = '-i $subtitlesPath -c:s mov_text';
           final subsCommand =
               '-i "$finalPath" $subtitles -c:v copy -c:a copy -map 0:v -map 0:a? -map 1 -disposition:s:0 default "$tempPath" -y';
@@ -334,8 +334,9 @@ class _SaveButtonState extends State<SaveButton> {
           Utils.logError('${logTag}Session log is: $sessionLog');
           Utils.logError('${logTag}Failure stacktrace: $failureStackTrace');
 
-          // Make sure no incomplete file was left in the folder
+          // Make sure no incomplete files were left in the folder
           StorageUtils.deleteFile(finalPath);
+          StorageUtils.deleteFile(tempPath);
 
           await showDialog(
             barrierDismissible: false,
