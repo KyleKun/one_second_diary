@@ -3,6 +3,7 @@
 - Fixed subtitles text field not recognizing some cyrillic characters
 - Fixed edit button not wrapping text correctly in some languages
 - Fixed saving videos for profiles with white spaces in the name
+- Fixed error when saving videos due missing audio permission in some devices
 - Fixed UI in save recording page not updating after a custom locale is set twice
 
 ## v1.5 - 01/2023
