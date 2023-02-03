@@ -880,6 +880,7 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
                 toggleGeotaggingStatus();
               }
               Navigator.pop(context);
+              setState(() {});
             },
             style: TextButton.styleFrom(
               foregroundColor: AppColors.green,
