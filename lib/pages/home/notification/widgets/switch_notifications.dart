@@ -96,7 +96,7 @@ class _SwitchNotificationsComponentState
       platformNotificationDetails,
       uiLocalNotificationDateInterpretation:
           UILocalNotificationDateInterpretation.absoluteTime,
-      androidAllowWhileIdle: true,
+      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
       // Allow notification to be shown daily
       matchDateTimeComponents: DateTimeComponents.time,
     );

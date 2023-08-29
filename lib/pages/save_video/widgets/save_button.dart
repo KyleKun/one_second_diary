@@ -79,8 +79,7 @@ class _SaveButtonState extends State<SaveButton> {
           content: '${'tryAgainMsg'.tr}',
           actionText: 'Ok',
           actionColor: Colors.red,
-          action: () =>
-              Get.offAllNamed(Routes.HOME)?.then((_) => setState(() {})),
+          action: () => Get.offAllNamed(Routes.HOME)?.then((_) => setState(() {})),
           sendLogs: true,
         ),
       );
@@ -156,11 +155,9 @@ class _SaveButtonState extends State<SaveButton> {
   String getVideoOutputPath() {
     String videoOutputPath = '';
     final String videoName = DateFormatUtils.getDate(widget.determinedDate);
-    final String defaultOutputPath =
-        '${SharedPrefsUtil.getString('appPath')}$videoName.mp4';
+    final String defaultOutputPath = '${SharedPrefsUtil.getString('appPath')}$videoName.mp4';
 
-    final selectedProfileIndex =
-        SharedPrefsUtil.getInt('selectedProfileIndex') ?? 0;
+    final selectedProfileIndex = SharedPrefsUtil.getInt('selectedProfileIndex') ?? 0;
     if (selectedProfileIndex == 0) {
       // If this is true, it means we are using the default profile, so the output folder would be the default output path
       videoOutputPath = defaultOutputPath;
@@ -179,8 +176,7 @@ class _SaveButtonState extends State<SaveButton> {
     return videoOutputPath;
   }
 
-  Future<void> _editWithFFmpeg(
-      bool isGeotaggingEnabled, BuildContext context) async {
+  Future<void> _editWithFFmpeg(bool isGeotaggingEnabled, BuildContext context) async {
     // Positions to render texts for the (x, y co-ordinates)
     // According to the ffmpeg docs, the x, y positions are relative to the top-left side of the output frame.
     final String datePosY = widget.isTextDate ? 'h-th-40' : '40';
@@ -198,8 +194,7 @@ class _SaveButtonState extends State<SaveButton> {
     final String videoPath = widget.videoPath;
 
     // Parses the color code to a hex code format which can be read by ffmpeg
-    final String parsedDateColor =
-        '0x${widget.dateColor.value.toRadixString(16).substring(2)}';
+    final String parsedDateColor = '0x${widget.dateColor.value.toRadixString(16).substring(2)}';
     final String parsedTextOutlineColor =
         '0x${widget.textOutlineColor.value.toRadixString(16).substring(2)}';
 
@@ -209,14 +204,12 @@ class _SaveButtonState extends State<SaveButton> {
 
     // Check if video already exists and delete it if so (Edit daily feature)
     if (StorageUtils.checkFileExists(finalPath)) {
-      Utils.logInfo(
-          '${logTag}Video already exists, deleting it to perform edit.');
+      Utils.logInfo('${logTag}Video already exists, deleting it to perform edit.');
       StorageUtils.deleteFile(finalPath);
     }
 
     // Checks to ensure special read/write permissions with storage access framework
-    final hasSafDirPerms =
-        await Saf.isPersistedPermissionDirectoryFor(finalPath) ?? false;
+    final hasSafDirPerms = await Saf.isPersistedPermissionDirectoryFor(finalPath) ?? false;
     if (hasSafDirPerms) {
       await Saf(finalPath).getDirectoryPermission(isDynamic: true);
     }
@@ -240,8 +233,7 @@ class _SaveButtonState extends State<SaveButton> {
           final sessionLog = await session.getOutput();
           if (sessionLog == null || sessionLog.isEmpty) {
             Utils.logWarning('${logTag}Video has no audio stream, adding one.');
-            audioStream =
-                '-f lavfi -i anullsrc=channel_layout=mono:sample_rate=48000 -shortest';
+            audioStream = '-f lavfi -i anullsrc=channel_layout=mono:sample_rate=48000 -shortest';
           }
         }
       });
@@ -255,8 +247,7 @@ class _SaveButtonState extends State<SaveButton> {
         widget.videoEndInMilliseconds - widget.videoStartInMilliseconds,
       );
     } else {
-      Utils.logInfo(
-          '${logTag}Subtitles TextField was left empty. Adding empty subtitles...');
+      Utils.logInfo('${logTag}Subtitles TextField was left empty. Adding empty subtitles...');
       subtitlesPath = await Utils.writeSrt('', 0);
     }
     Utils.logInfo('${logTag}Subtitles file path: $subtitlesPath');
@@ -320,7 +311,11 @@ class _SaveButtonState extends State<SaveButton> {
               action: () {
                 // Deleting video from cache
                 StorageUtils.deleteFile(widget.videoPath);
-                Get.offAllNamed(Routes.HOME)?.then((_) => setState(() {}));
+                Get.offAllNamed(
+                  Routes.HOME,
+                  arguments:
+                      widget.isFromRecordingPage ? null : {'forcedDate': widget.determinedDate},
+                )?.then((_) => setState(() {}));
               },
             ),
           );
@@ -348,20 +343,17 @@ class _SaveButtonState extends State<SaveButton> {
               actionText: 'Ok',
               actionColor: Colors.red,
               sendLogs: true,
-              action: () =>
-                  Get.offAllNamed(Routes.HOME)?.then((_) => setState(() {})),
+              action: () => Get.offAllNamed(Routes.HOME)?.then((_) => setState(() {})),
             ),
           );
         }
       },
       statisticsCallback: (statistics) async {
         final totalVideoDuration =
-            (widget.videoEndInMilliseconds - widget.videoStartInMilliseconds) ~/
-                1000;
+            (widget.videoEndInMilliseconds - widget.videoStartInMilliseconds) ~/ 1000;
         // Determines the currently processed percentage of the video
         if (statistics.getTime() > 0) {
-          num tempProgressValue =
-              (statistics.getTime() ~/ totalVideoDuration) / 10;
+          num tempProgressValue = (statistics.getTime() ~/ totalVideoDuration) / 10;
           // Ideally the value should not exceed 100%, but the output also considers milliseconds so we estimate to 100.
           if (tempProgressValue >= 100) {
             tempProgressValue = 99.9;

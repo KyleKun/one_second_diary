@@ -28,11 +28,11 @@ class CreateMoviePage extends StatelessWidget {
               VideoCountCard(),
             ],
           ),
-          Column(
+          const Column(
             children: [
-              const _CreateMovieOptionsButton(),
-              const SizedBox(height: 10.0),
-              const _ViewMoviesButton(),
+              _CreateMovieOptionsButton(),
+              SizedBox(height: 10.0),
+              _ViewMoviesButton(),
             ],
           ),
         ],

@@ -18,7 +18,7 @@ import 'storage_utils.dart';
 
 final logger = Logger(
   printer: PrettyPrinter(printTime: true),
-  level: Level.verbose,
+  level: Level.trace,
 );
 
 final lock = Lock();

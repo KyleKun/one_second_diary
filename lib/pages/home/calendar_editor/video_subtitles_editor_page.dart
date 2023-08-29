@@ -6,7 +6,6 @@ import 'package:get/get.dart';
 import 'package:media_store_plus/media_store_plus.dart';
 import 'package:video_player/video_player.dart';
 
-import '../../../routes/app_pages.dart';
 import '../../../utils/constants.dart';
 import '../../../utils/ffmpeg_api_wrapper.dart';
 import '../../../utils/shared_preferences_util.dart';
@@ -24,8 +23,7 @@ class VideoSubtitlesEditorPage extends StatefulWidget {
   final String subtitles;
 
   @override
-  State<VideoSubtitlesEditorPage> createState() =>
-      _VideoSubtitlesEditorPageState();
+  State<VideoSubtitlesEditorPage> createState() => _VideoSubtitlesEditorPageState();
 }
 
 class _VideoSubtitlesEditorPageState extends State<VideoSubtitlesEditorPage> {
@@ -42,10 +40,7 @@ class _VideoSubtitlesEditorPageState extends State<VideoSubtitlesEditorPage> {
   void initState() {
     _initVideoPlayerController();
     if (widget.subtitles.isNotEmpty) {
-      _subtitles = widget.subtitles
-          .trim()
-          .replaceAll('\n', ' ')
-          .replaceAll(RegExp(r'\s+'), ' ');
+      _subtitles = widget.subtitles.trim().replaceAll('\n', ' ').replaceAll(RegExp(r'\s+'), ' ');
       subtitlesController.text = _subtitles;
       isEdit = true;
     }
@@ -97,17 +92,14 @@ class _VideoSubtitlesEditorPageState extends State<VideoSubtitlesEditorPage> {
 
           String command = '';
 
-          final String docsDir =
-              SharedPrefsUtil.getString('internalDirectoryPath');
+          final String docsDir = SharedPrefsUtil.getString('internalDirectoryPath');
           final String videoTempName = widget.videoPath.split('/').last;
           final String tempFilePath = '$docsDir/$videoTempName';
 
           if (isEdit) {
-            Utils.logWarning(
-                '${logTag}Editing subtitles for ${widget.videoPath}');
+            Utils.logWarning('${logTag}Editing subtitles for ${widget.videoPath}');
           } else {
-            Utils.logWarning(
-                '${logTag}Adding brand new subtitles for ${widget.videoPath}');
+            Utils.logWarning('${logTag}Adding brand new subtitles for ${widget.videoPath}');
           }
 
           command =
@@ -154,7 +146,7 @@ class _VideoSubtitlesEditorPageState extends State<VideoSubtitlesEditorPage> {
             isProcessing = false;
           });
 
-          Get.offAllNamed(Routes.HOME)?.then((_) => setState(() {}));
+          Get.back(result: true);
         },
       ),
       body: Column(
@@ -208,7 +200,7 @@ class _VideoSubtitlesEditorPageState extends State<VideoSubtitlesEditorPage> {
                     _subtitles = value;
                   }),
                   decoration: InputDecoration(
-                    hintText: ('enterSubtitles'.tr).split('(').first,
+                    hintText: 'enterSubtitles'.tr.split('(').first,
                     filled: true,
                     border: const OutlineInputBorder(
                       borderSide: BorderSide(color: AppColors.green),

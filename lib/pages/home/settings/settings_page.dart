@@ -15,27 +15,27 @@ class SettingPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: MediaQuery.of(context).size.width * 0.90,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 40.0),
+      child: const Padding(
+        padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 40.0),
         child: Scrollbar(
           interactive: true,
           thumbVisibility: true,
-          radius: const Radius.circular(30.0),
+          radius: Radius.circular(30.0),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 18.0),
+            padding: EdgeInsets.symmetric(horizontal: 18.0),
             child: SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
+              physics: BouncingScrollPhysics(),
               child: Column(
                 children: [
-                  const SwitchThemeComponent(),
-                  const PreferencesButton(),
-                  const NotificationsButton(),
-                  const ProfilesButton(),
-                  const LanguageChooser(),
-                  const BackupTutorial(),
-                  const GithubButton(),
-                  const ContactButton(),
-                  const AboutButton(),
+                  SwitchThemeComponent(),
+                  PreferencesButton(),
+                  NotificationsButton(),
+                  ProfilesButton(),
+                  LanguageChooser(),
+                  BackupTutorial(),
+                  GithubButton(),
+                  ContactButton(),
+                  AboutButton(),
                 ],
               ),
             ),

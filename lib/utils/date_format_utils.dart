@@ -1,5 +1,3 @@
-import 'dart:ui' as ui;
-
 import 'package:get/get.dart';
 
 import 'constants.dart';
@@ -55,7 +53,7 @@ class DateFormatUtils {
     // Default format for English and other languages
     month = Constants.enMonths[monthNumber - 1];
     // Used to remove leading 0
-    day = (int.parse(day)).toString();
+    day = int.parse(day).toString();
     // Day suffix
     final String suffix = getEnglishDaySuffix(day);
     return '$month $day$suffix, $year';
@@ -63,13 +61,8 @@ class DateFormatUtils {
 
   /// Applied if language is ['pt' or 'es']
   static bool isDayFirstPattern() {
-    if (Get.locale!.languageCode == 'pt') {
-      return true;
-    }
-    if (Get.locale!.languageCode == 'es') {
-      return true;
-    }
-    if (ui.window.locale.countryCode == 'BR') {
+    final String languageCode = Get.locale!.languageCode;
+    if (languageCode == 'pt' || languageCode == 'es') {
       return true;
     }
     return false;

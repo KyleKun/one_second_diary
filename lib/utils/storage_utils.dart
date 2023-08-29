@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:media_store_plus/media_store_plus.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:wakelock/wakelock.dart';
+import 'package:wakelock_plus/wakelock_plus.dart';
 
 import '../routes/app_pages.dart';
 import 'constants.dart';
@@ -169,7 +169,7 @@ class StorageUtils {
         );
 
         try {
-          Wakelock.enable();
+          WakelockPlus.enable();
           debugPrint(oldFolderFiles.toString());
 
           // Control how many files were found to check if matches the copied number
@@ -385,7 +385,7 @@ class StorageUtils {
             ),
           );
         } finally {
-          Wakelock.disable();
+          WakelockPlus.disable();
           Utils.updateVideoCount();
           Get.offAllNamed(Routes.HOME);
         }

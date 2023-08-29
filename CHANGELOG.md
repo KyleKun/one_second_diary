@@ -1,3 +1,6 @@
+## v1.5.2 - xx/2023
+- Fixed calendar page resetting to current date after returning from save video page for past dates
+
 ## v1.5.1 - 02/2023
 - Improved movies viewer page ordering movies by most recent
 - Fixed subtitles text field not recognizing some cyrillic characters

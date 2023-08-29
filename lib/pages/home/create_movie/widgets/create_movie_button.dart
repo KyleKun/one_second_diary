@@ -4,7 +4,7 @@ import 'package:ffmpeg_kit_flutter_full_gpl/return_code.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:open_filex/open_filex.dart';
-import 'package:wakelock/wakelock.dart';
+import 'package:wakelock_plus/wakelock_plus.dart';
 
 import '../../../../controllers/video_count_controller.dart';
 import '../../../../enums/export_date_range.dart';
@@ -44,7 +44,7 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
   }
 
   void _createMovie() async {
-    Wakelock.enable();
+    WakelockPlus.enable();
 
     setState(() {
       isProcessing = true;
@@ -383,7 +383,7 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
         ),
       );
     } finally {
-      Wakelock.disable();
+      WakelockPlus.disable();
       setState(() {
         isProcessing = false;
       });
