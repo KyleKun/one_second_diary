@@ -12,11 +12,9 @@ const Map<String, String> de = {
   'createMovie': 'Film erstellen',
   'settings': 'Einstellungen',
   'movieErrorTitle': 'Film konnte nicht erstellt werden!',
-  'movieInsufficientVideos':
-      'Du benötigst mindestens 2 Videos, um einen Film zu erstellen',
+  'movieInsufficientVideos': 'Du benötigst mindestens 2 Videos, um einen Film zu erstellen',
   'movieCreatedTitle': 'Film wurde erstellt!',
-  'movieCreatedDesc':
-      'Der Film wurde im DCIM/OneSecondDiary/Movies-Verzeichnis gespeichert',
+  'movieCreatedDesc': 'Der Film wurde im DCIM/OneSecondDiary/Movies-Verzeichnis gespeichert',
   'movieError': 'Film wurde nicht gespeichert!',
   'tryAgainMsg':
       'Bitte versuche es erneut. Wenn das Problem weiterhin besteht, kontaktiere die Entwickler.',
@@ -24,11 +22,9 @@ const Map<String, String> de = {
   'days': 'Tage',
   'day': 'Tag',
   'totalRecordedTitle': 'Aufgenommen:',
-  'tapBelowToGenerate':
-      'Tippe auf den untenstehenden Button um\neinen Film zu erstellen:',
+  'tapBelowToGenerate': 'Tippe auf den untenstehenden Button um\neinen Film zu erstellen:',
   'editQuestionTitle': 'Video bearbeiten?',
-  'editQuestion':
-      'Deine vorherige Aufnahme wird entfernt, möchtest Du fortsetzen?',
+  'editQuestion': 'Deine vorherige Aufnahme wird entfernt, möchtest Du fortsetzen?',
   'yes': 'Ja',
   'no': 'Nein',
   'edit': 'Bearbeiten',
@@ -46,8 +42,7 @@ const Map<String, String> de = {
   'discardVideoTitle': 'Video verwerfen?',
   'discardVideoDesc': 'Tippe "Ja" um erneut aufzunehmen',
   'introTitle1': 'Halte 1 Sekunde eines jeden Tages fest',
-  'introDesc1':
-      'Wähle einen speziellen Moment Deines Tages an welchen Du Dich erinnern möchtest.',
+  'introDesc1': 'Wähle einen speziellen Moment Deines Tages an welchen Du Dich erinnern möchtest.',
   'introTitle2': 'Erstelle den Film Deines Lebens',
   'introDesc2': 'Kreiere eine Zusammenstellung Deiner schönsten Momente.',
   'introTitle3': 'Keine Werbung und kostenlos',
@@ -114,8 +109,7 @@ const Map<String, String> de = {
       'Alle mit diesem Profil verknüpften Videos werden ebenfalls dauerhaft gelöscht.Bist du sicher weiter? ',
   'profileNameCannotBeEmpty': 'Profilname kann nicht leer sein',
   'reservedProfileName': 'Dies ist ein reservierter Profilname',
-  'creatingMovie':
-      'Verarbeitung... Bitte warten.\nDies kann mehrere Minuten dauern.',
+  'creatingMovie': 'Verarbeitung... Bitte warten.\nDies kann mehrere Minuten dauern.',
   'doNotCloseTheApp': 'Bitte schließen Sie die\nApp nicht',
   'cancelMovieCreation': 'Film erstellen abbrechen',
   'cancelMovieDesc': 'Möchtest Du wirklich abbrechen?',
@@ -141,11 +135,9 @@ const Map<String, String> de = {
   'whatsNewDescv15':
       'Diese Version brachte viele neue Funktionen und Verbesserungen!\n\nSehen Sie es sich in den nächsten Seiten an 😊',
   'feat1v15': 'Galerie',
-  'featDesc1v15':
-      'Fügen Sie ganz einfach Videos aus der Galerie zu Ihrer Sammlung hinzu 🤩',
+  'featDesc1v15': 'Fügen Sie ganz einfach Videos aus der Galerie zu Ihrer Sammlung hinzu 🤩',
   'feat2v15': 'Untertitel',
-  'featDesc2v15':
-      'Fügen Sie Untertitel hinzu, um mehr Details über Ihren Tag zu erfahren 📝',
+  'featDesc2v15': 'Fügen Sie Untertitel hinzu, um mehr Details über Ihren Tag zu erfahren 📝',
   'feat3v15': 'Geotagging',
   'featDesc3v15':
       'Fügen Sie Ihren Videos automatische oder manuelle Geotagging-Informationen hinzu, um sich an den Ort jedes Moments erinnern zu können 📍',
@@ -153,8 +145,7 @@ const Map<String, String> de = {
   'featDesc4v15':
       'Erstellen Sie mehrere Profile, um Ihre Videos separat zu speichern und einfach zwischen ihnen zu wechseln 🤗',
   'feat5v15': 'Kalender',
-  'featDesc5v15':
-      'Anzeige und Bearbeitung von jedem Ihrer aufgezeichneten Tage im Kalender 📅',
+  'featDesc5v15': 'Anzeige und Bearbeitung von jedem Ihrer aufgezeichneten Tage im Kalender 📅',
   'feat6v15': 'Filme',
   'featDesc6v15':
       'Erstellen Sie benutzerdefinierte Filme mit ausgewählten Zeiträumen oder spezifischen Videos 🎥',
@@ -163,8 +154,7 @@ const Map<String, String> de = {
       'Einrichten von täglichen Benachrichtigungen, um Sie daran zu erinnern, Ihren besonderen Moment aufzuzeichnen 🔔',
   'default': 'Standard',
   'profileNameAlreadyExists': 'Profilname existiert bereits',
-  'profileNameCannotContainSpecialChars':
-      'Profilname kann keine\nSonderzeichen enthalten',
+  'profileNameCannotContainSpecialChars': 'Profilname kann keine\nSonderzeichen enthalten',
   'subtitlesSaved': 'Untertitel gespeichert!',
   'error': 'Fehler',
   'migrationError':
@@ -172,16 +162,21 @@ const Map<String, String> de = {
   'success': 'Erfolg',
   'migrationSuccess':
       'Migration erfolgreich! Alle Videos und Filme sind jetzt in Internal Storage > DCIM > OneSecondDiary gespeichert',
-  'migrationInProgress':
-      'Migrieren aller Videos in den neuen App-Ordner, bitte warten...',
+  'migrationInProgress': 'Migrieren aller Videos in den neuen App-Ordner, bitte warten...',
   'migrationFolderDeletionError':
       'Migration abgeschlossen, aber beim Löschen der alten Ordner ist ein Fehler aufgetreten. Bitte löschen Sie sie manuell.',
   'preferences': 'Einstellungen',
   'forceNativeCamera': 'Nur nativen Kamera-Modus verwenden',
   'forceNativeCameraDescription':
-      'Verwenden Sie die native Kamera-App, um Videos aufzunehmen, anstatt die integrierte Kamera. Dies kann Probleme beim Aufzeichnen für Geräte mit geringeren Leistungsmerkmalen lösen. Diese Option funktioniert nicht auf Android 13.',
+      'Verwenden Sie die native Kamera-App, um Videos aufzunehmen, anstatt der eingebauten Kamera. Dies kann Aufnahmeprobleme für Geräte mit geringerer Leistungsfähigkeit lösen. Es funktioniert möglicherweise nicht auf einigen Geräten.',
   'movies': 'Filme',
   'myMovies': 'Meine filme',
   'noMoviesFound': 'Keine Filme gefunden',
   'play': 'Abspielen',
+  'saveVideoTabOne': 'Dateneigenschaften',
+  'saveVideoTabTwo': 'Standort',
+  'saveVideoTabThree': 'Untertitel',
+  'useExperimentalPicker': 'Experimentellen Dateiauswähler',
+  'useExperimentalPickerDescription':
+      'Verwenden Sie den experimentellen Dateiauswähler, um Videos aus der Galerie auszuwählen. Dies ermöglicht eine Vorschau des Videos vor der Auswahl, schnellere Ladezeiten und zeigt direkt die Aufnahmen für das ausgewählte Datum an. Deaktivieren Sie es, wenn Sie Probleme haben oder die alte Methode bevorzugen.',
 };

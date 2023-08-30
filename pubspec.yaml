@@ -14,7 +14,6 @@ dependencies:
   camera: ^0.10.5+3
   device_info_plus: ^9.0.3
   ffmpeg_kit_flutter_full_gpl: ^5.1.0
-  file_picker: ^5.3.4
   flutter:
     sdk: flutter
   flutter_calendar_carousel: ^2.4.2
@@ -53,6 +52,7 @@ dependencies:
   synchronized: ^3.1.0
   open_filex: ^4.3.2
   media_store_plus: ^0.0.7
+  wechat_assets_picker: ^8.7.0
 
 # TODO(KyleKun): check
 # Temp fix for camera plugin on Android 13 (https://github.com/flutter/flutter/issues/109769)

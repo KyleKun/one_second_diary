@@ -1,5 +1,11 @@
-## v1.5.2 - xx/2023
+## v1.5.2 - 09/2023
+- Added a new "lock orientation" button in the recording page
+- Added a new experimental file picker with:
+    - Filter support: past dates will show videos recorded on that date on the top
+    - Preview support: videos can be fully watched before being selected
+- Improved save video page by separating options in tabs
 - Fixed calendar page resetting to current date after returning from save video page for past dates
+- Fixed videoplayer showing some landscape videos rotated in preview
 
 ## v1.5.1 - 02/2023
 - Improved movies viewer page ordering movies by most recent

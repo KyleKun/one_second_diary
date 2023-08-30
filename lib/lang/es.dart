@@ -12,11 +12,9 @@ const Map<String, String> es = {
   'createMovie': 'Crear película',
   'settings': 'Ajustes',
   'movieErrorTitle': 'La película no ha podido ser creada.',
-  'movieInsufficientVideos':
-      'Necesitas tener dos o más videos grabados para crear una película.',
+  'movieInsufficientVideos': 'Necesitas tener dos o más videos grabados para crear una película.',
   'movieCreatedTitle': '¡Tu película se ha creado exitosamente!',
-  'movieCreatedDesc':
-      'La película ha sido guardada en la carpeta DCIM/OneSecondDiary/Movies.',
+  'movieCreatedDesc': 'La película ha sido guardada en la carpeta DCIM/OneSecondDiary/Movies.',
   'movieError': 'Ha ocurrido un error guardando la película.',
   'tryAgainMsg':
       'Inténtalo nuevamente, por favor. Si el problema persiste, contacta al desarrollador.',
@@ -24,8 +22,7 @@ const Map<String, String> es = {
   'days': 'días',
   'day': 'día',
   'totalRecordedTitle': 'Has grabado',
-  'tapBelowToGenerate':
-      'Presiona el siguiente botón para generar\nun archivo de video único.',
+  'tapBelowToGenerate': 'Presiona el siguiente botón para generar\nun archivo de video único.',
   'editQuestionTitle': '¿Deseas editar el video?',
   'editQuestion': 'La grabación anterior será eliminada, ¿deseas continuar?',
   'yes': 'Sí',
@@ -45,8 +42,7 @@ const Map<String, String> es = {
   'discardVideoTitle': '¿Descartar video grabado?',
   'discardVideoDesc': 'Presiona "Sí" para grabar nuevamente.',
   'introTitle1': 'Graba un segundo cada día.',
-  'introDesc1':
-      'Escoge un momento especial de tu día que te gustaría recordar en un futuro.',
+  'introDesc1': 'Escoge un momento especial de tu día que te gustaría recordar en un futuro.',
   'introTitle2': 'Crea la película de tu vida.',
   'introDesc2': 'Genera una compilación de todos tus videos grabados.',
   'introTitle3': '¡Sin anuncios y totalmente gratis!',
@@ -114,12 +110,10 @@ const Map<String, String> es = {
       'Todos los videos asociados con este perfil también se eliminarán permanentemente.¿Estás seguro de continuar?',
   'profileNameCannotBeEmpty': 'El nombre del perfil no puede estar vacío',
   'reservedProfileName': 'Este es un nombre de perfil reservado',
-  'creatingMovie':
-      'Procesando... Por favor espera.\nEsto puede tomar varios minutos.',
+  'creatingMovie': 'Procesando... Por favor espera.\nEsto puede tomar varios minutos.',
   'doNotCloseTheApp': 'No cierres la aplicación',
   'cancelMovieCreation': 'Cancelar creación de película',
-  'cancelMovieDesc':
-      '¿Estás seguro de que quieres cancelar la creación de la película?',
+  'cancelMovieDesc': '¿Estás seguro de que quieres cancelar la creación de la película?',
   'reportError': 'Reportar error',
   'oops': '¡Ups!',
   'videoResolutionWarning':
@@ -144,8 +138,7 @@ const Map<String, String> es = {
   'feat1v15': 'Galería',
   'featDesc1v15': 'Añade fácilmente vídeos de la galería a tu colección 🤩',
   'feat2v15': 'Subtítulos',
-  'featDesc2v15':
-      'Añade o edita subtítulos para incluir más detalles de tu día 📝',
+  'featDesc2v15': 'Añade o edita subtítulos para incluir más detalles de tu día 📝',
   'feat3v15': 'Geotagging',
   'featDesc3v15':
       'Añade geotagging automático o manual a tus vídeos para ayudarte a recordar dónde ocurrió cada momento 📍',
@@ -153,8 +146,7 @@ const Map<String, String> es = {
   'featDesc4v15':
       'Crea múltiples perfiles para guardar tus vídeos por separado y cambiar entre ellos fácilmente 🤗',
   'feat5v15': 'Calendario',
-  'featDesc5v15':
-      'Visualiza y edita cualquiera de tus días grabados en un calendario 📅',
+  'featDesc5v15': 'Visualiza y edita cualquiera de tus días grabados en un calendario 📅',
   'feat6v15': 'Películas',
   'featDesc6v15':
       'Genera películas personalizadas con periodos seleccionados o vídeos específicos 🎥',
@@ -179,9 +171,15 @@ const Map<String, String> es = {
   'preferences': 'Preferencias',
   'forceNativeCamera': 'Forzar cámara nativa',
   'forceNativeCameraDescription':
-      'Usa la aplicación de cámara nativa para grabar videos en lugar de la cámara incorporada. Esto puede solucionar problemas de grabación para dispositivos con capacidades de rendimiento más bajas. Esta opción no funciona en Android 13.',
+      'Use la aplicación de cámara nativa para grabar videos en lugar de la cámara integrada. Esto puede resolver problemas de grabación para dispositivos con capacidades de rendimiento más bajas. Puede que no funcione en algunos dispositivos.',
   'movies': 'Películas',
   'myMovies': 'Mis películas',
   'noMoviesFound': 'No se encontraron películas',
   'play': 'Reproducir',
+  'saveVideoTabOne': 'Propiedades de la fecha',
+  'saveVideoTabTwo': 'Ubicación',
+  'saveVideoTabThree': 'Subtítulos',
+  'useExperimentalPicker': 'Selector de archivos experimental',
+  'useExperimentalPickerDescription':
+      'Use el selector de archivos experimental para seleccionar videos de la galería. Esto permite previsualizar el video antes de seleccionarlo, tiempos de carga más rápidos y mostrar directamente las grabaciones para la fecha seleccionada. Desactívelo si experimenta algún problema o prefiere el método antiguo.',
 };

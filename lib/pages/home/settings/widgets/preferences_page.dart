@@ -12,12 +12,14 @@ class PreferencesPage extends StatefulWidget {
 }
 
 class _PreferencesPageState extends State<PreferencesPage> {
-  late bool isSwitchToggled;
+  late bool isCameraSwitchToggled;
+  late bool isPickerSwitchToggled;
 
   @override
   void initState() {
     super.initState();
-    isSwitchToggled = SharedPrefsUtil.getBool('forceNativeCamera') ?? false;
+    isCameraSwitchToggled = SharedPrefsUtil.getBool('forceNativeCamera') ?? false;
+    isPickerSwitchToggled = SharedPrefsUtil.getBool('useExperimentalPicker') ?? true;
   }
 
   @override
@@ -52,7 +54,7 @@ class _PreferencesPageState extends State<PreferencesPage> {
                       ),
                     ),
                     Switch(
-                      value: isSwitchToggled,
+                      value: isCameraSwitchToggled,
                       onChanged: (value) async {
                         if (value) {
                           Utils.logInfo(
@@ -70,7 +72,7 @@ class _PreferencesPageState extends State<PreferencesPage> {
 
                         /// Update switch value
                         setState(() {
-                          isSwitchToggled = !isSwitchToggled;
+                          isCameraSwitchToggled = !isCameraSwitchToggled;
                         });
                       },
                       activeTrackColor: AppColors.mainColor.withOpacity(0.4),
@@ -81,6 +83,50 @@ class _PreferencesPageState extends State<PreferencesPage> {
               ),
               const SizedBox(height: 5.0),
               Text('forceNativeCameraDescription'.tr),
+              const Divider(),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Flexible(
+                      child: Text(
+                        'useExperimentalPicker'.tr,
+                        style: TextStyle(
+                          fontSize: MediaQuery.of(context).size.width * 0.045,
+                        ),
+                      ),
+                    ),
+                    Switch(
+                      value: isPickerSwitchToggled,
+                      onChanged: (value) async {
+                        if (value) {
+                          Utils.logInfo(
+                            '[PREFERENCES] - Use experimental file picker was enabled',
+                          );
+
+                          SharedPrefsUtil.putBool('useExperimentalPicker', true);
+                        } else {
+                          Utils.logInfo(
+                            '[PREFERENCES] - Use experimental file picker was disabled',
+                          );
+
+                          SharedPrefsUtil.putBool('useExperimentalPicker', false);
+                        }
+
+                        /// Update switch value
+                        setState(() {
+                          isPickerSwitchToggled = !isPickerSwitchToggled;
+                        });
+                      },
+                      activeTrackColor: AppColors.mainColor.withOpacity(0.4),
+                      activeColor: AppColors.mainColor,
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 5.0),
+              Text('useExperimentalPickerDescription'.tr),
             ],
           ),
         ),

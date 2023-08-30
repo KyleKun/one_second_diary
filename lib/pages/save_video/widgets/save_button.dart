@@ -309,8 +309,12 @@ class _SaveButtonState extends State<SaveButton> {
               actionText: 'Ok',
               actionColor: AppColors.green,
               action: () {
-                // Deleting video from cache
-                StorageUtils.deleteFile(widget.videoPath);
+                final isExperimentalPicker =
+                    SharedPrefsUtil.getBool('useExperimentalPicker') ?? true;
+                // Deleting video from cache for recording page, or if experimental picker is disabled since experimental uses the source video
+                if (widget.isFromRecordingPage || !isExperimentalPicker) {
+                  StorageUtils.deleteFile(widget.videoPath);
+                }
                 Get.offAllNamed(
                   Routes.HOME,
                   arguments:

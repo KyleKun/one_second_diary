@@ -12,23 +12,18 @@ const Map<String, String> fr = {
   'createMovie': 'Créer un film',
   'settings': 'Paramètres',
   'movieErrorTitle': 'Film non créé !',
-  'movieInsufficientVideos':
-      'Vous devez avoir au moins 2 vidéos enregistrées pour créer un film.',
+  'movieInsufficientVideos': 'Vous devez avoir au moins 2 vidéos enregistrées pour créer un film.',
   'movieCreatedTitle': 'Film créé !',
-  'movieCreatedDesc':
-      'Film sauvegardé dans le dossier DCIM/OneSecondDiary/Movies.',
+  'movieCreatedDesc': 'Film sauvegardé dans le dossier DCIM/OneSecondDiary/Movies.',
   'movieError': 'Erreur lors de la sauvegarde du film !',
-  'tryAgainMsg':
-      'Veuillez réessayer. Si le problème persiste, contactez le développeur.',
+  'tryAgainMsg': 'Veuillez réessayer. Si le problème persiste, contactez le développeur.',
   'create': 'Créer',
   'days': 'jours',
   'day': 'jour',
   'totalRecordedTitle': 'Vous avez enregistré :',
-  'tapBelowToGenerate':
-      'Appuyez sur le bouton ci-dessous pour\ngénérer un seul fichier vidéo :',
+  'tapBelowToGenerate': 'Appuyez sur le bouton ci-dessous pour\ngénérer un seul fichier vidéo :',
   'editQuestionTitle': 'Editer la vidéo ?',
-  'editQuestion':
-      'Votre enregistrement précédent sera supprimé, voulez-vous continuer ?',
+  'editQuestion': 'Votre enregistrement précédent sera supprimé, voulez-vous continuer ?',
   'yes': 'Oui',
   'no': 'Non',
   'edit': 'Modifier',
@@ -69,8 +64,7 @@ const Map<String, String> fr = {
   'scheduleTime': 'Horaire',
   'test': 'Test',
   'notificationTitle': 'Hé !',
-  'notificationBody':
-      "N'oubliez pas d'enregistrer une seconde de votre journée. 👀",
+  'notificationBody': "N'oubliez pas d'enregistrer une seconde de votre journée. 👀",
   'recordingSettings': "Paramètres d'enregistrement",
   'seconds': 'Secondes: ',
   'timer': 'Minuteur : ',
@@ -116,8 +110,7 @@ const Map<String, String> fr = {
       'Toutes les vidéos associées à ce profil seront également supprimées en permanence. Êtes-vous sûr de continuer?',
   'profileNameCannotBeEmpty': 'Le nom du profil ne peut pas être vide',
   'reservedProfileName': 'Ceci est un nom de profil réservé',
-  'creatingMovie':
-      'Traitement... Veuillez patienter.\nCela peut prendre quelques minutes.',
+  'creatingMovie': 'Traitement... Veuillez patienter.\nCela peut prendre quelques minutes.',
   'doNotCloseTheApp': 'Ne fermez pas l\'application',
   'cancelMovieCreation': 'Annuler la création du film',
   'cancelMovieDesc': 'Voulez-vous vraiment annuler la création du film ?',
@@ -134,8 +127,7 @@ const Map<String, String> fr = {
   'dateColorAndFormat': 'Couleur et format de date',
   'locationServicesDisabled':
       'Les services de localisation sont désactivés sur votre appareil. Veuillez les activer et réessayer.',
-  'locationPermissionDenied':
-      'Les autorisations de localisation ont été refusées.',
+  'locationPermissionDenied': 'Les autorisations de localisation ont été refusées.',
   'locationPermissionPermanentlyDenied':
       'Les autorisations de localisation sont refusées de manière permanente. Veuillez les activer manuellement dans les paramètres de votre appareil.',
   'locationServiceError':
@@ -144,8 +136,7 @@ const Map<String, String> fr = {
   'whatsNewDescv15':
       'Cette version a apporté de nombreuses nouvelles fonctionnalités et améliorations!\n\nJetez un coup d\'œil aux prochaines pages 😊',
   'feat1v15': 'Galerie',
-  'featDesc1v15':
-      'Ajouter facilement des vidéos de la galerie à votre collection 🤩',
+  'featDesc1v15': 'Ajouter facilement des vidéos de la galerie à votre collection 🤩',
   'feat2v15': 'Sous-titres',
   'featDesc2v15':
       'Ajouter ou modifier des sous-titres pour inclure plus de détails sur votre journée 📝',
@@ -156,8 +147,7 @@ const Map<String, String> fr = {
   'featDesc4v15':
       'Créez plusieurs profils pour enregistrer vos vidéos séparément et basculer facilement entre eux 🤗',
   'feat5v15': 'Calendrier',
-  'featDesc5v15':
-      'Afficher et modifier tous les jours enregistrés dans un calendrier 📅',
+  'featDesc5v15': 'Afficher et modifier tous les jours enregistrés dans un calendrier 📅',
   'feat6v15': 'Films',
   'featDesc6v15':
       'Générer des films personnalisés avec des périodes sélectionnées ou des vidéos spécifiques 🎥',
@@ -182,9 +172,15 @@ const Map<String, String> fr = {
   'preferences': 'Préférences',
   'forceNativeCamera': 'Forcer l\'utilisation de la caméra native',
   'forceNativeCameraDescription':
-      'Utilisez l\'application de caméra native pour enregistrer des vidéos au lieu de la caméra intégrée. Cela peut résoudre les problèmes d\'enregistrement pour les appareils dotés de capacités de performance inférieures. Cette option ne fonctionne pas sur Android 13.',
+      'Utilisez l\'application appareil photo native pour enregistrer des vidéos au lieu de l\'appareil photo intégré. Cela peut résoudre les problèmes d\'enregistrement pour les appareils ayant des capacités de performance inférieures. Cela peut ne pas fonctionner sur certains appareils.',
   'movies': 'Films',
   'myMovies': 'Mes films',
   'noMoviesFound': 'Aucun film trouvé',
   'play': 'Jouer',
+  'saveVideoTabOne': 'Propriétés de la date',
+  'saveVideoTabTwo': 'Emplacement',
+  'saveVideoTabThree': 'Sous-titres',
+  'useExperimentalPicker': 'Sélecteur de fichiers expérimental',
+  'useExperimentalPickerDescription':
+      'Utilisez le sélecteur de fichiers expérimental pour sélectionner des vidéos depuis la galerie. Cela permet de prévisualiser la vidéo avant de la sélectionner, d\'accélérer les temps de chargement et d\'afficher directement les enregistrements pour la date sélectionnée. Désactivez-le si vous rencontrez des problèmes ou préférez l\'ancienne méthode.'
 };

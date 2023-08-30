@@ -51,8 +51,7 @@ const Map<String, String> zh = {
   'licenses': '许可证',
   'contact': '联系方式',
   'share': '分享',
-  'shareMsg':
-      '瞧瞧这个应用吧: https://play.google.com/store/apps/details?id=com.kylekun.one_second_diary',
+  'shareMsg': '瞧瞧这个应用吧: https://play.google.com/store/apps/details?id=com.kylekun.one_second_diary',
   'thanksTo': '特别感谢',
   'foundVideos': '寻找视频集!',
   'foundVideo': '寻找视频!',
@@ -146,16 +145,20 @@ const Map<String, String> zh = {
   'migrationError':
       '迁移视频时出错。请关闭应用程序并手动将视频从Internal Storage > OneSecondDiary复制到Internal Storage > DCIM > OneSecondDiary，然后删除旧文件夹。',
   'success': '成功',
-  'migrationSuccess':
-      '迁移成功！所有视频和电影现在都保存在Internal Storage > DCIM > OneSecondDiary中',
+  'migrationSuccess': '迁移成功！所有视频和电影现在都保存在Internal Storage > DCIM > OneSecondDiary中',
   'migrationInProgress': '正在将所有视频迁移到新的应用程序文件夹中，请稍候...',
   'migrationFolderDeletionError': '迁移完成，但在删除旧文件夹时出错。请手动删除它。',
   'preferences': '偏好设置',
   'forceNativeCamera': '强制使用原生相机',
-  'forceNativeCameraDescription':
-      '使用原生相机应用程序记录视频，而不是内置相机。这可以解决性能能力较低的设备的录制问题。此选项在Android 13上不起作用。',
+  'forceNativeCameraDescription': '使用原生相机应用程序记录视频，而不是内置相机。这可以解决性能能力较低的设备的录制问题。这个选项可能不适用于某些设备。',
   'movies': '电影',
   'myMovies': '我的电影',
   'noMoviesFound': '未找到电影',
   'play': '播放',
+  'saveVideoTabOne': '日期属性',
+  'saveVideoTabTwo': '位置',
+  'saveVideoTabThree': '字幕',
+  'useExperimentalPicker': '使用实验性的文件选择器',
+  'useExperimentalPickerDescription':
+      '使用实验性的文件选择器从相册中选择视频。这允许在选择前预览视频，加载时间更快，并直接显示所选日期的录像。如果您遇到任何问题或更喜欢旧方法，请禁用它。',
 };

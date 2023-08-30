@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_bool_literals_in_conditional_expressions
+
 import 'dart:io';
 
 import 'package:ffmpeg_kit_flutter_full_gpl/return_code.dart';
@@ -8,6 +10,7 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:media_store_plus/media_store_plus.dart';
 import 'package:video_player/video_player.dart';
+import 'package:wechat_assets_picker/wechat_assets_picker.dart';
 
 import '../../../controllers/daily_entry_controller.dart';
 import '../../../controllers/lang_controller.dart';
@@ -36,6 +39,7 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
   String currentVideo = '';
   bool wasDateRecorded = false;
   DateTime _selectedDate = DateTime.now();
+  late String _currentSelectedDateStr = DateFormatUtils.getToday();
   late Color mainColor;
   late String appDocDir;
   late String srtFilePath;
@@ -158,22 +162,91 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
     }
   }
 
+  bool shouldIgnoreExperimentalFilter() {
+    if (_selectedDate.day == DateTime.now().day &&
+        _selectedDate.month == DateTime.now().month &&
+        _selectedDate.year == DateTime.now().year) {
+      return true;
+    }
+    return false;
+  }
+
   /// Picks video from gallery
   Future<void> selectVideoFromGallery() async {
-    final rawFile = await ImagePicker().pickVideo(
-      source: ImageSource.gallery,
-    );
+    final isExperimentalPicker = SharedPrefsUtil.getBool('useExperimentalPicker') ?? true;
 
-    // Go to the save video page
-    if (rawFile != null) {
-      Get.toNamed(
-        Routes.SAVE_VIDEO,
-        arguments: {
-          'videoPath': rawFile.path,
-          'currentDate': _selectedDate,
-          'isFromRecordingPage': false,
-        },
+    if (isExperimentalPicker) {
+      final bool shouldIgnoreFilter = shouldIgnoreExperimentalFilter();
+      final FilterOptionGroup filterOptionGroup = FilterOptionGroup(
+        containsPathModified: true,
+        updateTimeCond: DateTimeCond(
+          min: _selectedDate,
+          max: DateTime.now(),
+          ignore: shouldIgnoreFilter,
+        ),
+        orders: [
+          OrderOption(
+            type: OrderOptionType.updateDate,
+            asc: shouldIgnoreFilter ? false : true,
+          ),
+        ],
       );
+
+      final List<AssetEntity>? result = await AssetPicker.pickAssets(
+        context,
+        pickerConfig: AssetPickerConfig(
+          maxAssets: 1,
+          requestType: RequestType.video,
+          filterOptions: filterOptionGroup,
+          sortPathsByModifiedDate: true,
+          specialItemPosition: SpecialItemPosition.prepend,
+          specialItemBuilder: (context, path, length) {
+            return Center(
+              child: Text(
+                shouldIgnoreFilter
+                    ? 'Latest\nvideos'
+                    : 'From\n${_selectedDate.toString().substring(0, 10)}\nonwards',
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 14.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            );
+          },
+        ),
+      );
+
+      if (result?.isEmpty == false) {
+        final File? file = await result?.first.loadFile();
+        if (file != null) {
+          Get.toNamed(
+            Routes.SAVE_VIDEO,
+            arguments: {
+              'videoPath': file.path,
+              'currentDate': _selectedDate,
+              'isFromRecordingPage': false,
+            },
+          );
+        }
+      }
+    } else {
+      final rawFile = await ImagePicker().pickVideo(
+        source: ImageSource.gallery,
+      );
+
+      // Go to the save video page
+      if (rawFile != null) {
+        Get.toNamed(
+          Routes.SAVE_VIDEO,
+          arguments: {
+            'videoPath': rawFile.path,
+            'currentDate': _selectedDate,
+            'isFromRecordingPage': false,
+          },
+        );
+      }
     }
   }
 
@@ -510,7 +583,7 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
                                 ),
                                 onPressed: () async {
                                   Utils.logInfo(
-                                      '[CALENDAR] add video button pressed for date $_currentDateStr');
+                                      '[CALENDAR] add video button pressed for date $_currentSelectedDateStr');
                                   await selectVideoFromGallery();
                                 },
                                 child: Padding(
@@ -531,9 +604,12 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
 
   /// Sets the [_selectedDate] to the given [date] and checks if there is a video for that date
   Future<void> _changeSelectedDate(DateTime date) async {
-    setState(
-      () => _selectedDate = date,
-    );
+    setState(() {
+      _selectedDate = date;
+      _currentSelectedDateStr = DateFormatUtils.getDate(
+        date,
+      );
+    });
 
     final currentVideoExists = allVideos!.any(
       (a) => a.contains(
