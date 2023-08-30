@@ -48,6 +48,7 @@ class _RecordingPageState extends State<RecordingPage>
   Stopwatch stopwatch = Stopwatch();
 
   DeviceOrientation currentOrientation = DeviceOrientation.portraitUp;
+  bool lockOrientation = false;
   DateTime timeOfLastChange = DateTime.now();
 
   @override
@@ -103,8 +104,7 @@ class _RecordingPageState extends State<RecordingPage>
     if (!_cameraController.value.isInitialized) {
       return;
     }
-    if (state == AppLifecycleState.inactive ||
-        state == AppLifecycleState.paused) {
+    if (state == AppLifecycleState.inactive || state == AppLifecycleState.paused) {
       _cameraController.dispose();
     } else if (state == AppLifecycleState.resumed) {
       if (_cameraController.value.isInitialized) {
@@ -123,8 +123,7 @@ class _RecordingPageState extends State<RecordingPage>
       return;
     }
 
-    _currentScale = (_baseScale * details.scale)
-        .clamp(_minAvailableZoom, _maxAvailableZoom);
+    _currentScale = (_baseScale * details.scale).clamp(_minAvailableZoom, _maxAvailableZoom);
 
     await _cameraController.setZoomLevel(_currentScale);
   }
@@ -174,16 +173,11 @@ class _RecordingPageState extends State<RecordingPage>
     try {
       await _cameraController.initialize();
       await Future.wait([
-        _cameraController
-            .getMaxZoomLevel()
-            .then((value) => _maxAvailableZoom = value),
-        _cameraController
-            .getMinZoomLevel()
-            .then((value) => _minAvailableZoom = value),
+        _cameraController.getMaxZoomLevel().then((value) => _maxAvailableZoom = value),
+        _cameraController.getMinZoomLevel().then((value) => _minAvailableZoom = value),
       ]);
 
-      await _cameraController
-          .lockCaptureOrientation(DeviceOrientation.portraitUp);
+      await _cameraController.lockCaptureOrientation(DeviceOrientation.portraitUp);
     } catch (e) {
       Utils.logError('${logTag}failed to initialize camera: ${e.toString()}');
       showDialog(
@@ -210,12 +204,12 @@ class _RecordingPageState extends State<RecordingPage>
     if (toggle) {
       CameraDescription newDescription;
       if (lensDirection == CameraLensDirection.front) {
-        newDescription = _availableCameras.firstWhere((description) =>
-            description.lensDirection == CameraLensDirection.back);
+        newDescription = _availableCameras
+            .firstWhere((description) => description.lensDirection == CameraLensDirection.back);
         Utils.logInfo('${logTag}Changed to back camera');
       } else {
-        newDescription = _availableCameras.firstWhere((description) =>
-            description.lensDirection == CameraLensDirection.front);
+        newDescription = _availableCameras
+            .firstWhere((description) => description.lensDirection == CameraLensDirection.front);
         Utils.logInfo('${logTag}Changed to front camera');
       }
       _initCamera(newDescription);
@@ -271,9 +265,7 @@ class _RecordingPageState extends State<RecordingPage>
                         () => SizedBox(
                           width: 150,
                           child: Slider(
-                            value: _recordingSettingsController
-                                .recordingSeconds.value
-                                .toDouble(),
+                            value: _recordingSettingsController.recordingSeconds.value.toDouble(),
                             min: 1,
                             max: 10,
                             activeColor: AppColors.mainColor.withOpacity(0.9),
@@ -282,8 +274,7 @@ class _RecordingPageState extends State<RecordingPage>
                               _recordingSeconds = value.round();
 
                               /// Save on SharedPrefs
-                              _recordingSettingsController
-                                  .setRecordingSeconds(value.round());
+                              _recordingSettingsController.setRecordingSeconds(value.round());
                             },
                           ),
                         ),
@@ -296,10 +287,8 @@ class _RecordingPageState extends State<RecordingPage>
                       Obx(
                         () => Switch(
                           activeColor: AppColors.mainColor,
-                          activeTrackColor:
-                              AppColors.mainColor.withOpacity(0.5),
-                          value:
-                              _recordingSettingsController.isTimerEnable.value,
+                          activeTrackColor: AppColors.mainColor.withOpacity(0.5),
+                          value: _recordingSettingsController.isTimerEnable.value,
                           onChanged: (value) {
                             _recordingSettingsController.isTimerEnable.value
                                 ? _disableTimer()
@@ -362,12 +351,12 @@ class _RecordingPageState extends State<RecordingPage>
       Stream.periodic(const Duration(milliseconds: 200)).listen((_) async {
         if (mounted)
           setState(() {
-            elapsedSeconds = stopwatch.elapsed.inMilliseconds >= milliseconds &&
-                    milliseconds < 10000
-                ? '0${milliseconds ~/ 1000}'
-                : stopwatch.elapsed.inMilliseconds >= 10000
-                    ? '10'
-                    : '0${stopwatch.elapsed.inSeconds}';
+            elapsedSeconds =
+                stopwatch.elapsed.inMilliseconds >= milliseconds && milliseconds < 10000
+                    ? '0${milliseconds ~/ 1000}'
+                    : stopwatch.elapsed.inMilliseconds >= 10000
+                        ? '10'
+                        : '0${stopwatch.elapsed.inSeconds}';
           });
         if (stopwatch.elapsed.inMilliseconds >= milliseconds + 800) {
           final file = await _cameraController.stopVideoRecording();
@@ -506,7 +495,7 @@ class _RecordingPageState extends State<RecordingPage>
   }
 
   Future<void> setCurrentOrientation(DeviceOrientation orientation) async {
-    if (_isRecording) return;
+    if (_isRecording || lockOrientation) return;
     timeOfLastChange = DateTime.now();
     Future.delayed(const Duration(milliseconds: 500), () async {
       if (DateTime.now().difference(timeOfLastChange).inMilliseconds > 500) {
@@ -633,6 +622,36 @@ class _RecordingPageState extends State<RecordingPage>
               ),
             ),
 
+            /// Lock orientation button
+            Positioned(
+              right: MediaQuery.of(context).size.width / 5,
+              bottom: 15.0,
+              child: GestureDetector(
+                child: Container(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: !_isRecording
+                        ? AppColors.orange.withOpacity(0.8)
+                        : Colors.grey.withOpacity(0.4),
+                  ),
+                  width: MediaQuery.of(context).size.width * 0.12,
+                  height: MediaQuery.of(context).size.height * 0.12,
+                  child: Icon(
+                    getOrientationIcon(),
+                    color: Colors.white,
+                    size: MediaQuery.of(context).size.width * 0.06,
+                  ),
+                ),
+                onTap: () async {
+                  if (!_isRecording) {
+                    setState(() {
+                      lockOrientation = !lockOrientation;
+                    });
+                  }
+                },
+              ),
+            ),
+
             /// Recording settings button
             Positioned(
               left: 15.0,
@@ -676,6 +695,22 @@ class _RecordingPageState extends State<RecordingPage>
         return -1;
       default:
         return 0;
+    }
+  }
+
+  IconData? getOrientationIcon() {
+    if (!lockOrientation) return Icons.lock_open;
+    switch (currentOrientation) {
+      case DeviceOrientation.portraitUp:
+        return Icons.screen_lock_portrait;
+      case DeviceOrientation.landscapeLeft:
+        return Icons.screen_lock_landscape;
+      case DeviceOrientation.portraitDown:
+        return Icons.screen_lock_portrait;
+      case DeviceOrientation.landscapeRight:
+        return Icons.screen_lock_landscape;
+      default:
+        return null;
     }
   }
 }

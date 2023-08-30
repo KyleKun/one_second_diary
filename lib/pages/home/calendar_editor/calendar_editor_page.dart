@@ -39,7 +39,7 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
   late Color mainColor;
   late String appDocDir;
   late String srtFilePath;
-  final String _currentDateStr = DateFormatUtils.getToday();
+  late String _currentDateStr = DateFormatUtils.getToday();
   DateTime lastSelectedDate = DateTime.now();
   final LanguageController _languageController = Get.find();
   final VideoCountController _videoCountController = Get.find();
@@ -55,6 +55,7 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
     // Prevents UI from going back to current date after adding older videos
     if (routeArguments?['forcedDate'] != null) {
       _changeSelectedDate(routeArguments?['forcedDate']);
+      _currentDateStr = DateFormatUtils.getDate(routeArguments?['forcedDate']);
     }
     Future.delayed(const Duration(milliseconds: 500), () {
       allVideos = Utils.getAllVideos(fullPath: true);
