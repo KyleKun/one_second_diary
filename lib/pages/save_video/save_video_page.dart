@@ -485,7 +485,7 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
                 : customLocationTextController.text,
             subtitles: _subtitles,
             videoStartInMilliseconds: _videoStartValue,
-            videoEndInMilliseconds: _videoEndValue,
+            videoEndInMilliseconds: _videoEndValue + 500,
             videoDuration: _trimmer.videoPlayerController!.value.duration.inSeconds,
             isGeotaggingEnabled: isGeotaggingEnabled,
             textOutlineColor: invert(currentColor),
@@ -510,7 +510,7 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
                       viewerHeight: 50.0,
                       type: ViewerType.fixed,
                       editorProperties: TrimEditorProperties(
-                        borderWidth: 4.0,
+                        borderWidth: 2.5,
                         circleSize: 6.0,
                         circleSizeOnDrag: 9.0,
                         sideTapSize: 21,

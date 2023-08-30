@@ -54,15 +54,6 @@ dependencies:
   media_store_plus: ^0.0.7
   wechat_assets_picker: ^8.7.0
 
-# TODO(KyleKun): check
-# Temp fix for camera plugin on Android 13 (https://github.com/flutter/flutter/issues/109769)
-# dependency_overrides:
-#   camera_android:
-#     git:
-#       url: https://github.com/OmarHatem28/plugins.git
-#       path: packages/camera/camera_android
-#       ref: 8550e0e698f3d358f42d60b090320dea7c3c0775
-
 dev_dependencies:
   flutter_test:
     sdk: flutter
