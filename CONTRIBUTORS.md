@@ -25,6 +25,7 @@
 - Alexander Adam - German
 - Bagas Wastu - Indonesian
 - Варвара Попова - Russian
+- Miloš Koliáš - Czech
 
 ## App Logo (Initial Version)
 - Victória Marques

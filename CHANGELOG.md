@@ -3,6 +3,7 @@
 - Added a new experimental file picker with:
     - Filter support: past dates will show videos recorded on that date on the top
     - Preview support: videos can be fully watched before being selected
+- Added Czech localization
 - Improved save video page by separating options in tabs
 - Fixed calendar page resetting to current date after returning from save video page for past dates
 - Fixed videoplayer showing some landscape videos rotated in preview
