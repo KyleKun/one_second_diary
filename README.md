@@ -60,9 +60,7 @@ Then, after a couple months or even years:
 - ✅ Generate custom movies by periods or selected videos only
 - ✅ Receive scheduled daily notifications
 - ✅ Dark Mode
-- ✅ Available in 8 languages
-
-And of course, it has no ads, no data collection and no in-app purchases ;)
+- ✅ Available in 9 languages
 
 If you have any suggestions or want to contribute, feel free to open a PR or contact me!
 
