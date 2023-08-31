@@ -7,7 +7,7 @@ const Map<String, String> fr = {
       "Merci beaucoup d'utiliser l'application !\n\nSi vous souhaitez soutenir le développement,\nn'hésitez pas à faire un don ^^",
   'donationPageTitle': 'Soutenir le développement',
   'about': 'À propos',
-  'appVersion': 'Version 1.5.1',
+  'appVersion': 'Version 1.5.2',
   'record': 'Enregistrement',
   'createMovie': 'Créer un film',
   'settings': 'Paramètres',

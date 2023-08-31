@@ -7,7 +7,7 @@ const Map<String, String> cs = {
       'Děkuji moc za používání aplikace!\n\nPokud chcete podpořit vývoj,\nneváhejte přispět ^^',
   'donationPageTitle': 'Podpořte vývoj aplikace',
   'about': 'O aplikaci',
-  'appVersion': 'Verze 1.5.1',
+  'appVersion': 'Verze 1.5.2',
   'record': 'Record',
   'createMovie': 'Vytvoření videa',
   'settings': 'Nastavení',
@@ -114,7 +114,7 @@ const Map<String, String> cs = {
   'cancelMovieCreation': 'Zrušit vytvoření filmu',
   'cancelMovieDesc': 'Opravdu chcete zrušit vytvoření filmu?',
   'reportError': 'Nahlásit chybu',
-  'errorMailSubject': '[One Second Diary - v1.5.1] Zpráva o chybách v aplikaci',
+  'errorMailSubject': '[One Second Diary - v1.5.2] Zpráva o chybách v aplikaci',
   'errorMailBody':
       'Popište chybu, na kterou jste narazili, a kroky k jejímu reprodukování. Děkuju!',
   'oops': 'Oops!',

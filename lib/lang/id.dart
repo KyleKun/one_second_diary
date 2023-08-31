@@ -7,7 +7,7 @@ const Map<String, String> id = {
       'Terima kasih sudah menggunakan aplikasi ini!\n\nJika Anda ingin mendukung pembuatan aplikasi ini, jangan sungkan untuk berdonasi^^.',
   'donationPageTitle': 'Dukung pembuatan aplikasi',
   'about': 'Tentang',
-  'appVersion': 'Versi 1.5.1',
+  'appVersion': 'Versi 1.5.2',
   'record': 'Rekam',
   'createMovie': 'Buat video',
   'settings': 'Pengaturan',
