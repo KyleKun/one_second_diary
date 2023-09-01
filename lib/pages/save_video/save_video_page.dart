@@ -441,9 +441,11 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
         // Prevent showing the option to re-record video if not coming from the recording page
         final isFromRecordingPage = routeArguments['isFromRecordingPage'];
         if (!isFromRecordingPage) {
-          // Deleting video from cache
-          // TODO: delete if wechat picker is kept
-          // StorageUtils.deleteFile(_tempVideoPath);
+          final isExperimentalPicker = SharedPrefsUtil.getBool('useExperimentalPicker') ?? true;
+          if (!isExperimentalPicker) {
+            // Deleting video from cache
+            StorageUtils.deleteFile(_tempVideoPath);
+          }
           Get.back();
         } else {
           showDialog(
