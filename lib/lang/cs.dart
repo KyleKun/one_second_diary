@@ -176,10 +176,12 @@ const Map<String, String> cs = {
   'myMovies': 'Moje videa',
   'noMoviesFound': 'Žádna videa nebyla nalezena',
   'play': 'Přehrát',
-  'saveVideoTabOne': 'Vlastnosti data',
+  'saveVideoTabOne': 'Obecné',
   'saveVideoTabTwo': 'Umístění',
   'saveVideoTabThree': 'Titulky',
   'useExperimentalPicker': 'Použití experimentálního výběru souborů',
   'useExperimentalPickerDescription':
       'Pomocí experimentálního výběru souborů vyberte videa z galerie. To umožňuje náhled videa před výběrem, rychlejší načítání a přímé zobrazení nahrávek pro vybrané datum. Zakažte jej, pokud se setkáte s nějakými problémy nebo dáváte přednost staré metodě.',
+  'currentProfile': 'Aktuální profil:',
+  'change': 'Změnit',
 };

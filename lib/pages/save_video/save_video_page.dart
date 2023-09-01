@@ -19,6 +19,7 @@ import '../../utils/shared_preferences_util.dart';
 import '../../utils/storage_utils.dart';
 import '../../utils/theme.dart';
 import '../../utils/utils.dart';
+import '../home/profiles/profiles_page.dart';
 import 'widgets/save_button.dart';
 
 class SaveVideoPage extends StatefulWidget {
@@ -61,6 +62,8 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
   double _videoEndValue = 0.0;
   bool _isVideoPlaying = false;
   bool _isLocationProcessing = false;
+
+  late final bool isDarkTheme = ThemeService().isDarkTheme();
 
   void _initCorrectDates() {
     final DateTime selectedDate = routeArguments['currentDate'];
@@ -514,14 +517,12 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
                         circleSize: 6.0,
                         circleSizeOnDrag: 9.0,
                         sideTapSize: 21,
-                        circlePaintColor:
-                            ThemeService().isDarkTheme() ? Colors.white : AppColors.mainColor,
-                        borderPaintColor: ThemeService().isDarkTheme()
-                            ? AppColors.light
-                            : AppColors.mainColor.withOpacity(0.75),
+                        circlePaintColor: isDarkTheme ? Colors.white : AppColors.mainColor,
+                        borderPaintColor:
+                            isDarkTheme ? AppColors.light : AppColors.mainColor.withOpacity(0.75),
                       ),
                       durationStyle: DurationStyle.FORMAT_MM_SS,
-                      durationTextStyle: ThemeService().isDarkTheme()
+                      durationTextStyle: isDarkTheme
                           ? const TextStyle(color: Colors.white)
                           : const TextStyle(color: Colors.black),
                       maxVideoLength: const Duration(milliseconds: 10900),
@@ -545,6 +546,8 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
   }
 
   Widget videoProperties() {
+    final String selectedProfileName = Utils.getCurrentProfile();
+
     return DefaultTabController(
       initialIndex: 0,
       length: 3,
@@ -573,11 +576,12 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
                         child: Text('1'),
                       ),
                     ),
-                    const SizedBox(width: 4),
+                    const SizedBox(width: 6),
                     Text(
                       'saveVideoTabOne'.tr,
                       style: TextStyle(
                         fontSize: MediaQuery.of(context).size.height * 0.019,
+                        color: isDarkTheme ? Colors.white : Colors.black,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -596,11 +600,12 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
                         child: Text('2'),
                       ),
                     ),
-                    const SizedBox(width: 4),
+                    const SizedBox(width: 6),
                     Text(
                       'saveVideoTabTwo'.tr,
                       style: TextStyle(
                         fontSize: MediaQuery.of(context).size.height * 0.019,
+                        color: isDarkTheme ? Colors.white : Colors.black,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -619,11 +624,12 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
                         child: Text('3'),
                       ),
                     ),
-                    const SizedBox(width: 4),
+                    const SizedBox(width: 6),
                     Text(
                       'saveVideoTabThree'.tr,
                       style: TextStyle(
                         fontSize: MediaQuery.of(context).size.height * 0.019,
+                        color: isDarkTheme ? Colors.white : Colors.black,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -640,80 +646,122 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const SizedBox(height: 8),
-
-                    // Date color
-                    Container(
-                      margin: EdgeInsets.symmetric(
-                        horizontal: MediaQuery.of(context).size.width * 0.03,
-                      ),
-                      child: GestureDetector(
-                        onTap: () => colorPickerDialog(),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Expanded(
-                              child: Column(
-                                children: [
-                                  Padding(
-                                    padding: EdgeInsets.only(
-                                      left: MediaQuery.of(context).size.height * 0.02,
-                                      bottom: MediaQuery.of(context).size.height * 0.02,
-                                    ),
-                                    child: Text(
-                                      'dateColorAndFormat'.tr,
-                                      style: TextStyle(
-                                        fontSize: MediaQuery.of(context).size.height * 0.019,
-                                      ),
-                                    ),
-                                  ),
-                                  Container(
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: currentColor,
-                                    ),
-                                    width: MediaQuery.of(context).size.width * 0.09,
-                                    height: MediaQuery.of(context).size.width * 0.09,
-                                    child: Icon(
-                                      Icons.edit,
-                                      color: invert(currentColor),
-                                    ),
-                                  ),
-                                  const SizedBox(height: 5.0),
-                                ],
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 22.0),
+                      child: Row(
+                        children: [
+                          Text(
+                            'currentProfile'.tr,
+                            style: TextStyle(
+                              fontSize: MediaQuery.of(context).size.height * 0.019,
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Flexible(
+                            child: Text(
+                              selectedProfileName.isEmpty ? 'default'.tr : selectedProfileName,
+                              style: TextStyle(
+                                fontSize: MediaQuery.of(context).size.height * 0.019,
                               ),
                             ),
-                            Expanded(
-                              child: RadioGroup<String>.builder(
-                                direction: Axis.vertical,
-                                horizontalAlignment: MainAxisAlignment.start,
-                                groupValue: _recordingSettingsController.dateFormatId.value == 0
-                                    ? _dateFormatsForVideoEdit.first
-                                    : _dateFormatsForVideoEdit.last,
-                                fillColor: AppColors.yellow,
-                                onChanged: (value) => setState(() {
-                                  _dateFinalFormatValueForVideoEdit = value!;
-                                  // Place date in the bottom if it is text format
-                                  _dateFinalFormatValueForVideoEdit ==
-                                          _dateFormatsForVideoEdit.first
-                                      ? isTextDate = false
-                                      : isTextDate = true;
-
-                                  // Save the date format in shared preferences
-                                  _recordingSettingsController.setDateFormat(
-                                      _dateFinalFormatValueForVideoEdit ==
-                                              _dateFormatsForVideoEdit.first
-                                          ? 0
-                                          : 1);
-                                }),
-                                items: _dateFormatsForVideoEdit,
-                                itemBuilder: (item) => RadioButtonBuilder(
-                                  item,
+                          ),
+                          const SizedBox(width: 20),
+                          Flexible(
+                            child: TextButton(
+                              style: ButtonStyle(
+                                backgroundColor: MaterialStateProperty.all(AppColors.dark
+                                    .withOpacity(ThemeService().isDarkTheme() ? 1.0 : 0.66)),
+                                shape: MaterialStateProperty.all(
+                                  RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(40),
+                                  ),
+                                ),
+                              ),
+                              onPressed: () {
+                                Get.to(const ProfilesPage())?.then((_) => setState(() {}));
+                              },
+                              child: Text(
+                                'change'.tr,
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: MediaQuery.of(context).size.height * 0.017,
                                 ),
                               ),
                             ),
-                            const SizedBox(width: 10),
-                          ],
-                        ),
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    const SizedBox(height: 30),
+
+                    // Date color
+                    GestureDetector(
+                      onTap: () => colorPickerDialog(),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(left: 22.0, right: 11.0),
+                            child: Column(
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                    bottom: MediaQuery.of(context).size.height * 0.02,
+                                  ),
+                                  child: Text(
+                                    'dateColorAndFormat'.tr,
+                                    style: TextStyle(
+                                      fontSize: MediaQuery.of(context).size.height * 0.019,
+                                    ),
+                                  ),
+                                ),
+                                Container(
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: currentColor,
+                                  ),
+                                  width: MediaQuery.of(context).size.width * 0.09,
+                                  height: MediaQuery.of(context).size.width * 0.09,
+                                  child: Icon(
+                                    Icons.edit,
+                                    color: invert(currentColor),
+                                  ),
+                                ),
+                                const SizedBox(height: 5.0),
+                              ],
+                            ),
+                          ),
+                          Expanded(
+                            child: RadioGroup<String>.builder(
+                              direction: Axis.vertical,
+                              horizontalAlignment: MainAxisAlignment.start,
+                              groupValue: _recordingSettingsController.dateFormatId.value == 0
+                                  ? _dateFormatsForVideoEdit.first
+                                  : _dateFormatsForVideoEdit.last,
+                              fillColor: AppColors.yellow,
+                              onChanged: (value) => setState(() {
+                                _dateFinalFormatValueForVideoEdit = value!;
+                                // Place date in the bottom if it is text format
+                                _dateFinalFormatValueForVideoEdit == _dateFormatsForVideoEdit.first
+                                    ? isTextDate = false
+                                    : isTextDate = true;
+
+                                // Save the date format in shared preferences
+                                _recordingSettingsController.setDateFormat(
+                                    _dateFinalFormatValueForVideoEdit ==
+                                            _dateFormatsForVideoEdit.first
+                                        ? 0
+                                        : 1);
+                              }),
+                              items: _dateFormatsForVideoEdit,
+                              itemBuilder: (item) => RadioButtonBuilder(
+                                item,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                        ],
                       ),
                     ),
                   ],

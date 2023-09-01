@@ -25,8 +25,7 @@ class _ProfilesPageState extends State<ProfilesPage> {
   final _profileNameController = TextEditingController();
   final _profileNameFormKey = GlobalKey<FormState>();
 
-  final mainColor =
-      ThemeService().isDarkTheme() ? AppColors.dark : AppColors.light;
+  final mainColor = ThemeService().isDarkTheme() ? AppColors.dark : AppColors.light;
 
   List<Profile> profiles = [];
 
@@ -103,14 +102,12 @@ class _ProfilesPageState extends State<ProfilesPage> {
                     }
 
                     if (value.toLowerCase().trim() == 'default' ||
-                        value.toLowerCase().trim() ==
-                            'default'.tr.toLowerCase()) {
+                        value.toLowerCase().trim() == 'default'.tr.toLowerCase()) {
                       return 'reservedProfileName'.tr;
                     }
 
-                    if (profiles.any((profile) =>
-                        profile.label.toLowerCase() ==
-                        value.toLowerCase().trim())) {
+                    if (profiles.any(
+                        (profile) => profile.label.toLowerCase() == value.toLowerCase().trim())) {
                       return 'profileNameAlreadyExists'.tr;
                     }
 
@@ -144,8 +141,7 @@ class _ProfilesPageState extends State<ProfilesPage> {
               TextButton(
                 onPressed: () async {
                   // Checks if the textfield is valid based on if the text passes all the validations we set
-                  final bool isTextValid =
-                      _profileNameFormKey.currentState?.validate() ?? false;
+                  final bool isTextValid = _profileNameFormKey.currentState?.validate() ?? false;
 
                   if (isTextValid) {
                     // Create the profile directory for the new profile
@@ -167,10 +163,8 @@ class _ProfilesPageState extends State<ProfilesPage> {
                     });
 
                     // Add the modified profile list to persistence
-                    final profileNamesToStringList =
-                        profiles.map((e) => e.label).toList();
-                    SharedPrefsUtil.putStringList(
-                        'profiles', profileNamesToStringList);
+                    final profileNamesToStringList = profiles.map((e) => e.label).toList();
+                    SharedPrefsUtil.putStringList('profiles', profileNamesToStringList);
 
                     Navigator.pop(context);
                   }
@@ -209,9 +203,7 @@ class _ProfilesPageState extends State<ProfilesPage> {
               Navigator.pop(context);
             },
             style: TextButton.styleFrom(
-              foregroundColor: ThemeService().isDarkTheme()
-                  ? AppColors.light
-                  : AppColors.dark,
+              foregroundColor: ThemeService().isDarkTheme() ? AppColors.light : AppColors.dark,
             ),
             child: Text('no'.tr),
           ),
@@ -232,10 +224,8 @@ class _ProfilesPageState extends State<ProfilesPage> {
               });
 
               // Update the profile list in persistence
-              final profileNamesToStringList =
-                  profiles.map((e) => e.label).toList();
-              SharedPrefsUtil.putStringList(
-                  'profiles', profileNamesToStringList);
+              final profileNamesToStringList = profiles.map((e) => e.label).toList();
+              SharedPrefsUtil.putStringList('profiles', profileNamesToStringList);
 
               // Select default if the deleted profile was selected
               if (index == groupValue) {
@@ -314,9 +304,7 @@ class _ProfilesPageState extends State<ProfilesPage> {
                           borderRadius: BorderRadius.circular(12),
                         ),
                         title: Text(
-                          profiles[index].isDefault
-                              ? 'default'.tr
-                              : profiles[index].label,
+                          profiles[index].isDefault ? 'default'.tr : profiles[index].label,
                         ),
                         secondary: profiles[index].isDefault
                             ? null
@@ -371,8 +359,7 @@ class _ProfilesPageState extends State<ProfilesPage> {
     }
     final bool isTodayRecorded = StorageUtils.checkFileExists(todaysVideoPath);
     if (isTodayRecorded) {
-      Utils.logInfo(
-          '$logTag$todaysVideoPath exists, setting today status to recorded.');
+      Utils.logInfo('$logTag$todaysVideoPath exists, setting today status to recorded.');
       dailyEntryController.updateDaily();
     } else {
       Utils.logInfo(

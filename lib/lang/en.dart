@@ -105,7 +105,7 @@ const Map<String, String> en = {
   'deleteProfile': 'Delete profile',
   'enterProfileName': 'Enter profile name',
   'newProfileTooltip':
-      'Creating a new profile will set up a seperate directory for videos created while that profile is selected',
+      'Creating a new profile will set up a separate directory for videos created while that profile is selected.',
   'deleteProfileTooltip':
       'All videos associated with this profile will also be permanently deleted. Are you sure to continue?',
   'profileNameCannotBeEmpty': 'Profile name cannot be empty',
@@ -176,10 +176,12 @@ const Map<String, String> en = {
   'myMovies': 'My movies',
   'noMoviesFound': 'No movies found',
   'play': 'Play',
-  'saveVideoTabOne': 'Date Properties',
+  'saveVideoTabOne': 'General',
   'saveVideoTabTwo': 'Location',
   'saveVideoTabThree': 'Subtitles',
   'useExperimentalPicker': 'Use experimental file picker',
   'useExperimentalPickerDescription':
       'Use the experimental file picker to select videos from the gallery. This allows previewing the video before selecting, faster loading times, and showing directly the recordings for the date selected. Disable it if you experience any issues or prefer the old method.',
+  'currentProfile': 'Current profile:',
+  'change': 'Change',
 };

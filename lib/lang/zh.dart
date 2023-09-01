@@ -155,10 +155,12 @@ const Map<String, String> zh = {
   'myMovies': '我的电影',
   'noMoviesFound': '未找到电影',
   'play': '播放',
-  'saveVideoTabOne': '日期属性',
+  'saveVideoTabOne': '一般',
   'saveVideoTabTwo': '位置',
   'saveVideoTabThree': '字幕',
   'useExperimentalPicker': '使用实验性的文件选择器',
   'useExperimentalPickerDescription':
       '使用实验性的文件选择器从相册中选择视频。这允许在选择前预览视频，加载时间更快，并直接显示所选日期的录像。如果您遇到任何问题或更喜欢旧方法，请禁用它。',
+  'currentProfile': '当前配置文件:',
+  'change': '更改',
 };

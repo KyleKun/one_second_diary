@@ -4,8 +4,7 @@ import '../utils/shared_preferences_util.dart';
 
 class RecordingSettingsController extends GetxController {
   Rx<bool> isTimerEnable = SharedPrefsUtil.getBool('timer')?.obs ?? false.obs;
-  Rx<int> recordingSeconds =
-      SharedPrefsUtil.getInt('recordingSeconds')?.obs ?? 1.obs;
+  Rx<int> recordingSeconds = SharedPrefsUtil.getInt('recordingSeconds')?.obs ?? 1.obs;
 
   // Edit video page properties
   Rx<String> dateColor = SharedPrefsUtil.getString('dateColor').obs;

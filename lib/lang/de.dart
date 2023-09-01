@@ -173,10 +173,12 @@ const Map<String, String> de = {
   'myMovies': 'Meine filme',
   'noMoviesFound': 'Keine Filme gefunden',
   'play': 'Abspielen',
-  'saveVideoTabOne': 'Dateneigenschaften',
+  'saveVideoTabOne': 'Allgemein',
   'saveVideoTabTwo': 'Standort',
   'saveVideoTabThree': 'Untertitel',
   'useExperimentalPicker': 'Experimentellen Dateiauswähler',
   'useExperimentalPickerDescription':
       'Verwenden Sie den experimentellen Dateiauswähler, um Videos aus der Galerie auszuwählen. Dies ermöglicht eine Vorschau des Videos vor der Auswahl, schnellere Ladezeiten und zeigt direkt die Aufnahmen für das ausgewählte Datum an. Deaktivieren Sie es, wenn Sie Probleme haben oder die alte Methode bevorzugen.',
+  'currentProfile': 'Aktuelles Profil:',
+  'change': 'Ändern',
 };

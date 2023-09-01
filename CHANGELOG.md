@@ -4,6 +4,7 @@
     - Filter support: past dates will show videos recorded on that date on the top
     - Preview support: videos can be fully watched before being selected
 - Added Czech localization
+- Added option to change profile in save video page
 - Improved save video page by separating options in tabs
 - Fixed calendar page resetting to current date after returning from save video page for past dates
 - Fixed videoplayer showing some landscape videos rotated in preview

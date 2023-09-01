@@ -174,10 +174,12 @@ const Map<String, String> id = {
   'myMovies': 'Film saya',
   'noMoviesFound': 'Tidak ada film yang ditemukan',
   'play': 'Putar',
-  'saveVideoTabOne': 'Properti Tanggal',
+  'saveVideoTabOne': 'Umum',
   'saveVideoTabTwo': 'Lokasi',
   'saveVideoTabThree': 'Subjudul',
   'useExperimentalPicker': 'Pemilih file eksperimental',
   'useExperimentalPickerDescription':
       'Gunakan pemilih file eksperimental untuk memilih video dari galeri. Ini memungkinkan Anda untuk melihat pratinjau video sebelum memilihnya, mempercepat waktu pemuatan, dan langsung menampilkan rekaman untuk tanggal yang dipilih. Nonaktifkan jika Anda mengalami masalah atau lebih suka metode lama.',
+  'currentProfile': 'Profil saat ini:',
+  'change': 'Ubah',
 };

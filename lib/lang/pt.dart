@@ -176,10 +176,12 @@ const Map<String, String> pt = {
   'myMovies': 'Meus filmes',
   'noMoviesFound': 'Nenhum filme encontrado',
   'play': 'Reproduzir',
-  'saveVideoTabOne': 'Propriedades da Data',
+  'saveVideoTabOne': 'Geral',
   'saveVideoTabTwo': 'Localização',
   'saveVideoTabThree': 'Legendas',
   'useExperimentalPicker': 'Selecionador de arquivos experimental',
   'useExperimentalPickerDescription':
       'Use o selecionador de arquivos experimental para selecionar vídeos da galeria. Isso permite a visualização do vídeo antes da seleção, tempos de carregamento mais rápidos e filtrar diretamente as gravações para a data selecionada. Desative se você tiver algum problema ou preferir o método antigo.',
+  'currentProfile': 'Perfil atual:',
+  'change': 'Alterar',
 };
