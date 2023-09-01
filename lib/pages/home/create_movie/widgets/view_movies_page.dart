@@ -9,7 +9,6 @@ import 'package:share_plus/share_plus.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 
 import '../../../../utils/constants.dart';
-import '../../../../utils/lazy_future_builder.dart';
 import '../../../../utils/theme.dart';
 import '../../../../utils/utils.dart';
 
@@ -22,16 +21,12 @@ class ViewMovies extends StatefulWidget {
 
 class _ViewMoviesState extends State<ViewMovies> {
   List<String>? allMovies;
-  Map<String, Uint8List?> thumbnails = {};
   final mediaStore = MediaStore();
 
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(milliseconds: 250), () {
-      allMovies = Utils.getAllMovies(fullPath: true);
-      setState(() {});
-    });
+    allMovies = Utils.getAllMovies(fullPath: true);
   }
 
   @override
@@ -58,40 +53,38 @@ class _ViewMoviesState extends State<ViewMovies> {
                   children: [
                     const SizedBox(height: 10),
                     Expanded(
-                      child: GridView.builder(
-                        physics: const BouncingScrollPhysics(),
-                        addAutomaticKeepAlives: true,
-                        cacheExtent: 99999,
-                        shrinkWrap: true,
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 1,
-                        ),
-                        itemCount: allMovies!.length,
-                        itemBuilder: (context, index) {
-                          final movie = allMovies![index];
-                          return LazyFutureBuilder(
-                            future: () => getThumbnail(movie),
-                            builder: (context, snapshot) {
-                              if (snapshot.connectionState ==
-                                  ConnectionState.waiting) {
-                                return const Center(
-                                  child: SizedBox(
-                                    height: 30,
-                                    width: 30,
-                                    child: Padding(
-                                      padding: EdgeInsets.all(4.0),
-                                      child: CircularProgressIndicator(),
-                                    ),
-                                  ),
-                                );
-                              }
+                      child: FutureBuilder(
+                        future: getThumbnails(),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState == ConnectionState.waiting) {
+                            return const Center(
+                              child: SizedBox(
+                                height: 30,
+                                width: 30,
+                                child: Padding(
+                                  padding: EdgeInsets.all(4.0),
+                                  child: CircularProgressIndicator(),
+                                ),
+                              ),
+                            );
+                          }
 
-                              if (snapshot.hasError) {
-                                return Text(
-                                  '${snapshot.error}',
-                                );
-                              }
+                          if (snapshot.hasError) {
+                            return Text(
+                              '${snapshot.error}',
+                            );
+                          }
+                          return GridView.builder(
+                            physics: const BouncingScrollPhysics(),
+                            addAutomaticKeepAlives: true,
+                            cacheExtent: 99999,
+                            shrinkWrap: true,
+                            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 1,
+                            ),
+                            itemCount: allMovies!.length,
+                            itemBuilder: (context, index) {
+                              final movie = allMovies![index];
                               return Padding(
                                 padding: const EdgeInsets.all(15.0),
                                 child: Column(
@@ -101,7 +94,7 @@ class _ViewMoviesState extends State<ViewMovies> {
                                         Align(
                                           alignment: Alignment.center,
                                           child: Image.memory(
-                                            snapshot.data as Uint8List,
+                                            snapshot.data![index] as Uint8List,
                                           ),
                                         ),
                                         Align(
@@ -154,8 +147,7 @@ class _ViewMoviesState extends State<ViewMovies> {
                                     ),
                                     const SizedBox(height: 5.0),
                                     Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceAround,
+                                      mainAxisAlignment: MainAxisAlignment.spaceAround,
                                       children: [
                                         _ViewMoviesPlayButton(
                                           filePath: movie,
@@ -198,9 +190,7 @@ class _ViewMoviesState extends State<ViewMovies> {
               Navigator.pop(context);
             },
             style: TextButton.styleFrom(
-              foregroundColor: ThemeService().isDarkTheme()
-                  ? AppColors.light
-                  : AppColors.dark,
+              foregroundColor: ThemeService().isDarkTheme() ? AppColors.light : AppColors.dark,
             ),
             child: Text('no'.tr),
           ),
@@ -232,19 +222,17 @@ class _ViewMoviesState extends State<ViewMovies> {
     );
   }
 
-  Future<Uint8List?> getThumbnail(String video) async {
-    if (thumbnails.containsKey(video)) {
-      return thumbnails[video];
+  Future<List<Uint8List?>> getThumbnails() async {
+    final thumbnails = <Uint8List?>[];
+    for (final video in allMovies!) {
+      final thumbnail = await VideoThumbnail.thumbnailData(
+        video: File(video).path,
+        imageFormat: ImageFormat.JPEG,
+        quality: 14,
+      );
+      thumbnails.add(thumbnail);
     }
-    final thumbnail = await VideoThumbnail.thumbnailData(
-      video: File(video).path,
-      imageFormat: ImageFormat.JPEG,
-      quality: 15,
-    );
-    setState(() {
-      thumbnails[video] = thumbnail;
-    });
-    return thumbnail;
+    return thumbnails;
   }
 }
 

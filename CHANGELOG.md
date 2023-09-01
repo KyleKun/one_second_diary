@@ -7,6 +7,7 @@
 - Improved save video page by separating options in tabs
 - Fixed calendar page resetting to current date after returning from save video page for past dates
 - Fixed videoplayer showing some landscape videos rotated in preview
+- Fixed movie deletion not updating the movie list correctly
 
 ## v1.5.1 - 02/2023
 - Improved movies viewer page ordering movies by most recent
