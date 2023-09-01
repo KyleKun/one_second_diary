@@ -17,8 +17,6 @@ jobs:
       with:
         flutter-version: "3.13.1"
         channel: 'stable'
-    - name: Get dependencies
-      run: flutter pub get
-    - name: Run tests
-      run: flutter analyze
+    - run: flutter pub get
+    - run: flutter analyze
     # - run: flutter format --set-exit-if-changed --dry-run .
