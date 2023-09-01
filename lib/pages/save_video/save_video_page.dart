@@ -518,7 +518,6 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
                         borderWidth: 2.5,
                         circleSize: 6.0,
                         circleSizeOnDrag: 9.0,
-                        sideTapSize: 21,
                         circlePaintColor: isDarkTheme ? Colors.white : AppColors.mainColor,
                         borderPaintColor:
                             isDarkTheme ? AppColors.light : AppColors.mainColor.withOpacity(0.75),
@@ -530,7 +529,7 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
                       durationTextStyle: isDarkTheme
                           ? const TextStyle(color: Colors.white)
                           : const TextStyle(color: Colors.black),
-                      maxVideoLength: const Duration(milliseconds: 10900),
+                      maxVideoLength: const Duration(milliseconds: 10000),
                       viewerWidth: MediaQuery.of(context).size.width,
                       onChangeStart: (value) => _videoStartValue = value,
                       onChangeEnd: (value) => _videoEndValue = value,

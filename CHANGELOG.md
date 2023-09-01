@@ -1,4 +1,5 @@
 ## v1.5.2 - 09/2023
+- Added quick trim shortcuts in save video page for a more precise editing
 - Added a new "lock orientation" button in the recording page
 - Added a new experimental file picker with:
     - Filter support: past dates will show videos recorded on that date on the top
