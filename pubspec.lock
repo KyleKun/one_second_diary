@@ -1081,18 +1081,18 @@ packages:
     dependency: "direct main"
     description:
       name: url_launcher
-      sha256: "38d8e783681bc342e92dc9799cbe4421d08c4d210a67ee9d61d0f7310491a465"
+      sha256: "47e208a6711459d813ba18af120d9663c20bdf6985d6ad39fe165d2538378d27"
       url: "https://pub.dev"
     source: hosted
-    version: "6.1.13"
+    version: "6.1.14"
   url_launcher_android:
     dependency: transitive
     description:
       name: url_launcher_android
-      sha256: ef7e34951ffa963fb7a65928deeb38d40fb3c5975baf93c1d631341ff7f2650a
+      sha256: b04af59516ab45762b2ca6da40fa830d72d0f6045cd97744450b73493fa76330
       url: "https://pub.dev"
     source: hosted
-    version: "6.0.39"
+    version: "6.1.0"
   url_launcher_ios:
     dependency: transitive
     description:
@@ -1121,10 +1121,10 @@ packages:
     dependency: transitive
     description:
       name: url_launcher_platform_interface
-      sha256: "4d0dae953f80dc06fa24c58d0f8381302139c22c2dad301417787ad96f5f73bd"
+      sha256: "95465b39f83bfe95fcb9d174829d6476216f2d548b79c38ab2506e0458787618"
       url: "https://pub.dev"
     source: hosted
-    version: "2.1.4"
+    version: "2.1.5"
   url_launcher_web:
     dependency: transitive
     description:
@@ -1210,10 +1210,10 @@ packages:
     description:
       path: "."
       ref: main
-      resolved-ref: a70c604c254e94b1ab215ece688cdf55b5332cae
+      resolved-ref: "22f42420fb4558e0f86fa7c589d7238e08b8f50b"
       url: "https://github.com/KyleKun/video_trimmer.git"
     source: git
-    version: "2.1.1"
+    version: "2.1.2"
   wakelock_plus:
     dependency: "direct main"
     description:

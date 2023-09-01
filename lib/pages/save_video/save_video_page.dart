@@ -522,8 +522,11 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
                         circlePaintColor: isDarkTheme ? Colors.white : AppColors.mainColor,
                         borderPaintColor:
                             isDarkTheme ? AppColors.light : AppColors.mainColor.withOpacity(0.75),
+                        quickCutBackgroundColor: isDarkTheme
+                            ? AppColors.light.withOpacity(0.15)
+                            : AppColors.dark.withOpacity(0.40),
                       ),
-                      durationStyle: DurationStyle.FORMAT_MM_SS,
+                      durationStyle: DurationStyle.FORMAT_SS_MS,
                       durationTextStyle: isDarkTheme
                           ? const TextStyle(color: Colors.white)
                           : const TextStyle(color: Colors.black),
@@ -671,8 +674,8 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
                           Flexible(
                             child: TextButton(
                               style: ButtonStyle(
-                                backgroundColor: MaterialStateProperty.all(AppColors.dark
-                                    .withOpacity(ThemeService().isDarkTheme() ? 1.0 : 0.66)),
+                                backgroundColor: MaterialStateProperty.all(
+                                    AppColors.dark.withOpacity(isDarkTheme ? 1.0 : 0.55)),
                                 shape: MaterialStateProperty.all(
                                   RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(40),
