@@ -11,13 +11,12 @@ jobs:
       matrix:
         os: [ubuntu-latest]
     steps:
-    # Set up Flutter and add it to the path.
     - name: Clone Flutter repository with stable channel
     - uses: actions/checkout@v3
     - uses: subosito/flutter-action@v2
-        with:
-          flutter-version: "3.13.1"
-          channel: 'stable'
+      with:
+        flutter-version: "3.13.1"
+        channel: 'stable'
     - name: Get dependencies
       run: flutter pub get
     - name: Run tests
