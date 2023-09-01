@@ -241,8 +241,9 @@ class _SaveButtonState extends State<SaveButton> {
 
     // If geotagging is enabled, we can allow the command to render the location text into the video
     if (isGeotaggingEnabled) {
+      final String locationTextFilePath = await Utils.writeLocationTxt(widget.userLocation);
       locOutput =
-          ', drawtext=$fontPath:text=\'${widget.userLocation}\':fontsize=$locTextSize:fontcolor=\'$parsedDateColor\':borderw=${widget.textOutlineWidth}:bordercolor=$parsedTextOutlineColor:x=$locPosX:y=$locPosY';
+          ', drawtext=textfile=$locationTextFilePath:fontfile=$fontPath:fontsize=$locTextSize:fontcolor=\'$parsedDateColor\':borderw=${widget.textOutlineWidth}:bordercolor=$parsedTextOutlineColor:x=$locPosX:y=$locPosY';
     }
 
     // Check if video was added from gallery and has an audio stream, adding one if not (screen recordings can be muted for example)
@@ -291,6 +292,9 @@ class _SaveButtonState extends State<SaveButton> {
     // Edit and save video
     final command =
         '-i "$videoPath" $audioStream $metadata -vf [in]$scale,drawtext="$fontPath:text=\'${widget.dateFormat}\':fontsize=$dateTextSize:fontcolor=\'$parsedDateColor\':borderw=${widget.textOutlineWidth}:bordercolor=$parsedTextOutlineColor:x=$datePosX:y=$datePosY$locOutput[out]" $trimCommand -r 30 -ac 1 -ar 48000 -c:a aac -b:a 256k -c:v libx264 -pix_fmt yuv420p -crf 20 -preset slow "$finalPath" -y';
+
+    Utils.logInfo('${logTag}FFmpeg full command: $command');
+
     await executeAsyncFFmpeg(
       command,
       completeCallback: (session) async {

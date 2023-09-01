@@ -7,6 +7,7 @@
 - Added Czech localization
 - Added option to change profile in save video page
 - Improved save video page by separating options in tabs
+- Fixed saving video error when locale has special characters
 - Fixed calendar page resetting to current date after returning from save video page for past dates
 - Fixed videoplayer showing some landscape videos rotated in preview
 - Fixed movie deletion not updating the movie list correctly

@@ -116,6 +116,30 @@ class Utils {
     }
   }
 
+  /// Write txt used to avoid drawtext not supporting special chars for location text
+  static Future<String> writeLocationTxt(String? location) async {
+    final io.Directory directory = await getApplicationDocumentsDirectory();
+    final String txtPath = '${directory.path}/location.txt';
+
+    logInfo('[Utils.writeLocationTxt()] - Writing location txt file to $txtPath');
+
+    // Delete old txt files
+    StorageUtils.deleteFile(txtPath);
+
+    final io.File file = io.File(txtPath);
+
+    // Line to be added to the txt
+    final String ffString = location?.isNotEmpty == true ? '$location\r' : '';
+
+    // Appending it to the txt
+    await file.writeAsString(ffString, mode: io.FileMode.append);
+    debugPrint('$location added to txt file');
+
+    logInfo('[Utils.writeLocationTxt()] - Text file written successfully!');
+
+    return txtPath;
+  }
+
   /// Write txt used by ffmpeg to concatenate videos when generating movie
   static Future<String> writeTxt(List<String> files) async {
     final io.Directory directory = await getApplicationDocumentsDirectory();
