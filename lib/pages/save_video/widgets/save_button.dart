@@ -203,10 +203,35 @@ class _SaveButtonState extends State<SaveButton> {
     Utils.logInfo('${logTag}Video will be saved to: $finalPath');
 
     // Check if video already exists and delete it if so (Edit daily feature)
+    bool shouldContinue = true;
     if (StorageUtils.checkFileExists(finalPath)) {
-      Utils.logInfo('${logTag}Video already exists, deleting it to perform edit.');
-      StorageUtils.deleteFile(finalPath);
+      await showDialog(
+        barrierDismissible: false,
+        context: Get.context!,
+        builder: (context) => CustomDialog(
+            isDoubleAction: true,
+            title: 'editQuestionTitle'.tr,
+            content: 'editQuestion'.tr,
+            actionText: 'yes'.tr,
+            actionColor: AppColors.green,
+            action: () {
+              Utils.logInfo('${logTag}Video already exists, deleting it to perform edit.');
+              StorageUtils.deleteFile(finalPath);
+              Get.back();
+            },
+            action2Text: 'no'.tr,
+            action2Color: Colors.red,
+            action2: () {
+              Utils.logInfo('${logTag}User chose not to edit video.');
+              shouldContinue = false;
+              Get.back();
+              Get.back();
+            }),
+      );
     }
+
+    // If the video already exists and the user chose not to edit it, we can stop the process here
+    if (!shouldContinue) return;
 
     // Checks to ensure special read/write permissions with storage access framework
     final hasSafDirPerms = await Saf.isPersistedPermissionDirectoryFor(finalPath) ?? false;
