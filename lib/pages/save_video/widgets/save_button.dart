@@ -194,9 +194,18 @@ class _SaveButtonState extends State<SaveButton> {
     final String videoPath = widget.videoPath;
 
     // Parses the color code to a hex code format which can be read by ffmpeg
-    final String parsedDateColor = '0x${widget.dateColor.value.toRadixString(16).substring(2)}';
-    final String parsedTextOutlineColor =
-        '0x${widget.textOutlineColor.value.toRadixString(16).substring(2)}';
+    String parsedDateColor = '';
+    String parsedTextOutlineColor = '';
+
+    try {
+      parsedDateColor = '0x${widget.dateColor.value.toRadixString(16).substring(2)}';
+      parsedTextOutlineColor = '0x${widget.textOutlineColor.value.toRadixString(16).substring(2)}';
+    } catch (e) {
+      Utils.logError(logTag + e.toString());
+      Utils.logInfo('Error parsing colors, applying default white.');
+      parsedDateColor = '0xffffff';
+      parsedTextOutlineColor = '0x000000';
+    }
 
     // Path to save the final video
     final String finalPath = getVideoOutputPath();
