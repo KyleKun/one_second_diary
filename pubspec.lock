@@ -1210,10 +1210,10 @@ packages:
     description:
       path: "."
       ref: main
-      resolved-ref: "22f42420fb4558e0f86fa7c589d7238e08b8f50b"
+      resolved-ref: "523b8a400f034adb470300c42d5c2e963a757052"
       url: "https://github.com/KyleKun/video_trimmer.git"
     source: git
-    version: "2.1.2"
+    version: "2.1.3"
   wakelock_plus:
     dependency: "direct main"
     description:
