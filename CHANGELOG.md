@@ -13,6 +13,7 @@
 - Fixed saving video error when color parsing fails
 - Fixed calendar page resetting to current date after returning from save video page for past dates
 - Fixed videoplayer showing some landscape videos rotated in preview
+- Fixed movie creation that includes videos from before v1.5
 - Fixed movie deletion not updating the movie list correctly
 
 ## v1.5.1 - 02/2023

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:ffmpeg_kit_flutter_full_gpl/return_code.dart';
 import 'package:flutter/material.dart';
@@ -45,6 +46,7 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
 
   void _createMovie() async {
     WakelockPlus.enable();
+    final List<String> copiesToDelete = [];
 
     setState(() {
       isProcessing = true;
@@ -109,8 +111,6 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
         String videosFolder = SharedPrefsUtil.getString('appPath');
         if (currentProfileName.isNotEmpty) {
           videosFolder = '${videosFolder}Profiles/$currentProfileName/';
-        } else {
-          videosFolder = '$videosFolder';
         }
 
         Utils.logInfo('${logTag}Base videos folder: $videosFolder');
@@ -119,10 +119,17 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
         final String dummySubtitles = await Utils.writeSrt('', 0);
 
         // Start checking all videos
+        int currentIndex = 0;
         for (String video in selectedVideos) {
+          currentIndex++;
           bool isV1point5 = true;
           final String currentVideo = '$videosFolder$video';
-          final String tempVideo = '${currentVideo.split('.mp4').first}_temp.mp4';
+
+          // I hate MediaStore
+          final String randomNumber1 = Random().nextInt(1000000).toString();
+          final String randomNumber2 = Random().nextInt(1000000).toString();
+          final String tempVideo1 = '${currentVideo.split('.mp4').first}_$randomNumber1.mp4';
+          final String tempVideo2 = '${currentVideo.split('.mp4').first}_$randomNumber2.mp4';
 
           // TODO(KyleKun): this (in special) will need a good refactor for next version
           // Check if video was recorded before v1.5 so we can process what is needed
@@ -146,17 +153,23 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
           });
 
           // Make sure all selected videos have a subtitles and audio stream before creating movie, and finally check their resolution, resizes if necessary.
+          // To avoid asking permission for every single video, we make a copy and leave the original untouched
           if (!isV1point5) {
+            // Replace the entry in the list with the processed copy
+            final copyVideoName =
+                '${selectedVideos[selectedVideos.indexOf(video)].split('.mp4').first}_$randomNumber1.mp4';
+            selectedVideos[selectedVideos.indexOf(video)] = copyVideoName;
+            copiesToDelete.add(tempVideo1);
+
             // Make sure it is 1080p, h264
             // Also set the framerate to 30 and copy all the streams
             await executeFFmpeg(
-                    '-i "$currentVideo" -vf "scale=1920:1080" -r 30 -map 0 -c:v libx264 -c:a copy -c:s copy -crf 20 -preset slow "$tempVideo" -y')
+                    '-i "$currentVideo" -vf "scale=1920:1080" -r 30 -map 0 -c:v libx264 -c:a copy -c:s copy -crf 20 -preset slow "$tempVideo1" -y')
                 .then((session) async {
               final returnCode = await session.getReturnCode();
               if (ReturnCode.isSuccess(returnCode)) {
-                StorageUtils.deleteFile(currentVideo);
-                StorageUtils.renameFile(tempVideo, currentVideo);
-                Utils.logInfo('${logTag}Converted $currentVideo to 1080p, h264');
+                Utils.logInfo(
+                    '${logTag}Copied $currentVideo to $tempVideo1 and converted it to 1080p, h264');
               } else {
                 final sessionLog = await session.getLogsAsString();
                 Utils.logError('${logTag}Error converting $currentVideo to 1080p, h264');
@@ -164,42 +177,42 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
               }
             });
 
-            Utils.logInfo('${logTag}Checking streams for $currentVideo');
+            Utils.logInfo('${logTag}Checking streams for $tempVideo1');
             bool hasSubtitles = false;
             bool hasAudio = false;
 
             // Streams check
             await executeFFprobe(
-                    '-v quiet -print_format json -show_format -show_streams "$currentVideo"')
+                    '-v quiet -print_format json -show_format -show_streams "$tempVideo1"')
                 .then((session) async {
               final returnCode = await session.getReturnCode();
               if (ReturnCode.isSuccess(returnCode)) {
                 final sessionLog = await session.getOutput();
                 if (sessionLog == null) return;
                 final List<dynamic> streams = jsonDecode(sessionLog)['streams'];
-                debugPrint('${logTag}Streams info for $currentVideo --> $sessionLog');
+                debugPrint('${logTag}Streams info for $tempVideo1 --> $sessionLog');
                 for (var stream in streams) {
                   if (stream['codec_type'] == 'audio') {
-                    Utils.logWarning('$logTag$currentVideo already has audio!');
+                    Utils.logWarning('$logTag$tempVideo1 already has audio!');
                     // Make sure the audio stream is mono
                     await executeFFmpeg(
-                            '-i "$currentVideo" -map 0 -c:v copy -c:a aac -ac 1 -ar 48000 -b:a 256k -c:s copy "$tempVideo" -y')
+                            '-i "$tempVideo1" -map 0 -c:v copy -c:a aac -ac 1 -ar 48000 -b:a 256k -c:s copy "$tempVideo2" -y')
                         .then((session) async {
                       final returnCode = await session.getReturnCode();
                       if (ReturnCode.isSuccess(returnCode)) {
-                        StorageUtils.deleteFile(currentVideo);
-                        StorageUtils.renameFile(tempVideo, currentVideo);
+                        StorageUtils.deleteFile(tempVideo1);
+                        StorageUtils.renameFile(tempVideo2, tempVideo1);
                         Utils.logInfo('${logTag}Made sure $currentVideo is mono');
                       } else {
                         final sessionLog = await session.getLogsAsString();
-                        Utils.logError('${logTag}Error converting $currentVideo to mono audio');
+                        Utils.logError('${logTag}Error converting $tempVideo1 to mono audio');
                         Utils.logError('${logTag}Error: $sessionLog');
                       }
                     });
                     hasAudio = true;
                   }
                   if (stream['codec_type'] == 'subtitle') {
-                    Utils.logWarning('$logTag$currentVideo already has subtitles!');
+                    Utils.logWarning('$logTag$tempVideo1 already has subtitles!');
                     hasSubtitles = true;
                   }
                 }
@@ -208,21 +221,21 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
 
             // Add audio stream if necessary
             if (!hasAudio) {
-              Utils.logInfo('${logTag}No audio stream for $currentVideo, adding one...');
+              Utils.logInfo('${logTag}No audio stream for $tempVideo1, adding one...');
 
               // Creates an empty audio stream that matches video duration
               // Set the audio bitrate to 256k and sample rate to 48k (aac codec)
               final command =
-                  '-i "$currentVideo" -f lavfi -i anullsrc=channel_layout=mono:sample_rate=48000 -shortest -b:a 256k -c:v copy -c:s copy -c:a aac "$tempVideo" -y';
+                  '-i "$tempVideo1" -f lavfi -i anullsrc=channel_layout=mono:sample_rate=48000 -shortest -b:a 256k -c:v copy -c:s copy -c:a aac "$tempVideo2" -y';
               await executeFFmpeg(command).then((session) async {
                 final returnCode = await session.getReturnCode();
                 if (ReturnCode.isSuccess(returnCode)) {
-                  StorageUtils.deleteFile(currentVideo);
-                  StorageUtils.renameFile(tempVideo, currentVideo);
-                  Utils.logInfo('${logTag}Added empty audio stream to $currentVideo');
+                  StorageUtils.deleteFile(tempVideo1);
+                  StorageUtils.renameFile(tempVideo2, tempVideo1);
+                  Utils.logInfo('${logTag}Added empty audio stream to $tempVideo1');
                 } else {
                   final sessionLog = await session.getLogsAsString();
-                  Utils.logError('${logTag}Error adding audio stream to $currentVideo');
+                  Utils.logError('${logTag}Error adding audio stream to $tempVideo1');
                   Utils.logError('${logTag}Error: $sessionLog');
                 }
               });
@@ -230,18 +243,18 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
 
             // Add subtitles stream if necessary
             if (!hasSubtitles) {
-              Utils.logInfo('${logTag}No subtitles stream for $currentVideo, adding one...');
+              Utils.logInfo('${logTag}No subtitles stream for $tempVideo1, adding one...');
               final command =
-                  '-i "$currentVideo" -i $dummySubtitles -c copy -c:s mov_text "$tempVideo" -y';
+                  '-i "$tempVideo1" -i $dummySubtitles -c copy -c:s mov_text "$tempVideo2" -y';
               await executeFFmpeg(command).then((session) async {
                 final returnCode = await session.getReturnCode();
                 if (ReturnCode.isSuccess(returnCode)) {
-                  StorageUtils.deleteFile(currentVideo);
-                  StorageUtils.renameFile(tempVideo, currentVideo);
-                  Utils.logInfo('${logTag}Added empty subtitles stream to $currentVideo');
+                  StorageUtils.deleteFile(tempVideo1);
+                  StorageUtils.renameFile(tempVideo2, tempVideo1);
+                  Utils.logInfo('${logTag}Added empty subtitles stream to $tempVideo1');
                 } else {
                   final sessionLog = await session.getLogsAsString();
-                  Utils.logError('${logTag}Error adding subtitles stream to $currentVideo');
+                  Utils.logError('${logTag}Error adding subtitles stream to $tempVideo1');
                   Utils.logError('${logTag}Error: $sessionLog');
                 }
               });
@@ -249,16 +262,16 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
 
             // Add artist metadata to avoid redoing all that in this video in the future since it was already processed
             await executeFFmpeg(
-                    '-i "$currentVideo" -metadata artist="${Constants.artist}" -metadata album="Default" -metadata comment="origin=osd_recording_old" -c:v copy -c:a copy -c:s copy "$tempVideo" -y')
+                    '-i "$tempVideo1" -metadata artist="${Constants.artist}" -metadata album="Default" -metadata comment="origin=osd_recording_old" -c:v copy -c:a copy -c:s copy "$tempVideo2" -y')
                 .then((session) async {
               final returnCode = await session.getReturnCode();
               if (ReturnCode.isSuccess(returnCode)) {
-                StorageUtils.deleteFile(currentVideo);
-                StorageUtils.renameFile(tempVideo, currentVideo);
-                Utils.logInfo('${logTag}Added artist metadata to $currentVideo');
+                StorageUtils.deleteFile(tempVideo1);
+                StorageUtils.renameFile(tempVideo2, tempVideo1);
+                Utils.logInfo('${logTag}Added artist metadata to $tempVideo1');
               } else {
                 final sessionLog = await session.getLogsAsString();
-                Utils.logError('${logTag}Error adding artist metadata to $currentVideo');
+                Utils.logError('${logTag}Error adding artist metadata to $tempVideo1');
                 Utils.logError('${logTag}Error: $sessionLog');
               }
             });
@@ -266,7 +279,7 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
 
           if (mounted) {
             setState(() {
-              progress = '${selectedVideos.indexOf(video) + 1} / ${selectedVideos.length}';
+              progress = '$currentIndex / ${selectedVideos.length}';
             });
           } else {
             Utils.logWarning('${logTag}Aborted movie creation!');
@@ -361,6 +374,11 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
       );
     } finally {
       WakelockPlus.disable();
+      Utils.logInfo('Deleting temp files... : $copiesToDelete');
+      copiesToDelete.forEach((copy) {
+        StorageUtils.deleteFile(copy);
+      });
+
       setState(() {
         isProcessing = false;
       });

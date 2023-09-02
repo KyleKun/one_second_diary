@@ -19,8 +19,7 @@ class StorageUtils {
   /// Create application folder in internal storage
   static Future<void> createFolder() async {
     // Set internal appDirectoryPath
-    final io.Directory internalDirectoryPath =
-        await getApplicationDocumentsDirectory();
+    final io.Directory internalDirectoryPath = await getApplicationDocumentsDirectory();
     SharedPrefsUtil.putString(
       'internalDirectoryPath',
       internalDirectoryPath.path,
@@ -97,24 +96,20 @@ class StorageUtils {
       }
 
       // Migrate old videos to new folder inside DCIM if needed
-      final io.Directory oldAppFolder = io.Directory(
-          SharedPrefsUtil.getString('appPath')
-              .replaceFirst('DCIM/OneSecondDiary/', 'OneSecondDiary/'));
-      final io.Directory oldMoviesFolder = io.Directory(
-          SharedPrefsUtil.getString('moviesPath')
-              .replaceFirst('DCIM/OneSecondDiary/Movies/', 'OSD-Movies/'));
+      final io.Directory oldAppFolder = io.Directory(SharedPrefsUtil.getString('appPath')
+          .replaceFirst('DCIM/OneSecondDiary/', 'OneSecondDiary/'));
+      final io.Directory oldMoviesFolder = io.Directory(SharedPrefsUtil.getString('moviesPath')
+          .replaceFirst('DCIM/OneSecondDiary/Movies/', 'OSD-Movies/'));
 
       if (await oldAppFolder.exists()) {
         // Map all files inside old folders
-        final oldFolderFiles =
-            await oldAppFolder.list(recursive: true).toList();
+        final oldFolderFiles = await oldAppFolder.list(recursive: true).toList();
 
         // Remove files that contain Logs in path
         oldFolderFiles.removeWhere((file) => file.path.contains('Logs'));
 
         // Avoid repeating it if the migration was already done and user forgot to delete old folder
-        final newFolderFiles =
-            await appDirectory.list(recursive: true).toList();
+        final newFolderFiles = await appDirectory.list(recursive: true).toList();
         List<String> alreadyMigratedFiles = [];
         if (newFolderFiles.length >= oldFolderFiles.length) {
           Utils.logInfo(
@@ -122,8 +117,7 @@ class StorageUtils {
           );
           return;
         } else if (newFolderFiles.isNotEmpty) {
-          alreadyMigratedFiles =
-              newFolderFiles.map((file) => file.path.split('/').last).toList();
+          alreadyMigratedFiles = newFolderFiles.map((file) => file.path.split('/').last).toList();
           debugPrint('Already migrated files: $alreadyMigratedFiles');
         }
 
@@ -189,18 +183,15 @@ class StorageUtils {
               // Create the profile folder
               final folderName = pathSplitted[pathSplitted.length - 2];
               MediaStore.appFolder = 'OneSecondDiary/Profiles/$folderName';
-              final tempFolderPath =
-                  '${internalDirectoryPath.path}/Profiles/$folderName/';
+              final tempFolderPath = '${internalDirectoryPath.path}/Profiles/$folderName/';
               await io.Directory(tempFolderPath).create(recursive: true);
-              final newFolderPath =
-                  '${SharedPrefsUtil.getString('appPath')}Profiles/$folderName/';
+              final newFolderPath = '${SharedPrefsUtil.getString('appPath')}Profiles/$folderName/';
               await io.Directory(newFolderPath).create(recursive: true);
               debugPrint('Created profile folder $newFolderPath');
 
               // Update shared prefs
               // Get profiles from persistence
-              List<String>? storedProfiles =
-                  SharedPrefsUtil.getStringList('profiles');
+              List<String>? storedProfiles = SharedPrefsUtil.getStringList('profiles');
               if (storedProfiles == null || storedProfiles.isEmpty) {
                 // Add the default profile to storage
                 storedProfiles = ['Default'];
@@ -240,8 +231,7 @@ class StorageUtils {
                 !alreadyMigratedFiles.contains(file.path.split('/').last)) {
               MediaStore.appFolder = 'OneSecondDiary';
               validFiles++;
-              final copyFile =
-                  '${internalDirectoryPath.path}/${file.path.split('/').last}';
+              final copyFile = '${internalDirectoryPath.path}/${file.path.split('/').last}';
               await file.copy(copyFile);
               await mediaStorePlugin
                   .saveFile(
@@ -267,18 +257,15 @@ class StorageUtils {
           // If copying videos succeeded, then delete old folder and proceed to movies migration
           if (validFiles == copiedFiles) {
             if (await oldMoviesFolder.exists()) {
-              final oldMoviesFolderFiles =
-                  await oldMoviesFolder.list(recursive: true).toList();
+              final oldMoviesFolderFiles = await oldMoviesFolder.list(recursive: true).toList();
               debugPrint(oldMoviesFolderFiles.toString());
               // Copy all movies files to new folder
               await Future.forEach(oldMoviesFolderFiles, (file) async {
                 if (file is io.File && file.path.endsWith('.mp4')) {
                   MediaStore.appFolder = 'OneSecondDiary/Movies';
-                  final tempFolderPath =
-                      '${internalDirectoryPath.path}/Movies/';
+                  final tempFolderPath = '${internalDirectoryPath.path}/Movies/';
                   await io.Directory(tempFolderPath).create(recursive: true);
-                  final copyFile =
-                      '$tempFolderPath${file.path.split('/').last}';
+                  final copyFile = '$tempFolderPath${file.path.split('/').last}';
                   await file.copy(copyFile);
                   await mediaStorePlugin
                       .saveFile(
@@ -398,8 +385,7 @@ class StorageUtils {
   // Create log file in internal storage
   static Future<void> cleanOldLogFiles() async {
     try {
-      final String logsPath =
-          '${SharedPrefsUtil.getString('internalDirectoryPath')}/Logs';
+      final String logsPath = '${SharedPrefsUtil.getString('internalDirectoryPath')}/Logs';
 
       final io.Directory logsDirectory = io.Directory(logsPath);
 
@@ -414,8 +400,7 @@ class StorageUtils {
           final int difference = today.difference(fileDate).inDays;
 
           if (difference > 7) {
-            Utils.logInfo(
-                '[StorageUtils] - ' + 'Deleted old log file: ${file.path}');
+            Utils.logInfo('[StorageUtils] - ' + 'Deleted old log file: ${file.path}');
             await io.File(file.path).delete();
           }
         }
@@ -459,7 +444,6 @@ class StorageUtils {
     }
   }
 
-  /// Rename file
   static void renameFile(String oldPath, String newPath) {
     if (checkFileExists(oldPath)) {
       try {
@@ -470,15 +454,17 @@ class StorageUtils {
     }
   }
 
-  /// Used to check if daily video was already recorded
   static bool checkFileExists(String filePath) {
     return io.File(filePath).existsSync();
   }
 
-  /// Delete old video if user is editing daily entry
   static void deleteFile(String filePath) {
     if (checkFileExists(filePath)) {
-      io.File(filePath).deleteSync(recursive: true);
+      try {
+        io.File(filePath).deleteSync(recursive: true);
+      } catch (e) {
+        Utils.logError('[StorageUtils] - $e');
+      }
     }
   }
 }
