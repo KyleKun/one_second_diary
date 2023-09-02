@@ -868,10 +868,10 @@ packages:
     dependency: "direct main"
     description:
       name: rive
-      sha256: b7780ebdc56320da1f02a39a18f050a6079cad60c0cb92003c0801cc4eec6673
+      sha256: "0ed73d33bb501da49001510e456789c279ffa017370748bcde846693645640e0"
       url: "https://pub.dev"
     source: hosted
-    version: "0.11.14"
+    version: "0.11.15"
   rive_common:
     dependency: transitive
     description:
@@ -1210,10 +1210,10 @@ packages:
     description:
       path: "."
       ref: main
-      resolved-ref: "309c0a622a38672ad221264573c772f1ac924c8a"
+      resolved-ref: "3311af83faf02aa4eb87ebc6b02fb6c682256e3a"
       url: "https://github.com/KyleKun/video_trimmer.git"
     source: git
-    version: "2.1.4"
+    version: "2.1.6"
   wakelock_plus:
     dependency: "direct main"
     description:

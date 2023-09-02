@@ -258,7 +258,7 @@ class _RecordingPageState extends State<RecordingPage>
                       Text('seconds'.tr),
                       Obx(
                         () => Text(
-                          '${_recordingSettingsController.recordingSeconds}',
+                          '~ ${_recordingSettingsController.recordingSeconds}',
                         ),
                       ),
                       Obx(
@@ -266,7 +266,7 @@ class _RecordingPageState extends State<RecordingPage>
                           width: 150,
                           child: Slider(
                             value: _recordingSettingsController.recordingSeconds.value.toDouble(),
-                            min: 1,
+                            min: 2,
                             max: 10,
                             activeColor: AppColors.mainColor.withOpacity(0.9),
                             inactiveColor: AppColors.mainColor.withOpacity(0.2),
@@ -358,7 +358,7 @@ class _RecordingPageState extends State<RecordingPage>
                         ? '10'
                         : '0${stopwatch.elapsed.inSeconds}';
           });
-        if (stopwatch.elapsed.inMilliseconds >= milliseconds + 800) {
+        if (stopwatch.elapsed.inMilliseconds >= milliseconds + 1000) {
           final file = await _cameraController.stopVideoRecording();
           Utils.logInfo('${logTag}Video recorded to ${file.path}');
           setState(() {
