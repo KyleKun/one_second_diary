@@ -296,8 +296,7 @@ class _SaveButtonState extends State<SaveButton> {
         '-metadata artist="${Constants.artist}" -metadata album="$currentProfileName" -metadata comment="origin=$origin"';
 
     // Trim video to the selected range
-    final trimCommand =
-        '-ss ${widget.videoStartInMilliseconds}ms -to ${widget.videoEndInMilliseconds}ms';
+    final trim = '-ss ${widget.videoStartInMilliseconds}ms -to ${widget.videoEndInMilliseconds}ms';
 
     // Scale video to 1920x1080 and add black padding if needed
     const scale =
@@ -316,7 +315,7 @@ class _SaveButtonState extends State<SaveButton> {
 
     // Full command to edit and save video
     final command =
-        '-i "$subtitlesPath" -i "$videoPath" $audioStream $metadata -vf [in]$scale$date$locale[out]" $trimCommand $defaultEditSettings $subtitles "$finalPath" -y';
+        '-i "$subtitlesPath" -i "$videoPath" $audioStream $metadata -vf [in]$scale$date$locale[out]" $trim $defaultEditSettings $subtitles "$finalPath" -y';
 
     Utils.logInfo('${logTag}FFmpeg full command: $command');
 
