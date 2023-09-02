@@ -12,25 +12,27 @@ import 'utils.dart';
 
 class CustomDialog extends StatefulWidget {
   CustomDialog({
-    required this.isDoubleAction,
     required this.title,
     required this.content,
-    required this.actionText,
-    required this.actionColor,
-    required this.action,
+    this.isDoubleAction,
+    this.actionText,
+    this.actionColor,
+    this.action,
     this.sendLogs = false,
+    this.isContact = false,
     this.action2Text,
     this.action2Color,
     this.action2,
   });
 
-  final bool isDoubleAction;
   final String title;
   final String content;
-  final String actionText;
-  final Color actionColor;
+  final bool? isDoubleAction;
+  final String? actionText;
+  final Color? actionColor;
   final void Function()? action;
   final bool sendLogs;
+  final bool isContact;
   final String? action2Text;
   final Color? action2Color;
   final void Function()? action2;
@@ -89,7 +91,18 @@ class _CustomDialogState extends State<CustomDialog> {
       title: Text(widget.title),
       content: Text(widget.content),
       actions: <Widget>[
-        if (widget.sendLogs) ...{
+        if (widget.isContact) ...{
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(backgroundColor: AppColors.green),
+            child: Text('yes'.tr),
+            onPressed: () => zipAndSendLogs(),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+            child: Text('no'.tr),
+            onPressed: () => Utils.launchURL(Constants.email),
+          ),
+        } else if (widget.sendLogs) ...{
           ElevatedButton(
             style: ElevatedButton.styleFrom(backgroundColor: AppColors.purple),
             child: _isSending
@@ -105,15 +118,13 @@ class _CustomDialogState extends State<CustomDialog> {
           ),
         } else ...{
           ElevatedButton(
-            style:
-                ElevatedButton.styleFrom(backgroundColor: widget.actionColor),
-            child: Text(widget.actionText),
+            style: ElevatedButton.styleFrom(backgroundColor: widget.actionColor),
+            child: Text(widget.actionText!),
             onPressed: widget.action,
           ),
-          if (widget.isDoubleAction)
+          if (widget.isDoubleAction == true)
             ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                  backgroundColor: widget.action2Color),
+              style: ElevatedButton.styleFrom(backgroundColor: widget.action2Color),
               child: Text(widget.action2Text!),
               onPressed: widget.action2,
             )

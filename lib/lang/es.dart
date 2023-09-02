@@ -184,4 +184,7 @@ const Map<String, String> es = {
       'Use el selector de archivos experimental para seleccionar videos de la galería. Esto permite previsualizar el video antes de seleccionarlo, tiempos de carga más rápidos y mostrar directamente las grabaciones para la fecha seleccionada. Desactívelo si experimenta algún problema o prefiere el método antiguo.',
   'currentProfile': 'Perfil actual:',
   'change': 'Cambiar',
+  'sendLogs': '¿Enviar registros?',
+  'sendLogsDescription':
+      'Si te enfrentas a un problema, por favor toca "Sí" para incluir los registros que me ayudarán a encontrar el problema. Si es una sugerencia de función u otro tema, por favor toca "No".',
 };

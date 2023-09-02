@@ -6,6 +6,7 @@
     - Preview support: videos can be fully watched before being selected
 - Added Czech localization
 - Added option to change profile in save video page
+- Added option to send logs when contacting developer
 - Improved save video page by separating options in tabs
 - Fixed saving video error when locale has special characters
 - Fixed saving video error when color parsing fails

@@ -63,16 +63,14 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
         Utils.logInfo(
             '${logTag}Creating movie with the following custom selected videos: $selectedVideos');
       } else {
-        selectedVideos =
-            Utils.getSelectedVideosFromStorage(selectedExportDateRange!);
+        selectedVideos = Utils.getSelectedVideosFromStorage(selectedExportDateRange!);
         Utils.logInfo(
             '${logTag}Creating movie in range ${selectedExportDateRange.toString()} with the following videos: $selectedVideos');
       }
 
       // Needs more than 1 video to create movie
       if (selectedVideos.length < 2) {
-        Utils.logWarning(
-            '${logTag}Insufficient videos to create movie. Videos: $selectedVideos');
+        Utils.logWarning('${logTag}Insufficient videos to create movie. Videos: $selectedVideos');
         showDialog(
           barrierDismissible: false,
           context: Get.context!,
@@ -124,8 +122,7 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
         for (String video in selectedVideos) {
           bool isV1point5 = true;
           final String currentVideo = '$videosFolder$video';
-          final String tempVideo =
-              '${currentVideo.split('.mp4').first}_temp.mp4';
+          final String tempVideo = '${currentVideo.split('.mp4').first}_temp.mp4';
 
           // TODO(KyleKun): this (in special) will need a good refactor for next version
           // Check if video was recorded before v1.5 so we can process what is needed
@@ -138,14 +135,12 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
               if (sessionLog == null ||
                   sessionLog.isEmpty ||
                   !sessionLog.contains(Constants.artist)) {
-                Utils.logWarning(
-                    '$logTag$currentVideo was not recorded on v1.5. Processing it...');
+                Utils.logWarning('$logTag$currentVideo was not recorded on v1.5. Processing it...');
                 isV1point5 = false;
               }
             } else {
               final sessionLog = await session.getLogsAsString();
-              Utils.logError(
-                  '${logTag}Error checking if $currentVideo was recorded on v1.5');
+              Utils.logError('${logTag}Error checking if $currentVideo was recorded on v1.5');
               Utils.logError('${logTag}Error: $sessionLog');
             }
           });
@@ -161,12 +156,10 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
               if (ReturnCode.isSuccess(returnCode)) {
                 StorageUtils.deleteFile(currentVideo);
                 StorageUtils.renameFile(tempVideo, currentVideo);
-                Utils.logInfo(
-                    '${logTag}Converted $currentVideo to 1080p, h264');
+                Utils.logInfo('${logTag}Converted $currentVideo to 1080p, h264');
               } else {
                 final sessionLog = await session.getLogsAsString();
-                Utils.logError(
-                    '${logTag}Error converting $currentVideo to 1080p, h264');
+                Utils.logError('${logTag}Error converting $currentVideo to 1080p, h264');
                 Utils.logError('${logTag}Error: $sessionLog');
               }
             });
@@ -184,8 +177,7 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
                 final sessionLog = await session.getOutput();
                 if (sessionLog == null) return;
                 final List<dynamic> streams = jsonDecode(sessionLog)['streams'];
-                debugPrint(
-                    '${logTag}Streams info for $currentVideo --> $sessionLog');
+                debugPrint('${logTag}Streams info for $currentVideo --> $sessionLog');
                 for (var stream in streams) {
                   if (stream['codec_type'] == 'audio') {
                     Utils.logWarning('$logTag$currentVideo already has audio!');
@@ -197,20 +189,17 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
                       if (ReturnCode.isSuccess(returnCode)) {
                         StorageUtils.deleteFile(currentVideo);
                         StorageUtils.renameFile(tempVideo, currentVideo);
-                        Utils.logInfo(
-                            '${logTag}Made sure $currentVideo is mono');
+                        Utils.logInfo('${logTag}Made sure $currentVideo is mono');
                       } else {
                         final sessionLog = await session.getLogsAsString();
-                        Utils.logError(
-                            '${logTag}Error converting $currentVideo to mono audio');
+                        Utils.logError('${logTag}Error converting $currentVideo to mono audio');
                         Utils.logError('${logTag}Error: $sessionLog');
                       }
                     });
                     hasAudio = true;
                   }
                   if (stream['codec_type'] == 'subtitle') {
-                    Utils.logWarning(
-                        '$logTag$currentVideo already has subtitles!');
+                    Utils.logWarning('$logTag$currentVideo already has subtitles!');
                     hasSubtitles = true;
                   }
                 }
@@ -219,8 +208,7 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
 
             // Add audio stream if necessary
             if (!hasAudio) {
-              Utils.logInfo(
-                  '${logTag}No audio stream for $currentVideo, adding one...');
+              Utils.logInfo('${logTag}No audio stream for $currentVideo, adding one...');
 
               // Creates an empty audio stream that matches video duration
               // Set the audio bitrate to 256k and sample rate to 48k (aac codec)
@@ -231,12 +219,10 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
                 if (ReturnCode.isSuccess(returnCode)) {
                   StorageUtils.deleteFile(currentVideo);
                   StorageUtils.renameFile(tempVideo, currentVideo);
-                  Utils.logInfo(
-                      '${logTag}Added empty audio stream to $currentVideo');
+                  Utils.logInfo('${logTag}Added empty audio stream to $currentVideo');
                 } else {
                   final sessionLog = await session.getLogsAsString();
-                  Utils.logError(
-                      '${logTag}Error adding audio stream to $currentVideo');
+                  Utils.logError('${logTag}Error adding audio stream to $currentVideo');
                   Utils.logError('${logTag}Error: $sessionLog');
                 }
               });
@@ -244,8 +230,7 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
 
             // Add subtitles stream if necessary
             if (!hasSubtitles) {
-              Utils.logInfo(
-                  '${logTag}No subtitles stream for $currentVideo, adding one...');
+              Utils.logInfo('${logTag}No subtitles stream for $currentVideo, adding one...');
               final command =
                   '-i "$currentVideo" -i $dummySubtitles -c copy -c:s mov_text "$tempVideo" -y';
               await executeFFmpeg(command).then((session) async {
@@ -253,12 +238,10 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
                 if (ReturnCode.isSuccess(returnCode)) {
                   StorageUtils.deleteFile(currentVideo);
                   StorageUtils.renameFile(tempVideo, currentVideo);
-                  Utils.logInfo(
-                      '${logTag}Added empty subtitles stream to $currentVideo');
+                  Utils.logInfo('${logTag}Added empty subtitles stream to $currentVideo');
                 } else {
                   final sessionLog = await session.getLogsAsString();
-                  Utils.logError(
-                      '${logTag}Error adding subtitles stream to $currentVideo');
+                  Utils.logError('${logTag}Error adding subtitles stream to $currentVideo');
                   Utils.logError('${logTag}Error: $sessionLog');
                 }
               });
@@ -272,12 +255,10 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
               if (ReturnCode.isSuccess(returnCode)) {
                 StorageUtils.deleteFile(currentVideo);
                 StorageUtils.renameFile(tempVideo, currentVideo);
-                Utils.logInfo(
-                    '${logTag}Added artist metadata to $currentVideo');
+                Utils.logInfo('${logTag}Added artist metadata to $currentVideo');
               } else {
                 final sessionLog = await session.getLogsAsString();
-                Utils.logError(
-                    '${logTag}Error adding artist metadata to $currentVideo');
+                Utils.logError('${logTag}Error adding artist metadata to $currentVideo');
                 Utils.logError('${logTag}Error: $sessionLog');
               }
             });
@@ -285,8 +266,7 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
 
           if (mounted) {
             setState(() {
-              progress =
-                  '${selectedVideos.indexOf(video) + 1} / ${selectedVideos.length}';
+              progress = '${selectedVideos.indexOf(video) + 1} / ${selectedVideos.length}';
             });
           } else {
             Utils.logWarning('${logTag}Aborted movie creation!');
@@ -297,8 +277,7 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
         }
 
         if (mounted) {
-          Utils.logInfo(
-              '${logTag}Finished checking videos... creating movie...');
+          Utils.logInfo('${logTag}Finished checking videos... creating movie...');
 
           final String today = DateFormatUtils.getToday();
 
@@ -313,8 +292,7 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
           });
 
           // Create movie by concatenating all videos
-          await executeFFmpeg(
-                  '-f concat -safe 0 -i $txtPath -r 30 -map 0 -c copy $outputPath -y')
+          await executeFFmpeg('-f concat -safe 0 -i $txtPath -r 30 -map 0 -c copy $outputPath -y')
               .then(
             (session) async {
               final returnCode = await session.getReturnCode();
@@ -346,8 +324,7 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
                 final sessionLog = await session.getAllLogsAsString();
                 final failureStackTrace = await session.getFailStackTrace();
                 Utils.logError('${logTag}Session log is: $sessionLog');
-                Utils.logError(
-                    '${logTag}Failure stacktrace: $failureStackTrace');
+                Utils.logError('${logTag}Failure stacktrace: $failureStackTrace');
 
                 showDialog(
                   barrierDismissible: false,
@@ -356,8 +333,7 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
                     isDoubleAction: false,
                     title: 'movieError'.tr,
                     sendLogs: true,
-                    content:
-                        '${'tryAgainMsg'.tr}\nCode error: ${session.getFailStackTrace()}',
+                    content: '${'tryAgainMsg'.tr}\nCode error: ${session.getFailStackTrace()}',
                     actionText: 'Ok',
                     actionColor: Colors.red,
                     action: () => Get.offAllNamed(Routes.HOME),
@@ -376,6 +352,7 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
         builder: (context) => CustomDialog(
           isDoubleAction: false,
           title: 'movieError'.tr,
+          sendLogs: true,
           content: '${'tryAgainMsg'.tr}\n\nError: ${e.toString()}',
           actionText: 'Ok',
           actionColor: Colors.red,

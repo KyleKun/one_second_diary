@@ -185,4 +185,7 @@ const Map<String, String> fr = {
       'Utilisez le sélecteur de fichiers expérimental pour sélectionner des vidéos depuis la galerie. Cela permet de prévisualiser la vidéo avant de la sélectionner, d\'accélérer les temps de chargement et d\'afficher directement les enregistrements pour la date sélectionnée. Désactivez-le si vous rencontrez des problèmes ou préférez l\'ancienne méthode.',
   'currentProfile': 'Profil actuel:',
   'change': 'Changer',
+  'sendLogs': 'Envoyer les journaux?',
+  'sendLogsDescription':
+      'Si vous rencontrez un problème, veuillez appuyer sur "Oui" pour inclure les journaux qui m\'aideront à trouver le problème. Si c\'est une suggestion de fonctionnalité ou un autre sujet, veuillez appuyer sur "Non".',
 };

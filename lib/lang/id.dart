@@ -182,4 +182,7 @@ const Map<String, String> id = {
       'Gunakan pemilih file eksperimental untuk memilih video dari galeri. Ini memungkinkan Anda untuk melihat pratinjau video sebelum memilihnya, mempercepat waktu pemuatan, dan langsung menampilkan rekaman untuk tanggal yang dipilih. Nonaktifkan jika Anda mengalami masalah atau lebih suka metode lama.',
   'currentProfile': 'Profil saat ini:',
   'change': 'Ubah',
+  'sendLogs': 'Kirim log?',
+  'sendLogsDescription':
+      'Jika Anda menghadapi masalah, silakan tekan "Ya" untuk menyertakan log yang akan membantu saya menemukan masalahnya. Jika ini adalah saran fitur atau topik lain, silakan tekan "Tidak".',
 };

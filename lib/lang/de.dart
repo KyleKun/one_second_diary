@@ -181,4 +181,7 @@ const Map<String, String> de = {
       'Verwenden Sie den experimentellen Dateiauswähler, um Videos aus der Galerie auszuwählen. Dies ermöglicht eine Vorschau des Videos vor der Auswahl, schnellere Ladezeiten und zeigt direkt die Aufnahmen für das ausgewählte Datum an. Deaktivieren Sie es, wenn Sie Probleme haben oder die alte Methode bevorzugen.',
   'currentProfile': 'Aktuelles Profil:',
   'change': 'Ändern',
+  'sendLogs': 'Protokolle senden?',
+  'sendLogsDescription':
+      'Wenn Sie auf ein Problem stoßen, tippen Sie bitte auf "Ja", um die Protokolle einzuschließen, die mir helfen, das Problem zu finden. Wenn es sich um einen Verbesserungsvorschlag oder ein anderes Thema handelt, tippen Sie bitte auf "Nein".',
 };

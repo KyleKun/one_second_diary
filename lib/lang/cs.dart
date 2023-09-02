@@ -184,4 +184,7 @@ const Map<String, String> cs = {
       'Pomocí experimentálního výběru souborů vyberte videa z galerie. To umožňuje náhled videa před výběrem, rychlejší načítání a přímé zobrazení nahrávek pro vybrané datum. Zakažte jej, pokud se setkáte s nějakými problémy nebo dáváte přednost staré metodě.',
   'currentProfile': 'Aktuální profil:',
   'change': 'Změnit',
+  'sendLogs': 'Odeslat záznamy?',
+  'sendLogsDescription':
+      'Pokud se potýkáte s problémem, klepněte prosím na "Ano", abyste zahrnuli záznamy, které mi pomohou problém najít. Pokud jde o návrh funkce nebo jiné téma, klepněte prosím na "Ne".',
 };

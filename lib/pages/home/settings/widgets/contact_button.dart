@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
-import '../../../../utils/constants.dart';
-import '../../../../utils/utils.dart';
+import '../../../../utils/custom_dialog.dart';
 
 class ContactButton extends StatelessWidget {
   const ContactButton({Key? key}) : super(key: key);
@@ -12,7 +10,17 @@ class ContactButton extends StatelessWidget {
     return Column(
       children: [
         InkWell(
-          onTap: () => Utils.launchURL(Constants.email),
+          onTap: () {
+            showDialog(
+              barrierDismissible: true,
+              context: Get.context!,
+              builder: (context) => CustomDialog(
+                title: 'sendLogs'.tr,
+                content: 'sendLogsDescription'.tr,
+                isContact: true,
+              ),
+            );
+          },
           child: Ink(
             child: Container(
               height: MediaQuery.of(context).size.height * 0.065,

@@ -184,4 +184,7 @@ const Map<String, String> en = {
       'Use the experimental file picker to select videos from the gallery. This allows previewing the video before selecting, faster loading times, and showing directly the recordings for the date selected. Disable it if you experience any issues or prefer the old method.',
   'currentProfile': 'Current profile:',
   'change': 'Change',
+  'sendLogs': 'Send logs?',
+  'sendLogsDescription':
+      'If you are facing an issue, please tap "Yes" to include the logs that will help me find the problem. If it\'s a feature suggestion or other topic, please tap "No".',
 };
