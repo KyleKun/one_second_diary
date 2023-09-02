@@ -8,6 +8,7 @@
 - Added option to change profile in save video page
 - Added option to send logs when contacting developer
 - Improved save video page by separating options in tabs
+- Improved video saving speed by removing one unnecessary ffmpeg call
 - Fixed saving video error when locale has special characters
 - Fixed saving video error when color parsing fails
 - Fixed calendar page resetting to current date after returning from save video page for past dates

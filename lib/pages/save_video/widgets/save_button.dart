@@ -187,7 +187,7 @@ class _SaveButtonState extends State<SaveButton> {
     const double dateTextSize = 40;
     const double locTextSize = 40;
 
-    String locOutput = '';
+    String locale = '';
 
     // Copies text font for ffmpeg to storage if it was not copied yet
     final String fontPath = await Utils.copyFontToStorage();
@@ -242,6 +242,10 @@ class _SaveButtonState extends State<SaveButton> {
     // If the video already exists and the user chose not to edit it, we can stop the process here
     if (!shouldContinue) return;
 
+    // Caches the default font to save texts in ffmpeg.
+    // The edit may fail unexpectedly in some devices if this is not done.
+    await FFmpegKitConfig.setFontDirectory(fontPath);
+
     // Checks to ensure special read/write permissions with storage access framework
     final hasSafDirPerms = await Saf.isPersistedPermissionDirectoryFor(finalPath) ?? false;
     if (hasSafDirPerms) {
@@ -251,7 +255,7 @@ class _SaveButtonState extends State<SaveButton> {
     // If geotagging is enabled, we can allow the command to render the location text into the video
     if (isGeotaggingEnabled) {
       final String locationTextFilePath = await Utils.writeLocationTxt(widget.userLocation);
-      locOutput =
+      locale =
           ', drawtext=textfile=$locationTextFilePath:fontfile=$fontPath:fontsize=$locTextSize:fontcolor=\'$parsedDateColor\':borderw=${widget.textOutlineWidth}:bordercolor=$parsedTextOutlineColor:x=$locPosX:y=$locPosY';
     }
 
@@ -287,47 +291,40 @@ class _SaveButtonState extends State<SaveButton> {
     }
     Utils.logInfo('${logTag}Subtitles file path: $subtitlesPath');
 
+    // Add metadata to know the version of the app it was made, profile it was saved to and the origin of the video
     final metadata =
         '-metadata artist="${Constants.artist}" -metadata album="$currentProfileName" -metadata comment="origin=$origin"';
+
+    // Trim video to the selected range
     final trimCommand =
         '-ss ${widget.videoStartInMilliseconds}ms -to ${widget.videoEndInMilliseconds}ms';
+
+    // Scale video to 1920x1080 and add black padding if needed
     const scale =
         'scale=1920:1080:force_original_aspect_ratio=decrease,pad=1920:1080:(ow-iw)/2:(oh-ih)/2:black';
 
-    // Caches the default font to save texts in ffmpeg.
-    // The edit may fail unexpectedly in some devices if this is not done.
-    await FFmpegKitConfig.setFontDirectory(fontPath);
+    // Add date to the video
+    final date =
+        ',drawtext="$fontPath:text=\'${widget.dateFormat}\':fontsize=$dateTextSize:fontcolor=\'$parsedDateColor\':borderw=${widget.textOutlineWidth}:bordercolor=$parsedTextOutlineColor:x=$datePosX:y=$datePosY';
 
-    // Edit and save video
+    // Add subtitles to the video
+    const subtitles = '-c:s mov_text -map 1:v -map 1:a? -map 0:s -disposition:s:0 default';
+
+    // Apply default edit settings: framerate 30, audio channels 1, audio rate 48000, audio bitrate 256k, video codec libx264, pixel format yuv420p, crf 20, preset slow
+    const defaultEditSettings =
+        '-r 30 -ac 1 -ar 48000 -c:a aac -b:a 256k -c:v libx264 -pix_fmt yuv420p -crf 20 -preset slow';
+
+    // Full command to edit and save video
     final command =
-        '-i "$videoPath" $audioStream $metadata -vf [in]$scale,drawtext="$fontPath:text=\'${widget.dateFormat}\':fontsize=$dateTextSize:fontcolor=\'$parsedDateColor\':borderw=${widget.textOutlineWidth}:bordercolor=$parsedTextOutlineColor:x=$datePosX:y=$datePosY$locOutput[out]" $trimCommand -r 30 -ac 1 -ar 48000 -c:a aac -b:a 256k -c:v libx264 -pix_fmt yuv420p -crf 20 -preset slow "$finalPath" -y';
+        '-i "$subtitlesPath" -i "$videoPath" $audioStream $metadata -vf [in]$scale$date$locale[out]" $trimCommand $defaultEditSettings $subtitles "$finalPath" -y';
 
     Utils.logInfo('${logTag}FFmpeg full command: $command');
 
     await executeAsyncFFmpeg(
       command,
       completeCallback: (session) async {
-        final String tempPath = '${finalPath.split('.mp4').first}_noSubs.mp4';
         final returnCode = await session.getReturnCode();
         if (ReturnCode.isSuccess(returnCode)) {
-          final subtitles = '-i $subtitlesPath -c:s mov_text';
-          final subsCommand =
-              '-i "$finalPath" $subtitles -c:v copy -c:a copy -map 0:v -map 0:a? -map 1 -disposition:s:0 default "$tempPath" -y';
-          await executeFFmpeg(subsCommand).then((session) async {
-            final returnCode = await session.getReturnCode();
-            if (ReturnCode.isSuccess(returnCode)) {
-              Utils.logInfo('${logTag}Video subtitles updated successfully!');
-              StorageUtils.deleteFile(finalPath);
-              StorageUtils.renameFile(tempPath, finalPath);
-            } else {
-              Utils.logError('${logTag}Video subtitles update failed!');
-              final sessionLog = await session.getLogsAsString();
-              final failureStackTrace = await session.getFailStackTrace();
-              Utils.logError('${logTag}Session log: $sessionLog');
-              Utils.logError('${logTag}Failure stacktrace: $failureStackTrace');
-            }
-          });
-
           Utils.logInfo('${logTag}Video edited successfully');
 
           if (widget.determinedDate.difference(DateTime.now()).inDays == 0) {
@@ -373,7 +370,6 @@ class _SaveButtonState extends State<SaveButton> {
 
           // Make sure no incomplete files were left in the folder
           StorageUtils.deleteFile(finalPath);
-          StorageUtils.deleteFile(tempPath);
 
           await showDialog(
             barrierDismissible: false,
