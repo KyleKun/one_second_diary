@@ -77,6 +77,7 @@ class _CustomDialogState extends State<CustomDialog> {
       await FlutterEmailSender.send(email);
     } catch (e) {
       Utils.logError('$logTag${e.toString()}');
+      Utils.launchURL(Constants.email);
     } finally {
       setState(() {
         _isSending = false;

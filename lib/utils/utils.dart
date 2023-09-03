@@ -183,7 +183,11 @@ class Utils {
   }
 
   /// Write srt file used by ffmpeg to add subtitles to the movie
-  static Future<String> writeSrt(String text, double videoDurationMilliseconds) async {
+  static Future<String> writeSrt(
+    String text,
+    int videoStartMilliseconds,
+    int videoEndMilliseconds,
+  ) async {
     final io.Directory directory = await getApplicationDocumentsDirectory();
     final String srtPath = '${directory.path}/subtitles.srt';
     logInfo('[Utils.writeSrt()] - Writing srt file to $srtPath');
@@ -215,22 +219,33 @@ class Utils {
     }
 
     // Calculate subtitles duration and format it
-    final Duration duration = Duration(milliseconds: videoDurationMilliseconds.floor());
-    final int seconds = duration.inSeconds % 60;
-    final int milliseconds = (duration.inMilliseconds % 1000).round();
-    final String secondsAndMilliseconds =
-        "${seconds.toString().padLeft(2, '0')},${milliseconds.toString().padLeft(3, '0')}";
-    logInfo('[Utils.writeSrt()] - Subtitles total duration $secondsAndMilliseconds');
+    final String secondsAndMillisecondsStart = millisecondsToTime(videoStartMilliseconds);
+    logInfo('[Utils.writeSrt()] - Subtitles start duration $secondsAndMillisecondsStart');
+
+    final String secondsAndMillisecondsEnd = millisecondsToTime(videoEndMilliseconds);
+    logInfo('[Utils.writeSrt()] - Subtitles end duration $secondsAndMillisecondsEnd');
 
     final String subtitles =
-        '1\r\n00:00:00,000 --> 00:00:$secondsAndMilliseconds\r\n$subsContent\r\n';
+        '1\r\n$secondsAndMillisecondsStart --> $secondsAndMillisecondsEnd\r\n$subsContent\r\n';
 
     // Writing file
     await file.writeAsString(subtitles, mode: io.FileMode.write);
-
     logInfo('[Utils.writeSrt()] - Subtitles file written successfully!');
 
     return srtPath;
+  }
+
+  /// Convert milliseconds to time format used in srt files
+  static String millisecondsToTime(int milliseconds) {
+    final Duration duration = Duration(milliseconds: milliseconds);
+    final int seconds = duration.inSeconds % 60;
+    final int minutes = duration.inMinutes % 60;
+    final int hours = duration.inHours % 24;
+    milliseconds = milliseconds % 1000;
+    final String secondsString = seconds.toString().padLeft(2, '0');
+    final String minutesString = minutes.toString().padLeft(2, '0');
+    final String hoursString = hours.toString().padLeft(2, '0');
+    return '$hoursString:$minutesString:$secondsString,${milliseconds.toString().padLeft(3, '0')}';
   }
 
   /// Get current profile name, empty string if Default

@@ -116,7 +116,7 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
         Utils.logInfo('${logTag}Base videos folder: $videosFolder');
 
         // Create a dummy srt for adding subtitles stream if necessary
-        final String dummySubtitles = await Utils.writeSrt('', 0);
+        final String dummySubtitles = await Utils.writeSrt('', 0, 0);
 
         // Start checking all videos
         int currentIndex = 0;

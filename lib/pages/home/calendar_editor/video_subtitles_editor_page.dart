@@ -87,7 +87,8 @@ class _VideoSubtitlesEditorPageState extends State<VideoSubtitlesEditorPage> {
           });
           final subtitles = await Utils.writeSrt(
             _subtitles,
-            _videoController.value.duration.inMilliseconds.toDouble(),
+            0,
+            _videoController.value.duration.inMilliseconds,
           );
 
           String command = '';

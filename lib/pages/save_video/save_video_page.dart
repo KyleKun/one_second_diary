@@ -490,7 +490,7 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
                 : customLocationTextController.text,
             subtitles: _subtitles,
             videoStartInMilliseconds: _videoStartValue,
-            videoEndInMilliseconds: _videoEndValue + 500,
+            videoEndInMilliseconds: getVideoEndInMilliseconds(),
             videoDuration: _trimmer.videoPlayerController!.value.duration.inSeconds,
             isGeotaggingEnabled: isGeotaggingEnabled,
             textOutlineColor: invert(currentColor),
@@ -954,5 +954,14 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
         ],
       ),
     );
+  }
+
+  double getVideoEndInMilliseconds() {
+    final double defaultEnd = _videoEndValue + 500;
+    final int videoDuration = _trimmer.videoPlayerController!.value.duration.inMilliseconds;
+    if (defaultEnd > videoDuration) {
+      return videoDuration.toDouble();
+    }
+    return defaultEnd;
   }
 }

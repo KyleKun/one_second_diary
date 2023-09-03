@@ -280,14 +280,17 @@ class _SaveButtonState extends State<SaveButton> {
 
     // If subtitles TextBox were not left empty, we can allow the command to render the subtitles into the video, otherwise we add empty subtitles to populate the streams with a subtitle stream, so that concat demuxer can work properly when creating a movie
     String subtitlesPath = '';
+    final int videoStartInMilliseconds = widget.videoStartInMilliseconds.floor();
+    final int videoEndInMilliseconds = widget.videoEndInMilliseconds.floor();
     if (widget.subtitles?.isEmpty == false) {
       subtitlesPath = await Utils.writeSrt(
         widget.subtitles!,
-        widget.videoEndInMilliseconds - widget.videoStartInMilliseconds,
+        videoStartInMilliseconds,
+        videoEndInMilliseconds,
       );
     } else {
       Utils.logInfo('${logTag}Subtitles TextField was left empty. Adding empty subtitles...');
-      subtitlesPath = await Utils.writeSrt('', 0);
+      subtitlesPath = await Utils.writeSrt('', 0, 0);
     }
     Utils.logInfo('${logTag}Subtitles file path: $subtitlesPath');
 
@@ -296,7 +299,7 @@ class _SaveButtonState extends State<SaveButton> {
         '-metadata artist="${Constants.artist}" -metadata album="$currentProfileName" -metadata comment="origin=$origin"';
 
     // Trim video to the selected range
-    final trim = '-ss ${widget.videoStartInMilliseconds}ms -to ${widget.videoEndInMilliseconds}ms';
+    final trim = '-ss ${videoStartInMilliseconds}ms -to ${videoEndInMilliseconds}ms';
 
     // Scale video to 1920x1080 and add black padding if needed
     const scale =
