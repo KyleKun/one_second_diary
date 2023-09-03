@@ -219,10 +219,10 @@ class Utils {
     }
 
     // Calculate subtitles duration and format it
-    final String secondsAndMillisecondsStart = millisecondsToTime(videoStartMilliseconds);
+    final String secondsAndMillisecondsStart = millisecondsToSRTFormat(videoStartMilliseconds);
     logInfo('[Utils.writeSrt()] - Subtitles start duration $secondsAndMillisecondsStart');
 
-    final String secondsAndMillisecondsEnd = millisecondsToTime(videoEndMilliseconds);
+    final String secondsAndMillisecondsEnd = millisecondsToSRTFormat(videoEndMilliseconds);
     logInfo('[Utils.writeSrt()] - Subtitles end duration $secondsAndMillisecondsEnd');
 
     final String subtitles =
@@ -236,7 +236,7 @@ class Utils {
   }
 
   /// Convert milliseconds to time format used in srt files
-  static String millisecondsToTime(int milliseconds) {
+  static String millisecondsToSRTFormat(int milliseconds) {
     final Duration duration = Duration(milliseconds: milliseconds);
     final int seconds = duration.inSeconds % 60;
     final int minutes = duration.inMinutes % 60;
@@ -245,7 +245,8 @@ class Utils {
     final String secondsString = seconds.toString().padLeft(2, '0');
     final String minutesString = minutes.toString().padLeft(2, '0');
     final String hoursString = hours.toString().padLeft(2, '0');
-    return '$hoursString:$minutesString:$secondsString,${milliseconds.toString().padLeft(3, '0')}';
+    final String millisecondsString = milliseconds.toString().padLeft(3, '0');
+    return '$hoursString:$minutesString:$secondsString,$millisecondsString';
   }
 
   /// Get current profile name, empty string if Default
