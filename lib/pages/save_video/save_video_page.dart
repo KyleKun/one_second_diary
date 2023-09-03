@@ -539,7 +539,6 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
                 ),
               ],
             ),
-            const SizedBox(height: 8),
             Expanded(
               child: videoProperties(),
             ),
@@ -558,7 +557,7 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
       child: Column(
         children: [
           SizedBox(
-            height: 40,
+            height: 42,
             child: TabBar(
               labelPadding: const EdgeInsets.all(10),
               indicator: const UnderlineTabIndicator(
@@ -697,7 +696,7 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
                       ),
                     ),
 
-                    const SizedBox(height: 30),
+                    const SizedBox(height: 10),
 
                     // Date color
                     GestureDetector(
@@ -859,6 +858,7 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
                                 fontSize: MediaQuery.of(context).size.height * 0.019,
                               ),
                             ),
+                            const SizedBox(height: 4),
                             TextField(
                               style: TextStyle(
                                 fontFamily: DefaultTextStyle.of(context).style.fontFamily,
@@ -870,12 +870,12 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
                               decoration: InputDecoration(
                                 hintText: 'enterSubtitles'.tr,
                                 filled: true,
-                                border: const OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.transparent),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: isDarkTheme ? Colors.white : Colors.black),
                                 ),
-                                enabledBorder: InputBorder.none,
                                 focusedBorder: const OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.transparent),
+                                  borderSide: BorderSide(color: AppColors.mainColor),
                                 ),
                               ),
                             ),
