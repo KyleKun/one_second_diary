@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../../../controllers/video_count_controller.dart';
 import '../../../../enums/export_date_range.dart';
 // import '../../../../enums/export_orientations.dart';
 import '../../../../routes/app_pages.dart';
@@ -20,6 +21,7 @@ class CreateMovieOptions extends StatefulWidget {
 class _CreateMovieOptionsState extends State<CreateMovieOptions> {
   ExportDateRange _exportPeriodGroupValue = ExportDateRange.allTime;
   final List<ExportDateRange> _exportPeriods = ExportDateRange.values;
+  final VideoCountController controller = Get.find();
 
   final dropdownBorder = OutlineInputBorder(
     borderSide: BorderSide(
@@ -35,8 +37,7 @@ class _CreateMovieOptionsState extends State<CreateMovieOptions> {
     super.initState();
     Future.delayed(const Duration(milliseconds: 200), () {
       setState(() {
-        selectedVideos =
-            Utils.getSelectedVideosFromStorage(_exportPeriodGroupValue);
+        selectedVideos = Utils.getSelectedVideosFromStorage(_exportPeriodGroupValue);
       });
     });
   }
@@ -107,76 +108,77 @@ class _CreateMovieOptionsState extends State<CreateMovieOptions> {
                         alignment: Alignment.centerLeft,
                         child: SizedBox(
                           width: 300,
-                          child: DropdownButtonFormField<ExportDateRange>(
-                            value: _exportPeriodGroupValue,
-                            icon: const Icon(Icons.expand_more),
-                            iconSize: 24,
-                            elevation: 16,
-                            borderRadius: BorderRadius.circular(12),
-                            isExpanded: true,
-                            dropdownColor: ThemeService().isDarkTheme()
-                                ? AppColors.dark
-                                : AppColors.light,
-                            decoration: InputDecoration(
-                              enabledBorder: dropdownBorder,
-                              focusedBorder: dropdownBorder,
-                              border: dropdownBorder,
-                              filled: true,
-                              fillColor: ThemeService().isDarkTheme()
-                                  ? AppColors.dark
-                                  : AppColors.light,
-                            ),
-                            onChanged: (newValue) async {
-                              setState(() {
-                                _exportPeriodGroupValue = newValue!;
-                              });
+                          child: Obx(
+                            () => IgnorePointer(
+                              ignoring: controller.isProcessing.value,
+                              child: DropdownButtonFormField<ExportDateRange>(
+                                value: _exportPeriodGroupValue,
+                                icon: const Icon(Icons.expand_more),
+                                iconSize: 24,
+                                elevation: 16,
+                                borderRadius: BorderRadius.circular(12),
+                                isExpanded: true,
+                                dropdownColor:
+                                    ThemeService().isDarkTheme() ? AppColors.dark : AppColors.light,
+                                decoration: InputDecoration(
+                                  enabledBorder: dropdownBorder,
+                                  focusedBorder: dropdownBorder,
+                                  border: dropdownBorder,
+                                  filled: true,
+                                  fillColor: ThemeService().isDarkTheme()
+                                      ? AppColors.dark
+                                      : AppColors.light,
+                                ),
+                                onChanged: (newValue) async {
+                                  setState(() {
+                                    _exportPeriodGroupValue = newValue!;
+                                  });
 
-                              if (newValue == ExportDateRange.custom) {
-                                // Needs more than 1 video to create movie
-                                if (selectedVideos!.length < 2) {
-                                  showDialog(
-                                    barrierDismissible: false,
-                                    context: Get.context!,
-                                    builder: (context) => CustomDialog(
-                                      isDoubleAction: false,
-                                      title: 'movieErrorTitle'.tr,
-                                      content: 'movieInsufficientVideos'.tr,
-                                      actionText: 'Ok',
-                                      actionColor: AppColors.green,
-                                      action: () => Get.back(),
-                                    ),
-                                  );
-                                  return;
-                                }
-                                Get.toNamed(
-                                  Routes.SELECT_VIDEOS_FROM_STORAGE,
-                                );
-                                return;
-                              }
-                              // To show loading
-                              setState(() {
-                                selectedVideos = null;
-                              });
-                              // Update values
-                              Future.delayed(const Duration(milliseconds: 100),
-                                  () {
-                                setState(() {
-                                  selectedVideos =
-                                      Utils.getSelectedVideosFromStorage(
-                                    _exportPeriodGroupValue,
-                                  );
-                                });
-                              });
-                            },
-                            items: _exportPeriods
-                                .map<DropdownMenuItem<ExportDateRange>>(
-                              (ExportDateRange value) {
-                                return DropdownMenuItem<ExportDateRange>(
-                                  value: value,
-                                  child: Text(value.localizationLabel.tr),
-                                );
-                              },
-                            ).toList(),
+                                  if (newValue == ExportDateRange.custom) {
+                                    // Needs more than 1 video to create movie
+                                    if (selectedVideos!.length < 2) {
+                                      showDialog(
+                                        barrierDismissible: false,
+                                        context: Get.context!,
+                                        builder: (context) => CustomDialog(
+                                          isDoubleAction: false,
+                                          title: 'movieErrorTitle'.tr,
+                                          content: 'movieInsufficientVideos'.tr,
+                                          actionText: 'Ok',
+                                          actionColor: AppColors.green,
+                                          action: () => Get.back(),
+                                        ),
+                                      );
+                                      return;
+                                    }
+                                    Get.toNamed(
+                                      Routes.SELECT_VIDEOS_FROM_STORAGE,
+                                    );
+                                    return;
+                                  }
+                                  // To show loading
+                                  setState(() {
+                                    selectedVideos = null;
+                                  });
+                                  // Update values
+                                  Future.delayed(const Duration(milliseconds: 100), () {
+                                    setState(() {
+                                      selectedVideos = Utils.getSelectedVideosFromStorage(
+                                        _exportPeriodGroupValue,
+                                      );
+                                    });
+                                  });
+                                },
+                                items: _exportPeriods.map<DropdownMenuItem<ExportDateRange>>(
+                                  (ExportDateRange value) {
+                                    return DropdownMenuItem<ExportDateRange>(
+                                      value: value,
+                                      child: Text(value.localizationLabel.tr),
+                                    );
+                                  },
+                                ).toList(),
+                              ),
+                            ),
                           ),
                         ),
                       ),
@@ -188,8 +190,7 @@ class _CreateMovieOptionsState extends State<CreateMovieOptions> {
 
                 const Spacer(),
 
-                if (selectedVideos != null &&
-                    _exportPeriodGroupValue != ExportDateRange.custom)
+                if (selectedVideos != null && _exportPeriodGroupValue != ExportDateRange.custom)
                   Text(
                     '${'clipsFound'.tr}: ${getClipsFound()}',
                     style: TextStyle(
@@ -202,8 +203,7 @@ class _CreateMovieOptionsState extends State<CreateMovieOptions> {
                     size: 32.0,
                   ),
                 const Spacer(),
-                if (selectedVideos != null &&
-                    _exportPeriodGroupValue != ExportDateRange.custom)
+                if (selectedVideos != null && _exportPeriodGroupValue != ExportDateRange.custom)
                   Column(
                     children: [
                       Text(

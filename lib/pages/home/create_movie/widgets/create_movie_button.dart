@@ -36,7 +36,7 @@ class CreateMovieButton extends StatefulWidget {
 
 class _CreateMovieButtonState extends State<CreateMovieButton> {
   final String logTag = '[CREATE MOVIE] - ';
-  final VideoCountController _movieCount = Get.find();
+  final VideoCountController controller = Get.find();
   bool isProcessing = false;
   String progress = '';
 
@@ -48,6 +48,7 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
     WakelockPlus.enable();
     final List<String> copiesToDelete = [];
 
+    controller.setIsProcessing(true);
     setState(() {
       isProcessing = true;
     });
@@ -297,7 +298,7 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
           // Creating txt that will be used with ffmpeg to concatenate all videos
           final String txtPath = await Utils.writeTxt(selectedVideos);
           final String outputPath =
-              '${SharedPrefsUtil.getString('moviesPath')}OSD-Movie-${_movieCount.movieCount.value}-$today.mp4';
+              '${SharedPrefsUtil.getString('moviesPath')}OSD-Movie-${controller.movieCount.value}-$today.mp4';
           Utils.logInfo('${logTag}Movie will be saved as: $outputPath');
 
           setState(() {
@@ -309,7 +310,7 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
               .then(
             (session) async {
               final returnCode = await session.getReturnCode();
-              _movieCount.increaseMovieCount();
+              controller.increaseMovieCount();
               if (ReturnCode.isSuccess(returnCode)) {
                 showDialog(
                   barrierDismissible: false,
@@ -379,6 +380,7 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
         StorageUtils.deleteFile(copy);
       });
 
+      controller.setIsProcessing(false);
       setState(() {
         isProcessing = false;
       });
