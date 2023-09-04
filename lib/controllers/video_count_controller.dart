@@ -5,6 +5,7 @@ import '../utils/shared_preferences_util.dart';
 class VideoCountController extends GetxController {
   final Rx<int> videoCount = SharedPrefsUtil.getInt('videoCount')!.obs;
   final Rx<int> movieCount = SharedPrefsUtil.getInt('movieCount')!.obs;
+  final Rx<bool> isProcessing = false.obs;
 
   void increaseVideoCount() {
     videoCount.value++;
@@ -29,5 +30,10 @@ class VideoCountController extends GetxController {
     videoCount.value = count;
     videoCount.refresh();
     SharedPrefsUtil.putInt('videoCount', videoCount.value);
+  }
+
+  void setIsProcessing(bool value) {
+    isProcessing.value = value;
+    isProcessing.refresh();
   }
 }
