@@ -9,6 +9,7 @@ import 'package:share_plus/share_plus.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 
 import '../../../../utils/constants.dart';
+import '../../../../utils/storage_utils.dart';
 import '../../../../utils/theme.dart';
 import '../../../../utils/utils.dart';
 
@@ -197,11 +198,13 @@ class _ViewMoviesState extends State<ViewMovies> {
           TextButton(
             onPressed: () async {
               // Delete current video from storage
-              await mediaStore.deleteFile(
-                fileName: videoFile.split('/').last,
-                dirType: DirType.video,
-                dirName: DirName.dcim,
-              );
+              try {
+                StorageUtils.deleteFile(videoFile);
+              } catch (e) {
+                Utils.logError(
+                    '[MOVIES VIEWER] - Error deleting $videoFile: $e, trying MediaStore');
+                await StorageUtils.deleteFileWithMediaStore(videoFile);
+              }
 
               Utils.logInfo('[MOVIES VIEWER] - Deleted movie $videoFile');
 

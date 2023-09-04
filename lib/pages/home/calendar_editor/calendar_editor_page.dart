@@ -9,6 +9,7 @@ import 'package:flutter_calendar_carousel/flutter_calendar_carousel.dart' show C
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:media_store_plus/media_store_plus.dart';
+import '../../../utils/storage_utils.dart';
 import 'package:video_player/video_player.dart';
 import 'package:wechat_assets_picker/wechat_assets_picker.dart';
 
@@ -276,11 +277,12 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
           TextButton(
             onPressed: () async {
               // Delete current video from storage
-              await mediaStore.deleteFile(
-                fileName: currentVideo.split('/').last,
-                dirType: DirType.video,
-                dirName: DirName.dcim,
-              );
+              try {
+                StorageUtils.deleteFile(currentVideo);
+              } catch (e) {
+                Utils.logError('[CALENDAR] - Error deleting $currentVideo: $e, trying MediaStore');
+                await StorageUtils.deleteFileWithMediaStore(currentVideo);
+              }
 
               Utils.logInfo('[CALENDAR] - Deleted video from $_currentDateStr: $currentVideo');
 
@@ -509,7 +511,10 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
                                       _controller,
                                       forcePause: true,
                                     );
-                                    await deleteVideoDialog();
+                                    // Avoid '!_debugLocked': is not true.
+                                    WidgetsBinding.instance.addPostFrameCallback((_) async {
+                                      await deleteVideoDialog();
+                                    });
                                   },
                                   child: Padding(
                                     padding: const EdgeInsets.all(4.0),
@@ -535,19 +540,20 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
                                         forcePause: true,
                                       );
                                     } catch (e) {}
-                                    // // Avoid route not being pushed: '!_debugLocked': is not true.
-                                    // WidgetsBinding.instance.addPostFrameCallback((_) async {
-                                    final bool edited = await Get.to(
-                                      VideoSubtitlesEditorPage(
-                                        videoPath: currentVideo,
-                                        subtitles: subtitles ?? '',
-                                      ),
-                                    );
-                                    // Update UI
-                                    if (edited) {
-                                      await getSubtitlesForSelectedDate();
-                                    }
-                                    // });
+                                    // Avoid route not being pushed: '!_debugLocked': is not true.
+                                    WidgetsBinding.instance.addPostFrameCallback((_) async {
+                                      final bool edited = await Get.to(
+                                        VideoSubtitlesEditorPage(
+                                          videoPath: currentVideo,
+                                          subtitles: subtitles ?? '',
+                                        ),
+                                      );
+
+                                      // Update UI
+                                      if (edited) {
+                                        await getSubtitlesForSelectedDate();
+                                      }
+                                    });
                                   },
                                   child: Padding(
                                     padding: const EdgeInsets.all(4.0),

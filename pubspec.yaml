@@ -31,7 +31,6 @@ dependencies:
   path_provider: ^2.1.0
   permission_handler: ^10.4.3
   rive: ^0.11.14
-  saf: ^1.0.3+4
   salomon_bottom_bar: ^3.3.2
   share_plus: ^7.1.0
   shared_preferences: ^2.2.0
@@ -51,7 +50,10 @@ dependencies:
   flutter_email_sender: ^6.0.1
   synchronized: ^3.1.0
   open_filex: ^4.3.2
-  media_store_plus: ^0.0.7
+  media_store_plus:
+    git:
+      url: https://github.com/KyleKun/media_store_plus.git
+      ref: main
   wechat_assets_picker: ^8.7.0
 
 dev_dependencies:

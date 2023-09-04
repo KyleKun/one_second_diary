@@ -659,11 +659,12 @@ packages:
   media_store_plus:
     dependency: "direct main"
     description:
-      name: media_store_plus
-      sha256: "8ef2d1db47a6986c15d9d20bfb3689891bd0f8648d2da65da0343ac574dd071d"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.0.7"
+      path: "."
+      ref: main
+      resolved-ref: fa75179bf94e1ce4ba5ca538ea8bba1ac2c4ae35
+      url: "https://github.com/KyleKun/media_store_plus.git"
+    source: git
+    version: "0.0.8"
   meta:
     dependency: transitive
     description:
@@ -880,14 +881,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.2.6"
-  saf:
-    dependency: "direct main"
-    description:
-      name: saf
-      sha256: "3b7565638bc155801dc2b1b948ee0545f8cf9310da6e0f4ded45f62ee83f1321"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.3+4"
   salomon_bottom_bar:
     dependency: "direct main"
     description:

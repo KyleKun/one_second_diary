@@ -219,10 +219,12 @@ class Utils {
     }
 
     // Calculate subtitles duration and format it
-    final String secondsAndMillisecondsStart = millisecondsToSRTFormat(videoStartMilliseconds);
+    final String secondsAndMillisecondsStart =
+        millisecondsToSRTFormat(videoStartMilliseconds, videoStartMilliseconds);
     logInfo('[Utils.writeSrt()] - Subtitles start duration $secondsAndMillisecondsStart');
 
-    final String secondsAndMillisecondsEnd = millisecondsToSRTFormat(videoEndMilliseconds);
+    final String secondsAndMillisecondsEnd =
+        millisecondsToSRTFormat(videoEndMilliseconds, videoStartMilliseconds);
     logInfo('[Utils.writeSrt()] - Subtitles end duration $secondsAndMillisecondsEnd');
 
     final String subtitles =
@@ -236,12 +238,13 @@ class Utils {
   }
 
   /// Convert milliseconds to time format used in srt files
-  static String millisecondsToSRTFormat(int milliseconds) {
-    final Duration duration = Duration(milliseconds: milliseconds);
+  static String millisecondsToSRTFormat(int milliseconds, int videoStartMilliseconds) {
+    final int adjustedMilliseconds = milliseconds - videoStartMilliseconds;
+    final Duration duration = Duration(milliseconds: adjustedMilliseconds);
     final int seconds = duration.inSeconds % 60;
     final int minutes = duration.inMinutes % 60;
     final int hours = duration.inHours % 24;
-    milliseconds = milliseconds % 1000;
+    milliseconds = adjustedMilliseconds % 1000;
     final String secondsString = seconds.toString().padLeft(2, '0');
     final String minutesString = minutes.toString().padLeft(2, '0');
     final String hoursString = hours.toString().padLeft(2, '0');

@@ -2,7 +2,7 @@ import 'package:ffmpeg_kit_flutter_full_gpl/ffmpeg_kit_config.dart';
 import 'package:ffmpeg_kit_flutter_full_gpl/return_code.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:saf/saf.dart';
+import 'package:media_store_plus/media_store_plus.dart';
 import 'package:video_player/video_player.dart';
 
 import '../../../controllers/daily_entry_controller.dart';
@@ -59,6 +59,7 @@ class _SaveButtonState extends State<SaveButton> {
   final String logTag = '[SAVE RECORDING] - ';
   String currentProfileName = 'Default';
   ValueNotifier<num> saveProgressPercentage = ValueNotifier(0);
+  final mediaStore = MediaStore();
 
   final DailyEntryController _dayController = Get.find();
 
@@ -223,10 +224,16 @@ class _SaveButtonState extends State<SaveButton> {
             content: 'editQuestion'.tr,
             actionText: 'yes'.tr,
             actionColor: AppColors.green,
-            action: () {
+            action: () async {
               Utils.logInfo('${logTag}Video already exists, deleting it to perform edit.');
-              StorageUtils.deleteFile(finalPath);
-              Get.back();
+              try {
+                StorageUtils.deleteFile(finalPath);
+              } catch (e) {
+                Utils.logError('${logTag}Error deleting old video: $e, trying MediaStore');
+                await StorageUtils.deleteFileWithMediaStore(finalPath);
+              } finally {
+                Get.back();
+              }
             },
             action2Text: 'no'.tr,
             action2Color: Colors.red,
@@ -245,12 +252,6 @@ class _SaveButtonState extends State<SaveButton> {
     // Caches the default font to save texts in ffmpeg.
     // The edit may fail unexpectedly in some devices if this is not done.
     await FFmpegKitConfig.setFontDirectory(fontPath);
-
-    // Checks to ensure special read/write permissions with storage access framework
-    final hasSafDirPerms = await Saf.isPersistedPermissionDirectoryFor(finalPath) ?? false;
-    if (hasSafDirPerms) {
-      await Saf(finalPath).getDirectoryPermission(isDynamic: true);
-    }
 
     // If geotagging is enabled, we can allow the command to render the location text into the video
     if (isGeotaggingEnabled) {
@@ -290,7 +291,7 @@ class _SaveButtonState extends State<SaveButton> {
       );
     } else {
       Utils.logInfo('${logTag}Subtitles TextField was left empty. Adding empty subtitles...');
-      subtitlesPath = await Utils.writeSrt('', 0, 0);
+      subtitlesPath = await Utils.writeSrt('', 0, 1);
     }
     Utils.logInfo('${logTag}Subtitles file path: $subtitlesPath');
 
@@ -318,7 +319,7 @@ class _SaveButtonState extends State<SaveButton> {
 
     // Full command to edit and save video
     final command =
-        '-i "$subtitlesPath" -i "$videoPath" $audioStream $metadata -vf [in]$scale$date$locale[out]" $trim $defaultEditSettings $subtitles "$finalPath" -y';
+        '-i "$subtitlesPath" $trim -i "$videoPath" $audioStream $metadata -vf [in]$scale$date$locale[out]" $defaultEditSettings $subtitles "$finalPath" -y';
 
     Utils.logInfo('${logTag}FFmpeg full command: $command');
 

@@ -460,11 +460,35 @@ class StorageUtils {
 
   static void deleteFile(String filePath) {
     if (checkFileExists(filePath)) {
-      try {
-        io.File(filePath).deleteSync(recursive: true);
-      } catch (e) {
-        Utils.logError('[StorageUtils] - $e');
+      io.File(filePath).deleteSync(recursive: true);
+    }
+  }
+
+  static Future<void> deleteFileWithMediaStore(String filePath) async {
+    final mediaStore = MediaStore();
+    try {
+      final deleted = await mediaStore.deleteFile(
+        fileName: filePath.split('/').last,
+        dirType: DirType.video,
+        dirName: DirName.dcim,
+      );
+      if (!deleted) {
+        throw Exception('MediaStore default delete failed');
       }
+      Utils.logInfo('[StorageUtils] - File $filePath deleted using MediaStore');
+    } catch (e) {
+      Utils.logError(
+          '[StorageUtils] - MediaStore default delete failed ($e), trying URI method...');
+      // If the default method fails, usually because the MediaStore db doesn't have the register of a file even when
+      // it exists, try using an alternative method, which forces MediaStore to scan the file and delete using the URI
+      await mediaStore.getUriFromFilePath(path: filePath).then((uri) async {
+        await mediaStore.deleteFileUsingUri(
+          uriString: uri.toString(),
+          forceUseMediaStore: true,
+        );
+        Utils.logInfo(
+            '[StorageUtils] - File $filePath deleted using MediaStore alternative URI method');
+      });
     }
   }
 }

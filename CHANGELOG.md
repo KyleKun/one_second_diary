@@ -7,12 +7,13 @@
 - Added Czech localization
 - Added option to change profile in save video page
 - Added option to send logs when contacting developer
+- Improved video saving speed by processing only the selected part instead of the whole video
 - Improved save video page by separating options in tabs
-- Improved video saving speed by removing one unnecessary ffmpeg call
 - Fixed saving video error when locale has special characters
 - Fixed saving video error when color parsing fails
 - Fixed calendar page resetting to current date after returning from save video page for past dates
 - Fixed videoplayer showing some landscape videos rotated in preview
+- Fixed videos deletion not working if files were manually moved to app folder
 - Fixed movie creation that includes videos from before v1.5
 - Fixed movie deletion not updating the movie list correctly
 

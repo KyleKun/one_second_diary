@@ -111,11 +111,17 @@ class _VideoSubtitlesEditorPageState extends State<VideoSubtitlesEditorPage> {
             if (ReturnCode.isSuccess(returnCode)) {
               Utils.logInfo('${logTag}Video subtitles updated successfully!');
               // Delete current video from storage
-              await mediaStore.deleteFile(
-                fileName: videoTempName,
-                dirType: DirType.video,
-                dirName: DirName.dcim,
-              );
+              try {
+                StorageUtils.deleteFile(widget.videoPath);
+              } catch (e) {
+                setState(() {
+                  isProcessing = false;
+                });
+                Utils.logError(
+                    '${logTag}Error deleting ${widget.videoPath}: $e, trying MediaStore');
+                await StorageUtils.deleteFileWithMediaStore(widget.videoPath);
+              }
+
               // Save edited video to storage
               await mediaStore.saveFile(
                 tempFilePath: tempFilePath,
