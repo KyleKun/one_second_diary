@@ -35,6 +35,7 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
   final Trimmer _trimmer = Trimmer();
 
   final TextEditingController customLocationTextController = TextEditingController();
+  final TextEditingController subtitlesTextController = TextEditingController();
 
   late Color pickerColor;
   late Color currentColor;
@@ -860,13 +861,13 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
                             ),
                             const SizedBox(height: 4),
                             TextField(
+                              controller: subtitlesTextController,
                               style: TextStyle(
                                 fontFamily: DefaultTextStyle.of(context).style.fontFamily,
                               ),
                               maxLines: null,
-                              onChanged: (value) => setState(() {
-                                _subtitles = value;
-                              }),
+                              readOnly: true,
+                              onTap: () async => await showSubtitlesDialog(),
                               decoration: InputDecoration(
                                 hintText: 'enterSubtitles'.tr,
                                 filled: true,
@@ -874,8 +875,9 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
                                   borderSide:
                                       BorderSide(color: isDarkTheme ? Colors.white : Colors.black),
                                 ),
-                                focusedBorder: const OutlineInputBorder(
-                                  borderSide: BorderSide(color: AppColors.mainColor),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: isDarkTheme ? Colors.white : Colors.black),
                                 ),
                               ),
                             ),
@@ -890,6 +892,60 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
             ),
           ),
           //const SizedBox(height: 50.0),
+        ],
+      ),
+    );
+  }
+
+  Future<void> showSubtitlesDialog() async {
+    await showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Center(
+          child: Text(
+            'subtitles'.tr,
+          ),
+        ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              autofocus: true,
+              controller: subtitlesTextController,
+              maxLines: null,
+              style: TextStyle(
+                fontFamily: DefaultTextStyle.of(context).style.fontFamily,
+              ),
+              decoration: InputDecoration(
+                filled: true,
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: isDarkTheme ? Colors.white : Colors.black),
+                ),
+                focusedBorder: const OutlineInputBorder(
+                  borderSide: BorderSide(color: AppColors.green),
+                ),
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () async {
+              setState(() {
+                _subtitles = subtitlesTextController.text.trim();
+              });
+              Navigator.pop(context);
+            },
+            child: Text(
+              'ok'.tr,
+              style: const TextStyle(
+                color: AppColors.green,
+              ),
+            ),
+          ),
         ],
       ),
     );

@@ -9,6 +9,7 @@
 - Added option to send logs when contacting developer
 - Improved video saving speed by processing only the selected part instead of the whole video
 - Improved save video page by separating options in tabs
+- Improved subtitles text field making it fully visible with longer texts by using a dialog
 - Fixed saving video error when locale has special characters
 - Fixed saving video error when color parsing fails
 - Fixed calendar page resetting to current date after returning from save video page for past dates
