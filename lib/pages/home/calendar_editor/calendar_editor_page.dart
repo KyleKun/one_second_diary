@@ -180,14 +180,14 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
       final bool shouldIgnoreFilter = shouldIgnoreExperimentalFilter();
       final FilterOptionGroup filterOptionGroup = FilterOptionGroup(
         containsPathModified: true,
-        updateTimeCond: DateTimeCond(
+        createTimeCond: DateTimeCond(
           min: _selectedDate,
           max: DateTime.now(),
           ignore: shouldIgnoreFilter,
         ),
         orders: [
           OrderOption(
-            type: OrderOptionType.updateDate,
+            type: OrderOptionType.createDate,
             asc: shouldIgnoreFilter ? false : true,
           ),
         ],
@@ -206,7 +206,7 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
               child: Text(
                 shouldIgnoreFilter
                     ? 'Latest\nvideos'
-                    : 'From\n${_selectedDate.toString().substring(0, 10)}\nonwards',
+                    : 'From\n${_selectedDate.toString().substring(0, 10).split('-').reversed.join('-')}\nonwards',
                 textAlign: TextAlign.center,
                 style: const TextStyle(
                   color: Colors.white,
