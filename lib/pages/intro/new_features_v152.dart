@@ -6,11 +6,11 @@ import '../../routes/app_pages.dart';
 import '../../utils/constants.dart';
 import '../../utils/shared_preferences_util.dart';
 
-class NewFeaturesV15 extends StatelessWidget {
+class NewFeaturesV152 extends StatelessWidget {
   final introKey = GlobalKey<IntroductionScreenState>();
 
   Future<void> _onIntroEnd() async {
-    await SharedPrefsUtil.putBool('showChangelogV15', false);
+    await SharedPrefsUtil.putBool('showChangelogV152', false);
     Get.offNamed(Routes.HOME);
   }
 
@@ -23,42 +23,34 @@ class NewFeaturesV15 extends StatelessWidget {
           color: AppColors.mainColor,
         );
       case 1:
-        return const Icon(Icons.image, size: 100, color: Colors.orange);
-      case 2:
         return const Icon(
-          Icons.edit_note,
-          size: 100,
-          color: Colors.blueAccent,
-        );
-      case 3:
-        return const Icon(
-          Icons.map,
+          Icons.speed,
           size: 100,
           color: Colors.green,
         );
+      case 2:
+        return const Icon(
+          Icons.cut,
+          size: 100,
+          color: Colors.orange,
+        );
+      case 3:
+        return const Icon(
+          Icons.file_open,
+          size: 100,
+          color: Colors.blue,
+        );
       case 4:
         return const Icon(
-          Icons.person,
+          Icons.screen_lock_landscape,
           size: 100,
           color: Colors.red,
         );
       case 5:
         return const Icon(
-          Icons.calendar_month,
+          Icons.handyman,
           size: 100,
           color: Colors.teal,
-        );
-      case 6:
-        return const Icon(
-          Icons.movie,
-          size: 100,
-          color: Colors.pink,
-        );
-      case 7:
-        return const Icon(
-          Icons.notification_add,
-          size: 100,
-          color: Colors.amber,
         );
       default:
         return const Icon(
@@ -90,50 +82,38 @@ class NewFeaturesV15 extends StatelessWidget {
       pages: [
         PageViewModel(
           title: 'whatsNew'.tr,
-          body: 'whatsNewDescv15'.tr,
+          body: 'whatsNewDescv152'.tr,
           image: _buildImage(0),
           decoration: pageDecoration,
         ),
         PageViewModel(
-          title: 'feat1v15'.tr,
-          body: 'featDesc1v15'.tr,
+          title: 'feat1v152'.tr,
+          body: 'featDesc1v152'.tr,
           image: _buildImage(1),
           decoration: pageDecoration,
         ),
         PageViewModel(
-          title: 'feat2v15'.tr,
-          body: 'featDesc2v15'.tr,
+          title: 'feat2v152'.tr,
+          body: 'featDesc2v152'.tr,
           image: _buildImage(2),
           decoration: pageDecoration,
         ),
         PageViewModel(
-          title: 'feat3v15'.tr,
-          body: 'featDesc3v15'.tr,
+          title: 'feat3v152'.tr,
+          body: 'featDesc3v152'.tr,
           image: _buildImage(3),
           decoration: pageDecoration,
         ),
         PageViewModel(
-          title: 'feat4v15'.tr,
-          body: 'featDesc4v15'.tr,
+          title: 'feat4v152'.tr,
+          body: 'featDesc4v152'.tr,
           image: _buildImage(4),
           decoration: pageDecoration,
         ),
         PageViewModel(
-          title: 'feat5v15'.tr,
-          body: 'featDesc5v15'.tr,
+          title: 'feat5v152'.tr,
+          body: 'featDesc5v152'.tr,
           image: _buildImage(5),
-          decoration: pageDecoration,
-        ),
-        PageViewModel(
-          title: 'feat6v15'.tr,
-          body: 'featDesc6v15'.tr,
-          image: _buildImage(6),
-          decoration: pageDecoration,
-        ),
-        PageViewModel(
-          title: 'feat7v15'.tr,
-          body: 'featDesc7v15'.tr,
-          image: _buildImage(7),
           decoration: pageDecoration,
         ),
       ],

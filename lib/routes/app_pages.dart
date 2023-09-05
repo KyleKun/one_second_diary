@@ -10,7 +10,7 @@ import '../pages/home/notification/notification_page.dart';
 import '../pages/home/profiles/profiles_page.dart';
 import '../pages/home/settings/widgets/preferences_page.dart';
 import '../pages/intro/intro_page.dart';
-import '../pages/intro/new_features_v1_5.dart';
+import '../pages/intro/new_features_v152.dart';
 import '../pages/recording/recording_page.dart';
 import '../pages/save_video/save_video_page.dart';
 
@@ -34,7 +34,7 @@ class AppPages {
     ),
     GetPage(name: Routes.PREFERENCES, page: () => const PreferencesPage()),
     GetPage(name: Routes.PROFILES, page: () => const ProfilesPage()),
-    GetPage(name: Routes.NEW_FEATURES_V15, page: () => NewFeaturesV15()),
+    GetPage(name: Routes.NEW_FEATURES_V152, page: () => NewFeaturesV152()),
     GetPage(name: Routes.VIEW_MOVIES, page: () => const ViewMovies()),
   ];
 }

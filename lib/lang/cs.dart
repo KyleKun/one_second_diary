@@ -187,4 +187,19 @@ const Map<String, String> cs = {
   'sendLogs': 'Odeslat záznamy?',
   'sendLogsDescription':
       'Pokud se potýkáte s problémem, klepněte prosím na "Ano", abyste zahrnuli záznamy, které mi pomohou problém najít. Pokud jde o návrh funkce nebo jiné téma, klepněte prosím na "Ne".',
+  'whatsNewDescv152':
+      'Verze 1.5.2 přinesla několik oprav a vylepšení!\n\nPodívejte se na následujících stránkách 😊',
+  'feat1v152': 'Rychlejší zpracování videa',
+  'featDesc1v152': 'Úprava velkých videí je nyní mnohem rychlejší 🚀',
+  'feat2v152': 'Vylepšené zastřihávání videa',
+  'featDesc2v152':
+      'Vyberte svůj okamžik přesněji s novými tlačítky pro rychlý zástřih a vylepšeným lištou pro zastřihávání 🎞️',
+  'feat3v152': 'Nový experimentální výběr souborů',
+  'featDesc3v152':
+      'Nový experimentální výběr souborů umožňuje náhled a filtrování vašich videí podle data, žádné další procházení při přidávání starých videí 📅 (Můžete jej vypnout v Nastavení, pokud narazíte na problémy)',
+  'feat4v152': 'Zamknutí orientace',
+  'featDesc4v152':
+      'Při nahrávání v aplikaci klepněte po nastavení telefonu na nové tlačítko, abyste zamkli orientaci a předešli neočekávaným výsledkům 📱',
+  'feat5v152': 'A mnohem více...',
+  'featDesc5v152': 'Najdete zde také některá drobná vizuální vylepšení a opravy chyb 🐛',
 };

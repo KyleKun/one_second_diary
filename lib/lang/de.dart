@@ -184,4 +184,20 @@ const Map<String, String> de = {
   'sendLogs': 'Protokolle senden?',
   'sendLogsDescription':
       'Wenn Sie auf ein Problem stoßen, tippen Sie bitte auf "Ja", um die Protokolle einzuschließen, die mir helfen, das Problem zu finden. Wenn es sich um einen Verbesserungsvorschlag oder ein anderes Thema handelt, tippen Sie bitte auf "Nein".',
+  'whatsNewDescv152':
+      'Version 1.5.2 brachte mehrere Korrekturen und Verbesserungen!\n\nSchauen Sie sich die nächsten Seiten an 😊',
+  'feat1v152': 'Schnellere Videobearbeitung',
+  'featDesc1v152': 'Die Bearbeitung großer Videos geht jetzt viel schneller 🚀',
+  'feat2v152': 'Verbessertes Videoschneiden',
+  'featDesc2v152':
+      'Wählen Sie Ihren Moment genauer mit den neuen Schnellschnitttasten und einer verbesserten Schneidleiste 🎞️',
+  'feat3v152': 'Neuer experimenteller Dateiauswähler',
+  'featDesc3v152':
+      'Mit dem neuen experimentellen Dateiauswähler können Sie Ihre Videos nach Datum anzeigen und filtern, kein lästiges Durchscrollen mehr, wenn Sie ältere Videos hinzufügen 📅 (Sie können es in den Einstellungen deaktivieren, wenn Sie Probleme haben)',
+  'feat4v152': 'Orientierung sperren',
+  'featDesc4v152':
+      'Tippen Sie nach dem Ausrichten Ihres Telefons auf die neue Schaltfläche, um die Ausrichtung zu sperren und unerwartete Ergebnisse zu vermeiden 📱',
+  'feat5v152': 'Und mehr...',
+  'featDesc5v152':
+      'Sie finden auch einige kleinere visuelle Verbesserungen und Fehlerbehebungen 🐛',
 };

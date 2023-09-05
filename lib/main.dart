@@ -36,10 +36,10 @@ class MyApp extends StatelessWidget {
 
   String getInitialRoute() {
     if (SharedPrefsUtil.getBool('showIntro') == false) {
-      if (SharedPrefsUtil.getBool('showChangelogV15') == false) {
+      if (SharedPrefsUtil.getBool('showChangelogV152') == false) {
         return Routes.HOME;
       } else {
-        return Routes.NEW_FEATURES_V15;
+        return Routes.NEW_FEATURES_V152;
       }
     } else {
       return Routes.INTRO;

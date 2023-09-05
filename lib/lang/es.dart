@@ -187,4 +187,20 @@ const Map<String, String> es = {
   'sendLogs': '¿Enviar registros?',
   'sendLogsDescription':
       'Si te enfrentas a un problema, por favor toca "Sí" para incluir los registros que me ayudarán a encontrar el problema. Si es una sugerencia de función u otro tema, por favor toca "No".',
+  'whatsNewDescv152':
+      '¡La versión 1.5.2 trajo varias correcciones y mejoras!\n\n¡Échale un vistazo en las próximas páginas 😊!',
+  'feat1v152': 'Procesamiento de video más rápido',
+  'featDesc1v152': 'Editar videos grandes es ahora mucho más rápido 🚀',
+  'feat2v152': 'Mejora en el recorte de video',
+  'featDesc2v152':
+      'Elige tu momento con más precisión con los nuevos botones de recorte rápido y una barra de recorte mejorada 🎞️',
+  'feat3v152': 'Nuevo selector de archivos experimental',
+  'featDesc3v152':
+      'El nuevo selector de archivos experimental permite previsualizar y filtrar tus videos por fecha, no más desplazamientos al agregar videos pasados 📅 (Puedes desactivarlo en Preferencias si experimentas problemas)',
+  'feat4v152': 'Bloqueo de orientación',
+  'featDesc4v152':
+      'Al grabar en la aplicación, toca el nuevo botón después de posicionar tu teléfono para bloquear la orientación y evitar resultados inesperados 📱',
+  'feat5v152': 'Y más...',
+  'featDesc5v152':
+      'También encontrarás algunas pequeñas mejoras visuales y correcciones de errores 🐛',
 };

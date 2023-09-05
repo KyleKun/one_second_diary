@@ -17,7 +17,7 @@ class IntroPage extends StatelessWidget {
     await SharedPrefsUtil.putBool('showIntro', false);
     await SharedPrefsUtil.putInt('videoCount', 0);
     await SharedPrefsUtil.putInt('movieCount', 1);
-    Get.offNamed(Routes.NEW_FEATURES_V15);
+    Get.offNamed(Routes.NEW_FEATURES_V152);
   }
 
   Widget _buildImage(String assetName) {

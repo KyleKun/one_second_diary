@@ -185,4 +185,19 @@ const Map<String, String> id = {
   'sendLogs': 'Kirim log?',
   'sendLogsDescription':
       'Jika Anda menghadapi masalah, silakan tekan "Ya" untuk menyertakan log yang akan membantu saya menemukan masalahnya. Jika ini adalah saran fitur atau topik lain, silakan tekan "Tidak".',
+  'whatsNewDescv152':
+      'Versi 1.5.2 membawa berbagai perbaikan dan peningkatan!\n\nLihat di halaman berikutnya 😊',
+  'feat1v152': 'Pemrosesan Video Lebih Cepat',
+  'featDesc1v152': 'Mengedit video besar kini jauh lebih cepat 🚀',
+  'feat2v152': 'Pemotongan Video Ditingkatkan',
+  'featDesc2v152':
+      'Pilih momen Anda dengan lebih tepat dengan tombol potong cepat yang baru dan batang pemotongan yang ditingkatkan 🎞️',
+  'feat3v152': 'Pemilih Berkas Eksperimental Baru',
+  'featDesc3v152':
+      'Pemilih berkas eksperimental baru memungkinkan pratinjau dan penyaringan video Anda berdasarkan tanggal, tidak perlu menggulir saat menambahkan video lama 📅 (Anda dapat menonaktifkannya di Preferensi jika mengalami masalah)',
+  'feat4v152': 'Kunci Orientasi',
+  'featDesc4v152':
+      'Saat merekam di aplikasi, ketuk tombol baru setelah menempatkan ponsel Anda untuk mengunci orientasi dan menghindari hasil yang tidak diinginkan 📱',
+  'feat5v152': 'Dan lainnya...',
+  'featDesc5v152': 'Anda juga akan menemukan beberapa perbaikan visual kecil dan perbaikan bug 🐛',
 };
