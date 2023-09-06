@@ -21,6 +21,7 @@ import '../../utils/theme.dart';
 import '../../utils/utils.dart';
 import '../home/profiles/profiles_page.dart';
 import 'widgets/save_button.dart';
+import 'widgets/tab_item.dart';
 
 class SaveVideoPage extends StatefulWidget {
   @override
@@ -65,6 +66,7 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
   bool _isLocationProcessing = false;
 
   late final bool isDarkTheme = ThemeService().isDarkTheme();
+  String selectedProfileName = Utils.getCurrentProfile();
 
   void _initCorrectDates() {
     final DateTime selectedDate = routeArguments['currentDate'];
@@ -549,9 +551,257 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
     );
   }
 
-  Widget videoProperties() {
-    final String selectedProfileName = Utils.getCurrentProfile();
+  Widget generalTabContent() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(height: 8),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 22.0),
+          child: Row(
+            children: [
+              Text(
+                'currentProfile'.tr,
+                style: TextStyle(
+                  fontSize: MediaQuery.of(context).size.height * 0.019,
+                ),
+              ),
+              const SizedBox(width: 8),
+              Flexible(
+                child: Text(
+                  selectedProfileName.isEmpty ? 'default'.tr : selectedProfileName,
+                  style: TextStyle(
+                    fontSize: MediaQuery.of(context).size.height * 0.019,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 20),
+              Flexible(
+                child: TextButton(
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(
+                        AppColors.dark.withOpacity(isDarkTheme ? 1.0 : 0.55)),
+                    shape: MaterialStateProperty.all(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(40),
+                      ),
+                    ),
+                  ),
+                  onPressed: () {
+                    Get.to(const ProfilesPage())?.then(
+                      (_) => setState(() {
+                        selectedProfileName = Utils.getCurrentProfile();
+                      }),
+                    );
+                  },
+                  child: Text(
+                    'change'.tr,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: MediaQuery.of(context).size.height * 0.017,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
 
+        const SizedBox(height: 10),
+
+        // Date color
+        GestureDetector(
+          onTap: () => colorPickerDialog(),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 22.0, right: 11.0),
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(
+                        bottom: MediaQuery.of(context).size.height * 0.02,
+                      ),
+                      child: Text(
+                        'dateColorAndFormat'.tr,
+                        style: TextStyle(
+                          fontSize: MediaQuery.of(context).size.height * 0.019,
+                        ),
+                      ),
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: currentColor,
+                      ),
+                      width: MediaQuery.of(context).size.width * 0.09,
+                      height: MediaQuery.of(context).size.width * 0.09,
+                      child: Icon(
+                        Icons.edit,
+                        color: invert(currentColor),
+                      ),
+                    ),
+                    const SizedBox(height: 5.0),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: RadioGroup<String>.builder(
+                  direction: Axis.vertical,
+                  horizontalAlignment: MainAxisAlignment.start,
+                  groupValue: _recordingSettingsController.dateFormatId.value == 0
+                      ? _dateFormatsForVideoEdit.first
+                      : _dateFormatsForVideoEdit.last,
+                  fillColor: AppColors.yellow,
+                  onChanged: (value) => setState(() {
+                    _dateFinalFormatValueForVideoEdit = value!;
+                    // Place date in the bottom if it is text format
+                    _dateFinalFormatValueForVideoEdit == _dateFormatsForVideoEdit.first
+                        ? isTextDate = false
+                        : isTextDate = true;
+
+                    // Save the date format in shared preferences
+                    _recordingSettingsController.setDateFormat(
+                        _dateFinalFormatValueForVideoEdit == _dateFormatsForVideoEdit.first
+                            ? 0
+                            : 1);
+                  }),
+                  items: _dateFormatsForVideoEdit,
+                  itemBuilder: (item) => RadioButtonBuilder(
+                    item,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 10),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget locationTabContent() {
+    return Column(
+      children: [
+        const SizedBox(height: 8),
+
+        // Geotagging
+        Container(
+          margin: EdgeInsets.symmetric(
+            horizontal: MediaQuery.of(context).size.width * 0.03,
+          ),
+          child: Column(
+            children: [
+              CustomCheckboxListTile(
+                isChecked: isGeotaggingEnabled,
+                onChanged: (_) async {
+                  if (!_isLocationProcessing) {
+                    toggleGeotaggingStatus();
+                    if (isGeotaggingEnabled) {
+                      Utils.logInfo('[Geolocation] - Getting location...');
+                      await _getCurrentPosition();
+                    }
+                    setState(() {});
+                  }
+                },
+                padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * 0.04),
+                title: Text(
+                  'enableGeotagging'.tr,
+                  style: TextStyle(
+                    fontSize: MediaQuery.of(context).size.height * 0.019,
+                  ),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * 0.04),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Flexible(
+                      child: GestureDetector(
+                        onTap: () async {
+                          await showCustomLocationDialog();
+                        },
+                        child: Text(
+                          'setCustomLocation'.tr,
+                          style: TextStyle(
+                            fontSize: MediaQuery.of(context).size.height * 0.019,
+                          ),
+                        ),
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: () async {
+                        await showCustomLocationDialog();
+                      },
+                      icon: const Icon(Icons.edit_location_alt),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 5.0),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget subtitlesTabContent() {
+    return Column(
+      children: [
+        const SizedBox(height: 8),
+
+        // Subtitles
+        Container(
+          margin: EdgeInsets.symmetric(
+            horizontal: MediaQuery.of(context).size.width * 0.03,
+          ),
+          child: Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: MediaQuery.of(context).size.width * 0.04,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 10.0),
+                Text(
+                  'subtitles'.tr,
+                  style: TextStyle(
+                    fontSize: MediaQuery.of(context).size.height * 0.019,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                TextField(
+                  controller: subtitlesTextController,
+                  style: TextStyle(
+                    fontFamily: DefaultTextStyle.of(context).style.fontFamily,
+                  ),
+                  maxLines: 12,
+                  readOnly: true,
+                  onTap: () async => await showSubtitlesDialog(),
+                  decoration: InputDecoration(
+                    hintText: 'enterSubtitles'.tr,
+                    filled: true,
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: isDarkTheme ? Colors.white : Colors.black),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: isDarkTheme ? Colors.white : Colors.black),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 10.0),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget videoProperties() {
     return DefaultTabController(
       initialIndex: 0,
       length: 3,
@@ -567,77 +817,23 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
               ),
               isScrollable: true,
               tabs: [
-                Row(
-                  children: [
-                    Container(
-                      width: 20,
-                      height: 20,
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: AppColors.mainColor,
-                      ),
-                      child: const Center(
-                        child: Text('1'),
-                      ),
-                    ),
-                    const SizedBox(width: 6),
-                    Text(
-                      'saveVideoTabOne'.tr,
-                      style: TextStyle(
-                        fontSize: MediaQuery.of(context).size.height * 0.019,
-                        color: isDarkTheme ? Colors.white : Colors.black,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
+                TabItem(
+                  id: '1',
+                  title: 'saveVideoTabOne'.tr,
+                  color: AppColors.mainColor,
+                  isDarkTheme: isDarkTheme,
                 ),
-                Row(
-                  children: [
-                    Container(
-                      width: 20,
-                      height: 20,
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: AppColors.purple,
-                      ),
-                      child: const Center(
-                        child: Text('2'),
-                      ),
-                    ),
-                    const SizedBox(width: 6),
-                    Text(
-                      'saveVideoTabTwo'.tr,
-                      style: TextStyle(
-                        fontSize: MediaQuery.of(context).size.height * 0.019,
-                        color: isDarkTheme ? Colors.white : Colors.black,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
+                TabItem(
+                  id: '2',
+                  title: 'saveVideoTabTwo'.tr,
+                  color: AppColors.purple,
+                  isDarkTheme: isDarkTheme,
                 ),
-                Row(
-                  children: [
-                    Container(
-                      width: 20,
-                      height: 20,
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: AppColors.yellow,
-                      ),
-                      child: const Center(
-                        child: Text('3'),
-                      ),
-                    ),
-                    const SizedBox(width: 6),
-                    Text(
-                      'saveVideoTabThree'.tr,
-                      style: TextStyle(
-                        fontSize: MediaQuery.of(context).size.height * 0.019,
-                        color: isDarkTheme ? Colors.white : Colors.black,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
+                TabItem(
+                  id: '3',
+                  title: 'saveVideoTabThree'.tr,
+                  color: AppColors.yellow,
+                  isDarkTheme: isDarkTheme,
                 ),
               ],
             ),
@@ -646,248 +842,9 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
             child: TabBarView(
               physics: const BouncingScrollPhysics(),
               children: <Widget>[
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(height: 8),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 22.0),
-                      child: Row(
-                        children: [
-                          Text(
-                            'currentProfile'.tr,
-                            style: TextStyle(
-                              fontSize: MediaQuery.of(context).size.height * 0.019,
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          Flexible(
-                            child: Text(
-                              selectedProfileName.isEmpty ? 'default'.tr : selectedProfileName,
-                              style: TextStyle(
-                                fontSize: MediaQuery.of(context).size.height * 0.019,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 20),
-                          Flexible(
-                            child: TextButton(
-                              style: ButtonStyle(
-                                backgroundColor: MaterialStateProperty.all(
-                                    AppColors.dark.withOpacity(isDarkTheme ? 1.0 : 0.55)),
-                                shape: MaterialStateProperty.all(
-                                  RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(40),
-                                  ),
-                                ),
-                              ),
-                              onPressed: () {
-                                Get.to(const ProfilesPage())?.then((_) => setState(() {}));
-                              },
-                              child: Text(
-                                'change'.tr,
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: MediaQuery.of(context).size.height * 0.017,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-
-                    const SizedBox(height: 10),
-
-                    // Date color
-                    GestureDetector(
-                      onTap: () => colorPickerDialog(),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(left: 22.0, right: 11.0),
-                            child: Column(
-                              children: [
-                                Padding(
-                                  padding: EdgeInsets.only(
-                                    bottom: MediaQuery.of(context).size.height * 0.02,
-                                  ),
-                                  child: Text(
-                                    'dateColorAndFormat'.tr,
-                                    style: TextStyle(
-                                      fontSize: MediaQuery.of(context).size.height * 0.019,
-                                    ),
-                                  ),
-                                ),
-                                Container(
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: currentColor,
-                                  ),
-                                  width: MediaQuery.of(context).size.width * 0.09,
-                                  height: MediaQuery.of(context).size.width * 0.09,
-                                  child: Icon(
-                                    Icons.edit,
-                                    color: invert(currentColor),
-                                  ),
-                                ),
-                                const SizedBox(height: 5.0),
-                              ],
-                            ),
-                          ),
-                          Expanded(
-                            child: RadioGroup<String>.builder(
-                              direction: Axis.vertical,
-                              horizontalAlignment: MainAxisAlignment.start,
-                              groupValue: _recordingSettingsController.dateFormatId.value == 0
-                                  ? _dateFormatsForVideoEdit.first
-                                  : _dateFormatsForVideoEdit.last,
-                              fillColor: AppColors.yellow,
-                              onChanged: (value) => setState(() {
-                                _dateFinalFormatValueForVideoEdit = value!;
-                                // Place date in the bottom if it is text format
-                                _dateFinalFormatValueForVideoEdit == _dateFormatsForVideoEdit.first
-                                    ? isTextDate = false
-                                    : isTextDate = true;
-
-                                // Save the date format in shared preferences
-                                _recordingSettingsController.setDateFormat(
-                                    _dateFinalFormatValueForVideoEdit ==
-                                            _dateFormatsForVideoEdit.first
-                                        ? 0
-                                        : 1);
-                              }),
-                              items: _dateFormatsForVideoEdit,
-                              itemBuilder: (item) => RadioButtonBuilder(
-                                item,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 10),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                Column(
-                  children: [
-                    const SizedBox(height: 8),
-
-                    // Geotagging
-                    Container(
-                      margin: EdgeInsets.symmetric(
-                        horizontal: MediaQuery.of(context).size.width * 0.03,
-                      ),
-                      child: Column(
-                        children: [
-                          CustomCheckboxListTile(
-                            isChecked: isGeotaggingEnabled,
-                            onChanged: (_) async {
-                              if (!_isLocationProcessing) {
-                                toggleGeotaggingStatus();
-                                if (isGeotaggingEnabled) {
-                                  Utils.logInfo('[Geolocation] - Getting location...');
-                                  await _getCurrentPosition();
-                                }
-                                setState(() {});
-                              }
-                            },
-                            padding: EdgeInsets.symmetric(
-                                horizontal: MediaQuery.of(context).size.width * 0.04),
-                            title: Text(
-                              'enableGeotagging'.tr,
-                              style: TextStyle(
-                                fontSize: MediaQuery.of(context).size.height * 0.019,
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: MediaQuery.of(context).size.width * 0.04),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Flexible(
-                                  child: GestureDetector(
-                                    onTap: () async {
-                                      await showCustomLocationDialog();
-                                    },
-                                    child: Text(
-                                      'setCustomLocation'.tr,
-                                      style: TextStyle(
-                                        fontSize: MediaQuery.of(context).size.height * 0.019,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                IconButton(
-                                  onPressed: () async {
-                                    await showCustomLocationDialog();
-                                  },
-                                  icon: const Icon(Icons.edit_location_alt),
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(height: 5.0),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                Column(
-                  children: [
-                    const SizedBox(height: 8),
-
-                    // Subtitles
-                    Container(
-                      margin: EdgeInsets.symmetric(
-                        horizontal: MediaQuery.of(context).size.width * 0.03,
-                      ),
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: MediaQuery.of(context).size.width * 0.04,
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const SizedBox(height: 10.0),
-                            Text(
-                              'subtitles'.tr,
-                              style: TextStyle(
-                                fontSize: MediaQuery.of(context).size.height * 0.019,
-                              ),
-                            ),
-                            const SizedBox(height: 4),
-                            TextField(
-                              controller: subtitlesTextController,
-                              style: TextStyle(
-                                fontFamily: DefaultTextStyle.of(context).style.fontFamily,
-                              ),
-                              maxLines: null,
-                              readOnly: true,
-                              onTap: () async => await showSubtitlesDialog(),
-                              decoration: InputDecoration(
-                                hintText: 'enterSubtitles'.tr,
-                                filled: true,
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide:
-                                      BorderSide(color: isDarkTheme ? Colors.white : Colors.black),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderSide:
-                                      BorderSide(color: isDarkTheme ? Colors.white : Colors.black),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 10.0),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+                generalTabContent(),
+                locationTabContent(),
+                subtitlesTabContent(),
               ],
             ),
           ),
@@ -901,9 +858,33 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
     await showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Center(
-          child: Text(
-            'subtitles'.tr,
+        title: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 5.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'subtitles'.tr,
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                style: TextButton.styleFrom(
+                  backgroundColor: AppColors.green.withOpacity(0.8),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                ),
+                child: Text(
+                  'save'.tr,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 15.0,
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
         shape: RoundedRectangleBorder(
@@ -915,7 +896,7 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
             TextField(
               autofocus: true,
               controller: subtitlesTextController,
-              maxLines: null,
+              maxLines: 12,
               style: TextStyle(
                 fontFamily: DefaultTextStyle.of(context).style.fontFamily,
               ),
@@ -928,25 +909,12 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
                   borderSide: BorderSide(color: AppColors.green),
                 ),
               ),
+              onTapOutside: (_) => setState(() {
+                _subtitles = subtitlesTextController.text.trim();
+              }),
             ),
           ],
         ),
-        actions: [
-          TextButton(
-            onPressed: () async {
-              setState(() {
-                _subtitles = subtitlesTextController.text.trim();
-              });
-              Navigator.pop(context);
-            },
-            child: Text(
-              'ok'.tr,
-              style: const TextStyle(
-                color: AppColors.green,
-              ),
-            ),
-          ),
-        ],
       ),
     );
   }
