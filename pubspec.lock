@@ -620,10 +620,10 @@ packages:
     dependency: "direct main"
     description:
       name: logger
-      sha256: "66cb048220ca51cf9011da69fa581e4ee2bed4be6e82870d9e9baae75739da49"
+      sha256: ba3bc83117b2b49bdd723c0ea7848e8285a0fbc597ba09203b20d329d020c24a
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.1"
+    version: "2.0.2"
   logging:
     dependency: transitive
     description:
@@ -869,18 +869,18 @@ packages:
     dependency: "direct main"
     description:
       name: rive
-      sha256: "0ed73d33bb501da49001510e456789c279ffa017370748bcde846693645640e0"
+      sha256: "5fbb92f9f880cddbb9181342dc24099eee323ca43339e2c8e1ae6fad85df915e"
       url: "https://pub.dev"
     source: hosted
-    version: "0.11.15"
+    version: "0.11.16"
   rive_common:
     dependency: transitive
     description:
       name: rive_common
-      sha256: "1431b99c9f361234cc6fa9aee7987b20030622df25ff64343a4010f9446b275e"
+      sha256: e41f12917cb58e0c9376836490ebaa431e12744da0c67e19dad8d4bee9fedd46
       url: "https://pub.dev"
     source: hosted
-    version: "0.2.6"
+    version: "0.2.7"
   salomon_bottom_bar:
     dependency: "direct main"
     description:
@@ -1236,7 +1236,7 @@ packages:
     description:
       path: "."
       ref: main
-      resolved-ref: fad6e585aa8afe92b0c902151264342fd16129c9
+      resolved-ref: "3aea29958441db111a17acaa670c922d3f936854"
       url: "https://github.com/KyleKun/flutter_wechat_assets_picker.git"
     source: git
     version: "8.7.0"
