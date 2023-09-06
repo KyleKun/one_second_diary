@@ -778,7 +778,7 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
                   style: TextStyle(
                     fontFamily: DefaultTextStyle.of(context).style.fontFamily,
                   ),
-                  maxLines: 12,
+                  maxLines: 6,
                   readOnly: true,
                   onTap: () async => await showSubtitlesDialog(),
                   decoration: InputDecoration(
