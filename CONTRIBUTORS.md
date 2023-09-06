@@ -30,6 +30,6 @@
 ## App Logo (Initial Version)
 - Victória Marques
 
-## PlayStore Screenshots
+## PlayStore Screenshots (Initial Version)
 - Sajjad Bhattee
 
