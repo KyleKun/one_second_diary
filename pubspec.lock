@@ -1236,7 +1236,7 @@ packages:
     description:
       path: "."
       ref: main
-      resolved-ref: "3aea29958441db111a17acaa670c922d3f936854"
+      resolved-ref: "294dd86b5a64f87764da0b4260c67bfbbf2f4b41"
       url: "https://github.com/KyleKun/flutter_wechat_assets_picker.git"
     source: git
     version: "8.7.0"
