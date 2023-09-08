@@ -22,9 +22,14 @@
 <p align="center">🎬 Record 1 second everyday & create the movie of your life.</p>
 
 <p align="center">
-    <img src="/media/1.jpg" width="32%">
-    <img src="/media/2.jpg" width="32%">
-    <img src="/media/3.jpg" width="32%">
+    <img src="/media/1.png" width="32%">
+    <img src="/media/2.png" width="32%">
+    <img src="/media/3.png" width="32%">
+</p>
+<p align="center">
+    <img src="/media/4.png" width="32%">
+    <img src="/media/5.png" width="32%">
+    <img src="/media/6.png" width="32%">
 </p>
 
 ## About
@@ -50,17 +55,17 @@ Then, after a couple months or even years:
 
 ## Features
 
-- ✅ Record up to 10 seconds of video (1080p resolution)
-- ✅ Pick videos from gallery
-- ✅ Add or edit subtitles in the videos
-- ✅ Add automatic or manual geotagging on top of the videos
-- ✅ Choose the date format and color to show on top of the videos
-- ✅ Create profiles to save videos separately
-- ✅ View all recorded days in a calendar
-- ✅ Generate custom movies by periods or selected videos only
-- ✅ Receive scheduled daily notifications
-- ✅ Dark Mode
-- ✅ Available in 9 languages
+- Record up to 10 seconds of video (1080p resolution)
+- Pick videos from gallery
+- Add or edit subtitles in the videos
+- Add automatic or manual geotagging on top of the videos
+- Choose the date format and color to show on top of the videos
+- Create profiles to save videos separately
+- View all recorded days in a calendar
+- Generate custom movies by periods or selected videos only
+- Receive scheduled daily notifications
+- Dark Mode
+- Available in 9 languages
 
 If you have any suggestions or want to contribute, feel free to open a PR or contact me!
 
