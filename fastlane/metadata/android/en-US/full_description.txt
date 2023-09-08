@@ -27,4 +27,4 @@ Then, after a couple months or even years:
 - Generate custom movies with all videos or selected videos only
 - Receive scheduled daily notifications
 - Dark Mode
-- Available in 8 languages
+- Available in 9 languages
