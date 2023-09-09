@@ -21,15 +21,15 @@ dependencies:
   flutter_local_notifications: ^15.1.1
   fluttertoast: ^8.2.2
   geocoding: ^2.1.0
-  geolocator: ^10.0.0
-  get: ^4.6.5
+  geolocator: ^10.0.1
+  get: ^4.6.6
   group_radio_button: ^1.3.0
   image_picker: ^1.0.2
   intl: ^0.18.1
   introduction_screen: ^3.1.11
   native_device_orientation: ^1.1.4
   path_provider: ^2.1.0
-  permission_handler: ^10.4.3
+  permission_handler: ^10.4.5
   rive: ^0.11.14
   salomon_bottom_bar: ^3.3.2
   share_plus: ^7.1.0

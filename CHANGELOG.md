@@ -1,4 +1,5 @@
 ## v1.5.3 - 09/2023
+- Add reverse filter order button in experimental file picker
 - Store location metadata in video when geotagging is enabled
 - Autofocus and capitalize first letter of custom locale and subtitles text fields
 
