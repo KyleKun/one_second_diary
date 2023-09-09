@@ -302,8 +302,8 @@ class _SaveButtonState extends State<SaveButton> {
     if (isGeotaggingEnabled) {
       final latitude = Utils.locationPositionToString(widget.userPosition?.latitude);
       final longitude = Utils.locationPositionToString(widget.userPosition?.longitude);
-      // Default location metadata
-      locationMetadata = ' -metadata location="$latitude$longitude/${widget.userLocation}"';
+      final localeName = widget.userLocation?.replaceAll('"', '\\"');
+      locationMetadata = ' -metadata location="$latitude$longitude/$localeName"';
     }
 
     // Add metadata to know the version of the app it was made, profile it was saved to and the origin of the video
