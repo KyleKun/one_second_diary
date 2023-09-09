@@ -1,3 +1,7 @@
+## v1.5.3 - 09/2023
+- Store location metadata in video when geotagging is enabled
+- Autofocus and capitalize first letter of custom locale and subtitles text fields
+
 ## v1.5.2 - 09/2023
 - Added quick trim shortcuts in save video page for a more precise editing
 - Added a new "lock orientation" button in the recording page

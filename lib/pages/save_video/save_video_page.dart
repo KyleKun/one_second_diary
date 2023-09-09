@@ -488,6 +488,7 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
             dateColor: currentColor,
             dateFormat: _dateFinalFormatValueForVideoEdit,
             isTextDate: isTextDate,
+            userPosition: _currentPosition,
             userLocation: customLocationTextController.text.isEmpty
                 ? _currentAddress ?? ''
                 : customLocationTextController.text,
@@ -896,6 +897,7 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
             TextField(
               autofocus: true,
               controller: subtitlesTextController,
+              textCapitalization: TextCapitalization.sentences,
               maxLines: 12,
               style: TextStyle(
                 fontFamily: DefaultTextStyle.of(context).style.fontFamily,
@@ -935,7 +937,9 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
           mainAxisSize: MainAxisSize.min,
           children: [
             TextField(
+              autofocus: true,
               controller: customLocationTextController,
+              textCapitalization: TextCapitalization.sentences,
               decoration: InputDecoration(
                 hintText: 'enterLocation'.tr,
                 filled: true,

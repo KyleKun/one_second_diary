@@ -494,4 +494,15 @@ class Utils {
 
     return fontPath;
   }
+
+  /// Get the string with correct format for the location metadata
+  static String locationPositionToString(double? value) {
+    if (value == null) return '+0';
+
+    final String stringValue = value.toString();
+    if (stringValue.startsWith('-')) {
+      return stringValue;
+    }
+    return '+$stringValue';
+  }
 }

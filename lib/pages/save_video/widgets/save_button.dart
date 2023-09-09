@@ -1,6 +1,7 @@
 import 'package:ffmpeg_kit_flutter_full_gpl/ffmpeg_kit_config.dart';
 import 'package:ffmpeg_kit_flutter_full_gpl/return_code.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:media_store_plus/media_store_plus.dart';
 import 'package:video_player/video_player.dart';
@@ -22,6 +23,7 @@ class SaveButton extends StatefulWidget {
     required this.dateColor,
     required this.dateFormat,
     required this.isTextDate,
+    required this.userPosition,
     required this.userLocation,
     required this.subtitles,
     required this.videoDuration,
@@ -40,6 +42,7 @@ class SaveButton extends StatefulWidget {
   final Color dateColor;
   final String dateFormat;
   final bool isTextDate;
+  final Position? userPosition;
   final String? userLocation;
   final String? subtitles;
   final int videoDuration;
@@ -295,9 +298,19 @@ class _SaveButtonState extends State<SaveButton> {
     }
     Utils.logInfo('${logTag}Subtitles file path: $subtitlesPath');
 
+    String locationMetadata = '';
+    if (isGeotaggingEnabled) {
+      final latitude = Utils.locationPositionToString(widget.userPosition?.latitude);
+      final longitude = Utils.locationPositionToString(widget.userPosition?.longitude);
+      // Default location metadata
+      locationMetadata = ' -metadata location="$latitude$longitude/${widget.userLocation}"';
+    }
+
     // Add metadata to know the version of the app it was made, profile it was saved to and the origin of the video
-    final metadata =
+    final baseMetadata =
         '-metadata artist="${Constants.artist}" -metadata album="$currentProfileName" -metadata comment="origin=$origin"';
+
+    final metadata = baseMetadata + locationMetadata;
 
     // Trim video to the selected range
     final trim = '-ss ${videoStartInMilliseconds}ms -to ${videoEndInMilliseconds}ms';
