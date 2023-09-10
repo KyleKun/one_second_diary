@@ -3,7 +3,7 @@ description: Record one second of your day, everyday.
 
 publish_to: "none"
 
-version: 1.5.2+15
+version: 1.5.3+16
 
 environment:
   sdk: ">=2.18.2 <3.0.0"
