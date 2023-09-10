@@ -200,4 +200,10 @@ const Map<String, String> de = {
   'feat5v152': 'Und mehr...',
   'featDesc5v152':
       'Sie finden auch einige kleinere visuelle Verbesserungen und Fehlerbehebungen 🐛',
+  'useFilterInExperimentalPicker': 'Verwenden Sie das Datumsfilter, um Videos auszuwählen',
+  'useFilterInExperimentalPickerDescription':
+      'Wenn aktiviert, filtern die Auswahl vergangener Daten die Videos nach diesem Datum. Wenn deaktiviert, werden alle Videos angezeigt. Funktioniert nur mit dem experimentellen Dateiauswähler.',
+  'useAlternativeCalendarColors': 'Alternative Kalenderfarben verwenden',
+  'useAlternativeCalendarColorsDescription':
+      'Ändert grün und rot im Kalender zu blau und gelb. Nützlich für farbenblinde Menschen.'
 };

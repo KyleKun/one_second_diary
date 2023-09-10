@@ -202,4 +202,10 @@ const Map<String, String> en = {
       'When recording in the app, tap the new button after positioning your phone to lock the orientation and avoid unexpected results 📱',
   'feat5v152': 'And more...',
   'featDesc5v152': 'You will also find some small visual improvements and bug fixes 🐛',
+  'useFilterInExperimentalPicker': 'Use date filter to pick videos',
+  'useFilterInExperimentalPickerDescription':
+      'When enabled, selecting past dates will filter the videos by that date. When disabled, all videos will be shown. Works only with the experimental file picker.',
+  'useAlternativeCalendarColors': 'Use alternative calendar colors',
+  'useAlternativeCalendarColorsDescription':
+      'Changes green and red in calendar to blue and yellow. Useful for colorblind people.',
 };

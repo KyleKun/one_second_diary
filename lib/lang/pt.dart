@@ -203,4 +203,10 @@ const Map<String, String> pt = {
   'feat5v152': 'E mais...',
   'featDesc5v152':
       'Você também encontrará algumas pequenas melhorias visuais e correções de erros 🐛',
+  'useFilterInExperimentalPicker': 'Filtrar data para escolher vídeos',
+  'useFilterInExperimentalPickerDescription':
+      'Quando ativado, selecionar datas passadas filtrará os vídeos por essa data. Quando desativado, todos os vídeos serão mostrados. Funciona apenas com o seletor de arquivos experimental.',
+  'useAlternativeCalendarColors': 'Usar cores alternativas para o calendário',
+  'useAlternativeCalendarColorsDescription':
+      'Muda as cores verde e vermelho no calendário para azul e amarelo. Útil para pessoas daltônicas.'
 };

@@ -52,6 +52,8 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
   VideoPlayerController? _controller;
   final UniqueKey _videoPlayerKey = UniqueKey();
   final mediaStore = MediaStore();
+  late final bool useCalendarAlternativeColors =
+      SharedPrefsUtil.getBool('useAlternativeCalendarColors') ?? false;
 
   @override
   void initState() {
@@ -175,6 +177,7 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
   /// Picks video from gallery
   Future<void> selectVideoFromGallery() async {
     final isExperimentalPicker = SharedPrefsUtil.getBool('useExperimentalPicker') ?? true;
+    final useFilter = SharedPrefsUtil.getBool('useFilterInExperimentalPicker') ?? true;
 
     if (isExperimentalPicker) {
       final bool shouldIgnoreFilter = shouldIgnoreExperimentalFilter();
@@ -198,7 +201,7 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
         pickerConfig: AssetPickerConfig(
           maxAssets: 1,
           requestType: RequestType.video,
-          filterOptions: filterOptionGroup,
+          filterOptions: useFilter ? filterOptionGroup : null,
           sortPathsByModifiedDate: true,
           specialItemPosition: SpecialItemPosition.prepend,
           specialItemBuilder: (context, path, length) {
@@ -364,7 +367,10 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
                           child: Text(
                             date.day.toString(),
                             style: TextStyle(
-                              color: hasVideo ? AppColors.green : AppColors.mainColor,
+                              color: getDayColor(hasVideo),
+                              fontWeight: useCalendarAlternativeColors
+                                  ? FontWeight.w900
+                                  : FontWeight.normal,
                               fontFamily: 'Magic',
                             ),
                           ),
@@ -643,6 +649,13 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
         wasDateRecorded = false;
       });
     }
+  }
+
+  Color getDayColor(bool hasVideo) {
+    if (hasVideo) {
+      return useCalendarAlternativeColors ? Colors.blue : AppColors.green;
+    }
+    return useCalendarAlternativeColors ? AppColors.yellow : AppColors.mainColor;
   }
 }
 

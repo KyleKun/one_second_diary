@@ -202,4 +202,10 @@ const Map<String, String> cs = {
       'Při nahrávání v aplikaci klepněte po nastavení telefonu na nové tlačítko, abyste zamkli orientaci a předešli neočekávaným výsledkům 📱',
   'feat5v152': 'A mnohem více...',
   'featDesc5v152': 'Najdete zde také některá drobná vizuální vylepšení a opravy chyb 🐛',
+  'useFilterInExperimentalPicker': 'Použijte filtr datumu pro výběr videí',
+  'useFilterInExperimentalPickerDescription':
+      'Pokud je aktivní, výběr minulých dat filtruje videa podle toho data. Pokud je deaktivováno, zobrazí se všechna videa. Funguje pouze s experimentálním výběrem souborů.',
+  'useAlternativeCalendarColors': 'Použijte alternativní barvy kalendáře',
+  'useAlternativeCalendarColorsDescription':
+      'Změní zelenou a červenou v kalendáři na modrou a žlutou. Užitečné pro barvoslepé.'
 };

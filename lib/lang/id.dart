@@ -200,4 +200,10 @@ const Map<String, String> id = {
       'Saat merekam di aplikasi, ketuk tombol baru setelah menempatkan ponsel Anda untuk mengunci orientasi dan menghindari hasil yang tidak diinginkan 📱',
   'feat5v152': 'Dan lainnya...',
   'featDesc5v152': 'Anda juga akan menemukan beberapa perbaikan visual kecil dan perbaikan bug 🐛',
+  'useFilterInExperimentalPicker': 'Gunakan filter tanggal untuk memilih video',
+  'useFilterInExperimentalPickerDescription':
+      'Ketika diaktifkan, memilih tanggal sebelumnya akan memfilter video berdasarkan tanggal tersebut. Ketika dinonaktifkan, semua video akan ditampilkan. Hanya bekerja dengan pemilih file eksperimental.',
+  'useAlternativeCalendarColors': 'Gunakan warna kalender alternatif',
+  'useAlternativeCalendarColorsDescription':
+      'Mengubah hijau dan merah di kalender menjadi biru dan kuning. Berguna untuk orang buta warna.'
 };

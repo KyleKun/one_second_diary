@@ -176,4 +176,8 @@ const Map<String, String> zh = {
   'featDesc4v152': '在应用中录制时，调整手机位置后点击新按钮以锁定方向，避免意外的结果 📱',
   'feat5v152': '还有更多...',
   'featDesc5v152': '您还会发现一些小的视觉改进和错误修复 🐛',
+  'useFilterInExperimentalPicker': '使用日期过滤器选择视频',
+  'useFilterInExperimentalPickerDescription': '启用后，选择过去的日期将按该日期过滤视频。禁用后，将显示所有视频。仅适用于实验性文件选择器。',
+  'useAlternativeCalendarColors': '使用备用日历颜色',
+  'useAlternativeCalendarColorsDescription': '将日历中的绿色和红色更改为蓝色和黄色。对色盲者有用。'
 };
