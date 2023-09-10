@@ -58,7 +58,7 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
 
   String? _currentAddress;
   Position? _currentPosition;
-  bool isGeotaggingEnabled = false;
+  bool isGeotaggingEnabled = SharedPrefsUtil.getBool('enableGeotagging') ?? false;
   String? _subtitles;
   double _videoStartValue = 0.0;
   double _videoEndValue = 0.0;
@@ -156,6 +156,16 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
       return false;
     }
     return true;
+  }
+
+  Future<void> setGeotagging() async {
+    Utils.logInfo('[Geolocation] - Getting location...');
+    await _getCurrentPosition().then(
+      (_) => SharedPrefsUtil.putBool(
+        'enableGeotagging',
+        isGeotaggingEnabled,
+      ),
+    );
   }
 
   Future<void> _getCurrentPosition() async {
@@ -274,6 +284,9 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
     isTextDate = _recordingSettingsController.dateFormatId.value == 1;
     _initCorrectDates();
     _initVideoPlayerController();
+    if (isGeotaggingEnabled) {
+      setGeotagging();
+    }
     super.initState();
   }
 
@@ -608,7 +621,7 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
           ),
         ),
 
-        const SizedBox(height: 10),
+        const SizedBox(height: 8),
 
         // Date color
         GestureDetector(
@@ -700,8 +713,7 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
                   if (!_isLocationProcessing) {
                     toggleGeotaggingStatus();
                     if (isGeotaggingEnabled) {
-                      Utils.logInfo('[Geolocation] - Getting location...');
-                      await _getCurrentPosition();
+                      await setGeotagging();
                     }
                     setState(() {});
                   }

@@ -5,6 +5,7 @@
 - Added option to start recording by pressing volume buttons
 - Store location metadata in video when geotagging is enabled
 - Autofocus and capitalize first letter of custom locale and subtitles text fields
+- Remember last recording settings (which camera was used and geotagging checkbox)
 
 ## v1.5.2 - 09/2023
 - Added quick trim shortcuts in save video page for a more precise editing

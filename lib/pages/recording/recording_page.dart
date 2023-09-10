@@ -12,6 +12,7 @@ import '../../controllers/recording_settings_controller.dart';
 import '../../routes/app_pages.dart';
 import '../../utils/constants.dart';
 import '../../utils/custom_dialog.dart';
+import '../../utils/shared_preferences_util.dart';
 import '../../utils/utils.dart';
 
 // TODO(KyleKun): refactor this in the future ffs lol
@@ -25,6 +26,8 @@ class _RecordingPageState extends State<RecordingPage>
   final logTag = '[CAMERA] - ';
   late CameraController _cameraController;
   late List<CameraDescription> _availableCameras;
+  late CameraDescription _frontCamera;
+  late CameraDescription _backCamera;
   late StreamSubscription<HardwareButton>? volumeButtonStream;
 
   final RecordingSettingsController _recordingSettingsController = Get.find();
@@ -167,8 +170,13 @@ class _RecordingPageState extends State<RecordingPage>
     WidgetsFlutterBinding.ensureInitialized();
     await Utils.requestPermission(Permission.microphone);
     await Utils.requestPermission(Permission.camera);
+    final recordWithFrontCamera = SharedPrefsUtil.getBool('recordWithFrontCamera') ?? false;
     _availableCameras = await availableCameras();
-    _initCamera(_availableCameras.first);
+    _frontCamera = _availableCameras
+        .firstWhere((description) => description.lensDirection == CameraLensDirection.front);
+    _backCamera = _availableCameras
+        .firstWhere((description) => description.lensDirection == CameraLensDirection.back);
+    _initCamera(recordWithFrontCamera ? _frontCamera : _backCamera);
   }
 
   Future<void> _initCamera(CameraDescription description) async {
@@ -217,12 +225,12 @@ class _RecordingPageState extends State<RecordingPage>
     if (toggle) {
       CameraDescription newDescription;
       if (lensDirection == CameraLensDirection.front) {
-        newDescription = _availableCameras
-            .firstWhere((description) => description.lensDirection == CameraLensDirection.back);
+        newDescription = _backCamera;
+        SharedPrefsUtil.putBool('recordWithFrontCamera', false);
         Utils.logInfo('${logTag}Changed to back camera');
       } else {
-        newDescription = _availableCameras
-            .firstWhere((description) => description.lensDirection == CameraLensDirection.front);
+        newDescription = _frontCamera;
+        SharedPrefsUtil.putBool('recordWithFrontCamera', true);
         Utils.logInfo('${logTag}Changed to front camera');
       }
       _initCamera(newDescription);
