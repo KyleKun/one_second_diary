@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_android_volume_keydown/flutter_android_volume_keydown.dart';
 import 'package:get/get.dart';
 import 'package:native_device_orientation/native_device_orientation.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -24,6 +25,7 @@ class _RecordingPageState extends State<RecordingPage>
   final logTag = '[CAMERA] - ';
   late CameraController _cameraController;
   late List<CameraDescription> _availableCameras;
+  late StreamSubscription<HardwareButton>? volumeButtonStream;
 
   final RecordingSettingsController _recordingSettingsController = Get.find();
 
@@ -57,6 +59,16 @@ class _RecordingPageState extends State<RecordingPage>
     WidgetsBinding.instance.addObserver(this);
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
+    volumeButtonStream = FlutterAndroidVolumeKeydown.stream.listen((event) {
+      if (event == HardwareButton.volume_down || event == HardwareButton.volume_up) {
+        if (!_isRecording) {
+          volumeButtonStream?.cancel();
+          setState(() => _isRecording = true);
+          startVideoRecording();
+        }
+      }
+    });
+
     _isRecording = false;
 
     _isTimerEnable = _recordingSettingsController.isTimerEnable.value;
@@ -68,6 +80,7 @@ class _RecordingPageState extends State<RecordingPage>
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
+    volumeButtonStream?.cancel();
     stopwatch.stop();
     stopwatch.reset();
     _timer?.cancel();

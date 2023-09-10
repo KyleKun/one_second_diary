@@ -58,6 +58,7 @@ dependencies:
     git:
       url: https://github.com/KyleKun/flutter_wechat_assets_picker.git
       ref: main
+  flutter_android_volume_keydown: ^1.0.0
 
 dev_dependencies:
   flutter_test:
