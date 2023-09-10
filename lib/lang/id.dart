@@ -7,7 +7,7 @@ const Map<String, String> id = {
       'Terima kasih sudah menggunakan aplikasi ini!\n\nJika Anda ingin mendukung pembuatan aplikasi ini, jangan sungkan untuk berdonasi^^.',
   'donationPageTitle': 'Dukung pembuatan aplikasi',
   'about': 'Tentang',
-  'appVersion': 'Versi 1.5.2',
+  'appVersion': 'Versi 1.5.3',
   'record': 'Rekam',
   'createMovie': 'Buat video',
   'settings': 'Pengaturan',
@@ -186,7 +186,7 @@ const Map<String, String> id = {
   'sendLogsDescription':
       'Jika Anda menghadapi masalah, silakan tekan "Ya" untuk menyertakan log yang akan membantu saya menemukan masalahnya. Jika ini adalah saran fitur atau topik lain, silakan tekan "Tidak".',
   'whatsNewDescv152':
-      'Versi 1.5.2 membawa berbagai perbaikan dan peningkatan!\n\nLihat di halaman berikutnya 😊',
+      'Versi 1.5.3 membawa berbagai perbaikan dan peningkatan!\n\nLihat di halaman berikutnya 😊',
   'feat1v152': 'Pemrosesan Video Lebih Cepat',
   'featDesc1v152': 'Mengedit video besar kini jauh lebih cepat 🚀',
   'feat2v152': 'Pemotongan Video Ditingkatkan',

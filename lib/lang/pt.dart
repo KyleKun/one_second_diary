@@ -7,7 +7,7 @@ const Map<String, String> pt = {
       'Muito obrigado por usar o app!\n\nSe desejar apoiar o desenvolvimento, sinta-se livre para fazer uma doação ^^',
   'donationPageTitle': 'Apoiar o desenvolvimento',
   'about': 'Sobre',
-  'appVersion': 'Versão 1.5.2',
+  'appVersion': 'Versão 1.5.3',
   'record': 'Gravar',
   'createMovie': 'Criar filme',
   'settings': 'Configurações',
@@ -114,7 +114,7 @@ const Map<String, String> pt = {
   'cancelMovieCreation': 'Cancelar criação de filme',
   'cancelMovieDesc': 'Você tem certeza que deseja cancelar a criação do filme?',
   'reportError': 'Relatar erro',
-  'errorMailSubject': '[One Second Diary - v1.5.2] Relatório de erro',
+  'errorMailSubject': '[One Second Diary - v1.5.3] Relatório de erro',
   'errorMailBody':
       'Por favor descreva o erro e quais passos executar para reproduzir o mesmo. Obrigado!',
   'oops': 'Oops!',
@@ -188,7 +188,7 @@ const Map<String, String> pt = {
   'sendLogsDescription':
       'Se você está enfrentando um problema, por favor toque em "Sim" para incluir os logs que me ajudarão a encontrar o problema. Se for uma sugestão ou outro tópico, por favor toque em "Não".',
   'whatsNewDescv152':
-      'A versão 1.5.2 trouxe várias correções e melhorias!\n\nConfira nas próximas páginas 😊',
+      'A versão 1.5.3 trouxe várias correções e melhorias!\n\nConfira nas próximas páginas 😊',
   'feat1v152': 'Processamento Mais Rápido',
   'featDesc1v152': 'Editar vídeos grandes ficou muito mais rápido 🚀',
   'feat2v152': 'Melhoria na Edição de Vídeos',
