@@ -207,7 +207,7 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
           specialItemBuilder: (context, path, length) {
             return Center(
               child: Text(
-                shouldIgnoreFilter
+                (shouldIgnoreFilter || !useFilter)
                     ? 'Latest\nvideos'
                     : 'From\n${_selectedDate.toString().substring(0, 10).split('-').reversed.join('-')}\nonwards',
                 textAlign: TextAlign.center,
