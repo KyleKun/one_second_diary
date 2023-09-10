@@ -166,6 +166,8 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
   }
 
   bool shouldIgnoreExperimentalFilter() {
+    final useFilter = SharedPrefsUtil.getBool('useFilterInExperimentalPicker') ?? true;
+    if (!useFilter) return true;
     if (_selectedDate.day == DateTime.now().day &&
         _selectedDate.month == DateTime.now().month &&
         _selectedDate.year == DateTime.now().year) {
@@ -177,7 +179,6 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
   /// Picks video from gallery
   Future<void> selectVideoFromGallery() async {
     final isExperimentalPicker = SharedPrefsUtil.getBool('useExperimentalPicker') ?? true;
-    final useFilter = SharedPrefsUtil.getBool('useFilterInExperimentalPicker') ?? true;
 
     if (isExperimentalPicker) {
       final bool shouldIgnoreFilter = shouldIgnoreExperimentalFilter();
@@ -186,12 +187,11 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
         createTimeCond: DateTimeCond(
           min: _selectedDate,
           max: DateTime.now(),
-          ignore: shouldIgnoreFilter,
         ),
         orders: [
-          OrderOption(
+          const OrderOption(
             type: OrderOptionType.createDate,
-            asc: shouldIgnoreFilter ? false : true,
+            asc: true,
           ),
         ],
       );
@@ -201,13 +201,13 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
         pickerConfig: AssetPickerConfig(
           maxAssets: 1,
           requestType: RequestType.video,
-          filterOptions: useFilter ? filterOptionGroup : null,
+          filterOptions: shouldIgnoreFilter ? null : filterOptionGroup,
           sortPathsByModifiedDate: true,
           specialItemPosition: SpecialItemPosition.prepend,
           specialItemBuilder: (context, path, length) {
             return Center(
               child: Text(
-                (shouldIgnoreFilter || !useFilter)
+                shouldIgnoreFilter
                     ? 'Latest\nvideos'
                     : 'From\n${_selectedDate.toString().substring(0, 10).split('-').reversed.join('-')}\nonwards',
                 textAlign: TextAlign.center,
