@@ -24,13 +24,20 @@ class _SwitchNotificationsComponentState
   final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
   final int notificationId = 1;
-  late bool isSwitchToggled;
+  late bool isNotificationSwitchToggled;
   TimeOfDay scheduledTimeOfDay = const TimeOfDay(hour: 20, minute: 00);
+  late bool isPersistentSwitchToggled;
 
   @override
   void initState() {
     super.initState();
-    isSwitchToggled = NotificationService().isNotificationActivated();
+    isNotificationSwitchToggled = NotificationService().isNotificationActivated();
+    isPersistentSwitchToggled = NotificationService().isPersistentNotificationActivated();
+
+    if(isPersistentSwitchToggled)
+      platformNotificationDetails = platformPersistentNotificationDetails;
+    else
+      platformNotificationDetails = platformNonPersistentNotificationDetails;
 
     // Sets the default values for scheduled time
     getScheduledTime();
@@ -58,11 +65,21 @@ class _SwitchNotificationsComponentState
     super.dispose();
   }
 
-  final platformNotificationDetails = const NotificationDetails(
+  late NotificationDetails platformNotificationDetails;
+  final NotificationDetails platformNonPersistentNotificationDetails = const NotificationDetails(
     android: AndroidNotificationDetails(
       'channel id',
       'channel name',
       channelDescription: 'channel description',
+      ongoing: false
+    ),
+  );
+  final NotificationDetails platformPersistentNotificationDetails = const NotificationDetails(
+    android: AndroidNotificationDetails(
+      'channel id',
+      'channel name',
+      channelDescription: 'channel description',
+      ongoing: true
     ),
   );
 
@@ -139,7 +156,7 @@ class _SwitchNotificationsComponentState
                   ),
                 ),
                 Switch(
-                  value: isSwitchToggled,
+                  value: isNotificationSwitchToggled,
                   onChanged: (value) async {
                     if (value) {
                       Utils.logInfo(
@@ -163,7 +180,7 @@ class _SwitchNotificationsComponentState
 
                     /// Update switch value
                     setState(() {
-                      isSwitchToggled = !isSwitchToggled;
+                      isNotificationSwitchToggled = !isNotificationSwitchToggled;
                     });
                   },
                   activeTrackColor: AppColors.mainColor.withOpacity(0.4),
@@ -227,12 +244,12 @@ class _SwitchNotificationsComponentState
             if (newTimeOfDay == null) return;
 
             // Enable notification if it's disabled
-            if (!isSwitchToggled) {
+            if (!isNotificationSwitchToggled) {
               print('here');
               await Utils.requestPermission(Permission.notification);
               NotificationService().switchNotification();
               setState(() {
-                isSwitchToggled = true;
+                isNotificationSwitchToggled = true;
               });
             }
 
@@ -265,6 +282,53 @@ class _SwitchNotificationsComponentState
                 ),
               ],
             ),
+          ),
+        ),
+        const Divider(),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 15.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'usePersistentNotifications'.tr,
+                style: TextStyle(
+                  fontSize: MediaQuery.of(context).size.width * 0.045,
+                ),
+              ),
+              Switch(
+                value: isPersistentSwitchToggled,
+                onChanged: (value) async {
+                  if (value) {
+                    Utils.logInfo(
+                      '[NOTIFICATIONS] - Persistent notifications were enabled',
+                    );
+                    platformNotificationDetails = platformPersistentNotificationDetails;
+                  } else {
+                    Utils.logInfo(
+                      '[NOTIFICATIONS] - Persistent notifications were disabled',
+                    );
+                    platformNotificationDetails = platformNonPersistentNotificationDetails;
+                  }
+
+                  /// Schedule notification if switch in ON
+                  if(isNotificationSwitchToggled){
+                    flutterLocalNotificationsPlugin.cancelAll();
+                    await scheduleNotification();
+                  }
+
+                  /// Save notification on SharedPrefs
+                  NotificationService().switchPersistentNotification();
+
+                  /// Update switch value
+                  setState(() {
+                    isPersistentSwitchToggled = !isPersistentSwitchToggled;
+                  });
+                },
+                activeTrackColor: AppColors.mainColor.withOpacity(0.4),
+                activeColor: AppColors.mainColor,
+              ),
+            ],
           ),
         ),
         const Divider(),

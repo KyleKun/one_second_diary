@@ -7,6 +7,7 @@
 - Bagas Wastu (@bagaswastu)
 - Harry Schiller (@waitingwittykitty)
 - David Coker (@daoxve)
+- Adrasteon (@AdrasteonDev)
 
 ## Testing & Feedback
 - Augusto Vesco

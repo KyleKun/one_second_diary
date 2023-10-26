@@ -62,6 +62,7 @@ const Map<String, String> fr = {
   'notifications': 'Notifications',
   'enableNotifications': 'Activer les notifications',
   'scheduleTime': 'Horaire',
+  'usePersistentNotifications': 'Notifications persistantes',
   'test': 'Test',
   'notificationTitle': 'Hé !',
   'notificationBody': "N'oubliez pas d'enregistrer une seconde de votre journée. 👀",
