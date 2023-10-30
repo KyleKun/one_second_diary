@@ -1,17 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:timezone/data/latest.dart' as tz;
-import 'package:timezone/timezone.dart' as tz;
 
 import '../../../../routes/app_pages.dart';
 import '../../../../utils/constants.dart';
 import '../../../../utils/notification_service.dart';
-import '../../../../utils/shared_preferences_util.dart';
 import '../../../../utils/theme.dart';
-import '../../../../utils/utils.dart';
 
 class SwitchNotificationsComponent extends StatefulWidget {
   @override
@@ -21,121 +14,24 @@ class SwitchNotificationsComponent extends StatefulWidget {
 
 class _SwitchNotificationsComponentState
     extends State<SwitchNotificationsComponent> {
-  final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
-
-  final int notificationId = 1;
   late bool isNotificationSwitchToggled;
   TimeOfDay scheduledTimeOfDay = const TimeOfDay(hour: 20, minute: 00);
   late bool isPersistentSwitchToggled;
+  NotificationService notificationService = NotificationService();
 
   @override
   void initState() {
     super.initState();
-    isNotificationSwitchToggled = NotificationService().isNotificationActivated();
-    isPersistentSwitchToggled = NotificationService().isPersistentNotificationActivated();
-
-    if(isPersistentSwitchToggled)
-      platformNotificationDetails = platformPersistentNotificationDetails;
-    else
-      platformNotificationDetails = platformNonPersistentNotificationDetails;
+    isNotificationSwitchToggled = notificationService.isNotificationActivated();
+    isPersistentSwitchToggled = notificationService.isPersistentNotificationActivated();
 
     // Sets the default values for scheduled time
-    getScheduledTime();
-
-    /// Initializing notification settings
-    tz.initializeTimeZones();
-
-    const AndroidInitializationSettings androidInitializationSettings =
-        AndroidInitializationSettings('@mipmap/ic_launcher');
-
-    const DarwinInitializationSettings iosInitializationSettings =
-        DarwinInitializationSettings();
-
-    const InitializationSettings initializationSettings =
-        InitializationSettings(
-      android: androidInitializationSettings,
-      iOS: iosInitializationSettings,
-    );
-
-    flutterLocalNotificationsPlugin.initialize(initializationSettings);
+    scheduledTimeOfDay = notificationService.getScheduledTime();
   }
 
   @override
   void dispose() {
     super.dispose();
-  }
-
-  late NotificationDetails platformNotificationDetails;
-  final NotificationDetails platformNonPersistentNotificationDetails = const NotificationDetails(
-    android: AndroidNotificationDetails(
-      'channel id',
-      'channel name',
-      channelDescription: 'channel description',
-      ongoing: false
-    ),
-  );
-  final NotificationDetails platformPersistentNotificationDetails = const NotificationDetails(
-    android: AndroidNotificationDetails(
-      'channel id',
-      'channel name',
-      channelDescription: 'channel description',
-      ongoing: true
-    ),
-  );
-
-  // Checks for the scheduled time and sets it to a value in shared prefs
-  void getScheduledTime() {
-    final int hour = SharedPrefsUtil.getInt('scheduledTimeHour') ?? 20;
-    final int minute = SharedPrefsUtil.getInt('scheduledTimeMinute') ?? 00;
-    scheduledTimeOfDay = TimeOfDay(hour: hour, minute: minute);
-  }
-
-  Future<void> scheduleNotification() async {
-    final now = DateTime.now();
-
-    // sets the scheduled time in DateTime format
-    final String setTime = DateTime(
-      now.year,
-      now.month,
-      now.day,
-      scheduledTimeOfDay.hour,
-      scheduledTimeOfDay.minute,
-    ).toString();
-
-    Utils.logInfo('[NOTIFICATIONS] - Scheduled with setTime=$setTime');
-
-    /// Schedule notification
-    await flutterLocalNotificationsPlugin.zonedSchedule(
-      notificationId,
-      'notificationTitle'.tr,
-      'notificationBody'.tr,
-      tz.TZDateTime.parse(tz.local, setTime),
-      platformNotificationDetails,
-      uiLocalNotificationDateInterpretation:
-          UILocalNotificationDateInterpretation.absoluteTime,
-      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-      // Allow notification to be shown daily
-      matchDateTimeComponents: DateTimeComponents.time,
-    );
-  }
-
-  Future<void> showTestNotification() async {
-    await flutterLocalNotificationsPlugin.show(
-      notificationId,
-      'test'.tr,
-      'test'.tr,
-      platformNotificationDetails,
-    );
-
-    // Feedback to the user that the notification was called
-    await Fluttertoast.showToast(
-      msg: 'done'.tr,
-      toastLength: Toast.LENGTH_SHORT,
-      gravity: ToastGravity.CENTER,
-      backgroundColor: AppColors.dark,
-      textColor: Colors.white,
-      fontSize: 16.0,
-    );
   }
 
   @override
@@ -159,24 +55,13 @@ class _SwitchNotificationsComponentState
                   value: isNotificationSwitchToggled,
                   onChanged: (value) async {
                     if (value) {
-                      Utils.logInfo(
-                        '[NOTIFICATIONS] - Notifications were enabled',
-                      );
-
-                      /// Schedule notification if switch in ON
-                      await Utils.requestPermission(Permission.notification);
-                      await scheduleNotification();
+                      await notificationService.turnOnNotifications();
+                      await notificationService.scheduleNotification(
+                          scheduledTimeOfDay.hour,
+                          scheduledTimeOfDay.minute);
                     } else {
-                      Utils.logInfo(
-                        '[NOTIFICATIONS] - Notifications were disabled',
-                      );
-
-                      /// Cancel notification if switch is OFF
-                      flutterLocalNotificationsPlugin.cancelAll();
+                      await notificationService.turnOffNotifications();
                     }
-
-                    /// Save notification on SharedPrefs
-                    NotificationService().switchNotification();
 
                     /// Update switch value
                     setState(() {
@@ -245,22 +130,22 @@ class _SwitchNotificationsComponentState
 
             // Enable notification if it's disabled
             if (!isNotificationSwitchToggled) {
-              print('here');
-              await Utils.requestPermission(Permission.notification);
-              NotificationService().switchNotification();
+              await notificationService.turnOnNotifications();
               setState(() {
                 isNotificationSwitchToggled = true;
               });
             }
 
-            SharedPrefsUtil.putInt('scheduledTimeHour', newTimeOfDay.hour);
-            SharedPrefsUtil.putInt('scheduledTimeMinute', newTimeOfDay.minute);
+            notificationService.setScheduledTime(newTimeOfDay.hour,
+                newTimeOfDay.minute);
 
             setState(() {
               scheduledTimeOfDay = newTimeOfDay;
             });
 
-            await scheduleNotification();
+            await notificationService.scheduleNotification(
+                scheduledTimeOfDay.hour,
+                scheduledTimeOfDay.minute);
           },
           child: Container(
             padding:
@@ -300,25 +185,24 @@ class _SwitchNotificationsComponentState
                 value: isPersistentSwitchToggled,
                 onChanged: (value) async {
                   if (value) {
-                    Utils.logInfo(
-                      '[NOTIFICATIONS] - Persistent notifications were enabled',
-                    );
-                    platformNotificationDetails = platformPersistentNotificationDetails;
+                    notificationService.activatePersistentNotifications();
                   } else {
-                    Utils.logInfo(
-                      '[NOTIFICATIONS] - Persistent notifications were disabled',
-                    );
-                    platformNotificationDetails = platformNonPersistentNotificationDetails;
+                    notificationService.unactivatePersistentNotifications();
                   }
 
                   /// Schedule notification if switch in ON
-                  if(isNotificationSwitchToggled){
-                    flutterLocalNotificationsPlugin.cancelAll();
-                    await scheduleNotification();
+                  if(isNotificationSwitchToggled && !isNotificationSwitchToggled){
+                    await notificationService.turnOnNotifications();
+                    setState(() {
+                      isNotificationSwitchToggled = true;
+                    });
                   }
 
-                  /// Save notification on SharedPrefs
-                  NotificationService().switchPersistentNotification();
+                  if(isNotificationSwitchToggled){
+                    await notificationService.scheduleNotification(
+                        scheduledTimeOfDay.hour,
+                        scheduledTimeOfDay.minute);
+                  }
 
                   /// Update switch value
                   setState(() {
