@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../../../controllers/daily_entry_controller.dart';
 import '../../../../routes/app_pages.dart';
 import '../../../../utils/constants.dart';
 import '../../../../utils/notification_service.dart';
@@ -17,7 +18,7 @@ class _SwitchNotificationsComponentState
   late bool isNotificationSwitchToggled;
   TimeOfDay scheduledTimeOfDay = const TimeOfDay(hour: 20, minute: 00);
   late bool isPersistentSwitchToggled;
-  NotificationService notificationService = NotificationService();
+  final NotificationService notificationService = Get.find();
 
   @override
   void initState() {
@@ -56,9 +57,12 @@ class _SwitchNotificationsComponentState
                   onChanged: (value) async {
                     if (value) {
                       await notificationService.turnOnNotifications();
+
                       await notificationService.scheduleNotification(
                           scheduledTimeOfDay.hour,
-                          scheduledTimeOfDay.minute);
+                          scheduledTimeOfDay.minute,
+                          DateTime.now()
+                      );
                     } else {
                       await notificationService.turnOffNotifications();
                     }
@@ -145,7 +149,9 @@ class _SwitchNotificationsComponentState
 
             await notificationService.scheduleNotification(
                 scheduledTimeOfDay.hour,
-                scheduledTimeOfDay.minute);
+                scheduledTimeOfDay.minute,
+                DateTime.now()
+            );
           },
           child: Container(
             padding:
@@ -187,7 +193,7 @@ class _SwitchNotificationsComponentState
                   if (value) {
                     notificationService.activatePersistentNotifications();
                   } else {
-                    notificationService.unactivatePersistentNotifications();
+                    notificationService.deactivatePersistentNotifications();
                   }
 
                   /// Schedule notification if switch in ON
@@ -201,7 +207,9 @@ class _SwitchNotificationsComponentState
                   if(isNotificationSwitchToggled){
                     await notificationService.scheduleNotification(
                         scheduledTimeOfDay.hour,
-                        scheduledTimeOfDay.minute);
+                        scheduledTimeOfDay.minute,
+                        DateTime.now()
+                    );
                   }
 
                   /// Update switch value

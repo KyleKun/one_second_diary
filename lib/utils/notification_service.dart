@@ -24,7 +24,8 @@ class NotificationService {
         'channel id',
         'channel name',
         channelDescription: 'channel description',
-        ongoing: false
+        ongoing: false,
+        autoCancel: true
     ),
   );
   final NotificationDetails _platformPersistentNotificationDetails = const NotificationDetails(
@@ -32,7 +33,8 @@ class NotificationService {
         'channel id',
         'channel name',
         channelDescription: 'channel description',
-        ongoing: true
+        ongoing: true,
+        autoCancel: false
     ),
   );
 
@@ -118,7 +120,7 @@ class NotificationService {
     _switchPersistentNotification();
   }
 
-  Future<void> unactivatePersistentNotifications() async {
+  Future<void> deactivatePersistentNotifications() async {
     Utils.logInfo(
       '[NOTIFICATIONS] - Persistent notifications were disabled',
     );
@@ -128,15 +130,14 @@ class NotificationService {
     _switchPersistentNotification();
   }
 
-  Future<void> scheduleNotification(int hour, int minute) async {
+  Future<void> scheduleNotification(int hour, int minute, DateTime day) async {
     _flutterLocalNotificationsPlugin.cancelAll();
-    final now = DateTime.now();
 
     // sets the scheduled time in DateTime format
     final String setTime = DateTime(
-      now.year,
-      now.month,
-      now.day,
+      day.year,
+      day.month,
+      day.day,
       hour,
       minute,
     ).toString();
@@ -156,6 +157,11 @@ class NotificationService {
       // Allow notification to be shown daily
       matchDateTimeComponents: DateTimeComponents.time,
     );
+  }
+
+  Future<void> rescheduleNotification(DateTime day) async {
+    final TimeOfDay timeOfDay = getScheduledTime();
+    await scheduleNotification(timeOfDay.hour, timeOfDay.minute, day);
   }
 
   Future<void> showTestNotification() async {
