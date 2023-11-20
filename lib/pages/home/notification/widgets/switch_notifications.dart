@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../../controllers/daily_entry_controller.dart';
 import '../../../../routes/app_pages.dart';
 import '../../../../utils/constants.dart';
 import '../../../../utils/notification_service.dart';
