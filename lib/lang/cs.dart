@@ -7,7 +7,7 @@ const Map<String, String> cs = {
       'Děkuji moc za používání aplikace!\n\nPokud chcete podpořit vývoj,\nneváhejte přispět ^^',
   'donationPageTitle': 'Podpořte vývoj aplikace',
   'about': 'O aplikaci',
-  'appVersion': 'Verze 1.5.3',
+  'appVersion': 'Verze 1.6.0',
   'record': 'Record',
   'createMovie': 'Vytvoření videa',
   'settings': 'Nastavení',
@@ -114,7 +114,7 @@ const Map<String, String> cs = {
   'cancelMovieCreation': 'Zrušit vytvoření filmu',
   'cancelMovieDesc': 'Opravdu chcete zrušit vytvoření filmu?',
   'reportError': 'Nahlásit chybu',
-  'errorMailSubject': '[One Second Diary - v1.5.3] Zpráva o chybách v aplikaci',
+  'errorMailSubject': '[One Second Diary - v1.6.0] Zpráva o chybách v aplikaci',
   'errorMailBody':
       'Popište chybu, na kterou jste narazili, a kroky k jejímu reprodukování. Děkuju!',
   'oops': 'Oops!',
@@ -188,7 +188,7 @@ const Map<String, String> cs = {
   'sendLogsDescription':
       'Pokud se potýkáte s problémem, klepněte prosím na "Ano", abyste zahrnuli záznamy, které mi pomohou problém najít. Pokud jde o návrh funkce nebo jiné téma, klepněte prosím na "Ne".',
   'whatsNewDescv152':
-      'Verze 1.5.3 přinesla několik oprav a vylepšení!\n\nPodívejte se na následujících stránkách 😊',
+      'Verze 1.6.0 přinesla několik oprav a vylepšení!\n\nPodívejte se na následujících stránkách 😊',
   'feat1v152': 'Rychlejší zpracování videa',
   'featDesc1v152': 'Úprava velkých videí je nyní mnohem rychlejší 🚀',
   'feat2v152': 'Vylepšené zastřihávání videa',

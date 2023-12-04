@@ -1,4 +1,4 @@
-## v1.5.3 - 10/2023
+## v1.6.0 - 12/2023
 - Added option to receive persistent notifications
 - Added option to change calendar days color for colorblind users
 - Added option to disable date filter in experimental file picker
@@ -7,6 +7,7 @@
 - Store location metadata in video when geotagging is enabled
 - Autofocus and capitalize first letter of custom locale and subtitles text fields
 - Remember last recording settings (which camera was used and geotagging checkbox)
+- Automatically retry geotagging when it fails for the first time
 
 ## v1.5.2 - 09/2023
 - Added quick trim shortcuts in save video page for a more precise editing

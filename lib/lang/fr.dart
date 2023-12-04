@@ -7,7 +7,7 @@ const Map<String, String> fr = {
       "Merci beaucoup d'utiliser l'application !\n\nSi vous souhaitez soutenir le développement,\nn'hésitez pas à faire un don ^^",
   'donationPageTitle': 'Soutenir le développement',
   'about': 'À propos',
-  'appVersion': 'Version 1.5.3',
+  'appVersion': 'Version 1.6.0',
   'record': 'Enregistrement',
   'createMovie': 'Créer un film',
   'settings': 'Paramètres',
@@ -190,7 +190,7 @@ const Map<String, String> fr = {
   'sendLogsDescription':
       'Si vous rencontrez un problème, veuillez appuyer sur "Oui" pour inclure les journaux qui m\'aideront à trouver le problème. Si c\'est une suggestion de fonctionnalité ou un autre sujet, veuillez appuyer sur "Non".',
   'whatsNewDescv152':
-      'La version 1.5.3 a apporté plusieurs corrections et améliorations!\n\nDécouvrez-le dans les pages suivantes 😊',
+      'La version 1.6.0 a apporté plusieurs corrections et améliorations!\n\nDécouvrez-le dans les pages suivantes 😊',
   'feat1v152': 'Traitement vidéo plus rapide',
   'featDesc1v152': 'L\'édition de grandes vidéos est maintenant beaucoup plus rapide 🚀',
   'feat2v152': 'Amélioration de la découpe vidéo',

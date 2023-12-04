@@ -200,41 +200,54 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
   }
 
   Future<void> _getAddressFromLatLng(Position position) async {
-    await placemarkFromCoordinates(
-      _currentPosition!.latitude,
-      _currentPosition!.longitude,
-      localeIdentifier: Get.locale!.languageCode,
-    ).then((List<Placemark> placemarks) {
-      final Placemark place = placemarks[0];
-      String city = '';
-      if (place.locality?.isNotEmpty == true) {
-        city = place.locality!;
-      } else if (place.subAdministrativeArea?.isNotEmpty == true) {
-        city = place.subAdministrativeArea!;
-      } else if (place.administrativeArea?.isNotEmpty == true) {
-        city = place.administrativeArea!;
-      }
-      setState(() {
-        _currentAddress = '$city, ${place.country}';
-      });
+    const int maxAttempts = 3;
+    int attempts = 0;
 
-      Utils.logError('[Geolocation] - Location obtained successfully!');
-    }).catchError((e) {
-      Utils.logError('[Geolocation] - Failed to decode location: $e');
-      if (isGeotaggingEnabled) {
-        toggleGeotaggingStatus();
+    while (attempts < maxAttempts) {
+      try {
+        await placemarkFromCoordinates(
+          _currentPosition!.latitude,
+          _currentPosition!.longitude,
+          localeIdentifier: Get.locale!.languageCode,
+        ).then((List<Placemark> placemarks) {
+          final Placemark place = placemarks[0];
+          String city = '';
+          if (place.locality?.isNotEmpty == true) {
+            city = place.locality!;
+          } else if (place.subAdministrativeArea?.isNotEmpty == true) {
+            city = place.subAdministrativeArea!;
+          } else if (place.administrativeArea?.isNotEmpty == true) {
+            city = place.administrativeArea!;
+          }
+          setState(() {
+            _currentAddress = '$city, ${place.country}';
+          });
+          Utils.logInfo('[Geolocation] - Location obtained successfully!');
+        });
+        break;
+      } catch (e) {
+        attempts++;
+        if (attempts == maxAttempts) {
+          print('Function failed after $maxAttempts attempts: $e');
+          if (isGeotaggingEnabled) {
+            toggleGeotaggingStatus();
+          }
+          setState(() {
+            _isLocationProcessing = false;
+          });
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                'locationServiceError'.tr,
+              ),
+            ),
+          );
+        } else {
+          Utils.logError('[Geolocation] - Failed to decode location (attempt $attempts): $e');
+          await Future.delayed(const Duration(seconds: 1));
+        }
       }
-      setState(() {
-        _isLocationProcessing = false;
-      });
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            'locationServiceError'.tr,
-          ),
-        ),
-      );
-    });
+    }
   }
 
   void changeColor(Color color) {
