@@ -411,10 +411,16 @@ class StorageUtils {
   }
 
   // Create specific profile folder in internal storage
-  static Future<void> createSpecificProfileFolder(String profileName) async {
+  static Future<void> createSpecificProfileFolder(String profileName, bool verticalMode) async {
     try {
       final String appPath = SharedPrefsUtil.getString('appPath');
-      final String profilePath = '$appPath/Profiles/$profileName/';
+
+      // Vertical Profiles are stored in a folder ending with _vertical.
+      if(verticalMode) {
+        profileName = '${profileName}_vertical';
+      }
+
+      String profilePath = '$appPath/Profiles/$profileName/';
 
       // Checking if the folder really exists, if not, then create it
       final io.Directory? profileDirectory = io.Directory(profilePath);

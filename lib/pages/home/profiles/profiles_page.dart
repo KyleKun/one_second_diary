@@ -10,6 +10,7 @@ import '../../../utils/shared_preferences_util.dart';
 import '../../../utils/storage_utils.dart';
 import '../../../utils/theme.dart';
 import '../../../utils/utils.dart';
+import '../../../utils/vertical.dart';
 
 class ProfilesPage extends StatefulWidget {
   const ProfilesPage({super.key});
@@ -30,6 +31,10 @@ class _ProfilesPageState extends State<ProfilesPage> {
   List<Profile> profiles = [];
 
   final DailyEntryController dailyEntryController = Get.find();
+
+  final List<bool> verticalModeSelector = <bool>[true, false];
+
+  bool _verticalModeSwitch = false;
 
   @override
   void initState() {
@@ -52,16 +57,21 @@ class _ProfilesPageState extends State<ProfilesPage> {
     if (!storedProfiles.contains('Default')) {
       profiles.insert(
         0,
-        const Profile(label: 'Default', isDefault: true),
+        const Profile(label: 'Default', isDefault: true, isVertical: false),
       );
     } else {
+
+      // Profiles strings ending with '_vertical' creates an Profile object with isVertical value true, as other not.
       profiles = storedProfiles.map(
         (e) {
-          if (e == 'Default') return Profile(label: e, isDefault: true);
-          return Profile(label: e);
+          if (e == 'Default') return Profile(label: e, isDefault: true, isVertical: false);
+          if (e.endsWith('_vertical')) return Profile(label: e.replaceAll('_vertical', ''), isVertical: true);
+              else return Profile(label: e, isVertical: false);
         },
       ).toList();
     }
+
+
 
     Utils.logInfo('${logTag}Stored Profiles are: $storedProfiles');
   }
@@ -87,6 +97,24 @@ class _ProfilesPageState extends State<ProfilesPage> {
                 Text(
                   'newProfileTooltip'.tr,
                 ),
+                const SizedBox(height: 12),
+                Switch(
+                    value: _verticalModeSwitch,
+                    onChanged: (value) {
+                      setState(() {
+                        _verticalModeSwitch = value;
+                      });
+                    },
+                ),
+                /*ToggleButtons(
+                    children: verticalModeTexts,
+                    isSelected: [_isToggled, !_isToggled],
+                    onPressed: (int index) {
+                      setState(() {
+                        _isToggled = index == 0;
+                      });
+                    }
+                ),*/
                 const SizedBox(height: 12),
                 TextFormField(
                   controller: _profileNameController,
@@ -140,13 +168,14 @@ class _ProfilesPageState extends State<ProfilesPage> {
             actions: [
               TextButton(
                 onPressed: () async {
-                  // Checks if the textfield is valid based on if the text passes all the validations we set
+                  // Checks if the text field is valid based on if the text passes all the validations we set
                   final bool isTextValid = _profileNameFormKey.currentState?.validate() ?? false;
 
                   if (isTextValid) {
                     // Create the profile directory for the new profile
                     await StorageUtils.createSpecificProfileFolder(
                       _profileNameController.text.trim(),
+                      _verticalModeSwitch,
                     );
 
                     Utils.logInfo(
@@ -157,13 +186,17 @@ class _ProfilesPageState extends State<ProfilesPage> {
                     setState(() {
                       profiles.insert(
                         profiles.length,
-                        Profile(label: _profileNameController.text.trim()),
+                        Profile(
+                            label: _profileNameController.text.trim(),
+                            isVertical: _verticalModeSwitch),
                       );
                       _profileNameController.clear();
                     });
 
                     // Add the modified profile list to persistence
-                    final profileNamesToStringList = profiles.map((e) => e.label).toList();
+                    // Adds the string '_vertical' at the end of vertical profiles to keep this parameter persistent.
+                    final profileNamesToStringList = profiles.map((e) => e.isVertical? '${e.label}_vertical' : e.label).toList();
+
                     SharedPrefsUtil.putStringList('profiles', profileNamesToStringList);
 
                     Navigator.pop(context);
@@ -306,17 +339,24 @@ class _ProfilesPageState extends State<ProfilesPage> {
                         title: Text(
                           profiles[index].isDefault ? 'default'.tr : profiles[index].label,
                         ),
-                        secondary: profiles[index].isDefault
-                            ? null
-                            : IconButton(
+                        secondary: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              profiles[index].isVertical ? Icons.stay_current_portrait : Icons.stay_current_landscape,
+                            ),
+                            if(!profiles[index].isDefault)
+                              IconButton(
                                 onPressed: () async {
                                   await _showDeleteProfileDialog(index);
                                 },
                                 icon: const Icon(
-                                  Icons.delete_forever_rounded,
-                                  color: AppColors.mainColor,
+                                Icons.delete_forever_rounded,
+                                color: AppColors.mainColor,
                                 ),
                               ),
+                          ]
+                        ),
                       ),
                     );
                   },
