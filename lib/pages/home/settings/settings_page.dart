@@ -9,7 +9,6 @@ import 'widgets/notifications_button.dart';
 import 'widgets/preferences_button.dart';
 import 'widgets/profiles_button.dart';
 import 'widgets/switch_theme.dart';
-import 'widgets/switch_verticalmode.dart';
 
 class SettingPage extends StatelessWidget {
   @override
@@ -29,7 +28,6 @@ class SettingPage extends StatelessWidget {
               child: Column(
                 children: [
                   SwitchThemeComponent(),
-                  SwitchVerticalModeComponent(),
                   PreferencesButton(),
                   NotificationsButton(),
                   ProfilesButton(),
