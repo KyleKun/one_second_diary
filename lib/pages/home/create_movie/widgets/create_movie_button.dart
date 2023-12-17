@@ -106,7 +106,7 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
 
         // Get current profile
-        final currentProfileName = Utils.getCurrentProfile();
+        final currentProfileName = Utils.getCurrentProfileString();
 
         // Videos folder
         String videosFolder = SharedPrefsUtil.getString('appPath');

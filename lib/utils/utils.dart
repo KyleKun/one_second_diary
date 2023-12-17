@@ -12,6 +12,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../controllers/video_count_controller.dart';
 import '../enums/export_date_range.dart';
+import '../models/profile.dart';
 import 'date_format_utils.dart';
 import 'shared_preferences_util.dart';
 import 'storage_utils.dart';
@@ -148,7 +149,7 @@ class Utils {
     logInfo('[Utils.writeTxt()] - Writing txt file to $txtPath');
 
     // Get current profile
-    final currentProfileName = getCurrentProfile();
+    final currentProfileName = getCurrentProfileString();
 
     // Default directory
     String videosFolderPath = SharedPrefsUtil.getString('appPath');
@@ -253,7 +254,7 @@ class Utils {
   }
 
   /// Get current profile name, empty string if Default
-  static String getCurrentProfile() {
+  static String getCurrentProfileString() {
     // Get current profile
     String currentProfileName = '';
 
@@ -267,8 +268,33 @@ class Utils {
 
     final profileLog = currentProfileName == '' ? 'Default' : currentProfileName;
     logInfo('[Utils.getCurrentProfile()] - Selected profile: $profileLog');
-
     return currentProfileName;
+  }
+
+  /// Get current profile object, with isVertical property
+  static Profile getCurrentProfileObject() {
+    // Get current profile
+    String currentProfileName = '';
+    bool isVertical = false;
+
+    final selectedProfileIndex = SharedPrefsUtil.getInt('selectedProfileIndex') ?? 0;
+    if (selectedProfileIndex != 0) {
+      final allProfiles = SharedPrefsUtil.getStringList('profiles');
+      if (allProfiles != null) {
+        currentProfileName = allProfiles[selectedProfileIndex];
+
+        // Vertical profiles are stored with '_vertical' and the end, but shown without.
+        if(currentProfileName.endsWith('_vertical')) {
+          isVertical = true;
+          currentProfileName.replaceAll('_vertical', '');
+        }
+      }
+    }
+
+    final profileLog = currentProfileName == '' ? 'Default' : currentProfileName;
+    logInfo('[Utils.getCurrentProfile()] - Selected profile: $profileLog');
+
+    return Profile(label: currentProfileName, isVertical: isVertical);
   }
 
   /// Get all video files inside DCIM/OneSecondDiary/Movies folder
@@ -301,7 +327,7 @@ class Utils {
   static List<String> getAllVideos({bool fullPath = false}) {
     logInfo('[Utils.getAllVideos()] - Asked for full path: $fullPath');
     // Get current profile
-    final currentProfileName = getCurrentProfile();
+    final currentProfileName = getCurrentProfileString();
 
     // Default directory
     io.Directory directory = io.Directory(SharedPrefsUtil.getString('appPath'));

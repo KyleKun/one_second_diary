@@ -10,7 +10,6 @@ import '../../../utils/shared_preferences_util.dart';
 import '../../../utils/storage_utils.dart';
 import '../../../utils/theme.dart';
 import '../../../utils/utils.dart';
-import '../../../utils/vertical.dart';
 
 class ProfilesPage extends StatefulWidget {
   const ProfilesPage({super.key});
@@ -390,7 +389,7 @@ class _ProfilesPageState extends State<ProfilesPage> {
 
     // Update daily entry
     final String today = DateFormatUtils.getToday();
-    final String profile = Utils.getCurrentProfile();
+    final String profile = Utils.getCurrentProfileObject().label;
     String todaysVideoPath = SharedPrefsUtil.getString('appPath');
     if (profile.isEmpty) {
       todaysVideoPath = '$todaysVideoPath$today.mp4';

@@ -10,6 +10,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:video_trimmer/video_trimmer.dart';
 
 import '../../controllers/recording_settings_controller.dart';
+import '../../models/profile.dart';
 import '../../routes/app_pages.dart';
 import '../../utils/constants.dart';
 import '../../utils/custom_checkbox_list_tile.dart';
@@ -66,7 +67,7 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
   bool _isLocationProcessing = false;
 
   late final bool isDarkTheme = ThemeService().isDarkTheme();
-  String selectedProfileName = Utils.getCurrentProfile();
+  Profile selectedProfile = Utils.getCurrentProfileObject();
 
   void _initCorrectDates() {
     final DateTime selectedDate = routeArguments['currentDate'];
@@ -527,6 +528,7 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
             textOutlineWidth: textOutlineStrokeWidth,
             determinedDate: routeArguments['currentDate'],
             isFromRecordingPage: routeArguments['isFromRecordingPage'],
+            isVertical: selectedProfile.isVertical,
           ),
         ),
         body: Column(
@@ -596,7 +598,7 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
               const SizedBox(width: 8),
               Flexible(
                 child: Text(
-                  selectedProfileName.isEmpty ? 'default'.tr : selectedProfileName,
+                  selectedProfile.label.isEmpty ? 'default'.tr : selectedProfile.label,
                   style: TextStyle(
                     fontSize: MediaQuery.of(context).size.height * 0.019,
                   ),
@@ -617,7 +619,7 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
                   onPressed: () {
                     Get.to(const ProfilesPage())?.then(
                       (_) => setState(() {
-                        selectedProfileName = Utils.getCurrentProfile();
+                        selectedProfile = Utils.getCurrentProfileObject();
                       }),
                     );
                   },
