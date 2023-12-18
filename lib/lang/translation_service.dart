@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import 'ca.dart';
 import 'cs.dart';
 import 'de.dart';
 import 'en.dart';
@@ -34,6 +35,7 @@ class TranslationService extends Translations {
     LanguageModel('Français', 'fr'),
     LanguageModel('Русский', 'ru'),
     LanguageModel('Čeština', 'cs'),
+    LanguageModel('Català', 'ca'),
   ];
 
   @override
@@ -47,5 +49,6 @@ class TranslationService extends Translations {
         'fr': fr,
         'ru': ru,
         'cs': cs,
+        'ca': ca,
       };
 }
