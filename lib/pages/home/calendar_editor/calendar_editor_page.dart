@@ -478,7 +478,8 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
                                               children: [
                                                 Align(
                                                   alignment: Alignment.center,
-                                                  child: ClipRect(
+                                                  child: AspectRatio(
+                                                    aspectRatio: _controller!.value.aspectRatio,
                                                     child: VideoPlayer(
                                                       key: _videoPlayerKey,
                                                       _controller!,
