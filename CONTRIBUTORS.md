@@ -8,6 +8,7 @@
 - Harry Schiller (@waitingwittykitty)
 - David Coker (@daoxve)
 - Adrasteon (@AdrasteonDev)
+- Philéas (@phileas_imt)
 
 ## Testing & Feedback
 - Augusto Vesco
