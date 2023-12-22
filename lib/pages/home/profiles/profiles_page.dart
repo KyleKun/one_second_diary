@@ -96,25 +96,44 @@ class _ProfilesPageState extends State<ProfilesPage> {
                 Text(
                   'newProfileTooltip'.tr,
                 ),
-                const SizedBox(height: 12),
-                Switch(
-                    value: _verticalModeSwitch,
-                    onChanged: (value) {
-                      setState(() {
-                        _verticalModeSwitch = value;
-                      });
-                    },
+                const SizedBox(height: 24),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'verticalProfileName'.tr,
+                    ),
+                    Switch(
+                        value: _verticalModeSwitch,
+                        activeTrackColor: AppColors.mainColor.withOpacity(0.4),
+                        activeColor: AppColors.mainColor,
+                        onChanged: (value) {
+                          setState(() {
+                            _verticalModeSwitch = value;
+                            final snackBar = SnackBar(
+                              margin: const EdgeInsets.all(70.0),
+                              behavior: SnackBarBehavior.floating,
+                              backgroundColor: Colors.black54,
+                              duration: const Duration(seconds: 3),
+                              shape: const RoundedRectangleBorder(
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(25),
+                                ),
+                              ),
+                              content: Text(
+                                  _verticalModeSwitch?
+                                  'verticalProfileActivated'.tr :
+                                  'verticalProfileDisabled'.tr
+                              ),
+                            );
+                            //TODO : Show the snackbar in the foreground.
+                            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                          });
+                        },
+                    ),
+                  ],
                 ),
-                /*ToggleButtons(
-                    children: verticalModeTexts,
-                    isSelected: [_isToggled, !_isToggled],
-                    onPressed: (int index) {
-                      setState(() {
-                        _isToggled = index == 0;
-                      });
-                    }
-                ),*/
-                const SizedBox(height: 12),
+                const SizedBox(height: 24),
                 TextFormField(
                   controller: _profileNameController,
                   inputFormatters: [
