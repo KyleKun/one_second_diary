@@ -331,7 +331,7 @@ class _SaveButtonState extends State<SaveButton> {
           Utils.logInfo('résultat ffprobe : $sessionLog');
           // 4:3 vidéos (ex : produced by pixel devices in photo modes), will be scaled up to fit into 1080x1920.
           if (sessionLog!.contains('4:3')) {
-            scale = 'scale=1080:1920,crop=1080:1920';
+            scale = 'scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920';
             Utils.logInfo('${logTag}4/3 video detected, cropping to 9/16.');
           } else {
             scale = 'scale=1080:1920:force_original_aspect_ratio=decrease,pad=1080:1920:(ow-iw)/2:(oh-ih)/2:black';
