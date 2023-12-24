@@ -152,7 +152,7 @@ const Map<String, String> es = {
       'Genera películas personalizadas con periodos seleccionados o vídeos específicos 🎥',
   'feat7v15': 'Notificacion',
   'featDesc7v15':
-      'Configura notificaciones diarias programadas para recordarte grabar tu momento especial 🔔',
+      'Configura notificaciones diaryas programadas para recordarte grabar tu momento especial 🔔',
   'default': 'Patrón',
   'profileNameAlreadyExists': 'El nombre del perfil ya existe',
   'profileNameCannotContainSpecialChars':
