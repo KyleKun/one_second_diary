@@ -48,9 +48,10 @@ class _CreateMovieOptionsState extends State<CreateMovieOptions> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        showDialog(
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (_) async {
+        await showDialog(
           barrierDismissible: false,
           context: Get.context!,
           builder: (context) => CustomDialog(
@@ -65,7 +66,6 @@ class _CreateMovieOptionsState extends State<CreateMovieOptions> {
             action2: () => Get.back(),
           ),
         );
-        return true;
       },
       child: Scaffold(
         appBar: AppBar(

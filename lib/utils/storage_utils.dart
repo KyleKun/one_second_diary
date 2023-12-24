@@ -124,8 +124,8 @@ class StorageUtils {
         showDialog(
           barrierDismissible: false,
           context: Get.context!,
-          builder: (context) => WillPopScope(
-            onWillPop: () async => false,
+          builder: (context) => PopScope(
+            canPop: false,
             child: AlertDialog(
               title: const Icon(
                 Icons.handyman,

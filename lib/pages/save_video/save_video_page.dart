@@ -465,8 +465,9 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (_) async {
         // Prevent showing the option to re-record video if not coming from the recording page
         final isFromRecordingPage = routeArguments['isFromRecordingPage'];
         if (!isFromRecordingPage) {
@@ -477,7 +478,7 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
           }
           Get.back();
         } else {
-          showDialog(
+          await showDialog(
             barrierDismissible: false,
             context: Get.context!,
             builder: (context) => CustomDialog(
@@ -493,7 +494,6 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
             ),
           );
         }
-        return true;
       },
       child: Scaffold(
         appBar: AppBar(
