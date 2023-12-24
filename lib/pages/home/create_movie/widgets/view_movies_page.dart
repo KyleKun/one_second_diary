@@ -34,7 +34,13 @@ class _ViewMoviesState extends State<ViewMovies> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('myMovies'.tr),
+        iconTheme: const IconThemeData(
+          color: Colors.white,
+        ),
+        title: Text(
+          'myMovies'.tr,
+          style: const TextStyle(color: Colors.white),
+        ),
       ),
       body: allMovies == null
           ? const Center(
@@ -193,7 +199,10 @@ class _ViewMoviesState extends State<ViewMovies> {
             style: TextButton.styleFrom(
               foregroundColor: ThemeService().isDarkTheme() ? AppColors.light : AppColors.dark,
             ),
-            child: Text('no'.tr),
+            child: Text(
+              'no'.tr,
+              style: const TextStyle(color: Colors.white),
+            ),
           ),
           TextButton(
             onPressed: () async {
@@ -218,7 +227,10 @@ class _ViewMoviesState extends State<ViewMovies> {
             style: TextButton.styleFrom(
               foregroundColor: Colors.red,
             ),
-            child: Text('yes'.tr),
+            child: Text(
+              'yes'.tr,
+              style: const TextStyle(color: Colors.white),
+            ),
           )
         ],
       ),

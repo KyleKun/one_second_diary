@@ -26,7 +26,10 @@ class TabItem extends StatelessWidget {
             color: color,
           ),
           child: Center(
-            child: Text(id),
+            child: Text(
+              id,
+              style: const TextStyle(color: Colors.white),
+            ),
           ),
         ),
         const SizedBox(width: 6),

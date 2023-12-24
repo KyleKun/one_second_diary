@@ -166,7 +166,7 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
   }
 
   bool shouldIgnoreExperimentalFilter() {
-    final useFilter = SharedPrefsUtil.getBool('useFilterInExperimentalPicker') ?? true;
+    final useFilter = SharedPrefsUtil.getBool('useFilterInExperimentalPicker') ?? false;
     if (!useFilter) return true;
     if (_selectedDate.day == DateTime.now().day &&
         _selectedDate.month == DateTime.now().month &&
@@ -275,7 +275,10 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
             style: TextButton.styleFrom(
               foregroundColor: ThemeService().isDarkTheme() ? AppColors.light : AppColors.dark,
             ),
-            child: Text('no'.tr),
+            child: Text(
+              'no'.tr,
+              style: const TextStyle(color: Colors.white),
+            ),
           ),
           TextButton(
             onPressed: () async {
@@ -308,7 +311,10 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
             style: TextButton.styleFrom(
               foregroundColor: Colors.red,
             ),
-            child: Text('yes'.tr),
+            child: Text(
+              'yes'.tr,
+              style: const TextStyle(color: Colors.white),
+            ),
           )
         ],
       ),
@@ -527,6 +533,9 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
                                     child: Text(
                                       'deleteVideo'.tr,
                                       textAlign: TextAlign.center,
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -568,6 +577,9 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
                                           ? 'addSubtitles'.tr
                                           : 'editSubtitles'.tr,
                                       textAlign: TextAlign.center,
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -603,6 +615,9 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
                                   child: Text(
                                     'addVideo'.tr,
                                     textAlign: TextAlign.center,
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                    ),
                                   ),
                                 ),
                               ),

@@ -69,11 +69,15 @@ class _CreateMovieOptionsState extends State<CreateMovieOptions> {
       },
       child: Scaffold(
         appBar: AppBar(
+          iconTheme: const IconThemeData(
+            color: Colors.white,
+          ),
           title: Text(
             'createMovie'.tr,
             style: TextStyle(
               fontFamily: 'Magic',
               fontSize: MediaQuery.of(context).size.width * 0.05,
+              color: Colors.white,
             ),
           ),
         ),

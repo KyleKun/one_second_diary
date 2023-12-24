@@ -31,10 +31,12 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         style: TextStyle(
           fontFamily: 'Magic',
           fontSize: MediaQuery.of(context).size.width * 0.05,
+          color: Colors.white,
         ),
       ),
       actions: [
         PopupMenuButton<String>(
+          iconColor: Colors.white,
           onSelected: popupAction,
           itemBuilder: (BuildContext context) {
             return options.map((String option) {

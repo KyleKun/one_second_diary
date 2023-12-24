@@ -10,6 +10,7 @@ import '../../../utils/constants.dart';
 import '../../../utils/ffmpeg_api_wrapper.dart';
 import '../../../utils/shared_preferences_util.dart';
 import '../../../utils/storage_utils.dart';
+import '../../../utils/theme.dart';
 import '../../../utils/utils.dart';
 
 class VideoSubtitlesEditorPage extends StatefulWidget {
@@ -67,7 +68,13 @@ class _VideoSubtitlesEditorPageState extends State<VideoSubtitlesEditorPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('subtitles'.tr),
+        iconTheme: const IconThemeData(
+          color: Colors.white,
+        ),
+        title: Text(
+          'subtitles'.tr,
+          style: const TextStyle(color: Colors.white),
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: AppColors.green,
@@ -201,6 +208,7 @@ class _VideoSubtitlesEditorPageState extends State<VideoSubtitlesEditorPage> {
                   controller: subtitlesController,
                   style: TextStyle(
                     fontFamily: DefaultTextStyle.of(context).style.fontFamily,
+                    color: ThemeService().isDarkTheme() ? Colors.white : Colors.black,
                   ),
                   maxLines: null,
                   onChanged: (value) => setState(() {
@@ -208,6 +216,10 @@ class _VideoSubtitlesEditorPageState extends State<VideoSubtitlesEditorPage> {
                   }),
                   decoration: InputDecoration(
                     hintText: 'enterSubtitles'.tr.split('(').first,
+                    fillColor: ThemeService().isDarkTheme() ? Colors.black : Colors.white,
+                    hintStyle: TextStyle(
+                      color: ThemeService().isDarkTheme() ? Colors.black : Colors.white,
+                    ),
                     filled: true,
                     border: const OutlineInputBorder(
                       borderSide: BorderSide(color: AppColors.green),

@@ -6,7 +6,10 @@ import 'shared_preferences_util.dart';
 
 class Themes {
   static final light = ThemeData.light().copyWith(
-    appBarTheme: const AppBarTheme(backgroundColor: AppColors.mainColor),
+    appBarTheme: const AppBarTheme(
+      backgroundColor: AppColors.mainColor,
+      iconTheme: IconThemeData(color: Colors.white),
+    ),
     textTheme: ThemeData.light().textTheme.apply(fontFamily: 'Magic'),
     primaryColor: AppColors.mainColor,
     colorScheme: ColorScheme.fromSwatch().copyWith(
@@ -30,10 +33,17 @@ class Themes {
       selectionColor: AppColors.green,
       selectionHandleColor: AppColors.green,
     ),
+    switchTheme: SwitchThemeData(
+      thumbColor: MaterialStateProperty.all(AppColors.mainColor),
+      trackColor: MaterialStateProperty.all(AppColors.rose),
+    ),
   );
 
   static final dark = ThemeData.dark().copyWith(
-    appBarTheme: const AppBarTheme(backgroundColor: AppColors.dark),
+    appBarTheme: const AppBarTheme(
+      backgroundColor: AppColors.mainColor,
+      iconTheme: IconThemeData(color: Colors.white),
+    ),
     textTheme: ThemeData.dark().textTheme.apply(
           fontFamily: 'Magic',
         ),
@@ -56,6 +66,10 @@ class Themes {
       selectionColor: AppColors.green,
       selectionHandleColor: AppColors.green,
     ),
+    switchTheme: SwitchThemeData(
+      thumbColor: MaterialStateProperty.all(AppColors.mainColor),
+      trackColor: MaterialStateProperty.all(AppColors.dark.withOpacity(0.5)),
+    ),
   );
 }
 
@@ -67,8 +81,7 @@ class ThemeService {
   // Dark Mode is true by default
   bool isDarkTheme() => SharedPrefsUtil.getBool(_key) ?? true;
 
-  Future<bool> _saveTheme(bool isDarkMode) =>
-      SharedPrefsUtil.putBool(_key, isDarkMode);
+  Future<bool> _saveTheme(bool isDarkMode) => SharedPrefsUtil.putBool(_key, isDarkMode);
 
   void switchTheme() {
     Get.changeThemeMode(isDarkTheme() ? ThemeMode.light : ThemeMode.dark);

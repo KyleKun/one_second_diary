@@ -115,6 +115,9 @@ class _ProfilesPageState extends State<ProfilesPage> {
                   },
                   decoration: InputDecoration(
                     hintText: 'enterProfileName'.tr,
+                    hintStyle: TextStyle(
+                      color: ThemeService().isDarkTheme() ? Colors.white : Colors.black,
+                    ),
                     errorStyle: const TextStyle(
                       color: AppColors.mainColor,
                     ),
@@ -205,7 +208,12 @@ class _ProfilesPageState extends State<ProfilesPage> {
             style: TextButton.styleFrom(
               foregroundColor: ThemeService().isDarkTheme() ? AppColors.light : AppColors.dark,
             ),
-            child: Text('no'.tr),
+            child: Text(
+              'no'.tr,
+              style: TextStyle(
+                color: ThemeService().isDarkTheme() ? Colors.white : Colors.black,
+              ),
+            ),
           ),
           TextButton(
             onPressed: () async {
@@ -242,7 +250,12 @@ class _ProfilesPageState extends State<ProfilesPage> {
             style: TextButton.styleFrom(
               foregroundColor: Colors.red,
             ),
-            child: Text('yes'.tr),
+            child: Text(
+              'yes'.tr,
+              style: TextStyle(
+                color: ThemeService().isDarkTheme() ? Colors.white : Colors.black,
+              ),
+            ),
           )
         ],
       ),
@@ -253,11 +266,15 @@ class _ProfilesPageState extends State<ProfilesPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        iconTheme: const IconThemeData(
+          color: Colors.white,
+        ),
         title: Text(
           'profiles'.tr,
           style: TextStyle(
             fontFamily: 'Magic',
             fontSize: MediaQuery.of(context).size.width * 0.05,
+            color: Colors.white,
           ),
         ),
       ),
@@ -305,6 +322,9 @@ class _ProfilesPageState extends State<ProfilesPage> {
                         ),
                         title: Text(
                           profiles[index].isDefault ? 'default'.tr : profiles[index].label,
+                          style: TextStyle(
+                            color: ThemeService().isDarkTheme() ? Colors.white : Colors.black,
+                          ),
                         ),
                         secondary: profiles[index].isDefault
                             ? null

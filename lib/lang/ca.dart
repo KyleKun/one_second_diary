@@ -191,7 +191,7 @@ const Map<String, String> ca = {
   'sendLogsDescription':
       'Si us trobeu davant d’un problema, premeu «Sí» per incloure els registres que m’ajudaran a trobar el problema. Si voleu suggerir una característica o qualsevol altra cosa, premeu «No».',
   'whatsNewDescv152':
-      'La versió 1.6.0 porta diverses correccions i millores!\n\nFeu-hi una ullada a les següents pàgines 😊',
+      'La versió 1.5.2 porta diverses correccions i millores!\n\nFeu-hi una ullada a les següents pàgines 😊',
   'feat1v152': 'Processament de vídeo més ràpid',
   'featDesc1v152': 'El procés d’edició de vídeos llargs ara és molt més ràpid 🚀',
   'feat2v152': 'Millora en la retallada dels vídeos',
