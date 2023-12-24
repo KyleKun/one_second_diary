@@ -51,12 +51,12 @@ class DateFormatUtils {
       return '$day de $month de $year';
     }
     if (lang == 'ca') {
-      month = caMonths[monthNumber - 1];
+      month = Constants.caMonths[monthNumber - 1];
       //Add custom article for the months that start with a vowel
       if (monthNumber == 4 || monthNumber == 8 || monthNumber == 10) {
         return "$day d'$month de $year";
       }
-      return "$day de $month de $year";
+      return '$day de $month de $year';
     }
     // Default format for English and other languages
     month = Constants.enMonths[monthNumber - 1];
