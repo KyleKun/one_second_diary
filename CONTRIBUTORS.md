@@ -27,6 +27,7 @@
 - Bagas Wastu - Indonesian
 - Варвара Попова - Russian
 - Miloš Koliáš - Czech
+- Ander Romero - Catalan
 
 ## App Logo (Initial Version)
 - Victória Marques
