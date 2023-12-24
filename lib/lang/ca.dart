@@ -1,4 +1,4 @@
-const Map<String, String> en = {
+const Map<String, String> ca = {
   'darkMode': 'Mode Fosc',
   'language': 'Llengua',
   'videoQuality': 'Qualitat del vídeo',
@@ -15,7 +15,8 @@ const Map<String, String> en = {
   'movieInsufficientVideos':
       'Cal que tingueu 2 o més vídeos enregistrats per crear una pel·lícula.',
   'movieCreatedTitle': 'S’ha creat la pel·lícula!',
-  'movieCreatedDesc': 'La pel·lícula s’ha desat a l’emmagatzematge dins la carpeta DCIM/OneSecondDiary/Movies',
+  'movieCreatedDesc':
+      'La pel·lícula s’ha desat a l’emmagatzematge dins la carpeta DCIM/OneSecondDiary/Movies',
   'movieError': 'S’ha produït un error en desar la pel·lícula!',
   'tryAgainMsg': 'Torneu a provar-ho. Si el problema persisteix, contacteu amb el desenvolupador.',
   'create': 'Crea',
@@ -42,12 +43,12 @@ const Map<String, String> en = {
   'discardVideoTitle': 'Voleu descartar aquest vídeo?',
   'discardVideoDesc': 'Premeu «Sí» per tornar a enregistrar-lo',
   'introTitle1': 'Enregistreu 1 segon cada dia',
-  'introDesc1':
-      'Trieu un moment especial del dia que us agradaria recordar en el futur.',
+  'introDesc1': 'Trieu un moment especial del dia que us agradaria recordar en el futur.',
   'introTitle2': 'Creeu la pel·lícula de la vostra vida',
   'introDesc2': 'Genereu una recopilació de tots els vídeos que heu enregistrat.',
   'introTitle3': 'Sense anuncis i totalment gratuïta',
-  'introDesc3': 'Si us agrada l’aplicació, considereu donar suport al desenvolupament amb una donació.',
+  'introDesc3':
+      'Si us agrada l’aplicació, considereu donar suport al desenvolupament amb una donació.',
   'skip': 'Omet',
   'done': 'Fet',
   'futureUpdates': 'Futures actualitzacions',
@@ -166,7 +167,8 @@ const Map<String, String> en = {
   'success': 'Èxit',
   'migrationSuccess':
       'Migració exitosa! Tots els vídeos i pel·lícules són desats a «Emmagatzematge intern > DCIM > OneSecondDiary»',
-  'migrationInProgress': 'S’estan migrant tots els vídeos a la nova carpeta de l’aplicació, espereu...',
+  'migrationInProgress':
+      'S’estan migrant tots els vídeos a la nova carpeta de l’aplicació, espereu...',
   'migrationFolderDeletionError':
       'S’ha completat la migració, però ha succeït un error mentre se suprimien les carpetes velles. Suprimiu-les manualment.',
   'preferences': 'Preferències',
