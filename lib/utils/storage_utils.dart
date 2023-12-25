@@ -416,11 +416,11 @@ class StorageUtils {
       final String appPath = SharedPrefsUtil.getString('appPath');
 
       // Vertical Profiles are stored in a folder ending with _vertical.
-      if(verticalMode) {
+      if (verticalMode) {
         profileName = '${profileName}_vertical';
       }
 
-      String profilePath = '$appPath/Profiles/$profileName/';
+      final profilePath = '$appPath/Profiles/$profileName/';
 
       // Checking if the folder really exists, if not, then create it
       final io.Directory? profileDirectory = io.Directory(profilePath);

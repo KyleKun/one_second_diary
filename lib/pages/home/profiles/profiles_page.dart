@@ -59,18 +59,17 @@ class _ProfilesPageState extends State<ProfilesPage> {
         const Profile(label: 'Default', isDefault: true, isVertical: false),
       );
     } else {
-
       // Profiles strings ending with '_vertical' creates an Profile object with isVertical value true, as other not.
       profiles = storedProfiles.map(
         (e) {
           if (e == 'Default') return Profile(label: e, isDefault: true, isVertical: false);
-          if (e.endsWith('_vertical')) return Profile(label: e.replaceAll('_vertical', ''), isVertical: true);
-              else return Profile(label: e, isVertical: false);
+          if (e.endsWith('_vertical'))
+            return Profile(label: e.replaceAll('_vertical', ''), isVertical: true);
+          else
+            return Profile(label: e, isVertical: false);
         },
       ).toList();
     }
-
-
 
     Utils.logInfo('${logTag}Stored Profiles are: $storedProfiles');
   }
@@ -104,32 +103,30 @@ class _ProfilesPageState extends State<ProfilesPage> {
                       'verticalProfileName'.tr,
                     ),
                     Switch(
-                        value: _verticalModeSwitch,
-                        activeTrackColor: AppColors.mainColor.withOpacity(0.4),
-                        activeColor: AppColors.mainColor,
-                        onChanged: (value) {
-                          setState(() {
-                            _verticalModeSwitch = value;
-                            final snackBar = SnackBar(
-                              margin: const EdgeInsets.all(70.0),
-                              behavior: SnackBarBehavior.floating,
-                              backgroundColor: Colors.black54,
-                              duration: const Duration(seconds: 3),
-                              shape: const RoundedRectangleBorder(
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(25),
-                                ),
+                      value: _verticalModeSwitch,
+                      activeTrackColor: AppColors.mainColor.withOpacity(0.4),
+                      activeColor: AppColors.mainColor,
+                      onChanged: (value) {
+                        setState(() {
+                          _verticalModeSwitch = value;
+                          final snackBar = SnackBar(
+                            margin: const EdgeInsets.all(70.0),
+                            behavior: SnackBarBehavior.floating,
+                            backgroundColor: Colors.black54,
+                            duration: const Duration(seconds: 3),
+                            shape: const RoundedRectangleBorder(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(25),
                               ),
-                              content: Text(
-                                  _verticalModeSwitch?
-                                  'verticalProfileActivated'.tr :
-                                  'verticalProfileDisabled'.tr
-                              ),
-                            );
-                            //TODO : Show the snackbar in the foreground.
-                            ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                          });
-                        },
+                            ),
+                            content: Text(_verticalModeSwitch
+                                ? 'verticalProfileActivated'.tr
+                                : 'verticalProfileDisabled'.tr),
+                          );
+
+                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                        });
+                      },
                     ),
                   ],
                 ),
@@ -216,7 +213,9 @@ class _ProfilesPageState extends State<ProfilesPage> {
 
                     // Add the modified profile list to persistence
                     // Adds the string '_vertical' at the end of vertical profiles to keep this parameter persistent.
-                    final profileNamesToStringList = profiles.map((e) => e.isVertical? '${e.label}_vertical' : e.label).toList();
+                    final profileNamesToStringList = profiles
+                        .map((e) => e.isVertical ? '${e.label}_vertical' : e.label)
+                        .toList();
 
                     SharedPrefsUtil.putStringList('profiles', profileNamesToStringList);
 
@@ -377,24 +376,23 @@ class _ProfilesPageState extends State<ProfilesPage> {
                             color: ThemeService().isDarkTheme() ? Colors.white : Colors.black,
                           ),
                         ),
-                        secondary: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(
-                              profiles[index].isVertical ? Icons.stay_current_portrait : Icons.stay_current_landscape,
-                            ),
-                            if(!profiles[index].isDefault)
-                              IconButton(
-                                onPressed: () async {
-                                  await _showDeleteProfileDialog(index);
-                                },
-                                icon: const Icon(
+                        secondary: Row(mainAxisSize: MainAxisSize.min, children: [
+                          Icon(
+                            profiles[index].isVertical
+                                ? Icons.stay_current_portrait
+                                : Icons.stay_current_landscape,
+                          ),
+                          if (!profiles[index].isDefault)
+                            IconButton(
+                              onPressed: () async {
+                                await _showDeleteProfileDialog(index);
+                              },
+                              icon: const Icon(
                                 Icons.delete_forever_rounded,
                                 color: AppColors.mainColor,
-                                ),
                               ),
-                          ]
-                        ),
+                            ),
+                        ]),
                       ),
                     );
                   },
