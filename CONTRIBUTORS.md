@@ -22,12 +22,13 @@
 
 ## Localization
 - Greily Campusano - Spanish
-- 陈浮生 (Dilql) - Chinese
+- 丁禹懿 - Chinese
 - Ardin Biganiro - French
 - Alexander Adam - German
 - Bagas Wastu - Indonesian
 - Варвара Попова - Russian
 - Miloš Koliáš - Czech
+- Ander Romero - Catalan
 
 ## App Logo (Initial Version)
 - Victória Marques

@@ -22,7 +22,7 @@ class _PreferencesPageState extends State<PreferencesPage> {
     super.initState();
     isCameraSwitchToggled = SharedPrefsUtil.getBool('forceNativeCamera') ?? false;
     isPickerSwitchToggled = SharedPrefsUtil.getBool('useExperimentalPicker') ?? true;
-    isPickerFilterSwitchToggled = SharedPrefsUtil.getBool('useFilterInExperimentalPicker') ?? true;
+    isPickerFilterSwitchToggled = SharedPrefsUtil.getBool('useFilterInExperimentalPicker') ?? false;
     isColorsSwitchToggled = SharedPrefsUtil.getBool('useAlternativeCalendarColors') ?? false;
   }
 
@@ -30,11 +30,15 @@ class _PreferencesPageState extends State<PreferencesPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        iconTheme: const IconThemeData(
+          color: Colors.white,
+        ),
         title: Text(
           'preferences'.tr,
           style: TextStyle(
             fontFamily: 'Magic',
             fontSize: MediaQuery.of(context).size.width * 0.05,
+            color: Colors.white,
           ),
         ),
       ),

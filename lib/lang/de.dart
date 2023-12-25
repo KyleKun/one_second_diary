@@ -188,7 +188,7 @@ const Map<String, String> de = {
   'sendLogsDescription':
       'Wenn Sie auf ein Problem stoßen, tippen Sie bitte auf "Ja", um die Protokolle einzuschließen, die mir helfen, das Problem zu finden. Wenn es sich um einen Verbesserungsvorschlag oder ein anderes Thema handelt, tippen Sie bitte auf "Nein".',
   'whatsNewDescv152':
-      'Version 1.6.0 brachte mehrere Korrekturen und Verbesserungen!\n\nSchauen Sie sich die nächsten Seiten an 😊',
+      'Version 1.5.2 brachte mehrere Korrekturen und Verbesserungen!\n\nSchauen Sie sich die nächsten Seiten an 😊',
   'feat1v152': 'Schnellere Videobearbeitung',
   'featDesc1v152': 'Die Bearbeitung großer Videos geht jetzt viel schneller 🚀',
   'feat2v152': 'Verbessertes Videoschneiden',

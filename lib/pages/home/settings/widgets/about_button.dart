@@ -3,23 +3,32 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../../utils/constants.dart';
+import '../../../../utils/theme.dart';
 
 class AboutButton extends StatelessWidget {
   const AboutButton({Key? key}) : super(key: key);
 
   void showAbout(BuildContext context) {
     showAboutPage(
-      title: Text('about'.tr),
+      title: Text(
+        'about'.tr,
+        style: const TextStyle(color: Colors.white),
+      ),
       context: context,
       applicationVersion: 'appVersion'.tr,
-      applicationLegalese: 'Copyright © Caio Pedroso, 2023',
+      applicationLegalese: 'Copyright © Caio Pedroso, 2024',
       children: <Widget>[
-        const MarkdownPageListTile(
-          icon: Icon(
+        MarkdownPageListTile(
+          icon: const Icon(
             Icons.history,
             color: AppColors.green,
           ),
-          title: Text('Changelog'),
+          title: Text(
+            'Changelog',
+            style: TextStyle(
+              color: ThemeService().isDarkTheme() ? Colors.white : Colors.black,
+            ),
+          ),
           filename: 'CHANGELOG.md',
         ),
         MarkdownPageListTile(
@@ -27,10 +36,22 @@ class AboutButton extends StatelessWidget {
             Icons.favorite,
             color: AppColors.mainColor,
           ),
-          title: Text('thanksTo'.tr),
+          title: Text(
+            'thanksTo'.tr,
+            style: TextStyle(
+              color: ThemeService().isDarkTheme() ? Colors.white : Colors.black,
+            ),
+          ),
           filename: 'CONTRIBUTORS.md',
         ),
-        LicensesPageListTile(title: Text('licenses'.tr)),
+        LicensesPageListTile(
+          title: Text(
+            'licenses'.tr,
+            style: TextStyle(
+              color: ThemeService().isDarkTheme() ? Colors.white : Colors.black,
+            ),
+          ),
+        ),
       ],
       applicationIcon: const SizedBox(
         width: 100,

@@ -42,7 +42,9 @@ class CustomCheckboxListTile extends StatelessWidget {
               child: Transform.scale(
                 scale: checkboxSize ?? 1.4,
                 child: Checkbox(
-                  activeColor: AppColors.green,
+                  checkColor: Colors.white,
+                  fillColor:
+                      MaterialStatePropertyAll(isChecked == true ? AppColors.green : Colors.white),
                   value: isChecked,
                   onChanged: onChanged,
                 ),

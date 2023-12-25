@@ -10,7 +10,15 @@ class DonationPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('donationPageTitle'.tr),
+        iconTheme: const IconThemeData(
+          color: Colors.white,
+        ),
+        title: Text(
+          'donationPageTitle'.tr,
+          style: const TextStyle(
+            color: Colors.white,
+          ),
+        ),
       ),
       body: Column(
         children: [

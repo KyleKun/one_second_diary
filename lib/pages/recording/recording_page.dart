@@ -465,6 +465,7 @@ class _RecordingPageState extends State<RecordingPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.dark,
       body: Stack(
         children: [
           NativeDeviceOrientedWidget(

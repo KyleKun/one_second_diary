@@ -50,6 +50,14 @@ class DateFormatUtils {
       month = Constants.ptMonths[monthNumber - 1];
       return '$day de $month de $year';
     }
+    if (lang == 'ca') {
+      month = Constants.caMonths[monthNumber - 1];
+      //Add custom article for the months that start with a vowel
+      if (monthNumber == 4 || monthNumber == 8 || monthNumber == 10) {
+        return "$day d'$month de $year";
+      }
+      return '$day de $month de $year';
+    }
     // Default format for English and other languages
     month = Constants.enMonths[monthNumber - 1];
     // Used to remove leading 0
@@ -59,10 +67,10 @@ class DateFormatUtils {
     return '$month $day$suffix, $year';
   }
 
-  /// Applied if language is ['pt' or 'es']
+  /// Applied if language is ['pt', 'es' or 'ca']
   static bool isDayFirstPattern() {
     final String languageCode = Get.locale!.languageCode;
-    if (languageCode == 'pt' || languageCode == 'es') {
+    if (languageCode == 'pt' || languageCode == 'es' || languageCode == 'ca') {
       return true;
     }
     return false;

@@ -117,8 +117,8 @@ class _SaveButtonState extends State<SaveButton> {
     return await showDialog(
       context: Get.context!,
       barrierDismissible: false,
-      builder: (context) => WillPopScope(
-        onWillPop: () async => false,
+      builder: (context) => PopScope(
+        canPop: false,
         child: ValueListenableBuilder(
           valueListenable: saveProgressPercentage,
           builder: (context, value, child) => AlertDialog(

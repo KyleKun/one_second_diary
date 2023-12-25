@@ -52,6 +52,21 @@ class Constants {
     'Noviembre',
     'Diciembre',
   ];
+
+  static const caMonths = [
+    'gener',
+    'febrer',
+    'març',
+    'abril',
+    'maig',
+    'juny',
+    'juliol',
+    'agost',
+    'setembre',
+    'octubre',
+    'novembre',
+    'desembre',
+  ];
 }
 
 class AppColors {

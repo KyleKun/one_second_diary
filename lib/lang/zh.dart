@@ -165,7 +165,7 @@ const Map<String, String> zh = {
   'change': '更改',
   'sendLogs': '发送日志？',
   'sendLogsDescription': '如果您遇到问题，请点击“是”以包含将帮助我找到问题的日志。如果这是一个功能建议或其他话题，请点击“否”。',
-  'whatsNewDescv152': '1.6.0版本带来了几个修复和改进！\n\n在接下来的页面中查看 😊',
+  'whatsNewDescv152': '1.5.2版本带来了几个修复和改进！\n\n在接下来的页面中查看 😊',
   'feat1v152': '更快的视频处理',
   'featDesc1v152': '现在编辑大视频更加快速 🚀',
   'feat2v152': '改进的视频剪辑',

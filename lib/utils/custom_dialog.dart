@@ -8,6 +8,7 @@ import 'package:path_provider/path_provider.dart';
 
 import 'constants.dart';
 import 'storage_utils.dart';
+import 'theme.dart';
 import 'utils.dart';
 
 class CustomDialog extends StatefulWidget {
@@ -95,12 +96,18 @@ class _CustomDialogState extends State<CustomDialog> {
         if (widget.isContact) ...{
           ElevatedButton(
             style: ElevatedButton.styleFrom(backgroundColor: AppColors.green),
-            child: Text('yes'.tr),
+            child: Text(
+              'yes'.tr,
+              style: const TextStyle(color: Colors.white),
+            ),
             onPressed: () => zipAndSendLogs(),
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-            child: Text('no'.tr),
+            child: Text(
+              'no'.tr,
+              style: const TextStyle(color: Colors.white),
+            ),
             onPressed: () => Utils.launchURL(Constants.email),
           ),
         } else if (widget.sendLogs) ...{
@@ -120,13 +127,23 @@ class _CustomDialogState extends State<CustomDialog> {
         } else ...{
           ElevatedButton(
             style: ElevatedButton.styleFrom(backgroundColor: widget.actionColor),
-            child: Text(widget.actionText!),
+            child: Text(
+              widget.actionText!,
+              style: TextStyle(
+                color: ThemeService().isDarkTheme() ? Colors.white : Colors.black,
+              ),
+            ),
             onPressed: widget.action,
           ),
           if (widget.isDoubleAction == true)
             ElevatedButton(
               style: ElevatedButton.styleFrom(backgroundColor: widget.action2Color),
-              child: Text(widget.action2Text!),
+              child: Text(
+                widget.action2Text!,
+                style: TextStyle(
+                  color: ThemeService().isDarkTheme() ? Colors.white : Colors.black,
+                ),
+              ),
               onPressed: widget.action2,
             )
           else

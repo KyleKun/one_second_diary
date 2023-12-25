@@ -466,8 +466,9 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (_) async {
         // Prevent showing the option to re-record video if not coming from the recording page
         final isFromRecordingPage = routeArguments['isFromRecordingPage'];
         if (!isFromRecordingPage) {
@@ -478,7 +479,7 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
           }
           Get.back();
         } else {
-          showDialog(
+          await showDialog(
             barrierDismissible: false,
             context: Get.context!,
             builder: (context) => CustomDialog(
@@ -494,11 +495,16 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
             ),
           );
         }
-        return true;
       },
       child: Scaffold(
         appBar: AppBar(
-          title: Text('saveVideo'.tr),
+          iconTheme: const IconThemeData(
+            color: Colors.white,
+          ),
+          title: Text(
+            'saveVideo'.tr,
+            style: const TextStyle(color: Colors.white),
+          ),
         ),
         floatingActionButton: Visibility(
           visible: !_isLocationProcessing,
@@ -805,12 +811,17 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
                   controller: subtitlesTextController,
                   style: TextStyle(
                     fontFamily: DefaultTextStyle.of(context).style.fontFamily,
+                    color: Colors.white,
                   ),
                   maxLines: 6,
                   readOnly: true,
                   onTap: () async => await showSubtitlesDialog(),
                   decoration: InputDecoration(
+                    fillColor: AppColors.dark,
                     hintText: 'enterSubtitles'.tr,
+                    hintStyle: const TextStyle(
+                      color: Colors.white,
+                    ),
                     filled: true,
                     enabledBorder: OutlineInputBorder(
                       borderSide: BorderSide(color: isDarkTheme ? Colors.white : Colors.black),
@@ -839,8 +850,11 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
             height: 42,
             child: TabBar(
               labelPadding: const EdgeInsets.all(10),
-              indicator: const UnderlineTabIndicator(
-                borderSide: BorderSide(color: AppColors.mainColor, width: 2), // Indicator height
+              indicator: UnderlineTabIndicator(
+                borderSide: BorderSide(
+                  color: ThemeService().isDarkTheme() ? Colors.white : Colors.black,
+                  width: 4,
+                ), // Indicator height
                 // insets: EdgeInsets.only(left: 60, right: 40), // Indicator width
               ),
               isScrollable: true,
@@ -885,6 +899,7 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
   Future<void> showSubtitlesDialog() async {
     await showDialog(
       context: context,
+      useSafeArea: false,
       builder: (context) => AlertDialog(
         title: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 5.0),
@@ -925,12 +940,14 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
               autofocus: true,
               controller: subtitlesTextController,
               textCapitalization: TextCapitalization.sentences,
-              maxLines: 12,
+              maxLines: 10,
               style: TextStyle(
                 fontFamily: DefaultTextStyle.of(context).style.fontFamily,
+                color: Colors.white,
               ),
               decoration: InputDecoration(
                 filled: true,
+                fillColor: AppColors.dark,
                 enabledBorder: OutlineInputBorder(
                   borderSide: BorderSide(color: isDarkTheme ? Colors.white : Colors.black),
                 ),
@@ -967,9 +984,16 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
               autofocus: true,
               controller: customLocationTextController,
               textCapitalization: TextCapitalization.sentences,
+              style: TextStyle(
+                color: ThemeService().isDarkTheme() ? Colors.black : Colors.white,
+              ),
               decoration: InputDecoration(
                 hintText: 'enterLocation'.tr,
+                hintStyle: const TextStyle(
+                  color: Colors.white,
+                ),
                 filled: true,
+                fillColor: AppColors.dark,
                 border: const OutlineInputBorder(
                   borderSide: BorderSide(color: AppColors.green),
                 ),
