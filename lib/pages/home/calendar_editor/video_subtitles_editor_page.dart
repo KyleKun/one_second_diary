@@ -170,35 +170,41 @@ class _VideoSubtitlesEditorPageState extends State<VideoSubtitlesEditorPage> {
             children: [
               GestureDetector(
                 onTap: () => videoPlay(),
-                child: AspectRatio(
-                  aspectRatio: 16 / 9,
-                  child: Stack(
-                    children: [
-                      VideoPlayer(
-                        key: UniqueKey(),
-                        _videoController,
-                      ),
-                      Center(
-                        child: Opacity(
-                          opacity: _opacity,
-                          child: Container(
-                            width: MediaQuery.of(context).size.width * 0.25,
-                            height: MediaQuery.of(context).size.width * 0.25,
-                            decoration: const BoxDecoration(
-                              color: Colors.black45,
-                              shape: BoxShape.circle,
-                            ),
-                            child: const Center(
-                              child: Icon(
-                                Icons.play_arrow,
-                                size: 72.0,
-                                color: Colors.white,
+                // ConstrainedBox to fit vertical videos without overflowing
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxHeight: MediaQuery.of(context).size.height * 0.7
+                  ),
+                  child: AspectRatio(
+                    aspectRatio: _videoController!.value.aspectRatio,
+                    child: Stack(
+                      children: [
+                        VideoPlayer(
+                          key: UniqueKey(),
+                          _videoController,
+                        ),
+                        Center(
+                          child: Opacity(
+                            opacity: _opacity,
+                            child: Container(
+                              width: MediaQuery.of(context).size.width * 0.25,
+                              height: MediaQuery.of(context).size.width * 0.25,
+                              decoration: const BoxDecoration(
+                                color: Colors.black45,
+                                shape: BoxShape.circle,
+                              ),
+                              child: const Center(
+                                child: Icon(
+                                  Icons.play_arrow,
+                                  size: 72.0,
+                                  color: Colors.white,
+                                ),
                               ),
                             ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),
