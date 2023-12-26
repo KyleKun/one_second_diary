@@ -328,8 +328,7 @@ class _SaveButtonState extends State<SaveButton> {
         final returnCode = await session.getReturnCode();
         if (ReturnCode.isSuccess(returnCode)) {
           final sessionLog = await session.getOutput();
-          Utils.logInfo('résultat ffprobe : $sessionLog');
-          // 4:3 vidéos (ex : produced by pixel devices in photo modes), will be scaled up to fit into 1080x1920.
+          // 4:3 videos (ex : produced by pixel devices in photo modes), will be scaled up to fit into 1080x1920.
           if (sessionLog!.contains('4:3')) {
             scale = 'scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920';
             Utils.logInfo('${logTag}4/3 video detected, cropping to 9/16.');

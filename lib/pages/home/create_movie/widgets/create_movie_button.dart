@@ -39,6 +39,8 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
   final VideoCountController controller = Get.find();
   bool isProcessing = false;
   String progress = '';
+  String usedResolution = '';
+  var mixedResolutionError = [];
 
   void _openVideo(String filePath) async {
     await OpenFilex.open(filePath);
@@ -145,6 +147,27 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
                   !sessionLog.contains(Constants.artist)) {
                 Utils.logWarning('$logTag$currentVideo was not recorded on v1.5. Processing it...');
                 isV1point5 = false;
+              }
+            } else {
+              final sessionLog = await session.getLogsAsString();
+              Utils.logError('${logTag}Error checking if $currentVideo was recorded on v1.5');
+              Utils.logError('${logTag}Error: $sessionLog');
+            }
+          });
+
+          // Checks if there is a mix of horizontal/vertical videos by comparing their resolution.
+          await executeFFprobe(
+                  '-v quiet -show_entries stream=width,height -of default=nw=1:nk=1 "$currentVideo"')
+              .then((session) async {
+            final returnCode = await session.getReturnCode();
+            if (ReturnCode.isSuccess(returnCode)) {
+              final sessionLog = await session.getOutput();
+              if (sessionLog == usedResolution) {
+                return;
+              } else if (usedResolution == '' && sessionLog!.isNotEmpty) {
+                usedResolution = sessionLog;
+              } else {
+                mixedResolutionError.add(currentVideo);
               }
             } else {
               final sessionLog = await session.getLogsAsString();
@@ -276,6 +299,22 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
                 Utils.logError('${logTag}Error: $sessionLog');
               }
             });
+          }
+
+          // Show an error if multiple resolutions is detected.
+          if(mixedResolutionError.isNotEmpty) {
+            showDialog(
+              barrierDismissible: false,
+              context: Get.context!,
+              builder: (context) => CustomDialog(
+                isDoubleAction: false,
+                title: 'mixedResolutionAlert'.tr,
+                content: "${'mixedResolutionAlertDescription'.tr}\n\n${mixedResolutionError.toString()}",
+                actionText: 'Ok',
+                actionColor: Colors.red,
+                action: () => Get.offAllNamed(Routes.HOME),
+              ),
+            );
           }
 
           if (mounted) {

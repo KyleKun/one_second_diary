@@ -213,5 +213,9 @@ const Map<String, String> fr = {
       'Lorsqu\'il est activé, sélectionner des dates passées filtrera les vidéos par cette date. Lorsqu\'il est désactivé, toutes les vidéos seront affichées. Fonctionne uniquement avec le sélecteur de fichiers expérimental.',
   'useAlternativeCalendarColors': 'Utilisez des couleurs de calendrier alternatives',
   'useAlternativeCalendarColorsDescription':
-      'Change le vert et le rouge dans le calendrier en bleu et jaune. Utile pour les personnes daltoniennes.'
+      'Change le vert et le rouge dans le calendrier en bleu et jaune. Utile pour les personnes daltoniennes.',
+  'mixedResolutionAlert' : 'Mix de résolutions détecté.',
+  'mixedResolutionAlertDescription' : 'Au moins une vidéo semble avoir un mix de résolutions.\n\n'
+  'Cela peut produire des résultats innatendus lorsque vous utilisez votre film.\n\n'
+  'Essayez de supprimer ces fichiers ou de les déplacer dans un autre profil.'
 };
