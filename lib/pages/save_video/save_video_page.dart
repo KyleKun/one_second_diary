@@ -67,7 +67,7 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
   bool _isLocationProcessing = false;
 
   late final bool isDarkTheme = ThemeService().isDarkTheme();
-  Profile selectedProfile = Utils.getCurrentProfileObject();
+  Profile selectedProfile = Utils.getCurrentProfile();
 
   void _initCorrectDates() {
     final DateTime selectedDate = routeArguments['currentDate'];
@@ -604,11 +604,18 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
               const SizedBox(width: 8),
               Flexible(
                 child: Text(
-                  selectedProfile.label.isEmpty ? 'default'.tr : selectedProfile.label,
+                  selectedProfile.label.isEmpty ? 'default'.tr :
+                  selectedProfile.isVertical ? selectedProfile.label.replaceAll('_vertical', '')
+                  : selectedProfile.label,
                   style: TextStyle(
                     fontSize: MediaQuery.of(context).size.height * 0.019,
                   ),
                 ),
+              ),
+              const SizedBox(width: 20),
+              Icon(
+                selectedProfile.isVertical? Icons.stay_current_portrait :
+                Icons.stay_current_landscape
               ),
               const SizedBox(width: 20),
               Flexible(
@@ -625,7 +632,7 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
                   onPressed: () {
                     Get.to(const ProfilesPage())?.then(
                       (_) => setState(() {
-                        selectedProfile = Utils.getCurrentProfileObject();
+                        selectedProfile = Utils.getCurrentProfile();
                       }),
                     );
                   },

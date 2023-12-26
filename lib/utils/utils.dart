@@ -149,7 +149,7 @@ class Utils {
     logInfo('[Utils.writeTxt()] - Writing txt file to $txtPath');
 
     // Get current profile
-    final currentProfileName = getCurrentProfileString();
+    final currentProfileName = getCurrentProfile().storageString;
 
     // Default directory
     String videosFolderPath = SharedPrefsUtil.getString('appPath');
@@ -253,48 +253,33 @@ class Utils {
     return '$hoursString:$minutesString:$secondsString,$millisecondsString';
   }
 
-  /// Get current profile name, empty string if Default
-  static String getCurrentProfileString() {
+  /// Get current profile object, empty string if Default.
+  /// As vertical profiles are saved with suffix '_vertical',
+  /// storageString = what's in storage, label = name without suffix.
+  static Profile getCurrentProfile() {
     // Get current profile
-    String currentProfileName = '';
-
-    final selectedProfileIndex = SharedPrefsUtil.getInt('selectedProfileIndex') ?? 0;
-    if (selectedProfileIndex != 0) {
-      final allProfiles = SharedPrefsUtil.getStringList('profiles');
-      if (allProfiles != null) {
-        currentProfileName = allProfiles[selectedProfileIndex];
-      }
-    }
-
-    final profileLog = currentProfileName == '' ? 'Default' : currentProfileName;
-    logInfo('[Utils.getCurrentProfile()] - Selected profile: $profileLog');
-    return currentProfileName;
-  }
-
-  /// Get current profile object, with isVertical property
-  static Profile getCurrentProfileObject() {
-    // Get current profile
-    String currentProfileName = '';
+    String currentProfileStorageString = '';
+    String currentProfileLabel = '';
     bool isVertical = false;
 
     final selectedProfileIndex = SharedPrefsUtil.getInt('selectedProfileIndex') ?? 0;
     if (selectedProfileIndex != 0) {
       final allProfiles = SharedPrefsUtil.getStringList('profiles');
       if (allProfiles != null) {
-        currentProfileName = allProfiles[selectedProfileIndex];
+        currentProfileStorageString = allProfiles[selectedProfileIndex];
 
-        // Vertical profiles are stored with '_vertical' and the end, but shown without.
-        if(currentProfileName.endsWith('_vertical')) {
+        // Vertical profiles are stored with '_vertical' in storage, but shown without.
+        if(currentProfileStorageString.endsWith('_vertical')) {
           isVertical = true;
-          currentProfileName.replaceAll('_vertical', '');
+          currentProfileLabel = currentProfileStorageString.replaceAll('_vertical', '');
         }
       }
     }
 
-    final profileLog = currentProfileName == '' ? 'Default' : currentProfileName;
+    final profileLog = currentProfileStorageString == '' ? 'Default' : currentProfileStorageString;
     logInfo('[Utils.getCurrentProfile()] - Selected profile: $profileLog');
 
-    return Profile(label: currentProfileName, isVertical: isVertical);
+    return Profile(storageString: currentProfileStorageString, label: currentProfileLabel, isVertical: isVertical);
   }
 
   /// Get all video files inside DCIM/OneSecondDiary/Movies folder
@@ -327,7 +312,7 @@ class Utils {
   static List<String> getAllVideos({bool fullPath = false}) {
     logInfo('[Utils.getAllVideos()] - Asked for full path: $fullPath');
     // Get current profile
-    final currentProfileName = getCurrentProfileString();
+    final currentProfileName = getCurrentProfile().storageString;
 
     // Default directory
     io.Directory directory = io.Directory(SharedPrefsUtil.getString('appPath'));

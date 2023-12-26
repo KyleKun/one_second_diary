@@ -79,7 +79,7 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
   }
 
   void setMediaStorePath() {
-    final currentProfile = Utils.getCurrentProfileString();
+    final currentProfile = Utils.getCurrentProfile().storageString;
     if (currentProfile.isEmpty || currentProfile == 'Default') {
       MediaStore.appFolder = 'OneSecondDiary';
     } else {

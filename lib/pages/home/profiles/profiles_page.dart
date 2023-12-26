@@ -56,17 +56,17 @@ class _ProfilesPageState extends State<ProfilesPage> {
     if (!storedProfiles.contains('Default')) {
       profiles.insert(
         0,
-        const Profile(label: 'Default', isDefault: true, isVertical: false),
+        const Profile(label: 'Default', storageString: 'Default', isDefault: true, isVertical: false),
       );
     } else {
       // Profiles strings ending with '_vertical' creates an Profile object with isVertical value true, as other not.
       profiles = storedProfiles.map(
         (e) {
-          if (e == 'Default') return Profile(label: e, isDefault: true, isVertical: false);
+          if (e == 'Default') return Profile(label: e, storageString: e, isDefault: true, isVertical: false);
           if (e.endsWith('_vertical'))
-            return Profile(label: e.replaceAll('_vertical', ''), isVertical: true);
+            return Profile(label: e.replaceAll('_vertical', ''), storageString: e, isVertical: true);
           else
-            return Profile(label: e, isVertical: false);
+            return Profile(label: e, storageString: e, isVertical: false);
         },
       ).toList();
     }
@@ -206,6 +206,8 @@ class _ProfilesPageState extends State<ProfilesPage> {
                         profiles.length,
                         Profile(
                             label: _profileNameController.text.trim(),
+                            storageString: _verticalModeSwitch? '${_profileNameController.text.trim()}_vertical'
+                                : _profileNameController.text.trim(),
                             isVertical: _verticalModeSwitch),
                       );
                       _profileNameController.clear();
@@ -214,8 +216,7 @@ class _ProfilesPageState extends State<ProfilesPage> {
                     // Add the modified profile list to persistence
                     // Adds the string '_vertical' at the end of vertical profiles to keep this parameter persistent.
                     final profileNamesToStringList = profiles
-                        .map((e) => e.isVertical ? '${e.label}_vertical' : e.label)
-                        .toList();
+                        .map((e) => e.storageString).toList();
 
                     SharedPrefsUtil.putStringList('profiles', profileNamesToStringList);
 
@@ -269,11 +270,11 @@ class _ProfilesPageState extends State<ProfilesPage> {
             onPressed: () async {
               // Delete the profile directory for the specific profile
               await StorageUtils.deleteSpecificProfileFolder(
-                profiles[index].label,
+                profiles[index].storageString,
               );
 
               Utils.logWarning(
-                '${logTag}Profile ${profiles[index].label} deleted!',
+                '${logTag}Profile ${profiles[index].storageString} deleted!',
               );
 
               // Remove the profile from the list
@@ -426,7 +427,7 @@ class _ProfilesPageState extends State<ProfilesPage> {
 
     // Update daily entry
     final String today = DateFormatUtils.getToday();
-    final String profile = Utils.getCurrentProfileObject().label;
+    final String profile = Utils.getCurrentProfile().label;
     String todaysVideoPath = SharedPrefsUtil.getString('appPath');
     if (profile.isEmpty) {
       todaysVideoPath = '$todaysVideoPath$today.mp4';

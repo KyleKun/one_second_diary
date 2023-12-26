@@ -176,7 +176,7 @@ class _VideoSubtitlesEditorPageState extends State<VideoSubtitlesEditorPage> {
                     maxHeight: MediaQuery.of(context).size.height * 0.7
                   ),
                   child: AspectRatio(
-                    aspectRatio: _videoController!.value.aspectRatio,
+                    aspectRatio: _videoController.value.aspectRatio,
                     child: Stack(
                       children: [
                         VideoPlayer(
