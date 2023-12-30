@@ -9,6 +9,7 @@
 - Remember last recording settings (which camera was used and geotagging checkbox)
 - Automatically retry geotagging when it fails for the first time
 - Added Catalan localization
+- Cancel notification if video is recorded for that day
 
 ## v1.5.2 - 09/2023
 - Added quick trim shortcuts in save video page for a more precise editing
