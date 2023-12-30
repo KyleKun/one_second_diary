@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -6,6 +8,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
+import '../models/osd_date_time.dart';
 import 'constants.dart';
 import 'shared_preferences_util.dart';
 import 'utils.dart';
@@ -15,7 +18,6 @@ class NotificationService {
   final _persistentKey = 'persistentNotification';
   final _hourKey = 'scheduledTimeHour';
   final _minuteKey = 'scheduledTimeMinute';
-  final int _notificationId = 1;
   final _flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
   late NotificationDetails _platformNotificationDetails;
@@ -73,7 +75,7 @@ class NotificationService {
     return TimeOfDay(hour: hour, minute: minute);
   }
 
-  void _switchNotification() {
+  void switchNotification() {
     SharedPrefsUtil.putBool(_notificationKey, !isNotificationActivated());
   }
 
@@ -87,15 +89,21 @@ class NotificationService {
   }
 
   Future<void> turnOnNotifications() async {
-    Utils.logInfo(
-      '[NOTIFICATIONS] - Notifications were enabled',
-    );
+    const permission = Permission.notification;
+    if (await permission.isPermanentlyDenied) {
+      return;
+    }
 
-    /// Schedule notification if switch in ON
-    await Utils.requestPermission(Permission.notification);
+    // request for permission
+    final bool hasPermission = await Utils.requestPermission(permission);
+    if (hasPermission) {
+      /// Save notification on SharedPrefs
+      switchNotification();
 
-    /// Save notification on SharedPrefs
-    _switchNotification();
+      Utils.logInfo(
+        '[NOTIFICATIONS] - Notifications were enabled',
+      );
+    }
   }
 
   Future<void> turnOffNotifications() async {
@@ -107,7 +115,7 @@ class NotificationService {
     _flutterLocalNotificationsPlugin.cancelAll();
 
     /// Save notification on SharedPrefs
-    _switchNotification();
+    switchNotification();
   }
 
   Future<void> activatePersistentNotifications() async {
@@ -130,43 +138,204 @@ class NotificationService {
     _switchPersistentNotification();
   }
 
-  Future<void> scheduleNotification(int hour, int minute, DateTime day) async {
-    _flutterLocalNotificationsPlugin.cancelAll();
+  void scheduleFutureNotifications() async {
+    if (!isNotificationActivated()) return;
 
-    // sets the scheduled time in DateTime format
-    final String setTime = DateTime(
-      day.year,
-      day.month,
-      day.day,
-      hour,
-      minute,
-    ).toString();
+    int notificationId = getNotificationId();
+    final notificationDates = Utils.getDateTimes();
 
-    Utils.logInfo('[NOTIFICATIONS] - Scheduled with setTime=$setTime');
+    // remove received notifications from db
+    for (int i = 0; i < notificationDates.length; i++) {
+      final OSDDateTime notificationDate = notificationDates[i];
+      final DateTime dateTime = DateTime(
+        notificationDate.year,
+        notificationDate.month,
+        notificationDate.day,
+        notificationDate.hour,
+        notificationDate.minute,
+      );
+      if (dateTime.isBefore(DateTime.now())) {
+        notificationDates.removeAt(i);
+      }
+    }
 
-    /// Schedule notification
-    await _flutterLocalNotificationsPlugin.zonedSchedule(
-      _notificationId,
-      'notificationTitle'.tr,
-      'notificationBody'.tr,
-      tz.TZDateTime.parse(tz.local, setTime),
-      _platformNotificationDetails,
-      uiLocalNotificationDateInterpretation:
-      UILocalNotificationDateInterpretation.absoluteTime,
-      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-      // Allow notification to be shown daily
-      matchDateTimeComponents: DateTimeComponents.time,
+    // set scheduled time in DateTime format
+    late DateTime dateTime;
+    if (notificationDates.isEmpty) {
+      final TimeOfDay scheduleTime = getScheduledTime();
+      final DateTime tomorrowDate = DateTime.now().add(const Duration(days: 1));
+      dateTime = DateTime(
+        tomorrowDate.year,
+        tomorrowDate.month,
+        tomorrowDate.day,
+        scheduleTime.hour,
+        scheduleTime.minute,
+      );
+    } else {
+      final OSDDateTime osdDateTime = notificationDates.last;
+      dateTime = DateTime(
+        osdDateTime.year,
+        osdDateTime.month,
+        osdDateTime.day,
+        osdDateTime.hour,
+        osdDateTime.minute,
+      );
+      dateTime = dateTime.add(const Duration(days: 1));
+    }
+
+    // schedule notifications
+    while (notificationDates.length < Constants.scheduleNotificationForDays) {
+      await _flutterLocalNotificationsPlugin.zonedSchedule(
+        notificationId,
+        'notificationTitle'.tr,
+        'notificationBody'.tr,
+        tz.TZDateTime.parse(tz.local, dateTime.toString()),
+        _platformNotificationDetails,
+        uiLocalNotificationDateInterpretation:
+            UILocalNotificationDateInterpretation.absoluteTime,
+        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+      );
+      notificationDates.add(OSDDateTime(
+        year: dateTime.year,
+        month: dateTime.month,
+        day: dateTime.day,
+        hour: dateTime.hour,
+        minute: dateTime.minute,
+        notificationId: notificationId,
+      ));
+
+      // increase day
+      dateTime = dateTime.add(const Duration(days: 1));
+      notificationId = getNotificationId();
+    }
+
+    // saving notification dates in db
+    Utils.saveDateTimes(notificationDates);
+    Utils.logInfo(
+      '[NOTIFICATIONS] - Notifications were scheduled',
     );
   }
 
-  Future<void> rescheduleNotification(DateTime day) async {
-    final TimeOfDay timeOfDay = getScheduledTime();
-    await scheduleNotification(timeOfDay.hour, timeOfDay.minute, day);
+  void rescheduleNotifications(int hour, int minute) async {
+    if (!isNotificationActivated()) return;
+
+    int notificationId = getNotificationId();
+
+    _flutterLocalNotificationsPlugin.cancelAll();
+
+    // set scheduled time in DateTime format
+    final DateTime today = DateTime.now();
+    DateTime dateTime = DateTime(
+      today.year,
+      today.month,
+      today.day,
+      hour,
+      minute,
+    );
+
+    final List<OSDDateTime> notificationDates = [];
+
+    // schedule notifications
+    while (notificationDates.length < Constants.scheduleNotificationForDays) {
+      if (dateTime.isAfter(DateTime.now())) {
+        await _flutterLocalNotificationsPlugin.zonedSchedule(
+          notificationId,
+          'notificationTitle'.tr,
+          'notificationBody'.tr,
+          tz.TZDateTime.parse(tz.local, dateTime.toString()),
+          _platformNotificationDetails,
+          uiLocalNotificationDateInterpretation:
+              UILocalNotificationDateInterpretation.absoluteTime,
+          androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+        );
+        notificationDates.add(OSDDateTime(
+          year: dateTime.year,
+          month: dateTime.month,
+          day: dateTime.day,
+          hour: dateTime.hour,
+          minute: dateTime.minute,
+          notificationId: notificationId,
+        ));
+        notificationId = getNotificationId();
+      }
+
+      // increase day
+      dateTime = dateTime.add(const Duration(days: 1));
+    }
+
+    // saving notification dates in db
+    Utils.saveDateTimes(notificationDates);
+    Utils.logInfo(
+      '[NOTIFICATIONS] - Notifications were rescheduled',
+    );
+  }
+
+  void cancelTodayNotification() async {
+    final List<OSDDateTime> notificationDates = Utils.getDateTimes();
+
+    // cancel notification
+    if (notificationDates.isNotEmpty) {
+      final first = notificationDates.first;
+      await _flutterLocalNotificationsPlugin.cancel(first.notificationId);
+      notificationDates.remove(first);
+      Utils.saveDateTimes(notificationDates);
+    }
+
+    Utils.logInfo(
+      '[NOTIFICATIONS] - Notification was canceled for today',
+    );
+  }
+
+  void scheduleTodayNotification() async {
+    final notificationDates = Utils.getDateTimes();
+    final int notificationId = getNotificationId();
+
+    final TimeOfDay scheduleTime = getScheduledTime();
+    final DateTime todayDate = DateTime.now();
+    final dateTime = DateTime(
+      todayDate.year,
+      todayDate.month,
+      todayDate.day,
+      scheduleTime.hour,
+      scheduleTime.minute,
+    );
+
+    if (dateTime.isBefore(DateTime.now())) return;
+
+    // schedule notification
+    await _flutterLocalNotificationsPlugin.zonedSchedule(
+      notificationId,
+      'notificationTitle'.tr,
+      'notificationBody'.tr,
+      tz.TZDateTime.parse(tz.local, dateTime.toString()),
+      _platformNotificationDetails,
+      uiLocalNotificationDateInterpretation:
+          UILocalNotificationDateInterpretation.absoluteTime,
+      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+    );
+    notificationDates.insert(0, OSDDateTime(
+      year: dateTime.year,
+      month: dateTime.month,
+      day: dateTime.day,
+      hour: dateTime.hour,
+      minute: dateTime.minute,
+      notificationId: notificationId,
+    ));
+
+    // saving notification dates in db
+    Utils.saveDateTimes(notificationDates);
+    Utils.logInfo(
+      '[NOTIFICATIONS] - Notification was scheduled for today',
+    );
+  }
+
+  int getNotificationId() {
+    return Random().nextInt(100000);
   }
 
   Future<void> showTestNotification() async {
     await _flutterLocalNotificationsPlugin.show(
-      _notificationId,
+      0,
       'test'.tr,
       'test'.tr,
       _platformNotificationDetails,

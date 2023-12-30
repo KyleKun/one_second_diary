@@ -18,9 +18,11 @@ class DailyEntryController extends GetxController {
     SharedPrefsUtil.putBool('dailyEntry', value);
     dailyEntry.value = value;
     dailyEntry.refresh();
-
-    // Remove the existing notification and schedule it again
-    notificationService.rescheduleNotification(DateTime.now());
+    if (value) {
+      notificationService.cancelTodayNotification();
+    } else {
+      notificationService.scheduleTodayNotification();
+    }
   }
 
   void _checkTodayEntry() {
@@ -34,8 +36,7 @@ class DailyEntryController extends GetxController {
       dailyEntry.refresh();
     }
 
-    // Remove the existing notification and schedule it again if there is a daily entry
-    if(dailyEntry.value)
-      notificationService.rescheduleNotification(DateTime.now());
+    // schedule future notification
+    notificationService.scheduleFutureNotifications();
   }
 }

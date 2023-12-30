@@ -7,6 +7,7 @@ class Constants {
   static const String backupTutorialUrl = 'https://youtu.be/1Kf3ysnNNNE';
   static const String email = 'mailto:kylekundev@gmail.com';
   static const String githubUrl = 'https://github.com/KyleKun/one_second_diary';
+  static const int scheduleNotificationForDays = 14;
 
   static const enMonths = [
     'January',
