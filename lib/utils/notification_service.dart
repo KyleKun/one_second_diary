@@ -212,7 +212,7 @@ class NotificationService {
     // saving notification dates in db
     Utils.saveDateTimes(notificationDates);
     Utils.logInfo(
-      '[NOTIFICATIONS] - Notifications were scheduled',
+      '[NOTIFICATIONS] - Future notifications were scheduled',
     );
   }
 
@@ -232,6 +232,11 @@ class NotificationService {
       hour,
       minute,
     );
+
+    // if video is already added for today
+    if (SharedPrefsUtil.getBool('dailyEntry') == true) {
+      dateTime = dateTime.add(const Duration(days: 1));
+    }
 
     final List<OSDDateTime> notificationDates = [];
 
