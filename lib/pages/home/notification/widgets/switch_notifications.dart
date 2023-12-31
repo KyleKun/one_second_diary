@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import '../../../../routes/app_pages.dart';
 import '../../../../utils/constants.dart';
+import '../../../../utils/custom_dialog.dart';
 import '../../../../utils/notification_service.dart';
 import '../../../../utils/theme.dart';
 
@@ -15,7 +18,7 @@ class SwitchNotificationsComponent extends StatefulWidget {
 class _SwitchNotificationsComponentState
     extends State<SwitchNotificationsComponent> {
   late bool isNotificationSwitchToggled;
-  TimeOfDay scheduledTimeOfDay = const TimeOfDay(hour: 20, minute: 00);
+  late TimeOfDay scheduledTimeOfDay;
   late bool isPersistentSwitchToggled;
   final NotificationService notificationService = Get.find();
 
@@ -55,21 +58,30 @@ class _SwitchNotificationsComponentState
                   value: isNotificationSwitchToggled,
                   onChanged: (value) async {
                     if (value) {
-                      await notificationService.turnOnNotifications();
+                      // show custom permission dialog
+                      if (await Permission.notification.isPermanentlyDenied) {
+                        await showNotificationDialog();
+                        return;
+                      }
 
-                      await notificationService.scheduleNotification(
+                      // show system permission dialog
+                      await notificationService.turnOnNotifications();
+                      if (notificationService.isNotificationActivated()) {
+                        setState(() {
+                          isNotificationSwitchToggled = true;
+                        });
+                        notificationService
+                            .rescheduleNotifications(
                           scheduledTimeOfDay.hour,
                           scheduledTimeOfDay.minute,
-                          DateTime.now()
-                      );
+                        );
+                      }
                     } else {
                       await notificationService.turnOffNotifications();
+                      setState(() {
+                        isNotificationSwitchToggled = false;
+                      });
                     }
-
-                    /// Update switch value
-                    setState(() {
-                      isNotificationSwitchToggled = !isNotificationSwitchToggled;
-                    });
                   },
                   activeTrackColor: AppColors.mainColor.withOpacity(0.4),
                   activeColor: AppColors.mainColor,
@@ -133,23 +145,29 @@ class _SwitchNotificationsComponentState
 
             // Enable notification if it's disabled
             if (!isNotificationSwitchToggled) {
+              // show custom permission dialog
+              if (await Permission.notification.isPermanentlyDenied) {
+                await showNotificationDialog();
+                return;
+              }
+
+              // show system permission dialog
               await notificationService.turnOnNotifications();
-              setState(() {
-                isNotificationSwitchToggled = true;
-              });
+              if (notificationService.isNotificationActivated()) {
+                setState(() {
+                  isNotificationSwitchToggled = true;
+                });
+              }
             }
 
-            notificationService.setScheduledTime(newTimeOfDay.hour,
-                newTimeOfDay.minute);
-
+            notificationService.setScheduledTime(newTimeOfDay.hour, newTimeOfDay.minute);
             setState(() {
               scheduledTimeOfDay = newTimeOfDay;
             });
 
-            await notificationService.scheduleNotification(
-                scheduledTimeOfDay.hour,
-                scheduledTimeOfDay.minute,
-                DateTime.now()
+            notificationService.rescheduleNotifications(
+              scheduledTimeOfDay.hour,
+              scheduledTimeOfDay.minute,
             );
           },
           child: Container(
@@ -194,27 +212,16 @@ class _SwitchNotificationsComponentState
                   } else {
                     notificationService.deactivatePersistentNotifications();
                   }
+                  setState(() {
+                    isPersistentSwitchToggled = value;
+                  });
 
-                  /// Schedule notification if switch in ON
-                  if(isNotificationSwitchToggled && !isNotificationSwitchToggled){
-                    await notificationService.turnOnNotifications();
-                    setState(() {
-                      isNotificationSwitchToggled = true;
-                    });
-                  }
-
-                  if(isNotificationSwitchToggled){
-                    await notificationService.scheduleNotification(
-                        scheduledTimeOfDay.hour,
-                        scheduledTimeOfDay.minute,
-                        DateTime.now()
+                  if (isNotificationSwitchToggled) {
+                    notificationService.rescheduleNotifications(
+                      scheduledTimeOfDay.hour,
+                      scheduledTimeOfDay.minute,
                     );
                   }
-
-                  /// Update switch value
-                  setState(() {
-                    isPersistentSwitchToggled = !isPersistentSwitchToggled;
-                  });
                 },
                 activeTrackColor: AppColors.mainColor.withOpacity(0.4),
                 activeColor: AppColors.mainColor,
@@ -224,6 +231,48 @@ class _SwitchNotificationsComponentState
         ),
         const Divider(),
       ],
+    );
+  }
+
+  Future<void> showNotificationDialog() async {
+    await showDialog(
+      barrierDismissible: false,
+      context: Get.context!,
+      builder: (context) =>
+          CustomDialog(
+            isDoubleAction: true,
+            title: 'permissionDenied'.tr,
+            content: 'allPermissionDenied'.tr,
+            actionText: 'noThanks'.tr,
+            actionColor: Colors.red,
+            action: () => Get.back(),
+            action2Text: 'settings'.tr,
+            action2Color: Colors.green,
+            action2: () async {
+              Get.back();
+              await openAppSettings();
+              const lifecycleChannel = SystemChannels.lifecycle;
+              lifecycleChannel.setMessageHandler((msg) async {
+                if (msg?.endsWith('resumed') == true) {
+                  lifecycleChannel.setMessageHandler(null);
+                  if (await Permission.notification.isGranted) {
+                    // schedule notifications
+                    notificationService.switchNotification();
+                    setState(() {
+                      isNotificationSwitchToggled = true;
+                    });
+                    notificationService
+                        .rescheduleNotifications(
+                      scheduledTimeOfDay.hour,
+                      scheduledTimeOfDay.minute,
+                    );
+                  }
+                }
+                return null;
+              });
+            },
+            sendLogs: false,
+          ),
     );
   }
 }

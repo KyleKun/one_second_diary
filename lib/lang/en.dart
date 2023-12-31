@@ -209,4 +209,7 @@ const Map<String, String> en = {
   'useAlternativeCalendarColors': 'Use alternative calendar colors',
   'useAlternativeCalendarColorsDescription':
       'Changes green and red in calendar to blue and yellow. Useful for colorblind people.',
+  'permissionDenied': 'Permission Denied',
+  'allPermissionDenied': 'You have denied all the requested permissions but these are required to perform the required functionality. Would you like to accept them?',
+  'noThanks': 'No Thanks',
 };

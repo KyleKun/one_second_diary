@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io' as io;
 
 import 'package:flutter/material.dart';
@@ -12,7 +13,9 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../controllers/video_count_controller.dart';
 import '../enums/export_date_range.dart';
+import '../models/osd_date_time.dart';
 import 'date_format_utils.dart';
+import 'preference_keys.dart';
 import 'shared_preferences_util.dart';
 import 'storage_utils.dart';
 
@@ -504,5 +507,31 @@ class Utils {
       return stringValue;
     }
     return '+$stringValue';
+  }
+
+  static String encodeDateTimes(List<OSDDateTime> dateTimes) => json.encode(
+        dateTimes
+            .map<Map<String, int>>((dateTime) => dateTime.toMap())
+            .toList(),
+      );
+
+  static List<OSDDateTime> decodeDateTimes(String dateTimes) =>
+      (json.decode(dateTimes) as List<dynamic>)
+          .map<OSDDateTime>((dateTime) => OSDDateTime.fromJson(dateTime))
+          .toList();
+
+  static List<OSDDateTime> getDateTimes() {
+    final String prefData =
+        SharedPrefsUtil.getString(PreferenceKeys.notificationDates);
+    final List<OSDDateTime> notificationDates = [];
+    if (prefData.isNotEmpty) {
+      notificationDates.addAll(Utils.decodeDateTimes(prefData));
+    }
+    return notificationDates;
+  }
+
+  static void saveDateTimes(List<OSDDateTime> notificationDates) {
+    final String prefData = Utils.encodeDateTimes(notificationDates);
+    SharedPrefsUtil.putString(PreferenceKeys.notificationDates, prefData);
   }
 }
