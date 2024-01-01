@@ -40,7 +40,6 @@ class ContactButton extends StatelessWidget {
             ),
           ),
         ),
-        const Divider(),
       ],
     );
   }

@@ -36,6 +36,7 @@ class Themes {
     switchTheme: SwitchThemeData(
       thumbColor: MaterialStateProperty.all(AppColors.mainColor),
       trackColor: MaterialStateProperty.all(AppColors.rose),
+      trackOutlineColor: MaterialStateProperty.all(AppColors.mainColor),
     ),
   );
 

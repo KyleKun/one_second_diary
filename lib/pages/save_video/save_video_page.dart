@@ -10,6 +10,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:video_trimmer/video_trimmer.dart';
 
 import '../../controllers/recording_settings_controller.dart';
+import '../../models/profile.dart';
 import '../../routes/app_pages.dart';
 import '../../utils/constants.dart';
 import '../../utils/custom_checkbox_list_tile.dart';
@@ -66,7 +67,7 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
   bool _isLocationProcessing = false;
 
   late final bool isDarkTheme = ThemeService().isDarkTheme();
-  String selectedProfileName = Utils.getCurrentProfile();
+  Profile selectedProfile = Utils.getCurrentProfile();
 
   void _initCorrectDates() {
     final DateTime selectedDate = routeArguments['currentDate'];
@@ -533,6 +534,7 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
             textOutlineWidth: textOutlineStrokeWidth,
             determinedDate: routeArguments['currentDate'],
             isFromRecordingPage: routeArguments['isFromRecordingPage'],
+            isVertical: selectedProfile.isVertical,
           ),
         ),
         body: Column(
@@ -602,13 +604,22 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
               const SizedBox(width: 8),
               Flexible(
                 child: Text(
-                  selectedProfileName.isEmpty ? 'default'.tr : selectedProfileName,
+                  selectedProfile.label.isEmpty
+                      ? 'default'.tr
+                      : selectedProfile.isVertical
+                          ? selectedProfile.label.replaceAll('_vertical', '')
+                          : selectedProfile.label,
                   style: TextStyle(
                     fontSize: MediaQuery.of(context).size.height * 0.019,
                   ),
                 ),
               ),
-              const SizedBox(width: 20),
+              const SizedBox(width: 5),
+              RotatedBox(
+                quarterTurns: selectedProfile.isVertical ? 0 : -1,
+                child: const Icon(Icons.phone_android),
+              ),
+              const SizedBox(width: 15),
               Flexible(
                 child: TextButton(
                   style: ButtonStyle(
@@ -623,7 +634,7 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
                   onPressed: () {
                     Get.to(const ProfilesPage())?.then(
                       (_) => setState(() {
-                        selectedProfileName = Utils.getCurrentProfile();
+                        selectedProfile = Utils.getCurrentProfile();
                       }),
                     );
                   },
@@ -982,8 +993,8 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
               autofocus: true,
               controller: customLocationTextController,
               textCapitalization: TextCapitalization.sentences,
-              style: TextStyle(
-                color: ThemeService().isDarkTheme() ? Colors.black : Colors.white,
+              style: const TextStyle(
+                color: Colors.white,
               ),
               decoration: InputDecoration(
                 hintText: 'enterLocation'.tr,

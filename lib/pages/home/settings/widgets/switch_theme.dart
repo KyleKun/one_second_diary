@@ -43,7 +43,6 @@ class _SwitchThemeComponentState extends State<SwitchThemeComponent> {
             ),
           ],
         ),
-        const Divider(),
       ],
     );
   }

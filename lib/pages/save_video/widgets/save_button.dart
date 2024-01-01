@@ -34,6 +34,7 @@ class SaveButton extends StatefulWidget {
     required this.videoEndInMilliseconds,
     required this.determinedDate,
     required this.isFromRecordingPage,
+    required this.isVertical,
   });
 
   // Finding controllers
@@ -53,6 +54,7 @@ class SaveButton extends StatefulWidget {
   final double videoEndInMilliseconds;
   final DateTime determinedDate;
   final bool isFromRecordingPage;
+  final bool isVertical;
 
   @override
   _SaveButtonState createState() => _SaveButtonState();
@@ -315,9 +317,30 @@ class _SaveButtonState extends State<SaveButton> {
     // Trim video to the selected range
     final trim = '-ss ${videoStartInMilliseconds}ms -to ${videoEndInMilliseconds}ms';
 
-    // Scale video to 1920x1080 and add black padding if needed
-    const scale =
-        'scale=1920:1080:force_original_aspect_ratio=decrease,pad=1920:1080:(ow-iw)/2:(oh-ih)/2:black';
+    // If video is created in a vertical profile, checks the aspect ratio.
+    String scale = '';
+    if(widget.isVertical) {
+
+      // Checks the aspect ratio of the video.
+      await executeFFprobe(
+          '-v error -select_streams v:0 -show_entries stream=display_aspect_ratio -of default=nw=1:nk=1 "$videoPath"')
+          .then((session) async {
+        final returnCode = await session.getReturnCode();
+        if (ReturnCode.isSuccess(returnCode)) {
+          final sessionLog = await session.getOutput();
+          // 4:3 videos (ex : produced by pixel devices in photo modes), will be scaled up to fit into 1080x1920.
+          if (sessionLog!.contains('4:3')) {
+            scale = 'scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920';
+            Utils.logInfo('${logTag}4/3 video detected, cropping to 9/16.');
+          } else {
+            scale = 'scale=1080:1920:force_original_aspect_ratio=decrease,pad=1080:1920:(ow-iw)/2:(oh-ih)/2:black';
+          }
+        }
+      });
+      // Scale video to 1920x1080 and add black padding if needed
+    } else {
+      scale = 'scale=1920:1080:force_original_aspect_ratio=decrease,pad=1920:1080:(ow-iw)/2:(oh-ih)/2:black';
+    }
 
     // Add date to the video
     final date =

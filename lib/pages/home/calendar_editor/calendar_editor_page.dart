@@ -79,7 +79,7 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
   }
 
   void setMediaStorePath() {
-    final currentProfile = Utils.getCurrentProfile();
+    final currentProfile = Utils.getCurrentProfile().storageString;
     if (currentProfile.isEmpty || currentProfile == 'Default') {
       MediaStore.appFolder = 'OneSecondDiary';
     } else {
@@ -166,7 +166,7 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
   }
 
   bool shouldIgnoreExperimentalFilter() {
-    final useFilter = SharedPrefsUtil.getBool('useFilterInExperimentalPicker') ?? false;
+    final useFilter = SharedPrefsUtil.getBool('useFilterInExperimentalPicker') ?? true;
     if (!useFilter) return true;
     if (_selectedDate.day == DateTime.now().day &&
         _selectedDate.month == DateTime.now().month &&
@@ -436,78 +436,78 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
                             padding: const EdgeInsets.symmetric(horizontal: 20.0),
                             child: AspectRatio(
                               aspectRatio: 16 / 9,
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  border: Border.all(color: mainColor),
-                                ),
-                                child: Stack(
-                                  children: [
-                                    Center(
-                                      child: SizedBox(
-                                        height: 30,
-                                        width: 30,
-                                        child: Icon(
-                                          Icons.hourglass_bottom,
-                                          color: mainColor,
-                                        ),
+                              child: Stack(
+                                children: [
+                                  Center(
+                                    child: SizedBox(
+                                      height: 30,
+                                      width: 30,
+                                      child: Icon(
+                                        Icons.hourglass_bottom,
+                                        color: mainColor,
                                       ),
                                     ),
-                                    FutureBuilder(
-                                      future: initializeVideoPlayback(currentVideo),
-                                      builder: (context, snapshot) {
-                                        if (snapshot.connectionState == ConnectionState.waiting) {
-                                          return const SizedBox.shrink();
-                                        }
+                                  ),
+                                  FutureBuilder(
+                                    future: initializeVideoPlayback(currentVideo),
+                                    builder: (context, snapshot) {
+                                      if (snapshot.connectionState == ConnectionState.waiting) {
+                                        return const SizedBox.shrink();
+                                      }
 
-                                        if (snapshot.hasError) {
-                                          return Text(
-                                            '"Error loading video: " + ${snapshot.error}',
-                                          );
-                                        }
+                                      if (snapshot.hasError) {
+                                        return Text(
+                                          '"Error loading video: " + ${snapshot.error}',
+                                        );
+                                      }
 
-                                        // Not sure if it works but if the videoController fails we try to restart the page
-                                        if (_controller?.value.hasError == true) {
-                                          WidgetsBinding.instance.addPostFrameCallback((_) {
-                                            _controller?.dispose();
-                                          });
-                                          Get.offAllNamed(Routes.HOME)
-                                              ?.then((_) => setState(() {}));
-                                        }
+                                      // Not sure if it works but if the videoController fails we try to restart the page
+                                      if (_controller?.value.hasError == true) {
+                                        WidgetsBinding.instance.addPostFrameCallback((_) {
+                                          _controller?.dispose();
+                                        });
+                                        Get.offAllNamed(Routes.HOME)?.then((_) => setState(() {}));
+                                      }
 
-                                        // VideoPlayer
-                                        if (_controller != null &&
-                                            _controller!.value.isInitialized) {
-                                          return Align(
-                                            alignment: Alignment.center,
-                                            child: Stack(
-                                              fit: StackFit.passthrough,
-                                              children: [
-                                                Align(
-                                                  alignment: Alignment.center,
-                                                  child: ClipRect(
+                                      // VideoPlayer
+                                      if (_controller != null && _controller!.value.isInitialized) {
+                                        return Align(
+                                          alignment: Alignment.center,
+                                          child: Stack(
+                                            fit: StackFit.passthrough,
+                                            children: [
+                                              Align(
+                                                alignment: Alignment.center,
+                                                child: Container(
+                                                  decoration: BoxDecoration(
+                                                    border: Border.all(color: mainColor),
+                                                  ),
+                                                  child: AspectRatio(
+                                                    aspectRatio: _controller!.value.aspectRatio,
                                                     child: VideoPlayer(
                                                       key: _videoPlayerKey,
                                                       _controller!,
                                                     ),
                                                   ),
                                                 ),
-                                                Controls(
-                                                  controller: _controller,
-                                                ),
-                                              ],
-                                            ),
-                                          );
-                                        } else {
-                                          return const SizedBox.shrink();
-                                        }
-                                      },
-                                    ),
-                                  ],
-                                ),
+                                              ),
+                                              Controls(
+                                                controller: _controller,
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                      } else {
+                                        return const SizedBox.shrink();
+                                      }
+                                    },
+                                  ),
+                                ],
                               ),
                             ),
                           ),
-                          Flexible(
+                          Padding(
+                            padding: const EdgeInsets.only(top: 15),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [

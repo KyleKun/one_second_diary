@@ -111,6 +111,9 @@ const Map<String, String> en = {
       'All videos associated with this profile will also be permanently deleted. Are you sure to continue?',
   'profileNameCannotBeEmpty': 'Profile name cannot be empty',
   'reservedProfileName': 'This is a reserved profile name',
+  'verticalProfileName': 'Vertical Profile',
+  'verticalProfileActivated': 'This profile will contain portrait snippets only.',
+  'verticalProfileDisabled': 'This profile will contain landscape snippets only.',
   'creatingMovie': 'Processing... Please wait.\nThis can take several minutes.',
   'doNotCloseTheApp': 'Do not close the app',
   'cancelMovieCreation': 'Cancel movie creation',
@@ -209,4 +212,9 @@ const Map<String, String> en = {
   'useAlternativeCalendarColors': 'Use alternative calendar colors',
   'useAlternativeCalendarColorsDescription':
       'Changes green and red in calendar to blue and yellow. Useful for colorblind people.',
+  'mixedResolutionAlert': 'Mixed Resolutions detected',
+  'mixedResolutionAlertDescription':
+      'At least one snippet seems to have a different resolution.\n\n'
+          'This can cause unexpected results when using your film.\n\n'
+          'Try to delete theses files or move them to a different profile.'
 };

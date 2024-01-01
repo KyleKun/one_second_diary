@@ -22,8 +22,7 @@ class _PreferencesButtonState extends State<PreferencesButton> {
               InkWell(
                 onTap: () => Get.toNamed(Routes.PREFERENCES),
                 child: Ink(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 15.0, vertical: 10.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -38,7 +37,6 @@ class _PreferencesButtonState extends State<PreferencesButton> {
                   ),
                 ),
               ),
-              const Divider(),
             ],
           );
   }

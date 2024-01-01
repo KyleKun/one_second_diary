@@ -31,7 +31,6 @@ class GithubButton extends StatelessWidget {
             ),
           ),
         ),
-        const Divider(),
       ],
     );
   }

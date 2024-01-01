@@ -43,6 +43,7 @@ class _SelectVideoFromStorageState extends State<SelectVideoFromStorage> {
   Widget build(BuildContext context) {
     // Count all true in isSelected and return quantity
     final int totalSelected = isSelected?.where((element) => element).length ?? 0;
+    final aspectRatio = allVideos?.first.contains('_vertical') == true ? 0.5 : 1.0;
     return Scaffold(
       appBar: AppBar(
         iconTheme: const IconThemeData(
@@ -115,9 +116,9 @@ class _SelectVideoFromStorageState extends State<SelectVideoFromStorage> {
                     cacheExtent: 99999,
                     shrinkWrap: true,
                     controller: scrollController,
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
-                      childAspectRatio: 1.12,
+                      childAspectRatio: aspectRatio,
                     ),
                     itemCount: allVideos!.length,
                     itemBuilder: (context, index) {

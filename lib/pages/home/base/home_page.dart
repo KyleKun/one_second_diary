@@ -19,9 +19,7 @@ class HomePage extends GetView<BottomAppBarIndexController> {
       body: SizedBox(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
-        child: Center(
-          child: Obx(() => _getSelectedPage(controller.activeIndex.value)),
-        ),
+        child: Obx(() => _getSelectedPage(controller.activeIndex.value)),
       ),
     );
   }

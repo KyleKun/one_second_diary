@@ -31,6 +31,10 @@ class _ProfilesPageState extends State<ProfilesPage> {
 
   final DailyEntryController dailyEntryController = Get.find();
 
+  final List<bool> verticalModeSelector = <bool>[true, false];
+
+  bool _verticalModeSwitch = false;
+
   @override
   void initState() {
     super.initState();
@@ -52,13 +56,20 @@ class _ProfilesPageState extends State<ProfilesPage> {
     if (!storedProfiles.contains('Default')) {
       profiles.insert(
         0,
-        const Profile(label: 'Default', isDefault: true),
+        const Profile(
+            label: 'Default', storageString: 'Default', isDefault: true, isVertical: false),
       );
     } else {
+      // Profiles strings ending with '_vertical' creates an Profile object with isVertical value true, as other not.
       profiles = storedProfiles.map(
         (e) {
-          if (e == 'Default') return Profile(label: e, isDefault: true);
-          return Profile(label: e);
+          if (e == 'Default')
+            return Profile(label: e, storageString: e, isDefault: true, isVertical: false);
+          if (e.endsWith('_vertical'))
+            return Profile(
+                label: e.replaceAll('_vertical', ''), storageString: e, isVertical: true);
+          else
+            return Profile(label: e, storageString: e, isVertical: false);
         },
       ).toList();
     }
@@ -87,7 +98,42 @@ class _ProfilesPageState extends State<ProfilesPage> {
                 Text(
                   'newProfileTooltip'.tr,
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: 24),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'verticalProfileName'.tr,
+                    ),
+                    Switch(
+                      value: _verticalModeSwitch,
+                      activeTrackColor: AppColors.mainColor.withOpacity(0.4),
+                      activeColor: AppColors.mainColor,
+                      onChanged: (value) {
+                        setState(() {
+                          _verticalModeSwitch = value;
+                          final snackBar = SnackBar(
+                            margin: const EdgeInsets.all(70.0),
+                            behavior: SnackBarBehavior.floating,
+                            backgroundColor: Colors.black54,
+                            duration: const Duration(seconds: 3),
+                            shape: const RoundedRectangleBorder(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(25),
+                              ),
+                            ),
+                            content: Text(_verticalModeSwitch
+                                ? 'verticalProfileActivated'.tr
+                                : 'verticalProfileDisabled'.tr),
+                          );
+
+                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                        });
+                      },
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 24),
                 TextFormField(
                   controller: _profileNameController,
                   inputFormatters: [
@@ -143,13 +189,14 @@ class _ProfilesPageState extends State<ProfilesPage> {
             actions: [
               TextButton(
                 onPressed: () async {
-                  // Checks if the textfield is valid based on if the text passes all the validations we set
+                  // Checks if the text field is valid based on if the text passes all the validations we set
                   final bool isTextValid = _profileNameFormKey.currentState?.validate() ?? false;
 
                   if (isTextValid) {
                     // Create the profile directory for the new profile
                     await StorageUtils.createSpecificProfileFolder(
                       _profileNameController.text.trim(),
+                      _verticalModeSwitch,
                     );
 
                     Utils.logInfo(
@@ -160,13 +207,20 @@ class _ProfilesPageState extends State<ProfilesPage> {
                     setState(() {
                       profiles.insert(
                         profiles.length,
-                        Profile(label: _profileNameController.text.trim()),
+                        Profile(
+                            label: _profileNameController.text.trim(),
+                            storageString: _verticalModeSwitch
+                                ? '${_profileNameController.text.trim()}_vertical'
+                                : _profileNameController.text.trim(),
+                            isVertical: _verticalModeSwitch),
                       );
                       _profileNameController.clear();
                     });
 
                     // Add the modified profile list to persistence
-                    final profileNamesToStringList = profiles.map((e) => e.label).toList();
+                    // Adds the string '_vertical' at the end of vertical profiles to keep this parameter persistent.
+                    final profileNamesToStringList = profiles.map((e) => e.storageString).toList();
+
                     SharedPrefsUtil.putStringList('profiles', profileNamesToStringList);
 
                     Navigator.pop(context);
@@ -219,11 +273,11 @@ class _ProfilesPageState extends State<ProfilesPage> {
             onPressed: () async {
               // Delete the profile directory for the specific profile
               await StorageUtils.deleteSpecificProfileFolder(
-                profiles[index].label,
+                profiles[index].storageString,
               );
 
               Utils.logWarning(
-                '${logTag}Profile ${profiles[index].label} deleted!',
+                '${logTag}Profile ${profiles[index].storageString} deleted!',
               );
 
               // Remove the profile from the list
@@ -320,23 +374,36 @@ class _ProfilesPageState extends State<ProfilesPage> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
-                        title: Text(
-                          profiles[index].isDefault ? 'default'.tr : profiles[index].label,
-                          style: TextStyle(
-                            color: ThemeService().isDarkTheme() ? Colors.white : Colors.black,
-                          ),
-                        ),
-                        secondary: profiles[index].isDefault
-                            ? null
-                            : IconButton(
-                                onPressed: () async {
-                                  await _showDeleteProfileDialog(index);
-                                },
-                                icon: const Icon(
-                                  Icons.delete_forever_rounded,
-                                  color: AppColors.mainColor,
-                                ),
+                        title: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              profiles[index].isDefault ? 'default'.tr : profiles[index].label,
+                              style: TextStyle(
+                                color: ThemeService().isDarkTheme() ? Colors.white : Colors.black,
                               ),
+                            ),
+                            const SizedBox(
+                              width: 5.0,
+                            ),
+                            RotatedBox(
+                              quarterTurns: profiles[index].isVertical ? 0 : -1,
+                              child: const Icon(Icons.phone_android),
+                            ),
+                          ],
+                        ),
+                        secondary: Row(mainAxisSize: MainAxisSize.min, children: [
+                          if (!profiles[index].isDefault)
+                            IconButton(
+                              onPressed: () async {
+                                await _showDeleteProfileDialog(index);
+                              },
+                              icon: const Icon(
+                                Icons.delete_forever_rounded,
+                                color: AppColors.mainColor,
+                              ),
+                            ),
+                        ]),
                       ),
                     );
                   },
@@ -370,7 +437,7 @@ class _ProfilesPageState extends State<ProfilesPage> {
 
     // Update daily entry
     final String today = DateFormatUtils.getToday();
-    final String profile = Utils.getCurrentProfile();
+    final String profile = Utils.getCurrentProfile().label;
     String todaysVideoPath = SharedPrefsUtil.getString('appPath');
     if (profile.isEmpty) {
       todaysVideoPath = '$todaysVideoPath$today.mp4';

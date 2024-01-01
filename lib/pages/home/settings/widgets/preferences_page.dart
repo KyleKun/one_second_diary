@@ -22,7 +22,7 @@ class _PreferencesPageState extends State<PreferencesPage> {
     super.initState();
     isCameraSwitchToggled = SharedPrefsUtil.getBool('forceNativeCamera') ?? false;
     isPickerSwitchToggled = SharedPrefsUtil.getBool('useExperimentalPicker') ?? true;
-    isPickerFilterSwitchToggled = SharedPrefsUtil.getBool('useFilterInExperimentalPicker') ?? false;
+    isPickerFilterSwitchToggled = SharedPrefsUtil.getBool('useFilterInExperimentalPicker') ?? true;
     isColorsSwitchToggled = SharedPrefsUtil.getBool('useAlternativeCalendarColors') ?? false;
   }
 

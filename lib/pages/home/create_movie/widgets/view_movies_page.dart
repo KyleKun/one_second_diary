@@ -102,6 +102,7 @@ class _ViewMoviesState extends State<ViewMovies> {
                                           alignment: Alignment.center,
                                           child: Image.memory(
                                             snapshot.data![index] as Uint8List,
+                                            height: MediaQuery.sizeOf(context).height * 0.27,
                                           ),
                                         ),
                                         Align(

@@ -12,6 +12,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../controllers/video_count_controller.dart';
 import '../enums/export_date_range.dart';
+import '../models/profile.dart';
 import 'date_format_utils.dart';
 import 'shared_preferences_util.dart';
 import 'storage_utils.dart';
@@ -148,7 +149,7 @@ class Utils {
     logInfo('[Utils.writeTxt()] - Writing txt file to $txtPath');
 
     // Get current profile
-    final currentProfileName = getCurrentProfile();
+    final currentProfileName = getCurrentProfile().storageString;
 
     // Default directory
     String videosFolderPath = SharedPrefsUtil.getString('appPath');
@@ -252,23 +253,33 @@ class Utils {
     return '$hoursString:$minutesString:$secondsString,$millisecondsString';
   }
 
-  /// Get current profile name, empty string if Default
-  static String getCurrentProfile() {
+  /// Get current profile object, empty string if Default.
+  /// As vertical profiles are saved with suffix '_vertical',
+  /// storageString = what's in storage, label = name without suffix.
+  static Profile getCurrentProfile() {
     // Get current profile
-    String currentProfileName = '';
+    String currentProfileStorageString = '';
+    String currentProfileLabel = '';
+    bool isVertical = false;
 
     final selectedProfileIndex = SharedPrefsUtil.getInt('selectedProfileIndex') ?? 0;
     if (selectedProfileIndex != 0) {
       final allProfiles = SharedPrefsUtil.getStringList('profiles');
       if (allProfiles != null) {
-        currentProfileName = allProfiles[selectedProfileIndex];
+        currentProfileStorageString = allProfiles[selectedProfileIndex];
+
+        // Vertical profiles are stored with '_vertical' in storage, but shown without.
+        if(currentProfileStorageString.endsWith('_vertical')) {
+          isVertical = true;
+          currentProfileLabel = currentProfileStorageString.replaceAll('_vertical', '');
+        }
       }
     }
 
-    final profileLog = currentProfileName == '' ? 'Default' : currentProfileName;
+    final profileLog = currentProfileStorageString == '' ? 'Default' : currentProfileStorageString;
     logInfo('[Utils.getCurrentProfile()] - Selected profile: $profileLog');
 
-    return currentProfileName;
+    return Profile(storageString: currentProfileStorageString, label: currentProfileLabel, isVertical: isVertical);
   }
 
   /// Get all video files inside DCIM/OneSecondDiary/Movies folder
@@ -301,7 +312,7 @@ class Utils {
   static List<String> getAllVideos({bool fullPath = false}) {
     logInfo('[Utils.getAllVideos()] - Asked for full path: $fullPath');
     // Get current profile
-    final currentProfileName = getCurrentProfile();
+    final currentProfileName = getCurrentProfile().storageString;
 
     // Default directory
     io.Directory directory = io.Directory(SharedPrefsUtil.getString('appPath'));
