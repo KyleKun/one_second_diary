@@ -166,7 +166,7 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
   }
 
   bool shouldIgnoreExperimentalFilter() {
-    final useFilter = SharedPrefsUtil.getBool('useFilterInExperimentalPicker') ?? false;
+    final useFilter = SharedPrefsUtil.getBool('useFilterInExperimentalPicker') ?? true;
     if (!useFilter) return true;
     if (_selectedDate.day == DateTime.now().day &&
         _selectedDate.month == DateTime.now().month &&
@@ -435,7 +435,7 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 20.0),
                             child: AspectRatio(
-                              aspectRatio: 16/9,
+                              aspectRatio: 16 / 9,
                               child: Stack(
                                 children: [
                                   Center(
@@ -466,13 +466,11 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
                                         WidgetsBinding.instance.addPostFrameCallback((_) {
                                           _controller?.dispose();
                                         });
-                                        Get.offAllNamed(Routes.HOME)
-                                            ?.then((_) => setState(() {}));
+                                        Get.offAllNamed(Routes.HOME)?.then((_) => setState(() {}));
                                       }
 
                                       // VideoPlayer
-                                      if (_controller != null &&
-                                          _controller!.value.isInitialized) {
+                                      if (_controller != null && _controller!.value.isInitialized) {
                                         return Align(
                                           alignment: Alignment.center,
                                           child: Stack(

@@ -4,7 +4,6 @@ import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 
 import '../../../../controllers/bottom_app_bar_index_controller.dart';
 import '../../../../utils/constants.dart';
-import '../../../../utils/theme.dart';
 
 SalomonBottomBarItem _bottomBarItem({
   required IconData icon,
@@ -28,7 +27,7 @@ class CustomBottomAppBar extends GetView<BottomAppBarIndexController> {
   Widget build(BuildContext context) {
     return Obx(
       () => SalomonBottomBar(
-        backgroundColor: ThemeService().isDarkTheme() ? AppColors.dark : AppColors.light,
+        backgroundColor: Colors.black12.withOpacity(0.05),
         currentIndex: controller.activeIndex.value,
         onTap: controller.setBottomAppBarIndex,
         items: [

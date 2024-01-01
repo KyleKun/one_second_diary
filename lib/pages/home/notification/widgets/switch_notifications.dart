@@ -8,12 +8,10 @@ import '../../../../utils/theme.dart';
 
 class SwitchNotificationsComponent extends StatefulWidget {
   @override
-  _SwitchNotificationsComponentState createState() =>
-      _SwitchNotificationsComponentState();
+  _SwitchNotificationsComponentState createState() => _SwitchNotificationsComponentState();
 }
 
-class _SwitchNotificationsComponentState
-    extends State<SwitchNotificationsComponent> {
+class _SwitchNotificationsComponentState extends State<SwitchNotificationsComponent> {
   late bool isNotificationSwitchToggled;
   TimeOfDay scheduledTimeOfDay = const TimeOfDay(hour: 20, minute: 00);
   late bool isPersistentSwitchToggled;
@@ -58,10 +56,7 @@ class _SwitchNotificationsComponentState
                       await notificationService.turnOnNotifications();
 
                       await notificationService.scheduleNotification(
-                          scheduledTimeOfDay.hour,
-                          scheduledTimeOfDay.minute,
-                          DateTime.now()
-                      );
+                          scheduledTimeOfDay.hour, scheduledTimeOfDay.minute, DateTime.now());
                     } else {
                       await notificationService.turnOffNotifications();
                     }
@@ -139,22 +134,17 @@ class _SwitchNotificationsComponentState
               });
             }
 
-            notificationService.setScheduledTime(newTimeOfDay.hour,
-                newTimeOfDay.minute);
+            notificationService.setScheduledTime(newTimeOfDay.hour, newTimeOfDay.minute);
 
             setState(() {
               scheduledTimeOfDay = newTimeOfDay;
             });
 
             await notificationService.scheduleNotification(
-                scheduledTimeOfDay.hour,
-                scheduledTimeOfDay.minute,
-                DateTime.now()
-            );
+                scheduledTimeOfDay.hour, scheduledTimeOfDay.minute, DateTime.now());
           },
           child: Container(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
+            padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -196,19 +186,16 @@ class _SwitchNotificationsComponentState
                   }
 
                   /// Schedule notification if switch in ON
-                  if(isNotificationSwitchToggled && !isNotificationSwitchToggled){
+                  if (isNotificationSwitchToggled && !isNotificationSwitchToggled) {
                     await notificationService.turnOnNotifications();
                     setState(() {
                       isNotificationSwitchToggled = true;
                     });
                   }
 
-                  if(isNotificationSwitchToggled){
+                  if (isNotificationSwitchToggled) {
                     await notificationService.scheduleNotification(
-                        scheduledTimeOfDay.hour,
-                        scheduledTimeOfDay.minute,
-                        DateTime.now()
-                    );
+                        scheduledTimeOfDay.hour, scheduledTimeOfDay.minute, DateTime.now());
                   }
 
                   /// Update switch value
@@ -222,7 +209,6 @@ class _SwitchNotificationsComponentState
             ],
           ),
         ),
-        const Divider(),
       ],
     );
   }

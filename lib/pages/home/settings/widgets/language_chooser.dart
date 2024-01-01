@@ -58,7 +58,6 @@ class _LanguageChooserState extends State<LanguageChooser> {
             ],
           ),
         ),
-        const Divider(),
       ],
     );
   }

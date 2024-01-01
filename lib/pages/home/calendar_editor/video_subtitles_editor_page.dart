@@ -172,9 +172,7 @@ class _VideoSubtitlesEditorPageState extends State<VideoSubtitlesEditorPage> {
                 onTap: () => videoPlay(),
                 // ConstrainedBox to fit vertical videos without overflowing
                 child: ConstrainedBox(
-                  constraints: BoxConstraints(
-                    maxHeight: MediaQuery.of(context).size.height * 0.7
-                  ),
+                  constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.7),
                   child: AspectRatio(
                     aspectRatio: _videoController.value.aspectRatio,
                     child: Stack(
@@ -224,7 +222,7 @@ class _VideoSubtitlesEditorPageState extends State<VideoSubtitlesEditorPage> {
                     hintText: 'enterSubtitles'.tr.split('(').first,
                     fillColor: ThemeService().isDarkTheme() ? Colors.black : Colors.white,
                     hintStyle: TextStyle(
-                      color: ThemeService().isDarkTheme() ? Colors.black : Colors.white,
+                      color: ThemeService().isDarkTheme() ? Colors.white : Colors.black,
                     ),
                     filled: true,
                     border: const OutlineInputBorder(

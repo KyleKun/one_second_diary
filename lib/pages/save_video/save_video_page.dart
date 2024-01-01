@@ -604,20 +604,22 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
               const SizedBox(width: 8),
               Flexible(
                 child: Text(
-                  selectedProfile.label.isEmpty ? 'default'.tr :
-                  selectedProfile.isVertical ? selectedProfile.label.replaceAll('_vertical', '')
-                  : selectedProfile.label,
+                  selectedProfile.label.isEmpty
+                      ? 'default'.tr
+                      : selectedProfile.isVertical
+                          ? selectedProfile.label.replaceAll('_vertical', '')
+                          : selectedProfile.label,
                   style: TextStyle(
                     fontSize: MediaQuery.of(context).size.height * 0.019,
                   ),
                 ),
               ),
-              const SizedBox(width: 20),
-              Icon(
-                selectedProfile.isVertical? Icons.stay_current_portrait :
-                Icons.stay_current_landscape
+              const SizedBox(width: 5),
+              RotatedBox(
+                quarterTurns: selectedProfile.isVertical ? 0 : -1,
+                child: const Icon(Icons.phone_android),
               ),
-              const SizedBox(width: 20),
+              const SizedBox(width: 15),
               Flexible(
                 child: TextButton(
                   style: ButtonStyle(
@@ -991,8 +993,8 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
               autofocus: true,
               controller: customLocationTextController,
               textCapitalization: TextCapitalization.sentences,
-              style: TextStyle(
-                color: ThemeService().isDarkTheme() ? Colors.black : Colors.white,
+              style: const TextStyle(
+                color: Colors.white,
               ),
               decoration: InputDecoration(
                 hintText: 'enterLocation'.tr,

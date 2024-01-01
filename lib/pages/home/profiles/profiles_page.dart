@@ -56,15 +56,18 @@ class _ProfilesPageState extends State<ProfilesPage> {
     if (!storedProfiles.contains('Default')) {
       profiles.insert(
         0,
-        const Profile(label: 'Default', storageString: 'Default', isDefault: true, isVertical: false),
+        const Profile(
+            label: 'Default', storageString: 'Default', isDefault: true, isVertical: false),
       );
     } else {
       // Profiles strings ending with '_vertical' creates an Profile object with isVertical value true, as other not.
       profiles = storedProfiles.map(
         (e) {
-          if (e == 'Default') return Profile(label: e, storageString: e, isDefault: true, isVertical: false);
+          if (e == 'Default')
+            return Profile(label: e, storageString: e, isDefault: true, isVertical: false);
           if (e.endsWith('_vertical'))
-            return Profile(label: e.replaceAll('_vertical', ''), storageString: e, isVertical: true);
+            return Profile(
+                label: e.replaceAll('_vertical', ''), storageString: e, isVertical: true);
           else
             return Profile(label: e, storageString: e, isVertical: false);
         },
@@ -206,7 +209,8 @@ class _ProfilesPageState extends State<ProfilesPage> {
                         profiles.length,
                         Profile(
                             label: _profileNameController.text.trim(),
-                            storageString: _verticalModeSwitch? '${_profileNameController.text.trim()}_vertical'
+                            storageString: _verticalModeSwitch
+                                ? '${_profileNameController.text.trim()}_vertical'
                                 : _profileNameController.text.trim(),
                             isVertical: _verticalModeSwitch),
                       );
@@ -215,8 +219,7 @@ class _ProfilesPageState extends State<ProfilesPage> {
 
                     // Add the modified profile list to persistence
                     // Adds the string '_vertical' at the end of vertical profiles to keep this parameter persistent.
-                    final profileNamesToStringList = profiles
-                        .map((e) => e.storageString).toList();
+                    final profileNamesToStringList = profiles.map((e) => e.storageString).toList();
 
                     SharedPrefsUtil.putStringList('profiles', profileNamesToStringList);
 
@@ -371,18 +374,25 @@ class _ProfilesPageState extends State<ProfilesPage> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
-                        title: Text(
-                          profiles[index].isDefault ? 'default'.tr : profiles[index].label,
-                          style: TextStyle(
-                            color: ThemeService().isDarkTheme() ? Colors.white : Colors.black,
-                          ),
+                        title: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              profiles[index].isDefault ? 'default'.tr : profiles[index].label,
+                              style: TextStyle(
+                                color: ThemeService().isDarkTheme() ? Colors.white : Colors.black,
+                              ),
+                            ),
+                            const SizedBox(
+                              width: 5.0,
+                            ),
+                            RotatedBox(
+                              quarterTurns: profiles[index].isVertical ? 0 : -1,
+                              child: const Icon(Icons.phone_android),
+                            ),
+                          ],
                         ),
                         secondary: Row(mainAxisSize: MainAxisSize.min, children: [
-                          Icon(
-                            profiles[index].isVertical
-                                ? Icons.stay_current_portrait
-                                : Icons.stay_current_landscape,
-                          ),
                           if (!profiles[index].isDefault)
                             IconButton(
                               onPressed: () async {

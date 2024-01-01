@@ -212,8 +212,9 @@ const Map<String, String> en = {
   'useAlternativeCalendarColors': 'Use alternative calendar colors',
   'useAlternativeCalendarColorsDescription':
       'Changes green and red in calendar to blue and yellow. Useful for colorblind people.',
-  'mixedResolutionAlert' : 'Mixed Resolutions detected',
-  'mixedResolutionAlertDescription' : 'At least one snippet seems to have a different resolution.\n\n'
-  'This can cause unexpected results when using your film.\n\n'
-  'Try to delete theses files or move them to a different profile.'
+  'mixedResolutionAlert': 'Mixed Resolutions detected',
+  'mixedResolutionAlertDescription':
+      'At least one snippet seems to have a different resolution.\n\n'
+          'This can cause unexpected results when using your film.\n\n'
+          'Try to delete theses files or move them to a different profile.'
 };

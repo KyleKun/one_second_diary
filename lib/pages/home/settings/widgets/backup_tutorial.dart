@@ -31,7 +31,6 @@ class BackupTutorial extends StatelessWidget {
             ),
           ),
         ),
-        const Divider(),
       ],
     );
   }
