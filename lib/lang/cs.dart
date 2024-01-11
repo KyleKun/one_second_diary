@@ -28,7 +28,7 @@ const Map<String, String> cs = {
   'no': 'Ne',
   'edit': 'Editace',
   'emojiHappy': 'Úžasné\nUvidíme se zítra.',
-  'emojiSad': 'Čekání na\nvaše nahrávání ...',
+  'emojiSad': 'Čekání na\nvaše nahrávání…',
   'rotateDevice': 'Otočte zařízení doleva',
   'recordingErrorTitle': 'Chyba při nahrávání videa!',
   'save': 'Uložit',
@@ -36,7 +36,7 @@ const Map<String, String> cs = {
   'videoSavedTitle': 'Video uloženo!',
   'videoSavedDesc': 'Uvidíme se později :)',
   'editVideoProperties': 'Edit video properties',
-  'comingSoon': ' Již brzy... ',
+  'comingSoon': ' Již brzy… ',
   'saveVideo': 'Uložit video',
   'discardVideoTitle': 'Zahodit toto video?',
   'discardVideoDesc': 'Stiskněte "Ano" pro opětovné nahrávání',
@@ -109,7 +109,7 @@ const Map<String, String> cs = {
       'Všechna videa spojená s tímto profilem budou také trvale smazána. Jste si jisti, že budete pokračovat??',
   'profileNameCannotBeEmpty': ' Název profilu nemůže být prázdný',
   'reservedProfileName': 'Toto je vyhrazený název profilu',
-  'creatingMovie': 'Zpracování... Počkejte prosím.\nTo může trvat několik minut.',
+  'creatingMovie': 'Zpracování… Počkejte prosím.\nTo může trvat několik minut.',
   'doNotCloseTheApp': 'Nezavírejte aplikaci.',
   'cancelMovieCreation': 'Zrušit vytvoření filmu',
   'cancelMovieDesc': 'Opravdu chcete zrušit vytvoření filmu?',
@@ -165,7 +165,7 @@ const Map<String, String> cs = {
   'success': 'Úspěch',
   'migrationSuccess':
       'Migrace úspěšná! Všechna videa a filmy jsou nyní uloženy v interním úložišti > DCIM > OneSecondDiary',
-  'migrationInProgress': 'Migrace všech videí do nové složky aplikace, počkejte prosím...',
+  'migrationInProgress': 'Migrace všech videí do nové složky aplikace, počkejte prosím…',
   'migrationFolderDeletionError':
       'Migrace byla dokončena, ale při odstraňování starých složek došlo k chybě. Smažte je ručně.',
   'preferences': 'Možnosti',
@@ -200,7 +200,7 @@ const Map<String, String> cs = {
   'feat4v152': 'Zamknutí orientace',
   'featDesc4v152':
       'Při nahrávání v aplikaci klepněte po nastavení telefonu na nové tlačítko, abyste zamkli orientaci a předešli neočekávaným výsledkům 📱',
-  'feat5v152': 'A mnohem více...',
+  'feat5v152': 'A mnohem více…',
   'featDesc5v152': 'Najdete zde také některá drobná vizuální vylepšení a opravy chyb 🐛',
   'useFilterInExperimentalPicker': 'Použijte filtr datumu pro výběr videí',
   'useFilterInExperimentalPickerDescription':

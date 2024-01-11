@@ -29,7 +29,7 @@ const Map<String, String> pt = {
   'no': 'Não',
   'edit': 'Editar',
   'emojiHappy': 'Incrível!\nAté amanhã.',
-  'emojiSad': 'Aguardando\nsua gravação ...',
+  'emojiSad': 'Aguardando\nsua gravação…',
   'rotateDevice': 'Gire para a esquerda',
   'recordingErrorTitle': 'Erro ao gravar o vídeo!',
   'save': 'Salvar',
@@ -37,7 +37,7 @@ const Map<String, String> pt = {
   'videoSavedTitle': 'Vídeo salvo!',
   'videoSavedDesc': 'Até mais :)',
   'editVideoProperties': 'Editar propriedades',
-  'comingSoon': ' Em breve... ',
+  'comingSoon': ' Em breve… ',
   'saveVideo': 'Salvar vídeo',
   'discardVideoTitle': 'Descartar gravação?',
   'discardVideoDesc': 'Pressione "Sim" para gravar novamente',
@@ -109,7 +109,7 @@ const Map<String, String> pt = {
       'Todos os vídeos associados a este perfil também serão excluídos permanentemente. Você tem certeza que deseja continuar?',
   'profileNameCannotBeEmpty': 'O nome do perfil não pode estar vazio',
   'reservedProfileName': 'Este é um nome de perfil reservado',
-  'creatingMovie': 'Processando... Por favor, aguarde.\nIsso pode levar alguns minutos.',
+  'creatingMovie': 'Processando… Por favor, aguarde.\nIsso pode levar alguns minutos.',
   'doNotCloseTheApp': 'Não feche o aplicativo',
   'cancelMovieCreation': 'Cancelar criação de filme',
   'cancelMovieDesc': 'Você tem certeza que deseja cancelar a criação do filme?',
@@ -165,7 +165,7 @@ const Map<String, String> pt = {
   'migrationSuccess':
       'Migração concluída! Todos os vídeos e filmes agora estão salvos em Internal Storage > DCIM > OneSecondDiary',
   'migrationInProgress':
-      'Migrando todos os seus vídeos para a nova pasta do aplicativo, por favor aguarde...',
+      'Migrando todos os seus vídeos para a nova pasta do aplicativo, por favor aguarde…',
   'migrationFolderDeletionError':
       'Migração concluída, mas ocorreu um erro ao excluir as pastas antigas. Por favor, exclua manualmente.',
   'preferences': 'Preferências',
@@ -200,7 +200,7 @@ const Map<String, String> pt = {
   'feat4v152': 'Bloqueio de Orientação',
   'featDesc4v152':
       'Ao gravar no aplicativo, toque no novo botão após posicionar seu telefone para bloquear a orientação e evitar resultados inesperados 📱',
-  'feat5v152': 'E mais...',
+  'feat5v152': 'E mais…',
   'featDesc5v152':
       'Você também encontrará algumas pequenas melhorias visuais e correções de erros 🐛',
   'useFilterInExperimentalPicker': 'Filtrar data para escolher vídeos',

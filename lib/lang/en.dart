@@ -29,7 +29,7 @@ const Map<String, String> en = {
   'no': 'No',
   'edit': 'Edit',
   'emojiHappy': 'Amazing!\nSee you tomorrow.',
-  'emojiSad': 'Waiting for\nyour recording ...',
+  'emojiSad': 'Waiting for\nyour recording…',
   'rotateDevice': 'Rotate your device to the left',
   'recordingErrorTitle': 'Error recording video!',
   'save': 'Save',
@@ -37,7 +37,7 @@ const Map<String, String> en = {
   'videoSavedTitle': 'Video saved!',
   'videoSavedDesc': 'See you later :)',
   'editVideoProperties': 'Edit video properties',
-  'comingSoon': ' Coming soon... ',
+  'comingSoon': ' Coming soon… ',
   'saveVideo': 'Save video',
   'discardVideoTitle': 'Discard this video?',
   'discardVideoDesc': 'Press "Yes" to record again',
@@ -111,7 +111,7 @@ const Map<String, String> en = {
       'All videos associated with this profile will also be permanently deleted. Are you sure to continue?',
   'profileNameCannotBeEmpty': 'Profile name cannot be empty',
   'reservedProfileName': 'This is a reserved profile name',
-  'creatingMovie': 'Processing... Please wait.\nThis can take several minutes.',
+  'creatingMovie': 'Processing… Please wait.\nThis can take several minutes.',
   'doNotCloseTheApp': 'Do not close the app',
   'cancelMovieCreation': 'Cancel movie creation',
   'cancelMovieDesc': 'Are you sure you want to cancel the movie creation?',
@@ -166,7 +166,7 @@ const Map<String, String> en = {
   'success': 'Success',
   'migrationSuccess':
       'Migration successful! All videos and movies are now saved inside Internal Storage > DCIM > OneSecondDiary',
-  'migrationInProgress': 'Migrating all your videos to the new app folder, please wait...',
+  'migrationInProgress': 'Migrating all your videos to the new app folder, please wait…',
   'migrationFolderDeletionError':
       'Migration complete, but an error occurred while deleting the old folders. Please delete it manually.',
   'preferences': 'Preferences',
@@ -201,7 +201,7 @@ const Map<String, String> en = {
   'feat4v152': 'Lock Orientation',
   'featDesc4v152':
       'When recording in the app, tap the new button after positioning your phone to lock the orientation and avoid unexpected results 📱',
-  'feat5v152': 'And more...',
+  'feat5v152': 'And more…',
   'featDesc5v152': 'You will also find some small visual improvements and bug fixes 🐛',
   'useFilterInExperimentalPicker': 'Use date filter to pick videos',
   'useFilterInExperimentalPickerDescription':
