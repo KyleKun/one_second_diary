@@ -23,6 +23,7 @@
 - Greily Campusano - Spanish
 - 丁禹懿 - Chinese
 - Ardin Biganiro - French
+- Axel GD (@axgdcode) - French
 - Alexander Adam - German
 - Bagas Wastu - Indonesian
 - Варвара Попова - Russian

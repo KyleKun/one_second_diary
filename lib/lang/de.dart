@@ -29,7 +29,7 @@ const Map<String, String> de = {
   'no': 'Nein',
   'edit': 'Bearbeiten',
   'emojiHappy': 'Wow!\nBis morgen.',
-  'emojiSad': 'Warte auf\nDeine Aufnahme ...',
+  'emojiSad': 'Warte auf\nDeine Aufnahme…',
   'rotateDevice': 'Drehe Dein Gerät nach links',
   'recordingErrorTitle': 'Fehler bei der Aufnahme!',
   'save': 'Speichern',
@@ -37,7 +37,7 @@ const Map<String, String> de = {
   'videoSavedTitle': 'Video gespeichert!',
   'videoSavedDesc': 'Bis morgen :)',
   'editVideoProperties': 'Video-Eigenschaften bearbeiten',
-  'comingSoon': 'Kommt demnächst...',
+  'comingSoon': 'Kommt demnächst…',
   'saveVideo': 'Video speichern',
   'discardVideoTitle': 'Video verwerfen?',
   'discardVideoDesc': 'Tippe "Ja" um erneut aufzunehmen',
@@ -109,7 +109,7 @@ const Map<String, String> de = {
       'Alle mit diesem Profil verknüpften Videos werden ebenfalls dauerhaft gelöscht.Bist du sicher weiter? ',
   'profileNameCannotBeEmpty': 'Profilname kann nicht leer sein',
   'reservedProfileName': 'Dies ist ein reservierter Profilname',
-  'creatingMovie': 'Verarbeitung... Bitte warten.\nDies kann mehrere Minuten dauern.',
+  'creatingMovie': 'Verarbeitung… Bitte warten.\nDies kann mehrere Minuten dauern.',
   'doNotCloseTheApp': 'Bitte schließen Sie die\nApp nicht',
   'cancelMovieCreation': 'Film erstellen abbrechen',
   'cancelMovieDesc': 'Möchtest Du wirklich abbrechen?',
@@ -162,7 +162,7 @@ const Map<String, String> de = {
   'success': 'Erfolg',
   'migrationSuccess':
       'Migration erfolgreich! Alle Videos und Filme sind jetzt in Internal Storage > DCIM > OneSecondDiary gespeichert',
-  'migrationInProgress': 'Migrieren aller Videos in den neuen App-Ordner, bitte warten...',
+  'migrationInProgress': 'Migrieren aller Videos in den neuen App-Ordner, bitte warten…',
   'migrationFolderDeletionError':
       'Migration abgeschlossen, aber beim Löschen der alten Ordner ist ein Fehler aufgetreten. Bitte löschen Sie sie manuell.',
   'preferences': 'Einstellungen',
@@ -197,7 +197,7 @@ const Map<String, String> de = {
   'feat4v152': 'Orientierung sperren',
   'featDesc4v152':
       'Tippen Sie nach dem Ausrichten Ihres Telefons auf die neue Schaltfläche, um die Ausrichtung zu sperren und unerwartete Ergebnisse zu vermeiden 📱',
-  'feat5v152': 'Und mehr...',
+  'feat5v152': 'Und mehr…',
   'featDesc5v152':
       'Sie finden auch einige kleinere visuelle Verbesserungen und Fehlerbehebungen 🐛',
   'useFilterInExperimentalPicker': 'Verwenden Sie das Datumsfilter, um Videos auszuwählen',

@@ -30,7 +30,7 @@ const Map<String, String> ca = {
   'no': 'No',
   'edit': 'Edita',
   'emojiHappy': 'Fantàstic!\nFins demà.',
-  'emojiSad': 'Esperant el\nvostre enregistrament ...',
+  'emojiSad': 'Esperant el\nvostre enregistrament…',
   'rotateDevice': 'Roteu el dispositiu a la dreta',
   'recordingErrorTitle': 'S’ha produït un error en enregistrar el vídeo!',
   'save': 'Desa',
@@ -38,7 +38,7 @@ const Map<String, String> ca = {
   'videoSavedTitle': 'S’ha desat el vídeo!',
   'videoSavedDesc': 'A reveure :)',
   'editVideoProperties': 'Edita les propietats del vídeo',
-  'comingSoon': ' Pròximament... ',
+  'comingSoon': ' Pròximament… ',
   'saveVideo': 'Desa el vídeo',
   'discardVideoTitle': 'Voleu descartar aquest vídeo?',
   'discardVideoDesc': 'Premeu «Sí» per tornar a enregistrar-lo',
@@ -112,7 +112,7 @@ const Map<String, String> ca = {
       'Tots els vídeos associats amb aquest perfil també se suprimiran permanentment. Esteu segur que voleu continuar?',
   'profileNameCannotBeEmpty': 'El nom del perfil no pot estar buit',
   'reservedProfileName': 'Aquest és un nom de perfil reservat',
-  'creatingMovie': 'S’està processant... Espereu.\nPot trigar uns quants minuts',
+  'creatingMovie': 'S’està processant… Espereu.\nPot trigar uns quants minuts',
   'doNotCloseTheApp': 'No tanqueu l’aplicació',
   'cancelMovieCreation': 'Cancel·la la creació de la pel·lícula',
   'cancelMovieDesc': 'Esteu segur que voleu cancel·lar la creació de la pel·lícula?',
@@ -168,7 +168,7 @@ const Map<String, String> ca = {
   'migrationSuccess':
       'Migració exitosa! Tots els vídeos i pel·lícules són desats a «Emmagatzematge intern > DCIM > OneSecondDiary»',
   'migrationInProgress':
-      'S’estan migrant tots els vídeos a la nova carpeta de l’aplicació, espereu...',
+      'S’estan migrant tots els vídeos a la nova carpeta de l’aplicació, espereu…',
   'migrationFolderDeletionError':
       'S’ha completat la migració, però ha succeït un error mentre se suprimien les carpetes velles. Suprimiu-les manualment.',
   'preferences': 'Preferències',
@@ -203,7 +203,7 @@ const Map<String, String> ca = {
   'feat4v152': 'Bloqueig de l’orientació',
   'featDesc4v152':
       'Quan enregistreu dins l’aplicació, premeu el botó després de posicionar el telèfon per bloquejar l’orientació i prevenir resultats inesperats 📱',
-  'feat5v152': 'I més...',
+  'feat5v152': 'I més…',
   'featDesc5v152': 'També trobareu algunes petites millores visuals i correccions d’errors 🐛',
   'useFilterInExperimentalPicker': 'Fes servir el filtre de data per seleccionar vídeos',
   'useFilterInExperimentalPickerDescription':

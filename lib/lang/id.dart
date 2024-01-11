@@ -31,7 +31,7 @@ const Map<String, String> id = {
   'no': 'Tidak',
   'edit': 'Ubah',
   'emojiHappy': 'Luar biasa!\nSampai jumpa besok.',
-  'emojiSad': 'Sedang menunggu rekaman video...',
+  'emojiSad': 'Sedang menunggu rekaman video…',
   'rotateDevice': 'Putar perangkat anda ke kiri',
   'recordingErrorTitle': 'Kesalahan merekam video',
   'save': 'Save',
@@ -39,7 +39,7 @@ const Map<String, String> id = {
   'videoSavedTitle': 'Video disimpan!',
   'videoSavedDesc': 'Sampai jumpa besok :)',
   'editVideoProperties': 'Ubah detail video',
-  'comingSoon': 'Akan segera datang... ',
+  'comingSoon': 'Akan segera datang… ',
   'saveVideo': 'Simpan video',
   'discardVideoTitle': 'Buang video ini?',
   'discardVideoDesc': 'Tekan "Ya" untuk merekam kembali',
@@ -112,7 +112,7 @@ const Map<String, String> id = {
       'Semua video yang terkait dengan profil ini juga akan dihapus secara permanen.Apakah kamu pasti akan melanjutkan? ',
   'profileNameCannotBeEmpty': 'Nama profil tidak bisa kosong',
   'reservedProfileName': 'Ini adalah nama profil yang dipesan',
-  'creatingMovie': 'Memproses ... tunggu sebentar.\nIni bisa memakan waktu beberapa menit.',
+  'creatingMovie': 'Memproses… tunggu sebentar.\nIni bisa memakan waktu beberapa menit.',
   'doNotCloseTheApp': 'Jangan tutup aplikasi ini',
   'cancelMovieCreation': 'Batalkan pembuatan video',
   'cancelMovieDesc': 'Apakah Anda yakin ingin membatalkan pembuatan video?',
@@ -163,7 +163,7 @@ const Map<String, String> id = {
   'success': 'Sukses',
   'migrationSuccess':
       'Migrasi berhasil! Semua video dan film sekarang disimpan di Internal Storage > DCIM > OneSecondDiary',
-  'migrationInProgress': 'Migrasi semua video Anda ke folder aplikasi baru, mohon tunggu ...',
+  'migrationInProgress': 'Migrasi semua video Anda ke folder aplikasi baru, mohon tunggu…',
   'migrationFolderDeletionError':
       'Migrasi selesai, tetapi terjadi kesalahan saat menghapus folder lama. Mohon hapus secara manual.',
   'preferences': 'Preferensi',
@@ -198,7 +198,7 @@ const Map<String, String> id = {
   'feat4v152': 'Kunci Orientasi',
   'featDesc4v152':
       'Saat merekam di aplikasi, ketuk tombol baru setelah menempatkan ponsel Anda untuk mengunci orientasi dan menghindari hasil yang tidak diinginkan 📱',
-  'feat5v152': 'Dan lainnya...',
+  'feat5v152': 'Dan lainnya…',
   'featDesc5v152': 'Anda juga akan menemukan beberapa perbaikan visual kecil dan perbaikan bug 🐛',
   'useFilterInExperimentalPicker': 'Gunakan filter tanggal untuk memilih video',
   'useFilterInExperimentalPickerDescription':
