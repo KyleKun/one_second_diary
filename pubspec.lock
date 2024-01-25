@@ -1227,10 +1227,10 @@ packages:
     description:
       path: "."
       ref: main
-      resolved-ref: "3311af83faf02aa4eb87ebc6b02fb6c682256e3a"
-      url: "https://github.com/KyleKun/video_trimmer.git"
+      resolved-ref: f3dd2c89a8194cd99d124e1c9153e275c47fe2c8
+      url: "https://github.com/agsalguero/video_trimmer.git"
     source: git
-    version: "2.1.6"
+    version: "2.1.7"
   wakelock_plus:
     dependency: "direct main"
     description:
