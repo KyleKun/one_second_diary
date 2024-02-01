@@ -56,7 +56,7 @@ Then, after a couple months or even years:
 ## Features
 
 - Record up to 10 seconds of video (1080p resolution)
-- Pick videos from gallery
+- Pick videos or photos from gallery
 - Add or edit subtitles in the videos
 - Add automatic or manual geotagging on top of the videos
 - Choose the date format and color to show on top of the videos
