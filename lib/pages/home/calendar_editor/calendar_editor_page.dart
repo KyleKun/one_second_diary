@@ -200,7 +200,7 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
         context,
         pickerConfig: AssetPickerConfig(
           maxAssets: 1,
-          requestType: RequestType.video,
+          requestType: RequestType.common,
           filterOptions: shouldIgnoreFilter ? null : filterOptionGroup,
           sortPathsByModifiedDate: true,
           specialItemPosition: SpecialItemPosition.prepend,
@@ -208,7 +208,7 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
             return Center(
               child: Text(
                 shouldIgnoreFilter
-                    ? 'Latest\nvideos'
+                    ? 'Latest\nmedia'
                     : 'From\n${_selectedDate.toString().substring(0, 10).split('-').reversed.join('-')}\nonwards',
                 textAlign: TextAlign.center,
                 style: const TextStyle(

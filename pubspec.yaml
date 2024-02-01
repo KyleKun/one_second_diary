@@ -41,7 +41,7 @@ dependencies:
   video_thumbnail: ^0.5.3
   video_trimmer:
     git:
-      url: https://github.com/agsalguero/video_trimmer.git
+      url: https://github.com/KyleKun/video_trimmer.git
       ref: main
   wakelock_plus: ^1.1.1
   logger: ^2.0.1
