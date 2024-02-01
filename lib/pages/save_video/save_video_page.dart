@@ -70,8 +70,6 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
   late final bool isDarkTheme = ThemeService().isDarkTheme();
   String selectedProfileName = Utils.getCurrentProfile();
 
-  List<double> quickCutNumber = [1, 1.5, 2, 3, 4, 5, 6, 7, 8, 9, 10];  // @todo get from the trimmer
-
   void _initCorrectDates() {
     final DateTime selectedDate = routeArguments['currentDate'];
 
@@ -487,6 +485,9 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
   @override
   Widget build(BuildContext context) {
     const editorProperties = TrimEditorProperties();
+    final List<double>quickCutNumbers = (SharedPrefsUtil.getBool('useExtendedQuickCuts') ?? false)
+      ? [1, 1.5, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+      : [1, 2, 3, 5, 10];
 
     return PopScope(
       canPop: false,
@@ -574,7 +575,7 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
                             physics: const BouncingScrollPhysics(),
                             child: Row(
                               children: [
-                                for (double i in quickCutNumber)
+                                for (double i in quickCutNumbers)
                                     Padding(
                                       padding: const EdgeInsets.all(10.0),
                                       child: TextButton.icon(
@@ -638,6 +639,7 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
                             onChangeStart: (value) => _videoStartValue = value,
                             onChangeEnd: (value) => _videoEndValue = value,
                             onChangePlaybackState: (value) => setState(() => _isVideoPlaying = value),
+                            quickCutNumbers: quickCutNumbers,
                       ),
                   ),
                 ),
@@ -1102,7 +1104,7 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
   }
 
   double getVideoEndInMilliseconds() {
-    final double defaultEnd = _videoEndValue + 500;
+    final double defaultEnd = _videoEndValue;
     final int videoDuration = _trimmer.videoPlayerController!.value.duration.inMilliseconds;
     if (defaultEnd > videoDuration) {
       return videoDuration.toDouble();
