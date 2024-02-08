@@ -28,6 +28,7 @@
 - Варвара Попова - Russian
 - Miloš Koliáš - Czech
 - Ander Romero - Catalan
+- Bembee - Magyar
 
 ## App Logo (Initial Version)
 - Victória Marques

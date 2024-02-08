@@ -1,3 +1,5 @@
+- Added Hungarian localization
+
 ## v1.6.0 - 12/2023
 - Added option to receive persistent notifications
 - Added option to change calendar days color for colorblind users
