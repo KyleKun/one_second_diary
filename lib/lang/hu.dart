@@ -7,7 +7,7 @@ const Map<String, String> hu = {
       'Köszönjük szépen, hogy használod az alkalmazást!\n\nHa szeretnéd támogatni a fejlesztést,\nadományozz bátran ^^',
   'donationPageTitle': 'Támogasd az alkalmazás fejlesztését',
   'about': 'Rólunk',
-  'appVersion': 'Version 1.6.0',
+  'appVersion': '1.6.0 verzió',
   'record': 'Felvétel',
   'createMovie': 'Film létrehozása',
   'settings': 'Beállítások',
@@ -15,19 +15,17 @@ const Map<String, String> hu = {
   'movieInsufficientVideos':
       'A film létrehozásához 2 vagy több felvett videóra van szükség',
   'movieCreatedTitle': 'A film elkészült',
-  'movieCreatedDesc':
-      'A filmet a DCIM/OneSecondDiary/Movies mappába jött létre',
+  'movieCreatedDesc': 'A film a DCIM/OneSecondDiary/Movies mappába jött létre',
   'movieError': 'Hiba a film mentése közben!',
   'tryAgainMsg':
-      'Kérjük, próbáld meg újra. Ha a probléma továbbra is fennáll, lépjen kapcsolatba a fejlesztővel.',
+      'Kérjük, próbáld meg újra. Ha a probléma továbbra is fennáll, lépj kapcsolatba a fejlesztővel.',
   'create': 'Létrehozás',
   'days': 'nap',
   'day': 'nap',
-  'totalRecordedTitle': 'Összesen ennyi felvételt készítettél:',
-  'tapBelowToGenerate':
-      'Érintsd meg az alábbi gombot az\negyetlen videó fájl generáláshoz:',
+  'totalRecordedTitle': 'Felvételek száma:',
+  'tapBelowToGenerate': 'Érintsd meg az alábbi gombot a\n film elkészítéséhez:',
   'editQuestionTitle': 'Szerkeszted a videót?',
-  'editQuestion': 'Az előző felvételt törölve lesz, biztos vagy benne?',
+  'editQuestion': 'Az előző felvétel törölve lesz, biztos vagy benne?',
   'yes': 'Igen',
   'no': 'Nem',
   'edit': 'Szerkesztés',
@@ -61,7 +59,7 @@ const Map<String, String> hu = {
   'shareMsg':
       'Nézd meg ezt az alkalmazást: https://play.google.com/store/apps/details?id=com.kylekun.one_second_diary',
   'thanksTo': 'Külön köszönet',
-  'foundVideos': 'videók találva!',
+  'foundVideos': 'videó találva!',
   'foundVideo': 'videó találva!',
   'notifications': 'Értesítés',
   'enableNotifications': 'Értesítések engedélyezése',
@@ -81,7 +79,7 @@ const Map<String, String> hu = {
   'ok': 'OK',
   'reset': 'Visszaállít',
   'enterLocation': 'Helyszín megadása',
-  'allTime': 'Minden idő',
+  'allTime': 'Összes',
   'last7Days': 'Az elmúlt 7 nap',
   'last30Days': 'Az elmúlt 30 nap',
   'last60Days': 'Az elmúlt 60 nap',
@@ -134,7 +132,7 @@ const Map<String, String> hu = {
   'addSubtitles': 'Felirat hozzáadása',
   'dateColorAndFormat': 'Dátum szín és formátum',
   'locationServicesDisabled':
-      'A helymeghatározási szolgáltatások le vannak tiltva az eszközön. Kérjük, engedélyezd majd próbáld meg újra.',
+      'A helymeghatározási szolgáltatások le vannak tiltva az eszközön. Kérlek, engedélyezd majd próbáld meg újra.',
   'locationPermissionDenied': 'A helymeghatározási engedélyek megtagadva.',
   'locationPermissionPermanentlyDenied':
       'Helymeghatározási engedélyek tartósan megtagadva. Kérlek, engedélyezd manuálisan a készülék beállításaiban.',
@@ -165,9 +163,9 @@ const Map<String, String> hu = {
   'featDesc7v15':
       'Állíts be ütemezett napi értesítéseket, hogy emlékezezz a különleges pillanatok rögzítésére 🔔',
   'default': 'Alapértelmezett',
-  'profileNameAlreadyExists': 'Profilnév már létezik',
+  'profileNameAlreadyExists': 'Ez a profilnév már létezik',
   'profileNameCannotContainSpecialChars':
-      'Profilnév nem tartalmazhat\nspeciális karaktereket',
+      'A profilnév nem tartalmazhat\nspeciális karaktereket',
   'subtitlesSaved': 'Feliratok mentve!',
   'error': 'Hiba',
   'migrationError':
@@ -188,16 +186,16 @@ const Map<String, String> hu = {
   'noMoviesFound': 'Nem találtam filmeket',
   'play': 'Lejátszás',
   'saveVideoTabOne': 'Általános',
-  'saveVideoTabTwo': 'Helszín',
+  'saveVideoTabTwo': 'Helyszín',
   'saveVideoTabThree': 'Felirat',
   'useExperimentalPicker': 'Kísérleti fájlválasztó használata',
   'useExperimentalPickerDescription':
       'A kísérleti fájlválasztó használata a galériából való videók kiválasztásához. Ez lehetővé teszi a videó előnézetének megtekintését a kiválasztás előtt, gyorsabb betöltési időt, és közvetlenül a kiválasztott dátumhoz tartozó felvételek megjelenítését. Kapcsold ki, ha problémákat tapasztalsz, vagy ha a régi módszert részesíted előnyben.',
   'currentProfile': 'Jelenlegi profil:',
-  'change': 'Változás',
-  'sendLogs': 'Naplók küldése?',
+  'change': 'Megváltoztat',
+  'sendLogs': 'Napló küldése?',
   'sendLogsDescription':
-      'Ha problémád van, kérlek, koppints az "Igen" gombra a naplófájlok beküldéséhez, amelyek segítenek a probléma megtalálásában. Ha \'funkciójavaslat vagy egyéb mondadód van, kérem koppints a "Nem"-re.',
+      'Ha problémád van, kérlek, koppints az "Igen" gombra a naplófájlok elküldéséhez, amelyek segítenek a probléma megtalálásában.\nHa funkció javaslatod vagy egyéb mondadód van, koppints a "Nem"-re.',
   'whatsNewDescv152':
       'Az 1.5.2-es verzió számos javítást és fejlesztést hozott!\n\nNézd meg a következő oldalakon 😊',
   'feat1v152': 'Gyorsabb videófeldolgozás',
@@ -218,7 +216,7 @@ const Map<String, String> hu = {
   'useFilterInExperimentalPicker':
       'Dátumszűrő használata a videók kiválasztásához',
   'useFilterInExperimentalPickerDescription':
-      'Amikor engedélyezve van, videókat az adott dátumtól látod majd. Ha ki van kapcsolva, az összes videó megjelenik. Csak a kísérleti fájlválasztóval működik.',
+      'Amikor engedélyezve van, a videókat az adott dátumtól látod majd. Ha ki van kapcsolva, az összes videó megjelenik. Csak a kísérleti fájlválasztóval működik.',
   'useAlternativeCalendarColors': 'Alternatív naptárszínek használata',
   'useAlternativeCalendarColorsDescription':
       'A naptár zöld és piros színét kékre és sárgára változtatja. Hasznos színvakok számára.',
