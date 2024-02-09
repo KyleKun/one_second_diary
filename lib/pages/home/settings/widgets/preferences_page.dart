@@ -16,6 +16,7 @@ class _PreferencesPageState extends State<PreferencesPage> {
   late bool isPickerSwitchToggled;
   late bool isPickerFilterSwitchToggled;
   late bool isColorsSwitchToggled;
+  late bool isExtendedQuickCutsSwitchToggled;
 
   @override
   void initState() {
@@ -24,6 +25,7 @@ class _PreferencesPageState extends State<PreferencesPage> {
     isPickerSwitchToggled = SharedPrefsUtil.getBool('useExperimentalPicker') ?? true;
     isPickerFilterSwitchToggled = SharedPrefsUtil.getBool('useFilterInExperimentalPicker') ?? false;
     isColorsSwitchToggled = SharedPrefsUtil.getBool('useAlternativeCalendarColors') ?? false;
+    isExtendedQuickCutsSwitchToggled = SharedPrefsUtil.getBool('useExtendedQuickCuts') ?? false;
   }
 
   @override
@@ -229,6 +231,50 @@ class _PreferencesPageState extends State<PreferencesPage> {
                 ),
                 const SizedBox(height: 5.0),
                 Text('useAlternativeCalendarColorsDescription'.tr),
+                const Divider(),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Flexible(
+                        child: Text(
+                          'useExtendedQuickCuts'.tr,
+                          style: TextStyle(
+                            fontSize: MediaQuery.of(context).size.width * 0.045,
+                          ),
+                        ),
+                      ),
+                      Switch(
+                        value: isExtendedQuickCutsSwitchToggled,
+                        onChanged: (value) async {
+                          if (value) {
+                            Utils.logInfo(
+                              '[PREFERENCES] - Use extended quickCuts was enabled',
+                            );
+
+                            SharedPrefsUtil.putBool('useExtendedQuickCuts', true);
+                          } else {
+                            Utils.logInfo(
+                              '[PREFERENCES] - Use extended quickCuts was disabled',
+                            );
+
+                            SharedPrefsUtil.putBool('useExtendedQuickCuts', false);
+                          }
+
+                          /// Update switch value
+                          setState(() {
+                            isExtendedQuickCutsSwitchToggled = !isExtendedQuickCutsSwitchToggled;
+                          });
+                        },
+                        activeTrackColor: AppColors.mainColor.withOpacity(0.4),
+                        activeColor: AppColors.mainColor,
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 5.0),
+                Text('useExtendedQuickCutsDescription'.tr),
               ],
             ),
           ),

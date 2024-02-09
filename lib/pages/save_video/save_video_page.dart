@@ -7,6 +7,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:group_radio_button/group_radio_button.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:mime/mime.dart';
 import 'package:video_trimmer/video_trimmer.dart';
 
 import '../../controllers/recording_settings_controller.dart';
@@ -64,6 +65,7 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
   double _videoEndValue = 0.0;
   bool _isVideoPlaying = false;
   bool _isLocationProcessing = false;
+  bool _isImage = false;
 
   late final bool isDarkTheme = ThemeService().isDarkTheme();
   String selectedProfileName = Utils.getCurrentProfile();
@@ -294,9 +296,14 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
     pickerColor = parseColorString(_recordingSettingsController.dateColor.value);
     currentColor = pickerColor;
     _tempVideoPath = routeArguments['videoPath'];
+    _isImage = isImage(_tempVideoPath);
     isTextDate = _recordingSettingsController.dateFormatId.value == 1;
     _initCorrectDates();
-    _initVideoPlayerController();
+    if(_isImage) {
+      _videoEndValue = 1.0;
+    } else {
+      _initVideoPlayerController();
+    }
     if (isGeotaggingEnabled) {
       setGeotagging();
     }
@@ -367,17 +374,29 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
     return ColoredBox(
       color: AppColors.dark,
       child: GestureDetector(
-        onTap: () => videoPlay(),
+        onTap: _isImage ? null : () => videoPlay(),  // @todo animate effect for images
         child: AspectRatio(
           aspectRatio: 16 / 9,
           child: Stack(
             children: [
-              VideoViewer(
-                trimmer: _trimmer,
-              ),
+              if (_isImage)
+                SizedBox(
+                  width: MediaQuery.of(context).size.width,
+                  child: ColoredBox(
+                    color: Colors.black,
+                    child: Image.file(
+                      File(_tempVideoPath),
+                        fit: BoxFit.contain,
+                      ),
+                  ),
+                )
+              else
+                VideoViewer(
+                  trimmer: _trimmer,
+                ),
               Center(
                 child: Opacity(
-                  opacity: _isVideoPlaying ? 0.0 : 1.0,
+                  opacity: _isVideoPlaying || _isImage ? 0.0 : 1.0,  // @todo show play button for images
                   child: Container(
                     width: MediaQuery.of(context).size.width * 0.25,
                     height: MediaQuery.of(context).size.width * 0.25,
@@ -465,6 +484,11 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
 
   @override
   Widget build(BuildContext context) {
+    const editorProperties = TrimEditorProperties();
+    final List<double>quickCutNumbers = (SharedPrefsUtil.getBool('useExtendedQuickCuts') ?? false)
+      ? [1, 1.5, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+      : [1, 2, 3, 5, 10];
+
     return PopScope(
       canPop: false,
       onPopInvoked: (_) async {
@@ -516,7 +540,6 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
           ),
           child: SaveButton(
             videoPath: _tempVideoPath,
-            videoController: _trimmer.videoPlayerController!,
             dateColor: currentColor,
             dateFormat: _dateFinalFormatValueForVideoEdit,
             isTextDate: isTextDate,
@@ -526,13 +549,13 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
                 : customLocationTextController.text,
             subtitles: _subtitles,
             videoStartInMilliseconds: _videoStartValue,
-            videoEndInMilliseconds: getVideoEndInMilliseconds(),
-            videoDuration: _trimmer.videoPlayerController!.value.duration.inSeconds,
+            videoEndInMilliseconds: _isImage ? _videoEndValue * 1000 : getVideoEndInMilliseconds(),
             isGeotaggingEnabled: isGeotaggingEnabled,
             textOutlineColor: invert(currentColor),
             textOutlineWidth: textOutlineStrokeWidth,
             determinedDate: routeArguments['currentDate'],
             isFromRecordingPage: routeArguments['isFromRecordingPage'],
+            isImage: _isImage,
           ),
         ),
         body: Column(
@@ -546,31 +569,78 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
                 Center(
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 6.0),
-                    child: TrimViewer(
-                      trimmer: _trimmer,
-                      viewerHeight: 50.0,
-                      type: ViewerType.fixed,
-                      editorProperties: TrimEditorProperties(
-                        borderWidth: 2.5,
-                        circleSize: 6.0,
-                        circleSizeOnDrag: 9.0,
-                        circlePaintColor: isDarkTheme ? Colors.white : AppColors.mainColor,
-                        borderPaintColor:
-                            isDarkTheme ? AppColors.light : AppColors.mainColor.withOpacity(0.75),
-                        quickCutBackgroundColor: isDarkTheme
-                            ? AppColors.light.withOpacity(0.15)
-                            : AppColors.dark.withOpacity(0.40),
+                    child: _isImage
+                        ? SingleChildScrollView(  // add quick cut buttons for images
+                            scrollDirection: Axis.horizontal,
+                            physics: const BouncingScrollPhysics(),
+                            child: Row(
+                              children: [
+                                for (double i in quickCutNumbers)
+                                    Padding(
+                                      padding: const EdgeInsets.all(10.0),
+                                      child: TextButton.icon(
+                                        style: ButtonStyle(
+                                          foregroundColor: MaterialStateProperty.all<Color>(
+                                            editorProperties.quickCutForegroundColor,
+                                          ),
+                                          backgroundColor: MaterialStateProperty.all<Color>(
+                                            editorProperties.quickCutBackgroundColor,
+                                          ),
+                                          overlayColor: MaterialStateProperty.all<Color>(
+                                            editorProperties.quickCutForegroundColor.withOpacity(0.25),
+                                          ),
+                                          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                            RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(35.0),
+                                            ),
+                                          ),
+                                        ),
+                                        icon: Icon(
+                                          editorProperties.quickCutIcon,
+                                          size: editorProperties.quickCutIconSize,
+                                        ),
+                                        onPressed: () {
+                                          _videoStartValue = 0;
+                                          _videoEndValue = i;
+                                          setState(() {});
+                                        },
+                                        label: Text(
+                                          (i == i.roundToDouble()?i.round():i).toString(),
+                                          style: TextStyle(color: (i == _videoEndValue)
+                                              ? Colors.yellow
+                                              : editorProperties.quickCutTextColor),
+                                        ),
+                                      ),
+                                    ),
+                              ],
+                            ),
+                          )
+                        : TrimViewer(  // use video trimmer for videos
+                            trimmer: _trimmer,
+                            viewerHeight: 50.0,
+                            type: ViewerType.fixed,
+                            editorProperties: TrimEditorProperties(
+                              borderWidth: 2.5,
+                              circleSize: 6.0,
+                              circleSizeOnDrag: 9.0,
+                              circlePaintColor: isDarkTheme ? Colors.white : AppColors.mainColor,
+                              borderPaintColor:
+                                  isDarkTheme ? AppColors.light : AppColors.mainColor.withOpacity(0.75),
+                              quickCutBackgroundColor: isDarkTheme
+                                  ? AppColors.light.withOpacity(0.15)
+                                  : AppColors.dark.withOpacity(0.40),
+                            ),
+                            durationStyle: DurationStyle.FORMAT_SS_MS,
+                            durationTextStyle: isDarkTheme
+                                ? const TextStyle(color: Colors.white)
+                                : const TextStyle(color: Colors.black),
+                            maxVideoLength: const Duration(milliseconds: 10000),
+                            viewerWidth: MediaQuery.of(context).size.width,
+                            onChangeStart: (value) => _videoStartValue = value,
+                            onChangeEnd: (value) => _videoEndValue = value,
+                            onChangePlaybackState: (value) => setState(() => _isVideoPlaying = value),
+                            quickCutNumbers: quickCutNumbers,
                       ),
-                      durationStyle: DurationStyle.FORMAT_SS_MS,
-                      durationTextStyle: isDarkTheme
-                          ? const TextStyle(color: Colors.white)
-                          : const TextStyle(color: Colors.black),
-                      maxVideoLength: const Duration(milliseconds: 10000),
-                      viewerWidth: MediaQuery.of(context).size.width,
-                      onChangeStart: (value) => _videoStartValue = value,
-                      onChangeEnd: (value) => _videoEndValue = value,
-                      onChangePlaybackState: (value) => setState(() => _isVideoPlaying = value),
-                    ),
                   ),
                 ),
               ],
@@ -1034,11 +1104,20 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
   }
 
   double getVideoEndInMilliseconds() {
-    final double defaultEnd = _videoEndValue + 500;
+    final double defaultEnd = _videoEndValue;
     final int videoDuration = _trimmer.videoPlayerController!.value.duration.inMilliseconds;
     if (defaultEnd > videoDuration) {
       return videoDuration.toDouble();
     }
     return defaultEnd;
+  }
+
+  bool isImage(String path) {
+    final String? mimeStr = lookupMimeType(path);
+    if (mimeStr == null) {
+      return false;
+    }
+    final fileType = mimeStr.split('/');
+    return fileType[0] == 'image';
   }
 }

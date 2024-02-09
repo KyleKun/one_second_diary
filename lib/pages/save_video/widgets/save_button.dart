@@ -19,14 +19,12 @@ import '../../../utils/utils.dart';
 class SaveButton extends StatefulWidget {
   SaveButton({
     required this.videoPath,
-    required this.videoController,
     required this.dateColor,
     required this.dateFormat,
     required this.isTextDate,
     required this.userPosition,
     required this.userLocation,
     required this.subtitles,
-    required this.videoDuration,
     required this.isGeotaggingEnabled,
     required this.textOutlineColor,
     required this.textOutlineWidth,
@@ -34,18 +32,17 @@ class SaveButton extends StatefulWidget {
     required this.videoEndInMilliseconds,
     required this.determinedDate,
     required this.isFromRecordingPage,
+    required this.isImage,
   });
 
   // Finding controllers
   final String videoPath;
-  final VideoPlayerController videoController;
   final Color dateColor;
   final String dateFormat;
   final bool isTextDate;
   final Position? userPosition;
   final String? userLocation;
   final String? subtitles;
-  final int videoDuration;
   final bool isGeotaggingEnabled;
   final Color textOutlineColor;
   final double textOutlineWidth;
@@ -53,6 +50,7 @@ class SaveButton extends StatefulWidget {
   final double videoEndInMilliseconds;
   final DateTime determinedDate;
   final bool isFromRecordingPage;
+  final bool isImage;
 
   @override
   _SaveButtonState createState() => _SaveButtonState();
@@ -260,7 +258,7 @@ class _SaveButtonState extends State<SaveButton> {
     if (isGeotaggingEnabled) {
       final String locationTextFilePath = await Utils.writeLocationTxt(widget.userLocation);
       locale =
-          ', drawtext=textfile=$locationTextFilePath:fontfile=$fontPath:fontsize=$locTextSize:fontcolor=\'$parsedDateColor\':borderw=${widget.textOutlineWidth}:bordercolor=$parsedTextOutlineColor:x=$locPosX:y=$locPosY';
+          ',drawtext="textfile=$locationTextFilePath:fontfile=$fontPath:fontsize=$locTextSize:fontcolor=\'$parsedDateColor\':borderw=${widget.textOutlineWidth}:bordercolor=$parsedTextOutlineColor:x=$locPosX:y=$locPosY"';
     }
 
     // Check if video was added from gallery and has an audio stream, adding one if not (screen recordings can be muted for example)
@@ -268,18 +266,26 @@ class _SaveButtonState extends State<SaveButton> {
     String origin = 'osd_recording';
     if (!widget.isFromRecordingPage) {
       origin = 'gallery';
-      await executeFFprobe(
-              '-v quiet -select_streams a:0 -show_entries stream=codec_type -of default=nw=1:nk=1 "$videoPath"')
-          .then((session) async {
-        final returnCode = await session.getReturnCode();
-        if (ReturnCode.isSuccess(returnCode)) {
-          final sessionLog = await session.getOutput();
-          if (sessionLog == null || sessionLog.isEmpty) {
-            Utils.logWarning('${logTag}Video has no audio stream, adding one.');
-            audioStream = '-f lavfi -i anullsrc=channel_layout=mono:sample_rate=48000 -shortest';
+      if(widget.isImage) {
+        Utils.logInfo(
+            '${logTag}Adding audio stream to image.');
+        audioStream = '-f lavfi -i anullsrc=channel_layout=mono:sample_rate=48000';
+      } else {
+        await executeFFprobe(
+            '-v quiet -select_streams a:0 -show_entries stream=codec_type -of default=nw=1:nk=1 "$videoPath"')
+            .then((session) async {
+          final returnCode = await session.getReturnCode();
+          if (ReturnCode.isSuccess(returnCode)) {
+            final sessionLog = await session.getOutput();
+            if (sessionLog == null || sessionLog.isEmpty) {
+              Utils.logWarning(
+                  '${logTag}Video has no audio stream, adding one.');
+              audioStream =
+              '-f lavfi -i anullsrc=channel_layout=mono:sample_rate=48000 -shortest';
+            }
           }
-        }
-      });
+        });
+      }
     }
 
     // If subtitles TextBox were not left empty, we can allow the command to render the subtitles into the video, otherwise we add empty subtitles to populate the streams with a subtitle stream, so that concat demuxer can work properly when creating a movie
@@ -313,7 +319,12 @@ class _SaveButtonState extends State<SaveButton> {
     final metadata = baseMetadata + locationMetadata;
 
     // Trim video to the selected range
-    final trim = '-ss ${videoStartInMilliseconds}ms -to ${videoEndInMilliseconds}ms';
+    final trim = widget.isImage
+        ? '-loop 1 -t ${videoEndInMilliseconds}ms'
+        : '-ss ${videoStartInMilliseconds}ms -to ${videoEndInMilliseconds}ms';
+
+    const finalZoom = 0.1;
+    final imageEffect = widget.isImage ? ',zoompan=z=\'1+${finalZoom}*in_time/${videoEndInMilliseconds/1000}\':d=1' : '';
 
     // Scale video to 1920x1080 and add black padding if needed
     const scale =
@@ -321,7 +332,7 @@ class _SaveButtonState extends State<SaveButton> {
 
     // Add date to the video
     final date =
-        ',drawtext="$fontPath:text=\'${widget.dateFormat}\':fontsize=$dateTextSize:fontcolor=\'$parsedDateColor\':borderw=${widget.textOutlineWidth}:bordercolor=$parsedTextOutlineColor:x=$datePosX:y=$datePosY';
+        ',drawtext="$fontPath:text=\'${widget.dateFormat}\':fontsize=$dateTextSize:fontcolor=\'$parsedDateColor\':borderw=${widget.textOutlineWidth}:bordercolor=$parsedTextOutlineColor:x=$datePosX:y=$datePosY"';
 
     // Add subtitles to the video
     const subtitles = '-c:s mov_text -map 1:v -map 1:a? -map 0:s -disposition:s:0 default';
@@ -332,7 +343,7 @@ class _SaveButtonState extends State<SaveButton> {
 
     // Full command to edit and save video
     final command =
-        '-i "$subtitlesPath" $trim -i "$videoPath" $audioStream $metadata -vf [in]$scale$date$locale[out]" $defaultEditSettings $subtitles "$finalPath" -y';
+        '-i "$subtitlesPath" $trim -i "$videoPath" $audioStream $metadata -vf [in]$scale$imageEffect$date$locale[out] $defaultEditSettings $subtitles "$finalPath" -y';
 
     Utils.logInfo('${logTag}FFmpeg full command: $command');
 
