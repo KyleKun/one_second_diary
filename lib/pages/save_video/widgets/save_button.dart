@@ -258,7 +258,7 @@ class _SaveButtonState extends State<SaveButton> {
     if (isGeotaggingEnabled) {
       final String locationTextFilePath = await Utils.writeLocationTxt(widget.userLocation);
       locale =
-          ', drawtext=textfile=$locationTextFilePath:fontfile=$fontPath:fontsize=$locTextSize:fontcolor=\'$parsedDateColor\':borderw=${widget.textOutlineWidth}:bordercolor=$parsedTextOutlineColor:x=$locPosX:y=$locPosY';
+          ',drawtext="textfile=$locationTextFilePath:fontfile=$fontPath:fontsize=$locTextSize:fontcolor=\'$parsedDateColor\':borderw=${widget.textOutlineWidth}:bordercolor=$parsedTextOutlineColor:x=$locPosX:y=$locPosY"';
     }
 
     // Check if video was added from gallery and has an audio stream, adding one if not (screen recordings can be muted for example)
