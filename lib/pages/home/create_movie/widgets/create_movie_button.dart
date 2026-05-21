@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:math';
 
-import 'package:ffmpeg_kit_extended_flutter/ffmpeg_kit_extended_flutter.dart';
+import 'package:ffmpeg_kit_flutter_new/return_code.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:open_filex/open_filex.dart';
@@ -137,9 +137,9 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
           await executeFFprobe(
                   '-v quiet -show_entries format_tags=artist -of default=nw=1:nk=1 "$currentVideo"')
               .then((session) async {
-            final returnCode = session.getReturnCode();
+            final returnCode = await session.getReturnCode();
             if (ReturnCode.isSuccess(returnCode)) {
-              final sessionLog = session.getOutput();
+              final sessionLog = await session.getOutput();
               if (sessionLog == null ||
                   sessionLog.isEmpty ||
                   !sessionLog.contains(Constants.artist)) {
@@ -147,7 +147,7 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
                 isV1point5 = false;
               }
             } else {
-              final sessionLog = session.getLogsAsString();
+              final sessionLog = await session.getLogsAsString();
               Utils.logError('${logTag}Error checking if $currentVideo was recorded on v1.5');
               Utils.logError('${logTag}Error: $sessionLog');
             }
@@ -167,12 +167,12 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
             await executeFFmpeg(
                     '-i "$currentVideo" -vf "scale=1920:1080" -r 30 -map 0 -c:v libx264 -c:a copy -c:s copy -crf 20 -preset slow "$tempVideo1" -y')
                 .then((session) async {
-              final returnCode = session.getReturnCode();
+              final returnCode = await session.getReturnCode();
               if (ReturnCode.isSuccess(returnCode)) {
                 Utils.logInfo(
                     '${logTag}Copied $currentVideo to $tempVideo1 and converted it to 1080p, h264');
               } else {
-                final sessionLog = session.getLogsAsString();
+                final sessionLog = await session.getLogsAsString();
                 Utils.logError('${logTag}Error converting $currentVideo to 1080p, h264');
                 Utils.logError('${logTag}Error: $sessionLog');
               }
@@ -186,9 +186,9 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
             await executeFFprobe(
                     '-v quiet -print_format json -show_format -show_streams "$tempVideo1"')
                 .then((session) async {
-              final returnCode = session.getReturnCode();
+              final returnCode = await session.getReturnCode();
               if (ReturnCode.isSuccess(returnCode)) {
-                final sessionLog = session.getOutput();
+                final sessionLog = await session.getOutput();
                 if (sessionLog == null) return;
                 final List<dynamic> streams = jsonDecode(sessionLog)['streams'];
                 debugPrint('${logTag}Streams info for $tempVideo1 --> $sessionLog');
@@ -199,13 +199,13 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
                     await executeFFmpeg(
                             '-i "$tempVideo1" -map 0 -c:v copy -c:a aac -ac 1 -ar 48000 -b:a 256k -c:s copy "$tempVideo2" -y')
                         .then((session) async {
-                      final returnCode = session.getReturnCode();
+                      final returnCode = await session.getReturnCode();
                       if (ReturnCode.isSuccess(returnCode)) {
                         StorageUtils.deleteFile(tempVideo1);
                         StorageUtils.renameFile(tempVideo2, tempVideo1);
                         Utils.logInfo('${logTag}Made sure $currentVideo is mono');
                       } else {
-                        final sessionLog = session.getLogsAsString();
+                        final sessionLog = await session.getLogsAsString();
                         Utils.logError('${logTag}Error converting $tempVideo1 to mono audio');
                         Utils.logError('${logTag}Error: $sessionLog');
                       }
@@ -229,13 +229,13 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
               final command =
                   '-i "$tempVideo1" -f lavfi -i anullsrc=channel_layout=mono:sample_rate=48000 -shortest -b:a 256k -c:v copy -c:s copy -c:a aac "$tempVideo2" -y';
               await executeFFmpeg(command).then((session) async {
-                final returnCode = session.getReturnCode();
+                final returnCode = await session.getReturnCode();
                 if (ReturnCode.isSuccess(returnCode)) {
                   StorageUtils.deleteFile(tempVideo1);
                   StorageUtils.renameFile(tempVideo2, tempVideo1);
                   Utils.logInfo('${logTag}Added empty audio stream to $tempVideo1');
                 } else {
-                  final sessionLog = session.getLogsAsString();
+                  final sessionLog = await session.getLogsAsString();
                   Utils.logError('${logTag}Error adding audio stream to $tempVideo1');
                   Utils.logError('${logTag}Error: $sessionLog');
                 }
@@ -248,13 +248,13 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
               final command =
                   '-i "$tempVideo1" -i $dummySubtitles -c copy -c:s mov_text "$tempVideo2" -y';
               await executeFFmpeg(command).then((session) async {
-                final returnCode = session.getReturnCode();
+                final returnCode = await session.getReturnCode();
                 if (ReturnCode.isSuccess(returnCode)) {
                   StorageUtils.deleteFile(tempVideo1);
                   StorageUtils.renameFile(tempVideo2, tempVideo1);
                   Utils.logInfo('${logTag}Added empty subtitles stream to $tempVideo1');
                 } else {
-                  final sessionLog = session.getLogsAsString();
+                  final sessionLog = await session.getLogsAsString();
                   Utils.logError('${logTag}Error adding subtitles stream to $tempVideo1');
                   Utils.logError('${logTag}Error: $sessionLog');
                 }
@@ -265,13 +265,13 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
             await executeFFmpeg(
                     '-i "$tempVideo1" -metadata artist="${Constants.artist}" -metadata album="Default" -metadata comment="origin=osd_recording_old" -c:v copy -c:a copy -c:s copy "$tempVideo2" -y')
                 .then((session) async {
-              final returnCode = session.getReturnCode();
+              final returnCode = await session.getReturnCode();
               if (ReturnCode.isSuccess(returnCode)) {
                 StorageUtils.deleteFile(tempVideo1);
                 StorageUtils.renameFile(tempVideo2, tempVideo1);
                 Utils.logInfo('${logTag}Added artist metadata to $tempVideo1');
               } else {
-                final sessionLog = session.getLogsAsString();
+                final sessionLog = await session.getLogsAsString();
                 Utils.logError('${logTag}Error adding artist metadata to $tempVideo1');
                 Utils.logError('${logTag}Error: $sessionLog');
               }
@@ -309,7 +309,7 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
           await executeFFmpeg('-f concat -safe 0 -i $txtPath -r 30 -map 0 -c copy $outputPath -y')
               .then(
             (session) async {
-              final returnCode = session.getReturnCode();
+              final returnCode = await session.getReturnCode();
               controller.increaseMovieCount();
               if (ReturnCode.isSuccess(returnCode)) {
                 showDialog(
@@ -335,8 +335,8 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
                 Utils.logWarning('${logTag}Execution was cancelled');
               } else {
                 Utils.logError('${logTag}Error creating movie -> $outputPath');
-                final sessionLog = session.getLogsAsString();
-                final failureStackTrace = session.getFailStackTrace();
+                final sessionLog = await session.getAllLogsAsString();
+                final failureStackTrace = await session.getFailStackTrace();
                 Utils.logError('${logTag}Session log is: $sessionLog');
                 Utils.logError('${logTag}Failure stacktrace: $failureStackTrace');
 

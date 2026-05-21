@@ -2,7 +2,7 @@
 
 import 'dart:io';
 
-import 'package:ffmpeg_kit_extended_flutter/ffmpeg_kit_extended_flutter.dart';
+import 'package:ffmpeg_kit_flutter_new/return_code.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_calendar_carousel/classes/event.dart';
 import 'package:flutter_calendar_carousel/flutter_calendar_carousel.dart' show CalendarCarousel;
@@ -100,7 +100,7 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
       '-i "$currentVideo" $srtFilePath -y',
       showInLogs: false,
     );
-    final resultCode = getSubsFile.getReturnCode();
+    final resultCode = await getSubsFile.getReturnCode();
     if (ReturnCode.isSuccess(resultCode)) {
       final srtFileContent = await File(srtFilePath).readAsString();
       subtitles = srtFileContent.isEmpty
