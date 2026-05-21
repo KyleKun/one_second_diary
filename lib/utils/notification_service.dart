@@ -59,7 +59,7 @@ class NotificationService {
       iOS: iosInitializationSettings,
     );
 
-    _flutterLocalNotificationsPlugin.initialize(initializationSettings);
+    _flutterLocalNotificationsPlugin.initialize(settings: initializationSettings);
   }
 
   // Notification is deactivated by default
@@ -146,13 +146,11 @@ class NotificationService {
 
     /// Schedule notification
     await _flutterLocalNotificationsPlugin.zonedSchedule(
-      _notificationId,
-      'notificationTitle'.tr,
-      'notificationBody'.tr,
-      tz.TZDateTime.parse(tz.local, setTime),
-      _platformNotificationDetails,
-      uiLocalNotificationDateInterpretation:
-      UILocalNotificationDateInterpretation.absoluteTime,
+      id: _notificationId,
+      title: 'notificationTitle'.tr,
+      body: 'notificationBody'.tr,
+      scheduledDate: tz.TZDateTime.parse(tz.local, setTime),
+      notificationDetails: _platformNotificationDetails,
       androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
       // Allow notification to be shown daily
       matchDateTimeComponents: DateTimeComponents.time,
@@ -166,10 +164,10 @@ class NotificationService {
 
   Future<void> showTestNotification() async {
     await _flutterLocalNotificationsPlugin.show(
-      _notificationId,
-      'test'.tr,
-      'test'.tr,
-      _platformNotificationDetails,
+      id: _notificationId,
+      title: 'test'.tr,
+      body: 'test'.tr,
+      notificationDetails: _platformNotificationDetails,
     );
 
     // Feedback to the user that the notification was called
