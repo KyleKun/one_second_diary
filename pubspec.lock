@@ -1358,6 +1358,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.0.0"
+  visibility_detector:
+    dependency: transitive
+    description:
+      name: visibility_detector
+      sha256: dd5cc11e13494f432d15939c3aa8ae76844c42b723398643ce9addb88a5ed420
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.4.0+2"
   vm_service:
     dependency: transitive
     description:
@@ -1393,12 +1401,19 @@ packages:
   wechat_assets_picker:
     dependency: "direct main"
     description:
-      path: "."
-      ref: main
-      resolved-ref: d6b8dfed67d0fa6ba1bd59a8ed12c95cab023ec1
-      url: "https://github.com/KyleKun/flutter_wechat_assets_picker.git"
-    source: git
-    version: "8.7.0"
+      name: wechat_assets_picker
+      sha256: e2e447c12a6254e523b83415deb0b77953a96eafcb4586901b7d93039d2ca9d6
+      url: "https://pub.dev"
+    source: hosted
+    version: "10.1.2"
+  wechat_picker_library:
+    dependency: transitive
+    description:
+      name: wechat_picker_library
+      sha256: "5cb61b9aa935b60da5b043f8446fbb9c5077419f20ccc4856bf444aec4f44bc1"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.7"
   win32:
     dependency: transitive
     description:

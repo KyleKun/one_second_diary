@@ -203,22 +203,26 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
           requestType: RequestType.video,
           filterOptions: shouldIgnoreFilter ? null : filterOptionGroup,
           sortPathsByModifiedDate: true,
-          specialItemPosition: SpecialItemPosition.prepend,
-          specialItemBuilder: (context, path, length) {
-            return Center(
-              child: Text(
-                shouldIgnoreFilter
-                    ? 'Latest\nvideos'
-                    : 'From\n${_selectedDate.toString().substring(0, 10).split('-').reversed.join('-')}\nonwards',
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 14.0,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            );
-          },
+          specialItems: [
+            SpecialItem<AssetPathEntity>(
+              position: SpecialItemPosition.prepend,
+              builder: (context, path, length) {
+               return Center(
+                 child: Text(
+                   shouldIgnoreFilter
+                       ? 'Latest\nvideos'
+                       : 'From\n${_selectedDate.toString().substring(0, 10).split('-').reversed.join('-')}\nonwards',
+                   textAlign: TextAlign.center,
+                   style: const TextStyle(
+                     color: Colors.white,
+                     fontSize: 14.0,
+                     fontWeight: FontWeight.bold,
+                   ),
+                 ),
+               );
+              },
+            ),
+          ],
         ),
       );
 
