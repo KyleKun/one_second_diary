@@ -13,7 +13,7 @@ dependencies:
   avatar_glow: ^2.0.2
   camera: ^0.10.5+5
   device_info_plus: ^9.1.1
-  ffmpeg_kit_flutter_full_gpl: ^5.1.0
+  ffmpeg_kit_extended_flutter: ^0.5.0
   flutter:
     sdk: flutter
   flutter_calendar_carousel: ^2.4.2
