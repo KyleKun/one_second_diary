@@ -9,9 +9,25 @@ allprojects {
 rootProject.buildDir = '../build'
 subprojects {
     project.buildDir = "${rootProject.buildDir}/${project.name}"
-    afterEvaluate {
-        if (project.hasProperty('android') && project.android.namespace == null) {
-            project.android.namespace = project.group
+    afterEvaluate { project ->
+        if (project.hasProperty('android')) {
+            if (project.android.namespace == null) {
+                project.android.namespace = project.group
+            }
+            project.android {
+                compileOptions {
+                    sourceCompatibility = JavaVersion.VERSION_17
+                    targetCompatibility = JavaVersion.VERSION_17
+                }
+            }
+        }
+        
+        project.tasks.configureEach { task ->
+            if (task.class.name.contains("KotlinCompile")) {
+                task.kotlinOptions {
+                    jvmTarget = "17"
+                }
+            }
         }
     }
 }
