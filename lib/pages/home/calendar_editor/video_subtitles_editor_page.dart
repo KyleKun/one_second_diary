@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:ffmpeg_kit_extended_flutter/return_code.dart';
+import 'package:ffmpeg_kit_extended_flutter/ffmpeg_kit_extended_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:media_store_plus/media_store_plus.dart';
@@ -114,7 +114,7 @@ class _VideoSubtitlesEditorPageState extends State<VideoSubtitlesEditorPage> {
               '-i "${widget.videoPath}" -i $subtitles -c:s mov_text -c:v copy -c:a copy -map 0:v -map 0:a? -map 1 -disposition:s:0 default "$tempFilePath" -y';
 
           await executeFFmpeg(command).then((session) async {
-            final returnCode = await session.getReturnCode();
+            final returnCode = session.getReturnCode();
             if (ReturnCode.isSuccess(returnCode)) {
               Utils.logInfo('${logTag}Video subtitles updated successfully!');
               // Delete current video from storage
@@ -149,8 +149,8 @@ class _VideoSubtitlesEditorPageState extends State<VideoSubtitlesEditorPage> {
               );
             } else {
               Utils.logError('${logTag}Video subtitles update failed!');
-              final sessionLog = await session.getLogsAsString();
-              final failureStackTrace = await session.getFailStackTrace();
+              final sessionLog = session.getLogsAsString();
+              final failureStackTrace = session.getFailStackTrace();
               Utils.logError('${logTag}Session log: $sessionLog');
               Utils.logError('${logTag}Failure stacktrace: $failureStackTrace');
             }

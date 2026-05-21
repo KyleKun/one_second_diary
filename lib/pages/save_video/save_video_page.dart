@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide RadioGroup;
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
@@ -557,9 +557,6 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
                         circlePaintColor: isDarkTheme ? Colors.white : AppColors.mainColor,
                         borderPaintColor:
                             isDarkTheme ? AppColors.light : AppColors.mainColor.withOpacity(0.75),
-                        quickCutBackgroundColor: isDarkTheme
-                            ? AppColors.light.withOpacity(0.15)
-                            : AppColors.dark.withOpacity(0.40),
                       ),
                       durationStyle: DurationStyle.FORMAT_SS_MS,
                       durationTextStyle: isDarkTheme

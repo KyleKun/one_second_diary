@@ -1,17 +1,11 @@
 import 'dart:async';
+import 'dart:io' show Platform;
 
-import 'package:ffmpeg_kit_extended_flutter/ffmpeg_kit.dart';
-import 'package:ffmpeg_kit_extended_flutter/ffmpeg_kit_config.dart';
-import 'package:ffmpeg_kit_extended_flutter/ffmpeg_session.dart';
-import 'package:ffmpeg_kit_extended_flutter/ffprobe_kit.dart';
-import 'package:ffmpeg_kit_extended_flutter/ffprobe_session.dart';
-import 'package:ffmpeg_kit_extended_flutter/log.dart';
-import 'package:ffmpeg_kit_extended_flutter/log_callback.dart';
-import 'package:ffmpeg_kit_extended_flutter/media_information_session.dart';
-import 'package:ffmpeg_kit_extended_flutter/session.dart';
-import 'package:ffmpeg_kit_extended_flutter/statistics.dart';
-import 'package:ffmpeg_kit_extended_flutter/statistics_callback.dart';
+import 'package:ffmpeg_kit_extended_flutter/ffmpeg_kit_extended_flutter.dart';
 import 'utils.dart';
+
+typedef LogCallback = void Function(Log log);
+typedef StatisticsCallback = void Function(Statistics statistics);
 
 void enableLogCallback(LogCallback callback) {
   FFmpegKitConfig.enableLogCallback(callback);
@@ -22,15 +16,16 @@ void enableStatisticsCallback(StatisticsCallback callback) {
 }
 
 Future<String?> getFFmpegVersion() async {
-  return await FFmpegKitConfig.getFFmpegVersion();
+  return FFmpegKitConfig.getFFmpegVersion();
 }
 
 Future<String?> getPlatform() async {
-  return await FFmpegKitConfig.getPlatform();
+  return Platform.operatingSystem;
 }
 
 Future<FFmpegSession> executeFFmpegWithArguments(List<String> arguments) async {
-  return await FFmpegKit.executeWithArguments(arguments);
+  final session = FFmpegSession.createFromArguments(arguments);
+  return await session.executeAsync();
 }
 
 Future<FFmpegSession> executeFFmpeg(
@@ -40,7 +35,7 @@ Future<FFmpegSession> executeFFmpeg(
   if (showInLogs) {
     Utils.logInfo('[ffmpeg] - Executing FFmpeg command: $command');
   }
-  return await FFmpegKit.execute(command);
+  return FFmpegKit.execute(command);
 }
 
 Future<FFmpegSession> executeAsyncFFmpeg(
@@ -50,92 +45,87 @@ Future<FFmpegSession> executeAsyncFFmpeg(
   void Function(Statistics)? statisticsCallback,
 }) async {
   return await FFmpegKit.executeAsync(
-      command, completeCallback, logCallback, statisticsCallback);
+    command,
+    onComplete: completeCallback,
+    onLog: logCallback,
+    onStatistics: statisticsCallback,
+  );
 }
 
 Future<FFprobeSession> executeFFprobeWithArguments(
     List<String> arguments) async {
-  return await FFprobeKit.executeWithArguments(arguments);
+  final command = FFmpegKitConfig.argumentsToString(arguments);
+  return await FFprobeKit.executeAsync(command);
 }
 
 Future<FFprobeSession> executeFFprobe(String command) async {
   Utils.logInfo('[ffprobe] - Executing FFprobe command: $command');
-  return await FFprobeKit.execute(command);
+  return FFprobeKit.execute(command);
 }
 
 Future<void> cancel() async {
-  return await FFmpegKit.cancel();
+  FFmpegKitExtended.cancelAllSessions();
 }
 
 Future<void> cancelExecution(int executionId) async {
-  return await FFmpegKit.cancel(executionId);
+  FFmpegKitExtended.cancelSession(executionId);
 }
 
 Future<void> disableRedirection() async {
-  return await FFmpegKitConfig.disableRedirection();
+  FFmpegKitConfig.disableRedirection();
 }
 
-int getLogLevel() => FFmpegKitConfig.getLogLevel();
+int getLogLevel() => FFmpegKitConfig.getLogLevel().value;
 
 Future<void> setLogLevel(int logLevel) async {
-  return await FFmpegKitConfig.setLogLevel(logLevel);
+  FFmpegKitConfig.setLogLevel(LogLevel.fromValue(logLevel));
 }
 
-Future<void> enableLogs() async {
-  return await FFmpegKitConfig.enableLogs();
-}
+Future<void> enableLogs() async {}
 
-Future<void> disableLogs() async {
-  return await FFmpegKitConfig.disableLogs();
-}
+Future<void> disableLogs() async {}
 
-Future<void> enableStatistics() async {
-  return await FFmpegKitConfig.enableStatistics();
-}
+Future<void> enableStatistics() async {}
 
-Future<void> disableStatistics() async {
-  return await FFmpegKitConfig.disableStatistics();
-}
+Future<void> disableStatistics() async {}
 
 Future<Statistics?> getLastReceivedStatistics() async {
-  return FFmpegSession().getLastReceivedStatistics();
+  return null;
 }
 
-Future<void> setFontconfigConfigurationPath(String path) async {
-  return await FFmpegKitConfig.setFontconfigConfigurationPath(path);
-}
+Future<void> setFontconfigConfigurationPath(String path) async {}
 
 Future<void> setFontDirectory(
     String fontDirectory, Map<String, String> fontNameMap) async {
-  return await FFmpegKitConfig.setFontDirectory(fontDirectory, fontNameMap);
+  FFmpegKitConfig.setFontDirectory(fontDirectory);
 }
 
 Future<Session?> getLastReturnCode() async {
-  return await FFmpegKitConfig.getLastCompletedSession();
+  return FFmpegKitExtended.getLastCompletedSession();
 }
 
 Future<Session?> getLastCommandOutput() async {
-  return await FFmpegKitConfig.getLastSession();
+  return FFmpegKitExtended.getLastSession();
 }
 
 Future<MediaInformationSession> getMediaInformation(String path) async {
-  return await FFprobeKit.getMediaInformation(path);
+  return FFprobeKit.getMediaInformation(path);
 }
 
 Future<String?> registerNewFFmpegPipe() async {
-  return await FFmpegKitConfig.registerNewFFmpegPipe();
+  return FFmpegKitConfig.registerNewFFmpegPipe();
 }
 
 Future<void> setEnvironmentVariable(
     String variableName, String variableValue) async {
-  return await FFmpegKitConfig.setEnvironmentVariable(
-      variableName, variableValue);
+  FFmpegKitConfig.setEnvironmentVariable(variableName, variableValue);
 }
 
 Future<List<FFmpegSession>> listFFmpegSessions() async {
-  return await FFmpegKit.listSessions();
+  return FFmpegKit.getFFmpegSessions();
 }
 
 List<String>? parseArguments(command) {
   return FFmpegKitConfig.parseArguments(command);
 }
+

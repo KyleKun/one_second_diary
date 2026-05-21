@@ -1,5 +1,4 @@
-import 'package:ffmpeg_kit_extended_flutter/ffmpeg_kit_config.dart';
-import 'package:ffmpeg_kit_extended_flutter/return_code.dart';
+import 'package:ffmpeg_kit_extended_flutter/ffmpeg_kit_extended_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
@@ -254,7 +253,7 @@ class _SaveButtonState extends State<SaveButton> {
 
     // Caches the default font to save texts in ffmpeg.
     // The edit may fail unexpectedly in some devices if this is not done.
-    await FFmpegKitConfig.setFontDirectory(fontPath);
+    FFmpegKitConfig.setFontDirectory(fontPath);
 
     // If geotagging is enabled, we can allow the command to render the location text into the video
     if (isGeotaggingEnabled) {
@@ -271,9 +270,9 @@ class _SaveButtonState extends State<SaveButton> {
       await executeFFprobe(
               '-v quiet -select_streams a:0 -show_entries stream=codec_type -of default=nw=1:nk=1 "$videoPath"')
           .then((session) async {
-        final returnCode = await session.getReturnCode();
+        final returnCode = session.getReturnCode();
         if (ReturnCode.isSuccess(returnCode)) {
-          final sessionLog = await session.getOutput();
+          final sessionLog = session.getOutput();
           if (sessionLog == null || sessionLog.isEmpty) {
             Utils.logWarning('${logTag}Video has no audio stream, adding one.');
             audioStream = '-f lavfi -i anullsrc=channel_layout=mono:sample_rate=48000 -shortest';
@@ -339,7 +338,7 @@ class _SaveButtonState extends State<SaveButton> {
     await executeAsyncFFmpeg(
       command,
       completeCallback: (session) async {
-        final returnCode = await session.getReturnCode();
+        final returnCode = session.getReturnCode();
         if (ReturnCode.isSuccess(returnCode)) {
           Utils.logInfo('${logTag}Video edited successfully');
 
@@ -378,9 +377,9 @@ class _SaveButtonState extends State<SaveButton> {
           Utils.logInfo('${logTag}Execution was cancelled');
         } else {
           Utils.logError(
-              '${logTag}Error editing video: Return code is ${await session.getReturnCode()}');
-          final sessionLog = await session.getLogsAsString();
-          final failureStackTrace = await session.getFailStackTrace();
+              '${logTag}Error editing video: Return code is ${session.getReturnCode()}');
+          final sessionLog = session.getLogsAsString();
+          final failureStackTrace = session.getFailStackTrace();
           Utils.logError('${logTag}Session log is: $sessionLog');
           Utils.logError('${logTag}Failure stacktrace: $failureStackTrace');
 
@@ -406,8 +405,8 @@ class _SaveButtonState extends State<SaveButton> {
         final totalVideoDuration =
             (widget.videoEndInMilliseconds - widget.videoStartInMilliseconds) ~/ 1000;
         // Determines the currently processed percentage of the video
-        if (statistics.getTime() > 0) {
-          num tempProgressValue = (statistics.getTime() ~/ totalVideoDuration) / 10;
+        if (statistics.time > 0) {
+          num tempProgressValue = (statistics.time ~/ totalVideoDuration) / 10;
           // Ideally the value should not exceed 100%, but the output also considers milliseconds so we estimate to 100.
           if (tempProgressValue >= 100) {
             tempProgressValue = 99.9;
