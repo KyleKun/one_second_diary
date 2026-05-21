@@ -9,6 +9,11 @@ allprojects {
 rootProject.buildDir = '../build'
 subprojects {
     project.buildDir = "${rootProject.buildDir}/${project.name}"
+    afterEvaluate {
+        if (project.hasProperty('android') && project.android.namespace == null) {
+            project.android.namespace = project.group
+        }
+    }
 }
 subprojects {
     project.evaluationDependsOn(':app')
