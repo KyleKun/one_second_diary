@@ -175,8 +175,10 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
       _isLocationProcessing = true;
     });
     await Geolocator.getCurrentPosition(
-      desiredAccuracy: LocationAccuracy.medium,
-      timeLimit: const Duration(seconds: 20),
+      locationSettings: const LocationSettings(
+        accuracy: LocationAccuracy.medium,
+        timeLimit: Duration(seconds: 20),
+      ),
     ).then((Position position) async {
       setState(() => _currentPosition = position);
       await _getAddressFromLatLng(_currentPosition!);
@@ -205,10 +207,10 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
 
     while (attempts < maxAttempts) {
       try {
+        await setLocaleIdentifier(Get.locale!.languageCode);
         await placemarkFromCoordinates(
           _currentPosition!.latitude,
           _currentPosition!.longitude,
-          localeIdentifier: Get.locale!.languageCode,
         ).then((List<Placemark> placemarks) {
           final Placemark place = placemarks[0];
           String city = '';
