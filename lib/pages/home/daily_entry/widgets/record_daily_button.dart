@@ -12,7 +12,7 @@ class RecordDailyButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return AvatarGlow(
       glowColor: AppColors.green,
-      endRadius: MediaQuery.of(context).size.height * 0.08,
+      glowRadiusFactor: 0.3,
       child: SizedBox(
         width: MediaQuery.of(context).size.width * 0.4,
         height: MediaQuery.of(context).size.height * 0.1,
