@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
+import 'package:rive/rive.dart';
+
 import 'bindings/initial_binding.dart';
 import 'lang/translation_service.dart';
 import 'routes/app_pages.dart';
@@ -10,6 +12,7 @@ import 'utils/theme.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await RiveNative.init();
   await SharedPrefsUtil.getInstance();
 
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);

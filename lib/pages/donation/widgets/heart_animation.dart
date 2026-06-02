@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:rive/rive.dart';
 
 class HeartAnimation extends StatefulWidget {
@@ -8,25 +7,22 @@ class HeartAnimation extends StatefulWidget {
 }
 
 class _HeartAnimationState extends State<HeartAnimation> {
-  Artboard? _riveArtboard;
+  late final FileLoader _fileLoader;
 
   @override
   void initState() {
     super.initState();
-    // https://rive.app/community/38-heart/
-    // CC license, it was adapted
-    rootBundle.load('assets/images/heart.riv').then(
-      (data) async {
-        final file = RiveFile.import(data);
-        // The artboard is the root of the animation and gets drawn in the
-        // Rive widget.
-        final artboard = file.mainArtboard;
-        // Add a controller to play back a known animation on the main/default
-        // artboard.We store a reference to it so we can toggle playback.
-        artboard.addController(SimpleAnimation('heart'));
-        setState(() => _riveArtboard = artboard);
-      },
+    // Use the Factory.rive renderer for the new native backend
+    _fileLoader = FileLoader.fromAsset(
+      'assets/images/heart.riv',
+      riveFactory: Factory.rive,
     );
+  }
+
+  @override
+  void dispose() {
+    _fileLoader.dispose();
+    super.dispose();
   }
 
   @override
@@ -35,9 +31,15 @@ class _HeartAnimationState extends State<HeartAnimation> {
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height * 0.5,
       child: Center(
-        child: _riveArtboard == null
-            ? const SizedBox.shrink()
-            : Rive(artboard: _riveArtboard!),
+        child: RiveWidgetBuilder(
+          fileLoader: _fileLoader,
+          builder: (context, state) {
+            if (state is RiveLoaded) {
+              return RiveWidget(controller: state.controller);
+            }
+            return const SizedBox.shrink();
+          },
+        ),
       ),
     );
   }
