@@ -12,6 +12,8 @@ class _HeartAnimationState extends State<HeartAnimation> {
   @override
   void initState() {
     super.initState();
+    // https://rive.app/community/files/27851-52625-remixed-heart-by-jctoon/
+    // CC license, it was adapted
     // Use the Factory.rive renderer for the new native backend
     _fileLoader = FileLoader.fromAsset(
       'assets/images/heart.riv',
@@ -36,8 +38,10 @@ class _HeartAnimationState extends State<HeartAnimation> {
           builder: (context, state) {
             if (state is RiveLoaded) {
               return RiveWidget(controller: state.controller);
+            } else if (state is RiveFailed) {
+              return Text('Rive Error: ${state.error}', textAlign: TextAlign.center);
             }
-            return const SizedBox.shrink();
+            return const CircularProgressIndicator();
           },
         ),
       ),
