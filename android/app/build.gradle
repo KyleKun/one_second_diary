@@ -45,9 +45,6 @@ android {
         main.java.srcDirs += 'src/main/kotlin'
     }
 
-    lintOptions {
-        disable 'InvalidPackage'
-    }
 
     defaultConfig {
         applicationId "com.kylekun.one_second_diary"
@@ -72,7 +69,7 @@ android {
         release {
             signingConfig keystorePropertiesFile.exists() ? signingConfigs.release : signingConfigs.debug
             minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
 
@@ -84,6 +81,9 @@ android {
     }
 
     namespace 'com.kylekun.one_second_diary'
+    lint {
+        disable 'InvalidPackage'
+    }
 }
 
 flutter {
