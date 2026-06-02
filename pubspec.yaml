@@ -16,12 +16,12 @@ dependencies:
   ffmpeg_kit_flutter_new: ^4.1.0
   flutter:
     sdk: flutter
-  flutter_archive: ^5.0.0
+  flutter_archive: ^6.0.4
   flutter_calendar_carousel: ^2.4.2
   flutter_colorpicker: ^1.0.3
-  flutter_email_sender: ^6.0.1
+  flutter_email_sender: ^8.0.0
   flutter_local_notifications: ^21.0.0
-  fluttertoast: ^8.2.2
+  fluttertoast: ^9.1.0
   geocoding: ^2.1.1
   geolocator: ^10.0.1
   get: ^4.6.6
