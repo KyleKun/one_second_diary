@@ -46,13 +46,16 @@ dependencies:
   url_launcher: ^6.2.1
   video_player: ^2.8.1
   video_thumbnail: ^0.5.3
-  video_trimmer: ^5.0.0
   wakelock_plus: ^1.6.1
   wechat_assets_picker: ^10.1.2
   media_store_plus:
     git:
       url: https://github.com/KyleKun/media_store_plus.git
       ref: main
+  video_trimmer:
+    git:
+      url: https://github.com/TerenceAbigail/video_trimmer.git
+      ref: merging-kyle-kun-main-into-latest
 
 dev_dependencies:
   flutter_test:

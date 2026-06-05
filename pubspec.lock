@@ -1385,10 +1385,11 @@ packages:
   video_trimmer:
     dependency: "direct main"
     description:
-      name: video_trimmer
-      sha256: a7e24512ec6bf47c99e3e192264a1c19a2b30e21d92add1b43ecd0995659a0b4
-      url: "https://pub.dev"
-    source: hosted
+      path: "."
+      ref: merging-kyle-kun-main-into-latest
+      resolved-ref: "58f3738f88bc908b3f8a1a01d70b996c0e0dc965"
+      url: "https://github.com/TerenceAbigail/video_trimmer.git"
+    source: git
     version: "5.0.0"
   visibility_detector:
     dependency: transitive
