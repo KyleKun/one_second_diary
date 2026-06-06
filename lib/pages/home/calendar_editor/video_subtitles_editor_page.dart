@@ -58,6 +58,7 @@ class _VideoSubtitlesEditorPageState extends State<VideoSubtitlesEditorPage> {
   void _initVideoPlayerController() {
     _videoController = VideoPlayerController.file(File(widget.videoPath))
       ..initialize().then((_) {
+        if (!mounted) return;
         _videoController.setLooping(true);
         // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
         setState(() {});

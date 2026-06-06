@@ -129,13 +129,17 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
         currentVideo = allVideos!.firstWhere(
           (a) => a.contains(_currentDateStr),
         );
-        _controller = VideoPlayerController.file(File(currentVideo))
-          ..initialize().then((_) async {
-            await _controller?.setLooping(true);
-            await _controller?.setVolume(autoSound ? 1.0 : 0.0);
-            if (autoPlay) await _controller?.play();
-            setState(() {});
-          });
+        final controller = VideoPlayerController.file(File(currentVideo));
+        _controller = controller;
+        controller.initialize().then((_) async {
+          if (!mounted || _controller != controller) return;
+          try {
+            await controller.setLooping(true);
+            await controller.setVolume(autoSound ? 1.0 : 0.0);
+            if (autoPlay) await controller.play();
+            if (mounted && _controller == controller) setState(() {});
+          } catch (_) {}
+        });
       }
     });
     await getSubtitlesForSelectedDate();
@@ -144,23 +148,30 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
   /// Initializes the video playback for the selected date
   Future<void> initializeVideoPlayback(String video) async {
     if (lastSelectedDate != _selectedDate) {
+      lastSelectedDate = _selectedDate; // update immediately to prevent multiple triggers
       final autoPlay = SharedPrefsUtil.getBool('calendarAutoPlay') ?? true;
       final autoSound = SharedPrefsUtil.getBool('calendarAutoSound') ?? true;
       WidgetsBinding.instance.addPostFrameCallback((_) async {
         // Disposing old controller
-        await _controller?.dispose();
+        final oldController = _controller;
         _controller = null;
+        if (mounted) setState(() {}); // Remove old video player from UI
+        await oldController?.dispose();
 
         // Initing new controller
-        _controller = VideoPlayerController.file(File(video))
-          ..initialize().then((_) async {
-            await _controller?.setLooping(true);
-            await _controller?.setVolume(autoSound ? 1.0 : 0.0);
-            if (autoPlay) await _controller?.play();
-            setState(() {
-              lastSelectedDate = _selectedDate;
-            });
-          });
+        final controller = VideoPlayerController.file(File(video));
+        _controller = controller;
+        controller.initialize().then((_) async {
+          if (!mounted || _controller != controller) return;
+          try {
+            await controller.setLooping(true);
+            await controller.setVolume(autoSound ? 1.0 : 0.0);
+            if (autoPlay) await controller.play();
+            if (mounted && _controller == controller) {
+              setState(() {});
+            }
+          } catch (_) {}
+        });
       });
     }
   }
