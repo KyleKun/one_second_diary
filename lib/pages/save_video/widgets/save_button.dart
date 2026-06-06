@@ -83,7 +83,9 @@ class _SaveButtonState extends State<SaveButton> {
           content: '${'tryAgainMsg'.tr}',
           actionText: 'Ok',
           actionColor: Colors.red,
-          action: () => Get.offAllNamed(Routes.HOME)?.then((_) => setState(() {})),
+          action: () => Get.offAllNamed(Routes.HOME)?.then((_) {
+            if (mounted) setState(() {});
+          }),
           sendLogs: true,
         ),
       );
@@ -370,7 +372,9 @@ class _SaveButtonState extends State<SaveButton> {
                   Routes.HOME,
                   arguments:
                       widget.isFromRecordingPage ? null : {'forcedDate': widget.determinedDate},
-                )?.then((_) => setState(() {}));
+                )?.then((_) {
+                  if (mounted) setState(() {});
+                });
               },
             ),
           );
@@ -397,7 +401,9 @@ class _SaveButtonState extends State<SaveButton> {
               actionText: 'Ok',
               actionColor: Colors.red,
               sendLogs: true,
-              action: () => Get.offAllNamed(Routes.HOME)?.then((_) => setState(() {})),
+              action: () => Get.offAllNamed(Routes.HOME)?.then((_) {
+                if (mounted) setState(() {});
+              }),
             ),
           );
         }
