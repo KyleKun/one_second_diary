@@ -47,7 +47,6 @@ dependencies:
   video_player: ^2.8.1
   video_thumbnail: ^0.5.3
   wakelock_plus: ^1.6.1
-  wechat_assets_picker: ^10.1.2
   media_store_plus:
     git:
       url: https://github.com/KyleKun/media_store_plus.git
@@ -55,6 +54,10 @@ dependencies:
   video_trimmer:
     git:
       url: https://github.com/TerenceAbigail/video_trimmer.git
+      ref: merging-kyle-kun-main-into-latest
+  wechat_assets_picker:
+    git:
+      url: https://github.com/TerenceAbigail/flutter_wechat_assets_picker.git
       ref: merging-kyle-kun-main-into-latest
 
 dev_dependencies:

@@ -1434,10 +1434,11 @@ packages:
   wechat_assets_picker:
     dependency: "direct main"
     description:
-      name: wechat_assets_picker
-      sha256: e2e447c12a6254e523b83415deb0b77953a96eafcb4586901b7d93039d2ca9d6
-      url: "https://pub.dev"
-    source: hosted
+      path: "."
+      ref: merging-kyle-kun-main-into-latest
+      resolved-ref: a80031e14495f3661b288f679762482da4c207c3
+      url: "https://github.com/TerenceAbigail/flutter_wechat_assets_picker.git"
+    source: git
     version: "10.1.2"
   wechat_picker_library:
     dependency: transitive
