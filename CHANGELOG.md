@@ -1,3 +1,7 @@
+## vx.x.x - xx/202x
+- Updates Flutter and dependencies to what is avaiable in mid 2026
+- Dropping support for drops Android 7.0/7.1
+
 ## v1.6.0 - 12/2023
 - Added option to receive persistent notifications
 - Added option to change calendar days color for colorblind users

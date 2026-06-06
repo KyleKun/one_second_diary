@@ -1,7 +1,5 @@
 import 'dart:async';
 
-import 'dart:io' show Platform;
-
 import 'package:ffmpeg_kit_flutter_new/ffmpeg_kit.dart';
 import 'package:ffmpeg_kit_flutter_new/ffmpeg_kit_config.dart';
 import 'package:ffmpeg_kit_flutter_new/ffmpeg_session.dart';
@@ -13,8 +11,6 @@ import 'package:ffmpeg_kit_flutter_new/media_information_session.dart';
 import 'package:ffmpeg_kit_flutter_new/session.dart';
 import 'package:ffmpeg_kit_flutter_new/statistics.dart';
 import 'package:ffmpeg_kit_flutter_new/statistics_callback.dart';
-import 'package:ffmpeg_kit_flutter_new/level.dart';
-import 'package:ffmpeg_kit_flutter_new/return_code.dart';
 import 'utils.dart';
 
 void enableLogCallback(LogCallback callback) {

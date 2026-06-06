@@ -1377,10 +1377,11 @@ packages:
   video_thumbnail:
     dependency: "direct main"
     description:
-      name: video_thumbnail
-      sha256: "181a0c205b353918954a881f53a3441476b9e301641688a581e0c13f00dc588b"
-      url: "https://pub.dev"
-    source: hosted
+      path: "."
+      ref: update_for_newer_android_development
+      resolved-ref: "654c510d55a1b27dc6194eb8f10987ce6c065605"
+      url: "https://github.com/TerenceAbigail/video_thumbnail.git"
+    source: git
     version: "0.5.6"
   video_trimmer:
     dependency: "direct main"
@@ -1434,9 +1435,11 @@ packages:
   wechat_assets_picker:
     dependency: "direct main"
     description:
-      path: "../flutter_wechat_assets_picker"
-      relative: true
-    source: path
+      path: "."
+      ref: merging-kyle-kun-main-into-latest
+      resolved-ref: a80031e14495f3661b288f679762482da4c207c3
+      url: "https://github.com/TerenceAbigail/flutter_wechat_assets_picker.git"
+    source: git
     version: "10.1.2"
   wechat_picker_library:
     dependency: transitive
