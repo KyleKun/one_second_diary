@@ -12,7 +12,7 @@ class Themes {
     ),
     textTheme: ThemeData.light().textTheme.apply(fontFamily: 'Magic'),
     primaryColor: AppColors.mainColor,
-    colorScheme: ColorScheme.fromSwatch().copyWith(
+    colorScheme: ThemeData.light().colorScheme.copyWith(
       secondary: AppColors.mainColor,
     ),
     timePickerTheme: const TimePickerThemeData(
@@ -48,7 +48,7 @@ class Themes {
           fontFamily: 'Magic',
         ),
     primaryColor: AppColors.mainColor,
-    colorScheme: ColorScheme.fromSwatch().copyWith(
+    colorScheme: ThemeData.dark().colorScheme.copyWith(
       secondary: AppColors.mainColor,
     ),
     timePickerTheme: const TimePickerThemeData(
