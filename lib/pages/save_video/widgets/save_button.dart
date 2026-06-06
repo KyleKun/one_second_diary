@@ -267,6 +267,7 @@ class _SaveButtonState extends State<SaveButton> {
 
     // Check if video was added from gallery and has an audio stream, adding one if not (screen recordings can be muted for example)
     String audioStream = '';
+    String audioMap = '-map 1:a?';
     String origin = 'osd_recording';
     if (!widget.isFromRecordingPage) {
       origin = 'gallery';
@@ -279,6 +280,7 @@ class _SaveButtonState extends State<SaveButton> {
           if (sessionLog == null || sessionLog.isEmpty) {
             Utils.logWarning('${logTag}Video has no audio stream, adding one.');
             audioStream = '-f lavfi -i anullsrc=channel_layout=mono:sample_rate=48000 -shortest';
+            audioMap = '-map 2:a';
           }
         }
       });
@@ -326,7 +328,9 @@ class _SaveButtonState extends State<SaveButton> {
         ',drawtext="$fontPath:text=\'${widget.dateFormat}\':fontsize=$dateTextSize:fontcolor=\'$parsedDateColor\':borderw=${widget.textOutlineWidth}:bordercolor=$parsedTextOutlineColor:x=$datePosX:y=$datePosY';
 
     // Add subtitles to the video
-    const subtitles = '-c:s mov_text -map 1:v -map 1:a? -map 0:s -disposition:s:0 default';
+    final String subtitles = widget.subtitles?.isEmpty == false
+        ? '-c:s mov_text -map 1:v $audioMap -map 0:s -disposition:s:0 default'
+        : '-map 1:v $audioMap';
 
     // Apply default edit settings: framerate 30, audio channels 1, audio rate 48000, audio bitrate 256k, video codec libx264, pixel format yuv420p, crf 20, preset slow
     const defaultEditSettings =
