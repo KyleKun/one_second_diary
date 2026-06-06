@@ -1,0 +1,54 @@
+name: Compile iOS App
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch: # Allows you to manually trigger the build from the GitHub UI
+
+jobs:
+  build_ios:
+    name: Build Flutter iOS
+    runs-on: macos-latest # Tells GitHub to spin up the latest Mac VM
+
+    steps:
+      # 1. Pull down the repository code
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Select Xcode >= 26.2
+        run: |
+          LATEST_XCODE=$(ruby -e "
+            versions = Dir.glob('/Applications/Xcode_*.app').map { |p| p.match(/Xcode_(.*)\.app/)[1] rescue nil }.compact
+            valid_versions = versions.select { |v| Gem::Version.new(v) >= Gem::Version.new('26.2') }
+            puts valid_versions.sort_by { |v| Gem::Version.new(v) }.last
+          ")
+          if [ -z "$LATEST_XCODE" ]; then
+            echo "Failed to find Xcode >= 26.2"
+            exit 1
+          fi
+          echo "Selecting Xcode $LATEST_XCODE"
+          sudo xcode-select -s "/Applications/Xcode_${LATEST_XCODE}.app/Contents/Developer"
+
+      # 2. Install Flutter on the Mac VM
+      - name: Setup Flutter SDK
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true # Caches Flutter packages to speed up future runs
+
+      # 3. Get Dart/Flutter dependencies
+      - name: Install Flutter Dependencies
+        run: flutter pub get
+
+      # 4. Install iOS specific dependencies (CocoaPods)
+      - name: Install Pods
+        run: |
+          cd ios
+          pod install
+          cd ..
+
+      # 5. Compile the application framework
+      - name: Compile iOS Binary
+        run: flutter build ios --release --no-codesign

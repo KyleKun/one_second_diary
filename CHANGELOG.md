@@ -1,6 +1,7 @@
 ## vx.x.x - xx/202x
 - Updates Flutter and dependencies to what is avaiable in mid 2026
-- Dropping support for drops Android 7.0/7.1
+- Dropping support for drops Android 7.0/7.1 for Flutter Upgrade
+- Increasing minimum iOS deployment target from 11.0 to 15.0 for Flutter Upgrade
 
 ## v1.6.0 - 12/2023
 - Added option to receive persistent notifications
