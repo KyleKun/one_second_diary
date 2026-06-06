@@ -60,6 +60,10 @@ dependencies:
       url: https://github.com/TerenceAbigail/flutter_wechat_assets_picker.git
       ref: merging-kyle-kun-main-into-latest
 
+dependency_overrides:
+  wechat_assets_picker:
+    path: ../flutter_wechat_assets_picker
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

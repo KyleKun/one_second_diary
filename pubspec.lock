@@ -1434,11 +1434,9 @@ packages:
   wechat_assets_picker:
     dependency: "direct main"
     description:
-      path: "."
-      ref: merging-kyle-kun-main-into-latest
-      resolved-ref: a80031e14495f3661b288f679762482da4c207c3
-      url: "https://github.com/TerenceAbigail/flutter_wechat_assets_picker.git"
-    source: git
+      path: "../flutter_wechat_assets_picker"
+      relative: true
+    source: path
     version: "10.1.2"
   wechat_picker_library:
     dependency: transitive
