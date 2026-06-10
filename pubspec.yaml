@@ -53,16 +53,16 @@ dependencies:
       ref: main
   video_thumbnail:
     git:
-      url: https://github.com/TerenceAbigail/video_thumbnail.git
-      ref: update_for_newer_android_development
+      url: https://github.com/KyleKun/video_thumbnail
+      ref: master
   video_trimmer:
     git:
-      url: https://github.com/TerenceAbigail/video_trimmer.git
-      ref: merging-kyle-kun-main-into-latest
+      url: https://github.com/KyleKun/video_trimmer
+      ref: main
   wechat_assets_picker:
     git:
-      url: https://github.com/TerenceAbigail/flutter_wechat_assets_picker.git
-      ref: merging-kyle-kun-main-into-latest
+      url: https://github.com/KyleKun/flutter_wechat_assets_picker/
+      ref: 8b3e8f20f47b1eb3acb4365fabad907d74dafe61
 
 dev_dependencies:
   flutter_test:

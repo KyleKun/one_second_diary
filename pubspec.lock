@@ -1378,18 +1378,18 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: update_for_newer_android_development
-      resolved-ref: "654c510d55a1b27dc6194eb8f10987ce6c065605"
-      url: "https://github.com/TerenceAbigail/video_thumbnail.git"
+      ref: master
+      resolved-ref: e46ccb3b97be758e3610adc5438587fa734eac74
+      url: "https://github.com/KyleKun/video_thumbnail"
     source: git
     version: "0.5.6"
   video_trimmer:
     dependency: "direct main"
     description:
       path: "."
-      ref: merging-kyle-kun-main-into-latest
-      resolved-ref: "58f3738f88bc908b3f8a1a01d70b996c0e0dc965"
-      url: "https://github.com/TerenceAbigail/video_trimmer.git"
+      ref: main
+      resolved-ref: ac2c73ded98a2ec1ed62c55f1d73cbcb9f85a56e
+      url: "https://github.com/KyleKun/video_trimmer"
     source: git
     version: "5.0.0"
   visibility_detector:
@@ -1436,9 +1436,9 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: merging-kyle-kun-main-into-latest
-      resolved-ref: a80031e14495f3661b288f679762482da4c207c3
-      url: "https://github.com/TerenceAbigail/flutter_wechat_assets_picker.git"
+      ref: "8b3e8f20f47b1eb3acb4365fabad907d74dafe61"
+      resolved-ref: "8b3e8f20f47b1eb3acb4365fabad907d74dafe61"
+      url: "https://github.com/KyleKun/flutter_wechat_assets_picker/"
     source: git
     version: "10.1.2"
   wechat_picker_library:
