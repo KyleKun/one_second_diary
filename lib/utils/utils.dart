@@ -17,7 +17,7 @@ import 'shared_preferences_util.dart';
 import 'storage_utils.dart';
 
 final logger = Logger(
-  printer: PrettyPrinter(printTime: true),
+  printer: PrettyPrinter(dateTimeFormat: DateTimeFormat.onlyTimeAndSinceStart),
   level: Level.trace,
 );
 
@@ -455,7 +455,6 @@ class Utils {
           break;
         case ExportDateRange.custom:
         case ExportDateRange.allTime:
-        default:
         // Nothing else needs to be done here
       }
 

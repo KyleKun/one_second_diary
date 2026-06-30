@@ -277,10 +277,10 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
             ),
             onPressed: () {
               setState(() => currentColor = pickerColor);
-              final r = pickerColor.red;
-              final g = pickerColor.green;
-              final b = pickerColor.blue;
-              final a = pickerColor.alpha;
+              final r = (pickerColor.r * 255.0).round().clamp(0, 255);
+              final g = (pickerColor.g * 255.0).round().clamp(0, 255);
+              final b = (pickerColor.b * 255.0).round().clamp(0, 255);
+              final a = (pickerColor.a * 255.0).round().clamp(0, 255);
               final colorString = '$r,$g,$b,$a';
               _recordingSettingsController.setDateColor(colorString);
               Navigator.of(context).pop();
@@ -358,11 +358,11 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
   }
 
   Color invert(Color color) {
-    final r = 255 - color.red;
-    final g = 255 - color.green;
-    final b = 255 - color.blue;
+    final r = 255 - (color.r * 255.0).round().clamp(0, 255);
+    final g = 255 - (color.g * 255.0).round().clamp(0, 255);
+    final b = 255 - (color.b * 255.0).round().clamp(0, 255);
 
-    return Color.fromARGB((color.opacity * 255).round(), r, g, b);
+    return Color.fromARGB((color.a * 255.0).round().clamp(0, 255), r, g, b);
   }
 
   Widget _dailyVideoPlayer() {
@@ -469,7 +469,7 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
-      onPopInvoked: (_) async {
+      onPopInvokedWithResult: (_, __) async {
         // Prevent showing the option to re-record video if not coming from the recording page
         final isFromRecordingPage = routeArguments['isFromRecordingPage'];
         if (!isFromRecordingPage) {
@@ -558,7 +558,7 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
                         circleSizeOnDrag: 9.0,
                         circlePaintColor: isDarkTheme ? Colors.white : AppColors.mainColor,
                         borderPaintColor:
-                            isDarkTheme ? AppColors.light : AppColors.mainColor.withOpacity(0.75),
+                            isDarkTheme ? AppColors.light : AppColors.mainColor.withValues(alpha: 0.75),
                       ),
                       durationStyle: DurationStyle.FORMAT_SS_MS,
                       durationTextStyle: isDarkTheme
@@ -611,9 +611,9 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
               Flexible(
                 child: TextButton(
                   style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(
-                        AppColors.dark.withOpacity(isDarkTheme ? 1.0 : 0.55)),
-                    shape: MaterialStateProperty.all(
+                    backgroundColor: WidgetStateProperty.all(
+                        AppColors.dark.withValues(alpha: isDarkTheme ? 1.0 : 0.55)),
+                    shape: WidgetStateProperty.all(
                       RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(40),
                       ),
@@ -911,7 +911,7 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
                   Navigator.pop(context);
                 },
                 style: TextButton.styleFrom(
-                  backgroundColor: AppColors.green.withOpacity(0.8),
+                  backgroundColor: AppColors.green.withValues(alpha: 0.8),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(30),
                   ),

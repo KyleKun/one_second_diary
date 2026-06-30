@@ -37,8 +37,8 @@ class _SwitchThemeComponentState extends State<SwitchThemeComponent> {
                   updateFn(!ThemeService().isDarkTheme());
                   ThemeService().switchTheme();
                 },
-                activeTrackColor: AppColors.mainColor.withOpacity(0.4),
-                activeColor: AppColors.mainColor,
+                activeTrackColor: AppColors.mainColor.withValues(alpha: 0.4),
+                activeThumbColor: AppColors.mainColor,
               ),
             ),
           ],

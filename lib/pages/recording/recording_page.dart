@@ -289,8 +289,8 @@ class _RecordingPageState extends State<RecordingPage>
                             value: _recordingSettingsController.recordingSeconds.value.toDouble(),
                             min: 2,
                             max: 10,
-                            activeColor: AppColors.mainColor.withOpacity(0.9),
-                            inactiveColor: AppColors.mainColor.withOpacity(0.2),
+                            activeColor: AppColors.mainColor.withValues(alpha: 0.9),
+                            inactiveColor: AppColors.mainColor.withValues(alpha: 0.2),
                             onChanged: (double value) {
                               _recordingSeconds = value.round();
 
@@ -307,8 +307,8 @@ class _RecordingPageState extends State<RecordingPage>
                       Text('timer'.tr),
                       Obx(
                         () => Switch(
-                          activeColor: AppColors.mainColor,
-                          activeTrackColor: AppColors.mainColor.withOpacity(0.5),
+                          activeThumbColor: AppColors.mainColor,
+                          activeTrackColor: AppColors.mainColor.withValues(alpha: 0.5),
                           value: _recordingSettingsController.isTimerEnable.value,
                           onChanged: (value) {
                             _recordingSettingsController.isTimerEnable.value
@@ -566,7 +566,7 @@ class _RecordingPageState extends State<RecordingPage>
                         /// Avoid showing 0 in countdown
                         _timerSeconds == 0 ? r'\(*v*)/' : '$_timerSeconds',
                         style: TextStyle(
-                          color: Colors.white.withOpacity(0.8),
+                          color: Colors.white.withValues(alpha: 0.8),
                           fontSize: 56.0,
                         ),
                       ),
@@ -595,8 +595,8 @@ class _RecordingPageState extends State<RecordingPage>
                   ),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: !_isRecording
-                        ? Colors.white.withOpacity(0.8)
-                        : Colors.grey.withOpacity(0.5),
+                        ? Colors.white.withValues(alpha: 0.8)
+                        : Colors.grey.withValues(alpha: 0.5),
                     elevation: 8.0,
                     shape: const CircleBorder(),
                   ),
@@ -622,8 +622,8 @@ class _RecordingPageState extends State<RecordingPage>
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     color: !_isRecording
-                        ? AppColors.green.withOpacity(0.8)
-                        : Colors.grey.withOpacity(0.4),
+                        ? AppColors.green.withValues(alpha: 0.8)
+                        : Colors.grey.withValues(alpha: 0.4),
                   ),
                   width: MediaQuery.of(context).size.width * 0.12,
                   height: MediaQuery.of(context).size.height * 0.12,
@@ -653,8 +653,8 @@ class _RecordingPageState extends State<RecordingPage>
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     color: !_isRecording
-                        ? AppColors.orange.withOpacity(0.8)
-                        : Colors.grey.withOpacity(0.4),
+                        ? AppColors.orange.withValues(alpha: 0.8)
+                        : Colors.grey.withValues(alpha: 0.4),
                   ),
                   width: MediaQuery.of(context).size.width * 0.12,
                   height: MediaQuery.of(context).size.height * 0.12,
@@ -683,8 +683,8 @@ class _RecordingPageState extends State<RecordingPage>
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     color: !_isRecording
-                        ? Colors.blueGrey.withOpacity(0.8)
-                        : Colors.grey.withOpacity(0.4),
+                        ? Colors.blueGrey.withValues(alpha: 0.8)
+                        : Colors.grey.withValues(alpha: 0.4),
                   ),
                   width: MediaQuery.of(context).size.width * 0.12,
                   height: MediaQuery.of(context).size.height * 0.12,
@@ -715,8 +715,6 @@ class _RecordingPageState extends State<RecordingPage>
         return 2;
       case DeviceOrientation.landscapeRight:
         return -1;
-      default:
-        return 0;
     }
   }
 
@@ -731,8 +729,6 @@ class _RecordingPageState extends State<RecordingPage>
         return Icons.screen_lock_portrait;
       case DeviceOrientation.landscapeRight:
         return Icons.screen_lock_landscape;
-      default:
-        return null;
     }
   }
 }

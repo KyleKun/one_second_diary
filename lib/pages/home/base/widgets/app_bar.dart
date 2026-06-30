@@ -17,7 +17,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       Get.toNamed(Routes.DONATION);
     }
     if (option == 'share'.tr) {
-      Share.share('shareMsg'.tr);
+      SharePlus.instance.share(ShareParams(text: 'shareMsg'.tr));
     }
   }
 

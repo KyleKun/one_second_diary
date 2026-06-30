@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
@@ -112,7 +113,7 @@ class _SelectVideoFromStorageState extends State<SelectVideoFromStorage> {
                 Expanded(
                   child: GridView.builder(
                     addAutomaticKeepAlives: true,
-                    cacheExtent: 99999,
+                    scrollCacheExtent: const ScrollCacheExtent.pixels(99999),
                     shrinkWrap: true,
                     controller: scrollController,
                     gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(

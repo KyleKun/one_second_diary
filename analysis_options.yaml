@@ -7,7 +7,6 @@ linter:
   rules:
     - prefer_relative_imports
     - always_declare_return_types
-    - always_require_non_null_named_parameters
     - annotate_overrides
     - avoid_empty_else
     - avoid_slow_async_io
@@ -16,7 +15,6 @@ linter:
     - await_only_futures
     - avoid_annotating_with_dynamic
     - avoid_bool_literals_in_conditional_expressions
-    - avoid_returning_null
     - avoid_unnecessary_containers
     - camel_case_types
     - camel_case_extensions
@@ -35,7 +33,6 @@ linter:
     - prefer_const_constructors
     - prefer_const_declarations
     - prefer_contains
-    - prefer_equal_for_default_values
     - prefer_final_fields
     - prefer_final_locals
     - prefer_foreach

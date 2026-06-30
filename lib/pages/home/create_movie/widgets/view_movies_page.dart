@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:media_store_plus/media_store_plus.dart';
@@ -84,7 +85,7 @@ class _ViewMoviesState extends State<ViewMovies> {
                           return GridView.builder(
                             physics: const BouncingScrollPhysics(),
                             addAutomaticKeepAlives: true,
-                            cacheExtent: 99999,
+                            scrollCacheExtent: const ScrollCacheExtent.pixels(99999),
                             shrinkWrap: true,
                             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                               crossAxisCount: 1,
@@ -274,7 +275,7 @@ class _ViewMoviesShareButton extends StatelessWidget {
               ),
             ),
             onPressed: () {
-              Share.shareXFiles([XFile(filePath)]);
+              SharePlus.instance.share(ShareParams(files: [XFile(filePath)]));
             },
             child: Text(
               'share'.tr,

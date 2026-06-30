@@ -44,7 +44,7 @@ class CustomCheckboxListTile extends StatelessWidget {
                 child: Checkbox(
                   checkColor: Colors.white,
                   fillColor:
-                      MaterialStatePropertyAll(isChecked == true ? AppColors.green : Colors.white),
+                      WidgetStatePropertyAll(isChecked == true ? AppColors.green : Colors.white),
                   value: isChecked,
                   onChanged: onChanged,
                 ),

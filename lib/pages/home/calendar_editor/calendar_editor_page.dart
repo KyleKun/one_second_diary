@@ -207,8 +207,8 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
         ],
       );
 
-      final permissionRequestOption = PermissionRequestOption(
-        androidPermission: const AndroidPermission(
+      const permissionRequestOption = PermissionRequestOption(
+        androidPermission: AndroidPermission(
           type: RequestType.video,
           mediaLocation: false,
         ),
@@ -864,9 +864,7 @@ class _AutoSelectAssetPickerBuilderDelegate extends DefaultAssetPickerBuilderDel
     // which enables the Confirm button.
     if (!provider.selectedAssets.contains(currentAsset)) {
       final selected = List.of(provider.selectedAssets);
-      for (final s in selected) {
-        provider.unSelectAsset(s);
-      }
+      selected.forEach(provider.unSelectAsset);
       provider.selectAsset(currentAsset);
     }
 
@@ -889,9 +887,7 @@ class _AutoSelectAssetPickerBuilderDelegate extends DefaultAssetPickerBuilderDel
       final asset = current[pageIndex];
       if (!provider.selectedAssets.contains(asset)) {
         final selected = List.of(provider.selectedAssets);
-        for (final s in selected) {
-          viewerDelegate.unSelectAsset(s);
-        }
+        selected.forEach(viewerDelegate.unSelectAsset);
         viewerDelegate.selectAsset(asset);
       }
     });
@@ -910,9 +906,7 @@ class _AutoSelectAssetPickerBuilderDelegate extends DefaultAssetPickerBuilderDel
       Navigator.maybeOf(context)?.maybePop(result);
     } else {
       final selected = List.of(provider.selectedAssets);
-      for (final s in selected) {
-        provider.unSelectAsset(s);
-      }
+      selected.forEach(provider.unSelectAsset);
     }
   }
 }

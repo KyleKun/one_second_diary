@@ -34,8 +34,8 @@ class Themes {
       selectionHandleColor: AppColors.green,
     ),
     switchTheme: SwitchThemeData(
-      thumbColor: MaterialStateProperty.all(AppColors.mainColor),
-      trackColor: MaterialStateProperty.all(AppColors.rose),
+      thumbColor: WidgetStateProperty.all(AppColors.mainColor),
+      trackColor: WidgetStateProperty.all(AppColors.rose),
     ),
   );
 
@@ -67,8 +67,8 @@ class Themes {
       selectionHandleColor: AppColors.green,
     ),
     switchTheme: SwitchThemeData(
-      thumbColor: MaterialStateProperty.all(AppColors.mainColor),
-      trackColor: MaterialStateProperty.all(AppColors.dark.withOpacity(0.5)),
+      thumbColor: WidgetStateProperty.all(AppColors.mainColor),
+      trackColor: WidgetStateProperty.all(AppColors.dark.withValues(alpha: 0.5)),
     ),
   );
 }

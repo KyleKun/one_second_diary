@@ -293,53 +293,55 @@ class _ProfilesPageState extends State<ProfilesPage> {
               ),
               const SizedBox(height: 15),
               Expanded(
-                child: ListView.separated(
-                  physics: const ClampingScrollPhysics(),
-                  itemCount: profiles.length,
-                  separatorBuilder: (_, __) => const SizedBox(height: 12),
-                  itemBuilder: (context, index) {
-                    return Material(
-                      child: RadioListTile(
-                        activeColor: AppColors.green,
-                        value: index,
-                        groupValue: groupValue,
-                        onChanged: (val) {
-                          if (val == null) return;
+                child: RadioGroup<int>(
+                  groupValue: groupValue,
+                  onChanged: (val) {
+                    if (val == null) return;
 
-                          // Set index in UI
-                          setState(() {
-                            groupValue = val;
-                          });
+                    // Set index in UI
+                    setState(() {
+                      groupValue = val;
+                    });
 
-                          // Set index in persistence
-                          SharedPrefsUtil.putInt('selectedProfileIndex', val);
+                    // Set index in persistence
+                    SharedPrefsUtil.putInt('selectedProfileIndex', val);
 
-                          // Updates everything related to the profile
-                          updateAppProfile();
-                        },
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        title: Text(
-                          profiles[index].isDefault ? 'default'.tr : profiles[index].label,
-                          style: TextStyle(
-                            color: ThemeService().isDarkTheme() ? Colors.white : Colors.black,
-                          ),
-                        ),
-                        secondary: profiles[index].isDefault
-                            ? null
-                            : IconButton(
-                                onPressed: () async {
-                                  await _showDeleteProfileDialog(index);
-                                },
-                                icon: const Icon(
-                                  Icons.delete_forever_rounded,
-                                  color: AppColors.mainColor,
-                                ),
-                              ),
-                      ),
-                    );
+                    // Updates everything related to the profile
+                    updateAppProfile();
                   },
+                  child: ListView.separated(
+                    physics: const ClampingScrollPhysics(),
+                    itemCount: profiles.length,
+                    separatorBuilder: (_, __) => const SizedBox(height: 12),
+                    itemBuilder: (context, index) {
+                      return Material(
+                        child: RadioListTile<int>(
+                          activeColor: AppColors.green,
+                          value: index,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          title: Text(
+                            profiles[index].isDefault ? 'default'.tr : profiles[index].label,
+                            style: TextStyle(
+                              color: ThemeService().isDarkTheme() ? Colors.white : Colors.black,
+                            ),
+                          ),
+                          secondary: profiles[index].isDefault
+                              ? null
+                              : IconButton(
+                                  onPressed: () async {
+                                    await _showDeleteProfileDialog(index);
+                                  },
+                                  icon: const Icon(
+                                    Icons.delete_forever_rounded,
+                                    color: AppColors.mainColor,
+                                  ),
+                                ),
+                        ),
+                      );
+                    },
+                  ),
                 ),
               ),
               TextButton.icon(

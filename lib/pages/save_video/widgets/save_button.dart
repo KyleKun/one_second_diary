@@ -141,7 +141,7 @@ class _SaveButtonState extends State<SaveButton> {
                   ),
                   const SizedBox(height: 5),
                   LinearProgressIndicator(
-                    backgroundColor: AppColors.green.withOpacity(0.2),
+                    backgroundColor: AppColors.green.withValues(alpha: 0.2),
                     color: AppColors.green,
                     minHeight: 16,
                     value: (value / 100).toDouble(),
@@ -204,8 +204,8 @@ class _SaveButtonState extends State<SaveButton> {
     String parsedTextOutlineColor = '';
 
     try {
-      parsedDateColor = '0x${widget.dateColor.value.toRadixString(16).substring(2)}';
-      parsedTextOutlineColor = '0x${widget.textOutlineColor.value.toRadixString(16).substring(2)}';
+      parsedDateColor = '0x${widget.dateColor.toARGB32().toRadixString(16).substring(2)}';
+      parsedTextOutlineColor = '0x${widget.textOutlineColor.toARGB32().toRadixString(16).substring(2)}';
     } catch (e) {
       Utils.logError(logTag + e.toString());
       Utils.logInfo('Error parsing colors, applying default white.');

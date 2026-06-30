@@ -71,8 +71,8 @@ class _SwitchNotificationsComponentState
                       isNotificationSwitchToggled = !isNotificationSwitchToggled;
                     });
                   },
-                  activeTrackColor: AppColors.mainColor.withOpacity(0.4),
-                  activeColor: AppColors.mainColor,
+                  activeTrackColor: AppColors.mainColor.withValues(alpha: 0.4),
+                  activeThumbColor: AppColors.mainColor,
                 ),
               ],
             ),
@@ -216,8 +216,8 @@ class _SwitchNotificationsComponentState
                     isPersistentSwitchToggled = !isPersistentSwitchToggled;
                   });
                 },
-                activeTrackColor: AppColors.mainColor.withOpacity(0.4),
-                activeColor: AppColors.mainColor,
+                activeTrackColor: AppColors.mainColor.withValues(alpha: 0.4),
+                activeThumbColor: AppColors.mainColor,
               ),
             ],
           ),

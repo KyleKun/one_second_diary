@@ -149,7 +149,7 @@ class NewFeaturesV152 extends StatelessWidget {
         ),
       ),
       baseBtnStyle: ButtonStyle(
-        overlayColor: MaterialStateProperty.all(AppColors.rose),
+        overlayColor: WidgetStateProperty.all(AppColors.rose),
       ),
     );
   }

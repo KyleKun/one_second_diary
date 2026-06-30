@@ -84,8 +84,8 @@ class _PreferencesPageState extends State<PreferencesPage> {
                             isCameraSwitchToggled = !isCameraSwitchToggled;
                           });
                         },
-                        activeTrackColor: AppColors.mainColor.withOpacity(0.4),
-                        activeColor: AppColors.mainColor,
+                        activeTrackColor: AppColors.mainColor.withValues(alpha: 0.4),
+                        activeThumbColor: AppColors.mainColor,
                       ),
                     ],
                   ),
@@ -128,8 +128,8 @@ class _PreferencesPageState extends State<PreferencesPage> {
                             isPickerSwitchToggled = !isPickerSwitchToggled;
                           });
                         },
-                        activeTrackColor: AppColors.mainColor.withOpacity(0.4),
-                        activeColor: AppColors.mainColor,
+                        activeTrackColor: AppColors.mainColor.withValues(alpha: 0.4),
+                        activeThumbColor: AppColors.mainColor,
                       ),
                     ],
                   ),
@@ -175,8 +175,8 @@ class _PreferencesPageState extends State<PreferencesPage> {
                                   isPickerFilterSwitchToggled = !isPickerFilterSwitchToggled;
                                 });
                               },
-                              activeTrackColor: AppColors.mainColor.withOpacity(0.4),
-                              activeColor: AppColors.mainColor,
+                              activeTrackColor: AppColors.mainColor.withValues(alpha: 0.4),
+                              activeThumbColor: AppColors.mainColor,
                             ),
                           ],
                         ),
@@ -221,8 +221,8 @@ class _PreferencesPageState extends State<PreferencesPage> {
                             isColorsSwitchToggled = !isColorsSwitchToggled;
                           });
                         },
-                        activeTrackColor: AppColors.mainColor.withOpacity(0.4),
-                        activeColor: AppColors.mainColor,
+                        activeTrackColor: AppColors.mainColor.withValues(alpha: 0.4),
+                        activeThumbColor: AppColors.mainColor,
                       ),
                     ],
                   ),

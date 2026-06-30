@@ -50,7 +50,7 @@ class _CreateMovieOptionsState extends State<CreateMovieOptions> {
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
-      onPopInvoked: (_) async {
+      onPopInvokedWithResult: (_, __) async {
         await showDialog(
           barrierDismissible: false,
           context: Get.context!,
@@ -116,7 +116,7 @@ class _CreateMovieOptionsState extends State<CreateMovieOptions> {
                             () => IgnorePointer(
                               ignoring: controller.isProcessing.value,
                               child: DropdownButtonFormField<ExportDateRange>(
-                                value: _exportPeriodGroupValue,
+                                initialValue: _exportPeriodGroupValue,
                                 icon: const Icon(Icons.expand_more),
                                 iconSize: 24,
                                 elevation: 16,
