@@ -21,8 +21,8 @@ jobs:
         run: |
           LATEST_XCODE=$(ruby -e "
             versions = Dir.glob('/Applications/Xcode_*.app').map { |p| p.match(/Xcode_(.*)\.app/)[1] rescue nil }.compact
-            valid_versions = versions.select { |v| Gem::Version.new(v) >= Gem::Version.new('26.2') }
-            puts valid_versions.sort_by { |v| Gem::Version.new(v) }.last
+            valid_versions = versions.select { |v| (Gem::Version.new(v.split('_').first) >= Gem::Version.new('26.2')) rescue false }
+            puts valid_versions.sort_by { |v| Gem::Version.new(v.split('_').first) rescue Gem::Version.new('0') }.last
           ")
           if [ -z "$LATEST_XCODE" ]; then
             echo "Failed to find Xcode >= 26.2"
