@@ -736,7 +736,7 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
                           ),
                           if (!_selectedDate.isAfter(DateTime.now()))
                             Padding(
-                              padding: const EdgeInsets.all(8.0),
+                              padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 2.0),
                               child: ElevatedButton(
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: AppColors.green,
@@ -763,7 +763,7 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
                             ),
                           if (!_selectedDate.isAfter(DateTime.now()))
                             Padding(
-                              padding: const EdgeInsets.all(8.0),
+                              padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 2.0),
                               child: ElevatedButton(
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: AppColors.green,
