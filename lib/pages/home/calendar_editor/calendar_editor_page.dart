@@ -292,6 +292,107 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
     }
   }
 
+  /// Picks photo from gallery
+  Future<void> selectPhotoFromGallery() async {
+    final isExperimentalPicker = SharedPrefsUtil.getBool('useExperimentalPicker') ?? true;
+
+    if (isExperimentalPicker) {
+      final bool shouldIgnoreFilter = shouldIgnoreExperimentalFilter();
+      final FilterOptionGroup filterOptionGroup = FilterOptionGroup(
+        containsPathModified: true,
+        createTimeCond: DateTimeCond(
+          min: _selectedDate,
+          max: DateTime.now(),
+        ),
+        orders: [
+          const OrderOption(
+            type: OrderOptionType.createDate,
+            asc: true,
+          ),
+        ],
+      );
+
+      const permissionRequestOption = PermissionRequestOption(
+        androidPermission: AndroidPermission(
+          type: RequestType.image,
+          mediaLocation: false,
+        ),
+      );
+      final PermissionState ps = await AssetPicker.permissionCheck(
+        requestOption: permissionRequestOption,
+      );
+
+      final DefaultAssetPickerProvider provider = DefaultAssetPickerProvider(
+        maxAssets: 1,
+        requestType: RequestType.image,
+        filterOptions: shouldIgnoreFilter ? null : filterOptionGroup,
+        sortPathsByModifiedDate: true,
+      );
+
+      final delegate = _AutoSelectAssetPickerBuilderDelegate(
+        provider: provider,
+        initialPermission: ps,
+        locale: Localizations.maybeLocaleOf(context),
+        specialItems: [
+          SpecialItem<AssetPathEntity>(
+            position: SpecialItemPosition.prepend,
+            builder: (context, path, length) {
+              return Center(
+                child: Text(
+                  shouldIgnoreFilter
+                      ? 'Latest\nphotos'
+                      : 'From\n${_selectedDate.toString().substring(0, 10).split('-').reversed.join('-')}\nonwards',
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 14.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              );
+            },
+          ),
+        ],
+      );
+
+      final List<AssetEntity>? result = await AssetPicker.pickAssetsWithDelegate<
+          AssetEntity,
+          AssetPathEntity,
+          DefaultAssetPickerProvider,
+          _AutoSelectAssetPickerBuilderDelegate>(
+        context,
+        delegate: delegate,
+      );
+
+      if (result?.isEmpty == false) {
+        final File? file = await result?.first.loadFile();
+        if (file != null) {
+          Get.toNamed(
+            Routes.SAVE_PHOTO,
+            arguments: {
+              'photoPath': file.path,
+              'currentDate': _selectedDate,
+            },
+          );
+        }
+      }
+    } else {
+      final rawFile = await ImagePicker().pickImage(
+        source: ImageSource.gallery,
+      );
+
+      if (rawFile != null) {
+        Get.toNamed(
+          Routes.SAVE_PHOTO,
+          arguments: {
+            'photoPath': rawFile.path,
+            'currentDate': _selectedDate,
+          },
+        );
+      }
+    }
+  }
+
   Future<void> deleteVideoDialog() async {
     return await showDialog(
       context: context,
@@ -652,6 +753,33 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
                                   padding: const EdgeInsets.all(8.0),
                                   child: Text(
                                     'addVideo'.tr,
+                                    textAlign: TextAlign.center,
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          if (!_selectedDate.isAfter(DateTime.now()))
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: AppColors.green,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(30.0),
+                                  ),
+                                ),
+                                onPressed: () async {
+                                  Utils.logInfo(
+                                      '[CALENDAR] add photo as video button pressed for date $_currentSelectedDateStr');
+                                  await selectPhotoFromGallery();
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(
+                                    'addPhotoAsVideo'.tr,
                                     textAlign: TextAlign.center,
                                     style: const TextStyle(
                                       color: Colors.white,

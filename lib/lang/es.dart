@@ -94,6 +94,8 @@ const Map<String, String> es = {
   'noVideoRecorded': 'No se ha grabado ningún video',
   'subtitles': 'Subtítulos',
   'addVideo': 'Agregar video',
+  'addPhotoAsVideo': 'Añadir foto como vídeo',
+  'savePhoto': 'Guardar foto',
   'calendar': 'Calendario',
   'orientation': 'Orientación',
   'portrait': 'Retrato',

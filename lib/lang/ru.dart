@@ -93,6 +93,8 @@ const Map<String, String> ru = {
   'noVideoRecorded': 'Нет записанных видео',
   'subtitles': 'Субтитры',
   'addVideo': 'Добавить видео',
+  'addPhotoAsVideo': 'Добавить фото как видео',
+  'savePhoto': 'Сохранить фото',
   'calendar': 'Календарь',
   'orientation': 'Ориентация',
   'portrait': 'Портретная',

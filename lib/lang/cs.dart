@@ -93,6 +93,8 @@ const Map<String, String> cs = {
   'noVideoRecorded': 'Žádné video nebylo zaznamenáno',
   'subtitles': 'Titulky',
   'addVideo': 'Přidat Video',
+  'addPhotoAsVideo': 'Přidat fotku jako video',
+  'savePhoto': 'Uložit fotku',
   'calendar': 'Kalendář',
   'orientation': 'Orientace',
   'portrait': 'Na výšku',

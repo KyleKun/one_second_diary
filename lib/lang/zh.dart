@@ -90,6 +90,8 @@ const Map<String, String> zh = {
   'noVideoRecorded': '没有视频被记录',
   'subtitles': '字幕',
   'addVideo': '添加视频',
+  'addPhotoAsVideo': '添加照片为视频',
+  'savePhoto': '保存照片',
   'calendar': '日历',
   'orientation': '方向',
   'portrait': '肖像',

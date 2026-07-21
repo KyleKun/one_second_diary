@@ -96,6 +96,8 @@ const Map<String, String> ca = {
   'noVideoRecorded': 'Cap vídeo enregistrat',
   'subtitles': 'Subtítols',
   'addVideo': 'Afegeix vídeo',
+  'addPhotoAsVideo': 'Afegir foto com a vídeo',
+  'savePhoto': 'Desar foto',
   'calendar': 'Calendari',
   'orientation': 'Orientació',
   'portrait': 'Vertical',

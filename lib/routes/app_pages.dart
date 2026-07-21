@@ -12,6 +12,7 @@ import '../pages/home/settings/widgets/preferences_page.dart';
 import '../pages/intro/intro_page.dart';
 import '../pages/intro/new_features_v152.dart';
 import '../pages/recording/recording_page.dart';
+import '../pages/save_photo/save_photo_page.dart';
 import '../pages/save_video/save_video_page.dart';
 
 part './app_routes.dart';
@@ -24,6 +25,7 @@ class AppPages {
     GetPage(name: Routes.RECORDING, page: () => RecordingPage()),
     GetPage(name: Routes.DONATION, page: () => DonationPage()),
     GetPage(name: Routes.SAVE_VIDEO, page: () => SaveVideoPage()),
+    GetPage(name: Routes.SAVE_PHOTO, page: () => SavePhotoPage()),
     GetPage(
       name: Routes.CREATE_MOVIE_OPTIONS,
       page: () => const CreateMovieOptions(),

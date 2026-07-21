@@ -96,6 +96,8 @@ const Map<String, String> id = {
   'noVideoRecorded': 'Tidak ada video yang direkam',
   'subtitles': 'Subjudul',
   'addVideo': 'Tambah video',
+  'addPhotoAsVideo': 'Tambahkan foto sebagai video',
+  'savePhoto': 'Simpan foto',
   'calendar': 'Kalender',
   'orientation': 'Orientasi',
   'portrait': 'Potret',

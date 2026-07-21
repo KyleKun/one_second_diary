@@ -95,6 +95,8 @@ const Map<String, String> en = {
   'noVideoRecorded': 'No video recorded',
   'subtitles': 'Subtitles',
   'addVideo': 'Add video',
+  'addPhotoAsVideo': 'Add photo as video',
+  'savePhoto': 'Save photo',
   'calendar': 'Calendar',
   'orientation': 'Orientation',
   'portrait': 'Portrait',

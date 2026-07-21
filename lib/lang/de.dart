@@ -93,6 +93,8 @@ const Map<String, String> de = {
   'noVideoRecorded': 'Kein Video aufgenommen',
   'subtitles': 'Untertitel',
   'addVideo': 'Video hinzufügen',
+  'addPhotoAsVideo': 'Foto als Video hinzufügen',
+  'savePhoto': 'Foto speichern',
   'calendar': 'Kalender',
   'orientation': 'Orientierung',
   'portrait': 'Porträt',
