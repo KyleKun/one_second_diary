@@ -456,58 +456,59 @@ class _SavePhotoPageState extends State<SavePhotoPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          iconTheme: const IconThemeData(
+      resizeToAvoidBottomInset: false,
+      appBar: AppBar(
+        iconTheme: const IconThemeData(
+          color: Colors.white,
+        ),
+        title: Text(
+          'savePhoto'.tr,
+          style: const TextStyle(color: Colors.white),
+        ),
+      ),
+      floatingActionButton: Visibility(
+        visible: !_isLocationProcessing,
+        replacement: const FloatingActionButton(
+          onPressed: null,
+          child: CircularProgressIndicator(
             color: Colors.white,
           ),
-          title: Text(
-            'savePhoto'.tr,
-            style: const TextStyle(color: Colors.white),
-          ),
+          backgroundColor: AppColors.green,
         ),
-        floatingActionButton: Visibility(
-          visible: !_isLocationProcessing,
-          replacement: const FloatingActionButton(
-            onPressed: null,
-            child: CircularProgressIndicator(
-              color: Colors.white,
-            ),
-            backgroundColor: AppColors.green,
-          ),
-          child: SavePhotoButton(
-            photoPath: _tempPhotoPath,
-            photoDurationInSeconds: photoDurationInSeconds,
-            dateColor: currentColor,
-            dateFormat: _dateFinalFormatValueForVideoEdit,
-            isTextDate: isTextDate,
-            userPosition: _currentPosition,
-            userLocation: customLocationTextController.text.isEmpty
-                ? _currentAddress ?? ''
-                : customLocationTextController.text,
-            subtitles: _subtitles,
-            isGeotaggingEnabled: isGeotaggingEnabled,
-            textOutlineColor: invert(currentColor),
-            textOutlineWidth: textOutlineStrokeWidth,
-            determinedDate: routeArguments['currentDate'],
-          ),
+        child: SavePhotoButton(
+          photoPath: _tempPhotoPath,
+          photoDurationInSeconds: photoDurationInSeconds,
+          dateColor: currentColor,
+          dateFormat: _dateFinalFormatValueForVideoEdit,
+          isTextDate: isTextDate,
+          userPosition: _currentPosition,
+          userLocation: customLocationTextController.text.isEmpty
+              ? _currentAddress ?? ''
+              : customLocationTextController.text,
+          subtitles: _subtitles,
+          isGeotaggingEnabled: isGeotaggingEnabled,
+          textOutlineColor: invert(currentColor),
+          textOutlineWidth: textOutlineStrokeWidth,
+          determinedDate: routeArguments['currentDate'],
         ),
-        body: Column(
-          children: [
-            ListView(
-              physics: const ClampingScrollPhysics(),
-              shrinkWrap: true,
-              children: [
-                _dailyPhotoViewer(),
-                const SizedBox(height: 8),
-                _durationSelectionButtons(),
-              ],
-            ),
-            Expanded(
-              child: videoProperties(),
-            ),
-          ],
-        ),
-      );
+      ),
+      body: Column(
+        children: [
+          ListView(
+            physics: const ClampingScrollPhysics(),
+            shrinkWrap: true,
+            children: [
+              _dailyPhotoViewer(),
+              const SizedBox(height: 8),
+              _durationSelectionButtons(),
+            ],
+          ),
+          Expanded(
+            child: videoProperties(),
+          ),
+        ],
+      ),
+    );
   }
 
   Widget generalTabContent() {

@@ -500,6 +500,7 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
         }
       },
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         appBar: AppBar(
           iconTheme: const IconThemeData(
             color: Colors.white,
