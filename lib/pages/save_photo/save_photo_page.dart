@@ -221,7 +221,7 @@ class _SavePhotoPageState extends State<SavePhotoPage> {
       } catch (e) {
         attempts++;
         if (attempts == maxAttempts) {
-          print('Function failed after $maxAttempts attempts: $e');
+          Utils.logError('Function failed after $maxAttempts attempts: $e');
           if (isGeotaggingEnabled) {
             toggleGeotaggingStatus();
           }
@@ -297,6 +297,8 @@ class _SavePhotoPageState extends State<SavePhotoPage> {
 
   @override
   void dispose() {
+     customLocationTextController.dispose();
+     subtitlesTextController.dispose();
     super.dispose();
   }
 
@@ -833,6 +835,9 @@ class _SavePhotoPageState extends State<SavePhotoPage> {
               ),
               TextButton(
                 onPressed: () {
+                  // _subtitles is saved in onTapOutside whenever user taps out dialog, this
+                  // include when the user taps the save button, so we don't need to
+                  // explictly save the text here.
                   Navigator.pop(context);
                 },
                 style: TextButton.styleFrom(
@@ -907,7 +912,7 @@ class _SavePhotoPageState extends State<SavePhotoPage> {
               controller: customLocationTextController,
               textCapitalization: TextCapitalization.sentences,
               style: TextStyle(
-                color: ThemeService().isDarkTheme() ? Colors.black : Colors.white,
+                color: ThemeService().isDarkTheme() ? Colors.white : Colors.black,
               ),
               decoration: InputDecoration(
                 hintText: 'enterLocation'.tr,

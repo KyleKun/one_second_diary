@@ -230,7 +230,7 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
       } catch (e) {
         attempts++;
         if (attempts == maxAttempts) {
-          print('Function failed after $maxAttempts attempts: $e');
+          Utils.logError('Function failed after $maxAttempts attempts: $e');
           if (isGeotaggingEnabled) {
             toggleGeotaggingStatus();
           }
@@ -308,6 +308,8 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
   @override
   void dispose() {
     _trimmer.videoPlayerController?.dispose();
+    customLocationTextController.dispose();
+    subtitlesTextController.dispose();
     super.dispose();
   }
 
@@ -982,7 +984,7 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
               controller: customLocationTextController,
               textCapitalization: TextCapitalization.sentences,
               style: TextStyle(
-                color: ThemeService().isDarkTheme() ? Colors.black : Colors.white,
+                color: ThemeService().isDarkTheme() ? Colors.white : Colors.black,
               ),
               decoration: InputDecoration(
                 hintText: 'enterLocation'.tr,
