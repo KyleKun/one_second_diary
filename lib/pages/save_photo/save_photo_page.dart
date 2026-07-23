@@ -494,15 +494,9 @@ class _SavePhotoPageState extends State<SavePhotoPage> {
       ),
       body: Column(
         children: [
-          ListView(
-            physics: const ClampingScrollPhysics(),
-            shrinkWrap: true,
-            children: [
-              _dailyPhotoViewer(),
-              const SizedBox(height: 8),
-              _durationSelectionButtons(),
-            ],
-          ),
+          _dailyPhotoViewer(),
+          const SizedBox(height: 8),
+          _durationSelectionButtons(),
           Expanded(
             child: videoProperties(),
           ),
@@ -805,7 +799,7 @@ class _SavePhotoPageState extends State<SavePhotoPage> {
               ],
             ),
           ),
-          Flexible(
+          Expanded(
             child: TabBarView(
               physics: const BouncingScrollPhysics(),
               children: <Widget>[

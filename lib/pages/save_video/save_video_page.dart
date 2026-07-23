@@ -542,40 +542,34 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
         ),
         body: Column(
           children: [
-            ListView(
-              physics: const ClampingScrollPhysics(),
-              shrinkWrap: true,
-              children: [
-                _dailyVideoPlayer(),
-                const SizedBox(height: 8),
-                Center(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 6.0),
-                    child: TrimViewer(
-                      trimmer: _trimmer,
-                      viewerHeight: 50.0,
-                      type: ViewerType.fixed,
-                      editorProperties: TrimEditorProperties(
-                        borderWidth: 2.5,
-                        circleSize: 6.0,
-                        circleSizeOnDrag: 9.0,
-                        circlePaintColor: isDarkTheme ? Colors.white : AppColors.mainColor,
-                        borderPaintColor:
-                            isDarkTheme ? AppColors.light : AppColors.mainColor.withValues(alpha: 0.75),
-                      ),
-                      durationStyle: DurationStyle.FORMAT_SS_MS,
-                      durationTextStyle: isDarkTheme
-                          ? const TextStyle(color: Colors.white)
-                          : const TextStyle(color: Colors.black),
-                      maxVideoLength: const Duration(milliseconds: 10000),
-                      viewerWidth: MediaQuery.of(context).size.width,
-                      onChangeStart: (value) => _videoStartValue = value,
-                      onChangeEnd: (value) => _videoEndValue = value,
-                      onChangePlaybackState: (value) => setState(() => _isVideoPlaying = value),
-                    ),
+            _dailyVideoPlayer(),
+            const SizedBox(height: 8),
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 6.0),
+                child: TrimViewer(
+                  trimmer: _trimmer,
+                  viewerHeight: 50.0,
+                  type: ViewerType.fixed,
+                  editorProperties: TrimEditorProperties(
+                    borderWidth: 2.5,
+                    circleSize: 6.0,
+                    circleSizeOnDrag: 9.0,
+                    circlePaintColor: isDarkTheme ? Colors.white : AppColors.mainColor,
+                    borderPaintColor:
+                        isDarkTheme ? AppColors.light : AppColors.mainColor.withValues(alpha: 0.75),
                   ),
+                  durationStyle: DurationStyle.FORMAT_SS_MS,
+                  durationTextStyle: isDarkTheme
+                      ? const TextStyle(color: Colors.white)
+                      : const TextStyle(color: Colors.black),
+                  maxVideoLength: const Duration(milliseconds: 10000),
+                  viewerWidth: MediaQuery.of(context).size.width,
+                  onChangeStart: (value) => _videoStartValue = value,
+                  onChangeEnd: (value) => _videoEndValue = value,
+                  onChangePlaybackState: (value) => setState(() => _isVideoPlaying = value),
                 ),
-              ],
+              ),
             ),
             Expanded(
               child: videoProperties(),
