@@ -14,6 +14,19 @@
 	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
+	<key>CFBundleLocalizations</key>
+	<array>
+		<string>en</string>
+		<string>ca</string>
+		<string>cs</string>
+		<string>de</string>
+		<string>es</string>
+		<string>fr</string>
+		<string>id</string>
+		<string>pt</string>
+		<string>ru</string>
+		<string>zh</string>
+	</array>
 	<key>CFBundleName</key>
 	<string>one_second_diary</string>
 	<key>CFBundlePackageType</key>
