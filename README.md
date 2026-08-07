@@ -67,6 +67,12 @@ Then, after a couple months or even years:
 - Dark Mode
 - Available in 9 languages
 
+## Platforms
+
+Android is the shipping platform. iOS builds and runs from the same codebase;
+what is different there, and the one licensing decision an App Store build
+requires, is written up in [docs/ios.md](docs/ios.md).
+
 If you have any suggestions or want to contribute, feel free to open a PR or contact me!
 
 ## Support my work
