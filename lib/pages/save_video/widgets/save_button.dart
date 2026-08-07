@@ -248,7 +248,9 @@ class _SaveButtonState extends State<SaveButton> {
 
     // Caches the default font to save texts in ffmpeg.
     // The edit may fail unexpectedly in some devices if this is not done.
-    await FFmpegKitConfig.setFontDirectory(fontPath);
+    // The font name map must not be omitted: a null map reaches the iOS side
+    // of ffmpeg-kit as NSNull, which crashes on [NSNull allKeys].
+    await FFmpegKitConfig.setFontDirectory(fontPath, {});
 
     // If geotagging is enabled, we can allow the command to render the location text into the video
     if (isGeotaggingEnabled) {
