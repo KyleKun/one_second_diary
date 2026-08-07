@@ -30,9 +30,13 @@ abstract class MediaGallery {
   /// collection root. Ignored on platforms without a media index.
   void setAlbum(String relativeFolder);
 
-  /// Publishes [tempFilePath] as [destinationPath] and removes the temporary
-  /// file. On Android the destination is derived from the current album and the
-  /// file name, so [destinationPath] is only used off Android.
+  /// Publishes [tempFilePath] and removes the temporary file.
+  ///
+  /// On Android, MediaStore derives the destination from the current album and
+  /// the temp file name, and [destinationPath] is ignored. On iOS the file is
+  /// moved to [destinationPath]. Callers must therefore give the temporary
+  /// file the same name as the destination, or the two platforms would publish
+  /// under different names.
   Future<bool> save({
     required String tempFilePath,
     required String destinationPath,
