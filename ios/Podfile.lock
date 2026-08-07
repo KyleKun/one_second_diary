@@ -1,95 +1,78 @@
 PODS:
-  - camera (0.0.1):
+  - ffmpeg_kit_flutter_new (1.0.0):
+    - ffmpeg_kit_flutter_new/full-gpl (= 1.0.0)
+    - Flutter
+  - ffmpeg_kit_flutter_new/full-gpl (1.0.0):
     - Flutter
   - Flutter (1.0.0)
-  - flutter_ffmpeg/min-lts (0.4.2):
+  - flutter_archive (0.0.1):
     - Flutter
-    - mobile-ffmpeg-min (= 4.4.LTS)
-  - flutter_local_notifications (0.0.1):
+    - ZIPFoundation (= 0.9.19)
+  - flutter_native_video_trimmer (1.0.0):
     - Flutter
-  - mobile-ffmpeg-min (4.4.LTS)
-  - native_device_orientation (0.0.1):
+  - get_thumbnail_video (0.0.1):
     - Flutter
-  - open_file (0.0.1):
+    - libwebp
+  - libwebp (1.6.0):
+    - libwebp/demux (= 1.6.0)
+    - libwebp/mux (= 1.6.0)
+    - libwebp/sharpyuv (= 1.6.0)
+    - libwebp/webp (= 1.6.0)
+  - libwebp/demux (1.6.0):
+    - libwebp/webp
+  - libwebp/mux (1.6.0):
+    - libwebp/demux
+  - libwebp/sharpyuv (1.6.0)
+  - libwebp/webp (1.6.0):
+    - libwebp/sharpyuv
+  - open_filex (0.0.2):
     - Flutter
-  - path_provider_ios (0.0.1):
+  - video_thumbnail (0.0.1):
     - Flutter
-  - permission_handler_apple (9.0.4):
-    - Flutter
-  - share (0.0.1):
-    - Flutter
-  - shared_preferences_ios (0.0.1):
-    - Flutter
-  - tapioca (0.0.1):
-    - Flutter
-  - url_launcher_ios (0.0.1):
-    - Flutter
-  - video_player_avfoundation (0.0.1):
-    - Flutter
+    - libwebp
+  - ZIPFoundation (0.9.19)
 
 DEPENDENCIES:
-  - camera (from `.symlinks/plugins/camera/ios`)
+  - ffmpeg_kit_flutter_new (from `.symlinks/plugins/ffmpeg_kit_flutter_new/ios`)
   - Flutter (from `Flutter`)
-  - flutter_ffmpeg/min-lts (from `.symlinks/plugins/flutter_ffmpeg/ios`)
-  - flutter_local_notifications (from `.symlinks/plugins/flutter_local_notifications/ios`)
-  - native_device_orientation (from `.symlinks/plugins/native_device_orientation/ios`)
-  - open_file (from `.symlinks/plugins/open_file/ios`)
-  - path_provider_ios (from `.symlinks/plugins/path_provider_ios/ios`)
-  - permission_handler_apple (from `.symlinks/plugins/permission_handler_apple/ios`)
-  - share (from `.symlinks/plugins/share/ios`)
-  - shared_preferences_ios (from `.symlinks/plugins/shared_preferences_ios/ios`)
-  - tapioca (from `.symlinks/plugins/tapioca/ios`)
-  - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
-  - video_player_avfoundation (from `.symlinks/plugins/video_player_avfoundation/ios`)
+  - flutter_archive (from `.symlinks/plugins/flutter_archive/ios`)
+  - flutter_native_video_trimmer (from `.symlinks/plugins/flutter_native_video_trimmer/ios`)
+  - get_thumbnail_video (from `.symlinks/plugins/get_thumbnail_video/ios`)
+  - open_filex (from `.symlinks/plugins/open_filex/ios`)
+  - video_thumbnail (from `.symlinks/plugins/video_thumbnail/ios`)
 
 SPEC REPOS:
   trunk:
-    - mobile-ffmpeg-min
+    - libwebp
+    - ZIPFoundation
 
 EXTERNAL SOURCES:
-  camera:
-    :path: ".symlinks/plugins/camera/ios"
+  ffmpeg_kit_flutter_new:
+    :path: ".symlinks/plugins/ffmpeg_kit_flutter_new/ios"
   Flutter:
     :path: Flutter
-  flutter_ffmpeg:
-    :path: ".symlinks/plugins/flutter_ffmpeg/ios"
-  flutter_local_notifications:
-    :path: ".symlinks/plugins/flutter_local_notifications/ios"
-  native_device_orientation:
-    :path: ".symlinks/plugins/native_device_orientation/ios"
-  open_file:
-    :path: ".symlinks/plugins/open_file/ios"
-  path_provider_ios:
-    :path: ".symlinks/plugins/path_provider_ios/ios"
-  permission_handler_apple:
-    :path: ".symlinks/plugins/permission_handler_apple/ios"
-  share:
-    :path: ".symlinks/plugins/share/ios"
-  shared_preferences_ios:
-    :path: ".symlinks/plugins/shared_preferences_ios/ios"
-  tapioca:
-    :path: ".symlinks/plugins/tapioca/ios"
-  url_launcher_ios:
-    :path: ".symlinks/plugins/url_launcher_ios/ios"
-  video_player_avfoundation:
-    :path: ".symlinks/plugins/video_player_avfoundation/ios"
+  flutter_archive:
+    :path: ".symlinks/plugins/flutter_archive/ios"
+  flutter_native_video_trimmer:
+    :path: ".symlinks/plugins/flutter_native_video_trimmer/ios"
+  get_thumbnail_video:
+    :path: ".symlinks/plugins/get_thumbnail_video/ios"
+  open_filex:
+    :path: ".symlinks/plugins/open_filex/ios"
+  video_thumbnail:
+    :path: ".symlinks/plugins/video_thumbnail/ios"
 
 SPEC CHECKSUMS:
-  camera: a0ca5080336f7af47b88436e5e26da3dee5568f0
-  Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
-  flutter_ffmpeg: 3ec3912c74649851e6c3b1885511eef78142ac4f
-  flutter_local_notifications: 0c0b1ae97e741e1521e4c1629a459d04b9aec743
-  mobile-ffmpeg-min: dd2fd38da2788ccb7be5720fc308cb69160820e7
-  native_device_orientation: 3b4cfc9565a7b879cc4fde282b3e27745e852d0d
-  open_file: 02eb5cb6b21264bd3a696876f5afbfb7ca4f4b7d
-  path_provider_ios: 14f3d2fd28c4fdb42f44e0f751d12861c43cee02
-  permission_handler_apple: 44366e37eaf29454a1e7b1b7d736c2cceaeb17ce
-  share: 0b2c3e82132f5888bccca3351c504d0003b3b410
-  shared_preferences_ios: 548a61f8053b9b8a49ac19c1ffbc8b92c50d68ad
-  tapioca: 59e9fc89671d49e2cefe6cd59c3efe678e589e89
-  url_launcher_ios: 839c58cdb4279282219f5e248c3321761ff3c4de
-  video_player_avfoundation: e489aac24ef5cf7af82702979ed16f2a5ef84cff
+  ffmpeg_kit_flutter_new: 12426a19f10ac81186c67c6ebc4717f8f4364b7f
+  Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
+  flutter_archive: ad8edfd7f7d1bb12058d05424ba93e27d9930efe
+  flutter_native_video_trimmer: 11f6c679971dc3844519b485b9c878df8675ae3a
+  get_thumbnail_video: 1a754d46b860dffefcc57b7290a43089cd5d7e58
+  libwebp: af5937a13536ef73f3784d69cc342b98961acf33
+  open_filex: 432f3cd11432da3e39f47fcc0df2b1603854eff1
+  video_thumbnail: b637e0ad5f588ca9945f6e2c927f73a69a661140
+  ZIPFoundation: b8c29ea7ae353b309bc810586181fd073cb3312c
 
-PODFILE CHECKSUM: 3460e53762ceea3c3b40d0e687654910ee3996d4
+PODFILE CHECKSUM: 1723d4a379f06df5688b6fc71e3a0301b720dee9
 
-COCOAPODS: 1.11.3
+COCOAPODS: 1.17.0
