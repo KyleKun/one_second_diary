@@ -2,13 +2,11 @@
 
 import 'dart:io';
 
-import 'package:ffmpeg_kit_flutter_new/return_code.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_calendar_carousel/classes/event.dart';
 import 'package:flutter_calendar_carousel/flutter_calendar_carousel.dart' show CalendarCarousel;
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:media_store_plus/media_store_plus.dart';
 import 'package:video_player/video_player.dart';
 import 'package:wechat_assets_picker/wechat_assets_picker.dart';
 
@@ -16,9 +14,11 @@ import '../../../controllers/daily_entry_controller.dart';
 import '../../../controllers/lang_controller.dart';
 import '../../../controllers/video_count_controller.dart';
 import '../../../routes/app_pages.dart';
+import '../../../utils/app_paths.dart';
 import '../../../utils/constants.dart';
 import '../../../utils/date_format_utils.dart';
 import '../../../utils/ffmpeg_api_wrapper.dart';
+import '../../../utils/media_gallery.dart';
 import '../../../utils/shared_preferences_util.dart';
 import '../../../utils/storage_utils.dart';
 import '../../../utils/theme.dart';
@@ -42,7 +42,6 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
   DateTime _selectedDate = DateTime.now();
   late String _currentSelectedDateStr = DateFormatUtils.getToday();
   late Color mainColor;
-  late String appDocDir;
   late String srtFilePath;
   late String _currentDateStr = DateFormatUtils.getToday();
   DateTime lastSelectedDate = DateTime.now();
@@ -51,13 +50,12 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
   final DailyEntryController _dailyEntryController = Get.find();
   VideoPlayerController? _controller;
   final UniqueKey _videoPlayerKey = UniqueKey();
-  final mediaStore = MediaStore();
   late final bool useCalendarAlternativeColors =
       SharedPrefsUtil.getBool('useAlternativeCalendarColors') ?? false;
 
   @override
   void initState() {
-    setMediaStorePath();
+    setGalleryAlbum();
     mainColor = ThemeService().isDarkTheme() ? Colors.white : Colors.black;
     // Prevents UI from going back to current date after adding older videos
     if (routeArguments?['forcedDate'] != null) {
@@ -78,19 +76,17 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
     super.dispose();
   }
 
-  void setMediaStorePath() {
+  void setGalleryAlbum() {
     final currentProfile = Utils.getCurrentProfile();
-    if (currentProfile.isEmpty || currentProfile == 'Default') {
-      MediaStore.appFolder = 'OneSecondDiary';
-    } else {
-      MediaStore.appFolder = 'OneSecondDiary/Profiles/$currentProfile';
-    }
+    final bool isDefault = currentProfile.isEmpty || currentProfile == 'Default';
+    MediaGallery.instance.setAlbum(
+      isDefault ? AppPaths.folderName : '${AppPaths.folderName}/Profiles/$currentProfile',
+    );
   }
 
   /// Sets the path to save srt file for reading
   void setSubtitlesPath() {
-    appDocDir = SharedPrefsUtil.getString('internalDirectoryPath');
-    srtFilePath = '$appDocDir/temp.srt';
+    srtFilePath = '${AppPaths.internal}/temp.srt';
   }
 
   /// Reads subtitles from the video file and sets the [subtitles] variable
@@ -321,12 +317,7 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
           TextButton(
             onPressed: () async {
               // Delete current video from storage
-              try {
-                StorageUtils.deleteFile(currentVideo);
-              } catch (e) {
-                Utils.logError('[CALENDAR] - Error deleting $currentVideo: $e, trying MediaStore');
-                await StorageUtils.deleteFileWithMediaStore(currentVideo);
-              }
+              await StorageUtils.deleteVideo(currentVideo);
 
               Utils.logInfo('[CALENDAR] - Deleted video from $_currentDateStr: $currentVideo');
 

@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:stack_trace/stack_trace.dart';
 import 'package:synchronized/synchronized.dart';
@@ -12,6 +11,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../controllers/video_count_controller.dart';
 import '../enums/export_date_range.dart';
+import 'app_paths.dart';
 import 'date_format_utils.dart';
 import 'shared_preferences_util.dart';
 import 'storage_utils.dart';
@@ -55,12 +55,18 @@ class Utils {
 
   // Add a new line to txt log file
   static Future<void> appendLineToLogFile(String line) async {
-    final String logFolder = SharedPrefsUtil.getString('internalDirectoryPath');
+    // Anything can log, including code that runs before the paths are resolved
+    // or after the folder was removed. Losing a log line is never worth an
+    // unhandled asynchronous error.
+    if (!AppPaths.isReady) return;
     final String fileName = SharedPrefsUtil.getString('currentLogFile');
-
-    // Write the line to the file
-    final file = io.File('$logFolder/Logs/$fileName');
-    await file.writeAsString('$line\n', mode: io.FileMode.writeOnlyAppend);
+    if (fileName.isEmpty) return;
+    try {
+      final file = io.File('${AppPaths.internal}/Logs/$fileName');
+      await file.writeAsString('$line\n', mode: io.FileMode.writeOnlyAppend);
+    } catch (_) {
+      // Nothing sensible to do here, writing the failure would recurse.
+    }
   }
 
   // Example 2022-01-01_12-30-45.txt
@@ -118,8 +124,7 @@ class Utils {
 
   /// Write txt used to avoid drawtext not supporting special chars for location text
   static Future<String> writeLocationTxt(String? location) async {
-    final io.Directory directory = await getApplicationDocumentsDirectory();
-    final String txtPath = '${directory.path}/location.txt';
+    final String txtPath = '${AppPaths.internal}/location.txt';
 
     logInfo('[Utils.writeLocationTxt()] - Writing location txt file to $txtPath');
 
@@ -142,21 +147,11 @@ class Utils {
 
   /// Write txt used by ffmpeg to concatenate videos when generating movie
   static Future<String> writeTxt(List<String> files) async {
-    final io.Directory directory = await getApplicationDocumentsDirectory();
-    final String txtPath = '${directory.path}/videos.txt';
+    final String txtPath = '${AppPaths.internal}/videos.txt';
 
     logInfo('[Utils.writeTxt()] - Writing txt file to $txtPath');
 
-    // Get current profile
-    final currentProfileName = getCurrentProfile();
-
-    // Default directory
-    String videosFolderPath = SharedPrefsUtil.getString('appPath');
-
-    // If a profile is selected, use that directory
-    if (currentProfileName != '') {
-      videosFolderPath = '${videosFolderPath}Profiles/$currentProfileName/';
-    }
+    final String videosFolderPath = AppPaths.profileVideos(getCurrentProfile());
 
     // Delete old txt files
     StorageUtils.deleteFile(txtPath);
@@ -188,8 +183,7 @@ class Utils {
     int videoStartMilliseconds,
     int videoEndMilliseconds,
   ) async {
-    final io.Directory directory = await getApplicationDocumentsDirectory();
-    final String srtPath = '${directory.path}/subtitles.srt';
+    final String srtPath = '${AppPaths.internal}/subtitles.srt';
     logInfo('[Utils.writeSrt()] - Writing srt file to $srtPath');
 
     // Delete old srt files
@@ -275,8 +269,8 @@ class Utils {
   static List<String> getAllMovies({bool fullPath = false}) {
     logInfo('[Utils.getAllMovies()] - Asked for full path: $fullPath');
 
-    // Default directory
-    final io.Directory directory = io.Directory(SharedPrefsUtil.getString('moviesPath'));
+    final io.Directory directory = io.Directory(AppPaths.movies);
+    if (!directory.existsSync()) return [];
 
     final List<io.FileSystemEntity> files = directory.listSync(recursive: true, followLinks: false);
     final List<String> mp4Files = [];
@@ -303,14 +297,8 @@ class Utils {
     // Get current profile
     final currentProfileName = getCurrentProfile();
 
-    // Default directory
-    io.Directory directory = io.Directory(SharedPrefsUtil.getString('appPath'));
-
-    // If a profile is selected, use that directory
-    if (currentProfileName != '') {
-      directory =
-          io.Directory('${SharedPrefsUtil.getString('appPath')}Profiles/$currentProfileName/');
-    }
+    final io.Directory directory = io.Directory(AppPaths.profileVideos(currentProfileName));
+    if (!directory.existsSync()) return [];
 
     final List<io.FileSystemEntity> files = directory.listSync(recursive: true, followLinks: false);
     final List<String> mp4Files = [];
@@ -476,8 +464,7 @@ class Utils {
   }
 
   static Future<String> copyFontToStorage() async {
-    final io.Directory directory = await getApplicationDocumentsDirectory();
-    final String fontPath = '${directory.path}/magic.ttf';
+    final String fontPath = '${AppPaths.internal}/magic.ttf';
     try {
       if (StorageUtils.checkFileExists(fontPath)) {
         logInfo('Text font for ffmpeg already exists, not copying it.');

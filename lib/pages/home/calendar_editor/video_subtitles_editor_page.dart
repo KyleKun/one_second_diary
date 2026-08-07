@@ -1,14 +1,13 @@
 import 'dart:io';
 
-import 'package:ffmpeg_kit_flutter_new/return_code.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:media_store_plus/media_store_plus.dart';
 import 'package:video_player/video_player.dart';
 
+import '../../../utils/app_paths.dart';
 import '../../../utils/constants.dart';
 import '../../../utils/ffmpeg_api_wrapper.dart';
-import '../../../utils/shared_preferences_util.dart';
+import '../../../utils/media_gallery.dart';
 import '../../../utils/storage_utils.dart';
 import '../../../utils/theme.dart';
 import '../../../utils/utils.dart';
@@ -35,7 +34,6 @@ class _VideoSubtitlesEditorPageState extends State<VideoSubtitlesEditorPage> {
   bool isEdit = false;
   late VideoPlayerController _videoController;
   final TextEditingController subtitlesController = TextEditingController();
-  final mediaStore = MediaStore();
 
   @override
   void initState() {
@@ -101,9 +99,8 @@ class _VideoSubtitlesEditorPageState extends State<VideoSubtitlesEditorPage> {
 
           String command = '';
 
-          final String docsDir = SharedPrefsUtil.getString('internalDirectoryPath');
           final String videoTempName = widget.videoPath.split('/').last;
-          final String tempFilePath = '$docsDir/$videoTempName';
+          final String tempFilePath = '${AppPaths.internal}/$videoTempName';
 
           if (isEdit) {
             Utils.logWarning('${logTag}Editing subtitles for ${widget.videoPath}');
@@ -118,27 +115,12 @@ class _VideoSubtitlesEditorPageState extends State<VideoSubtitlesEditorPage> {
             final returnCode = await session.getReturnCode();
             if (ReturnCode.isSuccess(returnCode)) {
               Utils.logInfo('${logTag}Video subtitles updated successfully!');
-              // Delete current video from storage
-              try {
-                StorageUtils.deleteFile(widget.videoPath);
-              } catch (e) {
-                setState(() {
-                  isProcessing = false;
-                });
-                Utils.logError(
-                    '${logTag}Error deleting ${widget.videoPath}: $e, trying MediaStore');
-                await StorageUtils.deleteFileWithMediaStore(widget.videoPath);
-              }
-
-              // Save edited video to storage
-              await mediaStore.saveFile(
+              // Replace the original with the re-muxed copy
+              await StorageUtils.deleteVideo(widget.videoPath);
+              await MediaGallery.instance.save(
                 tempFilePath: tempFilePath,
-                dirType: DirType.video,
-                dirName: DirName.dcim,
+                destinationPath: widget.videoPath,
               );
-
-              // Delete temp file
-              StorageUtils.deleteFile(tempFilePath);
 
               // Show snackbar
               ScaffoldMessenger.of(context).showSnackBar(

@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_archive/flutter_archive.dart';
 import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'package:get/get.dart';
-import 'package:path_provider/path_provider.dart';
 
+import 'app_paths.dart';
 import 'constants.dart';
 import 'storage_utils.dart';
 import 'theme.dart';
@@ -53,9 +53,9 @@ class _CustomDialogState extends State<CustomDialog> {
     try {
       Utils.logInfo('${logTag}sending logs to developer...');
 
-      final docsDir = await getApplicationDocumentsDirectory();
-      final Directory logsDirectory = Directory('${docsDir.path}/Logs');
-      final String zipFilePath = '${docsDir.path}/logs.zip';
+      final String docsDir = AppPaths.internal;
+      final Directory logsDirectory = Directory('$docsDir/Logs');
+      final String zipFilePath = '$docsDir/logs.zip';
       final File zipFile = File(zipFilePath);
 
       // Delete any previous zip file

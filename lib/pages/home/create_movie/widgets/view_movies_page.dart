@@ -4,12 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:media_store_plus/media_store_plus.dart';
 import 'package:open_filex/open_filex.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 
+import '../../../../utils/app_paths.dart';
 import '../../../../utils/constants.dart';
+import '../../../../utils/media_gallery.dart';
 import '../../../../utils/storage_utils.dart';
 import '../../../../utils/theme.dart';
 import '../../../../utils/utils.dart';
@@ -23,7 +24,6 @@ class ViewMovies extends StatefulWidget {
 
 class _ViewMoviesState extends State<ViewMovies> {
   List<String>? allMovies;
-  final mediaStore = MediaStore();
 
   @override
   void initState() {
@@ -179,7 +179,7 @@ class _ViewMoviesState extends State<ViewMovies> {
   }
 
   Future<void> deleteVideoDialog(String videoFile) async {
-    MediaStore.appFolder = 'OneSecondDiary/Movies';
+    MediaGallery.instance.setAlbum('${AppPaths.folderName}/Movies');
     return await showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -208,13 +208,7 @@ class _ViewMoviesState extends State<ViewMovies> {
           TextButton(
             onPressed: () async {
               // Delete current video from storage
-              try {
-                StorageUtils.deleteFile(videoFile);
-              } catch (e) {
-                Utils.logError(
-                    '[MOVIES VIEWER] - Error deleting $videoFile: $e, trying MediaStore');
-                await StorageUtils.deleteFileWithMediaStore(videoFile);
-              }
+              await StorageUtils.deleteVideo(videoFile);
 
               Utils.logInfo('[MOVIES VIEWER] - Deleted movie $videoFile');
 

@@ -1,13 +1,11 @@
-import 'package:ffmpeg_kit_flutter_new/ffmpeg_kit_config.dart';
-import 'package:ffmpeg_kit_flutter_new/return_code.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
-import 'package:media_store_plus/media_store_plus.dart';
 import 'package:video_player/video_player.dart';
 
 import '../../../controllers/daily_entry_controller.dart';
 import '../../../routes/app_pages.dart';
+import '../../../utils/app_paths.dart';
 import '../../../utils/constants.dart';
 import '../../../utils/custom_dialog.dart';
 import '../../../utils/date_format_utils.dart';
@@ -15,6 +13,7 @@ import '../../../utils/ffmpeg_api_wrapper.dart';
 import '../../../utils/shared_preferences_util.dart';
 import '../../../utils/storage_utils.dart';
 import '../../../utils/utils.dart';
+import '../../../utils/video_encoder.dart';
 
 class SaveButton extends StatefulWidget {
   SaveButton({
@@ -62,7 +61,6 @@ class _SaveButtonState extends State<SaveButton> {
   final String logTag = '[SAVE RECORDING] - ';
   String currentProfileName = 'Default';
   ValueNotifier<num> saveProgressPercentage = ValueNotifier(0);
-  final mediaStore = MediaStore();
 
   final DailyEntryController _dayController = Get.find();
 
@@ -159,27 +157,24 @@ class _SaveButtonState extends State<SaveButton> {
 
   // Check if user is using a custom profile to determine the output path of the video
   String getVideoOutputPath() {
-    String videoOutputPath = '';
     final String videoName = DateFormatUtils.getDate(widget.determinedDate);
-    final String defaultOutputPath = '${SharedPrefsUtil.getString('appPath')}$videoName.mp4';
 
     final selectedProfileIndex = SharedPrefsUtil.getInt('selectedProfileIndex') ?? 0;
     if (selectedProfileIndex == 0) {
-      // If this is true, it means we are using the default profile, so the output folder would be the default output path
-      videoOutputPath = defaultOutputPath;
-    } else {
-      // This means we are using a custom profile
-      final allProfiles = SharedPrefsUtil.getStringList('profiles');
-      if (allProfiles != null) {
-        setState(() {
-          currentProfileName = allProfiles[selectedProfileIndex];
-        });
-
-        videoOutputPath =
-            '${SharedPrefsUtil.getString('appPath')}Profiles/$currentProfileName/$videoName.mp4';
-      }
+      // Default profile, videos go straight into the app folder.
+      return '${AppPaths.videos}$videoName.mp4';
     }
-    return videoOutputPath;
+
+    final allProfiles = SharedPrefsUtil.getStringList('profiles');
+    if (allProfiles == null || selectedProfileIndex >= allProfiles.length) {
+      Utils.logWarning('${logTag}Unknown profile index $selectedProfileIndex, using the default');
+      return '${AppPaths.videos}$videoName.mp4';
+    }
+
+    setState(() {
+      currentProfileName = allProfiles[selectedProfileIndex];
+    });
+    return '${AppPaths.profileVideos(currentProfileName)}$videoName.mp4';
   }
 
   Future<void> _editWithFFmpeg(bool isGeotaggingEnabled, BuildContext context) async {
@@ -232,10 +227,7 @@ class _SaveButtonState extends State<SaveButton> {
             action: () async {
               Utils.logInfo('${logTag}Video already exists, deleting it to perform edit.');
               try {
-                StorageUtils.deleteFile(finalPath);
-              } catch (e) {
-                Utils.logError('${logTag}Error deleting old video: $e, trying MediaStore');
-                await StorageUtils.deleteFileWithMediaStore(finalPath);
+                await StorageUtils.deleteVideo(finalPath);
               } finally {
                 Get.back();
               }
@@ -332,9 +324,10 @@ class _SaveButtonState extends State<SaveButton> {
         ? '-c:s mov_text -map 1:v $audioMap -map 0:s -disposition:s:0 default'
         : '-map 1:v $audioMap';
 
-    // Apply default edit settings: framerate 30, audio channels 1, audio rate 48000, audio bitrate 256k, video codec libx264, pixel format yuv420p, crf 20, preset slow
-    const defaultEditSettings =
-        '-r 30 -ac 1 -ar 48000 -c:a aac -b:a 256k -c:v libx264 -pix_fmt yuv420p -crf 20 -preset slow';
+    // Framerate 30, mono 48 kHz aac at 256k, yuv420p, and whichever H.264
+    // encoder this build of ffmpeg actually ships (see VideoEncoder).
+    final String defaultEditSettings =
+        '-r 30 -ac 1 -ar 48000 -c:a aac -b:a 256k ${VideoEncoder.arguments} -pix_fmt yuv420p';
 
     // Full command to edit and save video
     final command =
@@ -415,6 +408,8 @@ class _SaveButtonState extends State<SaveButton> {
       statisticsCallback: (statistics) async {
         final totalVideoDuration =
             (widget.videoEndInMilliseconds - widget.videoStartInMilliseconds) ~/ 1000;
+        // A trim shorter than a second would divide by zero below.
+        if (totalVideoDuration <= 0) return;
         // Determines the currently processed percentage of the video
         if (statistics.getTime() > 0) {
           num tempProgressValue = (statistics.getTime() ~/ totalVideoDuration) / 10;

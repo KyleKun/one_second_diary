@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:math';
 
-import 'package:ffmpeg_kit_flutter_new/return_code.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:open_filex/open_filex.dart';
@@ -10,13 +9,14 @@ import 'package:wakelock_plus/wakelock_plus.dart';
 import '../../../../controllers/video_count_controller.dart';
 import '../../../../enums/export_date_range.dart';
 import '../../../../routes/app_pages.dart';
+import '../../../../utils/app_paths.dart';
 import '../../../../utils/constants.dart';
 import '../../../../utils/custom_dialog.dart';
 import '../../../../utils/date_format_utils.dart';
 import '../../../../utils/ffmpeg_api_wrapper.dart';
-import '../../../../utils/shared_preferences_util.dart';
 import '../../../../utils/storage_utils.dart';
 import '../../../../utils/utils.dart';
+import '../../../../utils/video_encoder.dart';
 
 class CreateMovieButton extends StatefulWidget {
   const CreateMovieButton({
@@ -105,14 +105,8 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
         );
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
 
-        // Get current profile
-        final currentProfileName = Utils.getCurrentProfile();
-
-        // Videos folder
-        String videosFolder = SharedPrefsUtil.getString('appPath');
-        if (currentProfileName.isNotEmpty) {
-          videosFolder = '${videosFolder}Profiles/$currentProfileName/';
-        }
+        // Videos folder for the current profile
+        final String videosFolder = AppPaths.profileVideos(Utils.getCurrentProfile());
 
         Utils.logInfo('${logTag}Base videos folder: $videosFolder');
 
@@ -165,7 +159,7 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
             // Make sure it is 1080p, h264
             // Also set the framerate to 30 and copy all the streams
             await executeFFmpeg(
-                    '-i "$currentVideo" -vf "scale=1920:1080" -r 30 -map 0 -c:v libx264 -c:a copy -c:s copy -crf 20 -preset slow "$tempVideo1" -y')
+                    '-i "$currentVideo" -vf "scale=1920:1080" -r 30 -map 0 ${VideoEncoder.arguments} -c:a copy -c:s copy "$tempVideo1" -y')
                 .then((session) async {
               final returnCode = await session.getReturnCode();
               if (ReturnCode.isSuccess(returnCode)) {
@@ -298,7 +292,7 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
           // Creating txt that will be used with ffmpeg to concatenate all videos
           final String txtPath = await Utils.writeTxt(selectedVideos);
           final String outputPath =
-              '${SharedPrefsUtil.getString('moviesPath')}OSD-Movie-${controller.movieCount.value}-$today.mp4';
+              '${AppPaths.movies}OSD-Movie-${controller.movieCount.value}-$today.mp4';
           Utils.logInfo('${logTag}Movie will be saved as: $outputPath');
 
           setState(() {

@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 
 import '../../../controllers/daily_entry_controller.dart';
 import '../../../models/profile.dart';
+import '../../../utils/app_paths.dart';
 import '../../../utils/constants.dart';
 import '../../../utils/date_format_utils.dart';
 import '../../../utils/shared_preferences_util.dart';
@@ -373,12 +374,7 @@ class _ProfilesPageState extends State<ProfilesPage> {
     // Update daily entry
     final String today = DateFormatUtils.getToday();
     final String profile = Utils.getCurrentProfile();
-    String todaysVideoPath = SharedPrefsUtil.getString('appPath');
-    if (profile.isEmpty) {
-      todaysVideoPath = '$todaysVideoPath$today.mp4';
-    } else {
-      todaysVideoPath = '${todaysVideoPath}Profiles/$profile/$today.mp4';
-    }
+    final String todaysVideoPath = '${AppPaths.profileVideos(profile)}$today.mp4';
     final bool isTodayRecorded = StorageUtils.checkFileExists(todaysVideoPath);
     if (isTodayRecorded) {
       Utils.logInfo('$logTag$todaysVideoPath exists, setting today status to recorded.');
