@@ -22,12 +22,22 @@
 	<string>????</string>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
+	<key>NSCameraUsageDescription</key>
+	<string>One Second Diary uses the camera to record the short video you add to your diary each day.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>One Second Diary records audio together with your daily video.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>One Second Diary lets you pick an existing video from your library instead of recording a new one.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>This app needs access to location when open.</string>
-	<key>NSLocationAlwaysUsageDescription</key>
-	<string>This app needs access to location when in the background.</string>
+	<string>One Second Diary can stamp the place you recorded onto your daily video. Geotagging is off by default and everything stays on your device.</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>UIFileSharingEnabled</key>
+	<true/>
+	<key>LSSupportsOpeningDocumentsInPlace</key>
+	<true/>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>

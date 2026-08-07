@@ -12,6 +12,7 @@ import '../../controllers/recording_settings_controller.dart';
 import '../../routes/app_pages.dart';
 import '../../utils/constants.dart';
 import '../../utils/custom_dialog.dart';
+import '../../utils/platform_utils.dart';
 import '../../utils/shared_preferences_util.dart';
 import '../../utils/utils.dart';
 
@@ -62,15 +63,19 @@ class _RecordingPageState extends State<RecordingPage>
     WidgetsBinding.instance.addObserver(this);
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
-    volumeButtonStream = FlutterAndroidVolumeKeydown.stream.listen((event) {
-      if (event == HardwareButton.volume_down || event == HardwareButton.volume_up) {
-        if (!_isRecording) {
-          volumeButtonStream?.cancel();
-          setState(() => _isRecording = true);
-          startVideoRecording();
+    // iOS gives no supported way to intercept the volume buttons, so the
+    // shortcut is Android only.
+    if (PlatformUtils.isAndroid) {
+      volumeButtonStream = FlutterAndroidVolumeKeydown.stream.listen((event) {
+        if (event == HardwareButton.volume_down || event == HardwareButton.volume_up) {
+          if (!_isRecording) {
+            volumeButtonStream?.cancel();
+            setState(() => _isRecording = true);
+            startVideoRecording();
+          }
         }
-      }
-    });
+      });
+    }
 
     _isRecording = false;
 

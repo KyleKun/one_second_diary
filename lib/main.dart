@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -7,13 +9,22 @@ import 'package:rive/rive.dart';
 import 'bindings/initial_binding.dart';
 import 'lang/translation_service.dart';
 import 'routes/app_pages.dart';
+import 'utils/app_paths.dart';
 import 'utils/shared_preferences_util.dart';
 import 'utils/theme.dart';
+import 'utils/video_encoder.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await RiveNative.init();
   await SharedPrefsUtil.getInstance();
+
+  // Resolved before the first frame: on iOS the container path changes between
+  // launches, so nothing may rely on a path persisted by a previous run.
+  await AppPaths.init();
+
+  // Probing the ffmpeg build takes one short session, no need to block startup.
+  unawaited(VideoEncoder.init());
 
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
