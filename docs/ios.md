@@ -93,7 +93,7 @@ Requires a Mac with Xcode 26.2 or later, and CocoaPods.
 flutter pub get
 cd ios && pod install && cd ..
 
-# Simulator or a connected device
+# Connected device
 flutter run
 
 # Unsigned release build, which is what CI does
@@ -102,6 +102,16 @@ flutter build ios --release --no-codesign
 
 The unsigned release build runs on every push through
 `.github/workflows/ios-compile.yml`.
+
+### The simulator cannot run this app
+
+`ffmpeg_kit_flutter_new` ships no arm64 slice for the simulator, so a
+simulator build comes out x86_64 only. Apple Silicon simulators on iOS 26+
+no longer execute x86_64 apps (Xcode dropped the Rosetta simulator), which
+means the app installs on no current simulator at all: `simctl` rejects it
+with "Failed to find matching arch". Device builds are unaffected. Until the
+plugin ships an arm64 simulator slice, runtime testing means a physical
+iPhone.
 
 Deployment target is iOS 15.0, set in `ios/Podfile`. ffmpeg-kit itself only
 needs 14.0; the floor comes from the Flutter version the project is on.
