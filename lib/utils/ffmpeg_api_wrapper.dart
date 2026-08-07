@@ -13,6 +13,15 @@ import 'package:ffmpeg_kit_flutter_new/statistics.dart';
 import 'package:ffmpeg_kit_flutter_new/statistics_callback.dart';
 import 'utils.dart';
 
+// Re-exported so that the ffmpeg-kit package name appears in this file only.
+// Swapping the GPL flavour for the LGPL one, which is what makes an App Store
+// build possible, then comes down to editing the imports above. See docs/ios.md.
+export 'package:ffmpeg_kit_flutter_new/ffmpeg_kit_config.dart' show FFmpegKitConfig;
+export 'package:ffmpeg_kit_flutter_new/ffmpeg_session.dart' show FFmpegSession;
+export 'package:ffmpeg_kit_flutter_new/log.dart' show Log;
+export 'package:ffmpeg_kit_flutter_new/return_code.dart' show ReturnCode;
+export 'package:ffmpeg_kit_flutter_new/statistics.dart' show Statistics;
+
 void enableLogCallback(LogCallback callback) {
   FFmpegKitConfig.enableLogCallback(callback);
 }
