@@ -44,6 +44,7 @@ dependencies:
   synchronized: ^3.1.0
   timer_builder: ^2.0.0
   timezone: ^0.11.0
+  get_thumbnail_video: ^0.7.3
   url_launcher: ^6.2.1
   video_player: ^2.8.1
   wakelock_plus: ^1.6.1
@@ -51,10 +52,6 @@ dependencies:
     git:
       url: https://github.com/KyleKun/media_store_plus.git
       ref: main
-  video_thumbnail:
-    git:
-      url: https://github.com/KyleKun/video_thumbnail
-      ref: master
   video_trimmer:
     git:
       url: https://github.com/KyleKun/video_trimmer

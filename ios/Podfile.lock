@@ -27,9 +27,6 @@ PODS:
     - libwebp/sharpyuv
   - open_filex (0.0.2):
     - Flutter
-  - video_thumbnail (0.0.1):
-    - Flutter
-    - libwebp
   - ZIPFoundation (0.9.19)
 
 DEPENDENCIES:
@@ -39,7 +36,6 @@ DEPENDENCIES:
   - flutter_native_video_trimmer (from `.symlinks/plugins/flutter_native_video_trimmer/ios`)
   - get_thumbnail_video (from `.symlinks/plugins/get_thumbnail_video/ios`)
   - open_filex (from `.symlinks/plugins/open_filex/ios`)
-  - video_thumbnail (from `.symlinks/plugins/video_thumbnail/ios`)
 
 SPEC REPOS:
   trunk:
@@ -59,8 +55,6 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/get_thumbnail_video/ios"
   open_filex:
     :path: ".symlinks/plugins/open_filex/ios"
-  video_thumbnail:
-    :path: ".symlinks/plugins/video_thumbnail/ios"
 
 SPEC CHECKSUMS:
   ffmpeg_kit_flutter_new: 12426a19f10ac81186c67c6ebc4717f8f4364b7f
@@ -70,7 +64,6 @@ SPEC CHECKSUMS:
   get_thumbnail_video: 1a754d46b860dffefcc57b7290a43089cd5d7e58
   libwebp: af5937a13536ef73f3784d69cc342b98961acf33
   open_filex: 432f3cd11432da3e39f47fcc0df2b1603854eff1
-  video_thumbnail: b637e0ad5f588ca9945f6e2c927f73a69a661140
   ZIPFoundation: b8c29ea7ae353b309bc810586181fd073cb3312c
 
 PODFILE CHECKSUM: 1723d4a379f06df5688b6fc71e3a0301b720dee9
