@@ -116,11 +116,26 @@ iPhone.
 Deployment target is iOS 15.0, set in `ios/Podfile`. ffmpeg-kit itself only
 needs 14.0; the floor comes from the Flutter version the project is on.
 
+## Device status
+
+Verified on an iPhone 16e running iOS 26.6: the app launches, records (the
+camera outputs HEVC), saves with the burned-in date, and VideoToolbox
+transcodes to H.264 as the runtime encoder selection intends. Reinstalling over
+an existing install kept every video visible, which is the container UUID fix
+doing its job.
+
+Two features still fail on device, both with ffmpeg session errors:
+
+- **Subtitles editing.** Saving from the subtitles editor does not produce a
+  re-muxed file.
+- **Movie generation.** Concatenating a period into a movie fails.
+
+Both are Android-clean and under investigation.
+
 ## Still open
 
 - No export to the system photo library. Sharing a video out of the app uses
   the share sheet, which covers most of the need without asking for
   `NSPhotoLibraryAddUsageDescription`.
-- Not tested on a physical device by the author of this change. Every claim
-  about runtime behaviour above follows from the platform APIs involved, not
-  from a device run.
+- No `PrivacyInfo.xcprivacy` for the Runner target. Required before an App
+  Store submission.
