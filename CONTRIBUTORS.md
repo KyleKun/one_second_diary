@@ -29,6 +29,7 @@
 - Варвара Попова - Russian
 - Miloš Koliáš - Czech
 - Ander Romero - Catalan
+- Павел Мінютка - Belarusian
 
 ## App Logo (Initial Version)
 - Victória Marques

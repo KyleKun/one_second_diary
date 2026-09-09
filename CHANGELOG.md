@@ -6,6 +6,7 @@
 - The H.264 encoder is picked from what the ffmpeg build actually ships instead of being hardcoded
 - App folders are resolved on every launch instead of being read back from preferences
 - Add portrait/vertical videos support.
+- Added Belarusian localization
 
 ## v1.6.0 - 12/2023
 - Added option to receive persistent notifications
