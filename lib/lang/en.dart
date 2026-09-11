@@ -226,4 +226,7 @@ const Map<String, String> en = {
   'useAlternativeCalendarColors': 'Use alternative calendar colors',
   'useAlternativeCalendarColorsDescription':
       'Changes green and red in calendar to blue and yellow. Useful for colorblind people.',
+  'verboseLogging': 'Verbose logging',
+  'verboseLoggingDescription':
+      'Logs extra diagnostic detail to help troubleshoot bugs. Note that the additional logging may contain personally identifiable information.',
 };

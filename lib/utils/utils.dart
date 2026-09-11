@@ -25,6 +25,12 @@ final logger = Logger(
 final lock = Lock();
 
 class Utils {
+  /// Whether the user has opted into verbose logging from Preferences.
+  /// Gates extra diagnostic logging (e.g. movie creation's date filtering)
+  /// that's too noisy to always write to the log file.
+  static bool get isVerboseLoggingEnabled =>
+      SharedPrefsUtil.getBool('verboseLogging') ?? false;
+
   static void launchURL(String url) async {
     await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
   }
@@ -33,6 +39,17 @@ class Utils {
     logger.i(info);
     final String now = DateTime.now().toString();
     final String line = '[INFO] $now: ${info.toString()}';
+    await lock.synchronized(() => appendLineToLogFile(line));
+  }
+
+  /// Same as [logInfo], but only written when the user has enabled verbose
+  /// logging from Preferences. Use this for extra diagnostic detail that's
+  /// too noisy to always keep in the log file.
+  static Future<void> logVerbose(info) async {
+    if (!isVerboseLoggingEnabled) return;
+    logger.i(info);
+    final String now = DateTime.now().toString();
+    final String line = '[VERBOSE] $now: ${info.toString()}';
     await lock.synchronized(() => appendLineToLogFile(line));
   }
 
@@ -422,6 +439,11 @@ class Utils {
     /// Not doing this causes incorrect results in some scenarios
     final today = DateTime(now.year, now.month, now.day, 0, 1);
 
+    logVerbose(
+      '[Utils.getSelectedVideosFromStorage()] - Requested range: $exportDateRange. '
+      "Device's current date/time (DateTime.now()): $now. Filtering reference (today): $today.",
+    );
+
     try {
       final allFiles = getAllVideos();
 
@@ -431,32 +453,63 @@ class Utils {
         allDates.add(DateTime.parse(allFiles[i]));
       }
 
+      if (allDates.isNotEmpty) {
+        final DateTime oldest = allDates.reduce(
+          (a, b) => a.isBefore(b) ? a : b,
+        );
+        final DateTime newest = allDates.reduce((a, b) => a.isAfter(b) ? a : b);
+        logVerbose(
+          '[Utils.getSelectedVideosFromStorage()] - Parsed ${allDates.length} video dates before filtering. '
+          'Oldest: $oldest. Newest: $newest.',
+        );
+      } else {
+        logVerbose(
+          '[Utils.getSelectedVideosFromStorage()] - No video dates parsed from ${allFiles.length} file(s) found by getAllVideos().',
+        );
+      }
+
       switch (exportDateRange) {
         case ExportDateRange.last7Days:
           final last7Days = today.subtract(const Duration(days: 7));
+          logVerbose(
+            '[Utils.getSelectedVideosFromStorage()] - last7Days cutoff (keeping dates on/after): $last7Days',
+          );
           for (int i = 0; i < allDates.length; i++) {
             allDates.removeWhere((e) => e.isBefore(last7Days));
           }
           break;
         case ExportDateRange.last30Days:
           final last30Days = today.subtract(const Duration(days: 30));
+          logVerbose(
+            '[Utils.getSelectedVideosFromStorage()] - last30Days cutoff (keeping dates on/after): $last30Days',
+          );
           for (int i = 0; i < allDates.length; i++) {
             allDates.removeWhere((e) => e.isBefore(last30Days));
           }
           break;
         case ExportDateRange.last60Days:
           final last60Days = today.subtract(const Duration(days: 60));
+          logVerbose(
+            '[Utils.getSelectedVideosFromStorage()] - last60Days cutoff (keeping dates on/after): $last60Days',
+          );
           for (int i = 0; i < allDates.length; i++) {
             allDates.removeWhere((e) => e.isBefore(last60Days));
           }
           break;
         case ExportDateRange.last90Days:
           final last90Days = today.subtract(const Duration(days: 90));
+          logVerbose(
+            '[Utils.getSelectedVideosFromStorage()] - last90Days cutoff (keeping dates on/after): $last90Days',
+          );
           for (int i = 0; i < allDates.length; i++) {
             allDates.removeWhere((e) => e.isBefore(last90Days));
           }
           break;
         case ExportDateRange.thisMonth:
+          logVerbose(
+            '[Utils.getSelectedVideosFromStorage()] - thisMonth range (keeping dates between): '
+            '${DateTime(now.year, now.month)} and $now',
+          );
           for (int i = 0; i < allDates.length; i++) {
             // Retains all the dates from the beginning of the month until the current date
             allDates.retainWhere(
@@ -467,6 +520,10 @@ class Utils {
           }
           break;
         case ExportDateRange.thisYear:
+          logVerbose(
+            '[Utils.getSelectedVideosFromStorage()] - thisYear range (keeping dates between): '
+            '${DateTime(now.year)} and $now',
+          );
           for (int i = 0; i < allDates.length; i++) {
             // Retains all the dates from the start of the year until the current date within the year
             allDates.retainWhere(
@@ -476,6 +533,10 @@ class Utils {
           }
           break;
         case ExportDateRange.lastYear:
+          logVerbose(
+            '[Utils.getSelectedVideosFromStorage()] - lastYear range (keeping dates between): '
+            '${DateTime(now.year - 1)} and ${DateTime(now.year)}',
+          );
           for (int i = 0; i < allDates.length; i++) {
             // Retains all the dates from the start to the end of the previous year
             allDates.retainWhere(
@@ -489,6 +550,10 @@ class Utils {
         case ExportDateRange.allTime:
         // Nothing else needs to be done here
       }
+
+      logVerbose(
+        '[Utils.getSelectedVideosFromStorage()] - ${allDates.length} video date(s) remain after filtering for $exportDateRange.',
+      );
 
       final List<DateTime> orderedDates = DateFormatUtils.orderDates(allDates);
 
@@ -505,7 +570,18 @@ class Utils {
 
         allVideos.add('$year-$month-$day.mp4');
       }
-    } catch (e) {}
+    } catch (e, stackTrace) {
+      logError(
+        '[Utils.getSelectedVideosFromStorage()] - Error while filtering videos for $exportDateRange: $e',
+      );
+      logError(
+        '[Utils.getSelectedVideosFromStorage()] - Stack trace: $stackTrace',
+      );
+    }
+
+    logVerbose(
+      '[Utils.getSelectedVideosFromStorage()] - Returning ${allVideos.length} video(s) for $exportDateRange.',
+    );
     return allVideos;
   }
 

@@ -222,4 +222,7 @@ const Map<String, String> cs = {
   'useAlternativeCalendarColors': 'Použijte alternativní barvy kalendáře',
   'useAlternativeCalendarColorsDescription':
       'Změní zelenou a červenou v kalendáři na modrou a žlutou. Užitečné pro barvoslepé.',
+  'verboseLogging': 'Podrobné protokolování',
+  'verboseLoggingDescription':
+      'Zaznamenává další diagnostické podrobnosti, které pomáhají při řešení chyb. Upozorňujeme, že tyto další záznamy mohou obsahovat osobní údaje.',
 };

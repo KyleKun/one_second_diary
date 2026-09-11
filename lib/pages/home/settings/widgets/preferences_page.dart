@@ -16,6 +16,7 @@ class _PreferencesPageState extends State<PreferencesPage> {
   late bool isPickerSwitchToggled;
   late bool isPickerFilterSwitchToggled;
   late bool isColorsSwitchToggled;
+  late bool isVerboseLoggingSwitchToggled;
 
   @override
   void initState() {
@@ -28,6 +29,8 @@ class _PreferencesPageState extends State<PreferencesPage> {
         SharedPrefsUtil.getBool('useFilterInExperimentalPicker') ?? false;
     isColorsSwitchToggled =
         SharedPrefsUtil.getBool('useAlternativeCalendarColors') ?? false;
+    isVerboseLoggingSwitchToggled =
+        SharedPrefsUtil.getBool('verboseLogging') ?? false;
   }
 
   @override
@@ -259,6 +262,53 @@ class _PreferencesPageState extends State<PreferencesPage> {
                 ),
                 const SizedBox(height: 5.0),
                 Text('useAlternativeCalendarColorsDescription'.tr),
+                const Divider(),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Flexible(
+                        child: Text(
+                          'verboseLogging'.tr,
+                          style: TextStyle(
+                            fontSize: MediaQuery.of(context).size.width * 0.045,
+                          ),
+                        ),
+                      ),
+                      Switch(
+                        value: isVerboseLoggingSwitchToggled,
+                        onChanged: (value) async {
+                          if (value) {
+                            Utils.logInfo(
+                              '[PREFERENCES] - Verbose logging was enabled',
+                            );
+
+                            SharedPrefsUtil.putBool('verboseLogging', true);
+                          } else {
+                            Utils.logInfo(
+                              '[PREFERENCES] - Verbose logging was disabled',
+                            );
+
+                            SharedPrefsUtil.putBool('verboseLogging', false);
+                          }
+
+                          /// Update switch value
+                          setState(() {
+                            isVerboseLoggingSwitchToggled =
+                                !isVerboseLoggingSwitchToggled;
+                          });
+                        },
+                        activeTrackColor: AppColors.mainColor.withValues(
+                          alpha: 0.4,
+                        ),
+                        activeThumbColor: AppColors.mainColor,
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 5.0),
+                Text('verboseLoggingDescription'.tr),
               ],
             ),
           ),

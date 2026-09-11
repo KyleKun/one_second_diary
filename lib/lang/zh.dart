@@ -191,4 +191,6 @@ const Map<String, String> zh = {
       '启用后，选择过去的日期将按该日期过滤视频。禁用后，将显示所有视频。仅适用于实验性文件选择器。',
   'useAlternativeCalendarColors': '使用备用日历颜色',
   'useAlternativeCalendarColorsDescription': '将日历中的绿色和红色更改为蓝色和黄色。对色盲者有用。',
+  'verboseLogging': '详细日志',
+  'verboseLoggingDescription': '记录额外的诊断细节以帮助排查错误。请注意,这些额外的日志可能包含个人身份信息。',
 };

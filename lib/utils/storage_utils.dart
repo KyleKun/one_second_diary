@@ -27,6 +27,7 @@ class StorageUtils {
     await io.Directory('${AppPaths.internal}/Logs').create(recursive: true);
     SharedPrefsUtil.putString('currentLogFile', Utils.getNewLogFilename());
     Utils.logInfo('[App Started] - Log file created');
+    Utils.logVerbose('[App Started] - Device date/time: ${DateTime.now()}');
 
     try {
       await _requestPermissions();

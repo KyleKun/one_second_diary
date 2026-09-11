@@ -223,4 +223,7 @@ const Map<String, String> id = {
   'useAlternativeCalendarColors': 'Gunakan warna kalender alternatif',
   'useAlternativeCalendarColorsDescription':
       'Mengubah hijau dan merah di kalender menjadi biru dan kuning. Berguna untuk orang buta warna.',
+  'verboseLogging': 'Pencatatan rinci',
+  'verboseLoggingDescription':
+      'Mencatat detail diagnostik tambahan untuk membantu mengatasi bug. Perlu diketahui bahwa pencatatan tambahan ini dapat berisi informasi identitas pribadi.',
 };

@@ -224,4 +224,7 @@ const Map<String, String> de = {
   'useAlternativeCalendarColors': 'Alternative Kalenderfarben verwenden',
   'useAlternativeCalendarColorsDescription':
       'Ändert grün und rot im Kalender zu blau und gelb. Nützlich für farbenblinde Menschen.',
+  'verboseLogging': 'Ausführliche Protokollierung',
+  'verboseLoggingDescription':
+      'Protokolliert zusätzliche Diagnosedetails, um bei der Fehlerbehebung zu helfen. Beachte, dass diese zusätzliche Protokollierung personenbezogene Daten enthalten kann.',
 };

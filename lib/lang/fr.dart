@@ -231,4 +231,7 @@ const Map<String, String> fr = {
       'Utilisez des couleurs de calendrier alternatives',
   'useAlternativeCalendarColorsDescription':
       'Change le vert et le rouge dans le calendrier en bleu et jaune. Utile pour les personnes daltoniennes.',
+  'verboseLogging': 'Journalisation détaillée',
+  'verboseLoggingDescription':
+      'Enregistre des détails de diagnostic supplémentaires pour aider à résoudre les problèmes. Notez que ces journaux supplémentaires peuvent contenir des informations personnelles identifiables.',
 };
