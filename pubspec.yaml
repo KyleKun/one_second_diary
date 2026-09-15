@@ -46,20 +46,25 @@ dependencies:
   timezone: ^0.11.0
   get_thumbnail_video: ^0.7.3
   url_launcher: ^6.2.1
-  video_player: ^2.8.1
   wakelock_plus: ^1.6.1
   media_store_plus:
     git:
       url: https://github.com/KyleKun/media_store_plus.git
       ref: main
+  # Hacked fork or repo until https://github.com/flutter/flutter/issues/170737 fixed
+  video_player:
+    git:
+      url: https://github.com/KyleKun/packages/
+      ref: 336bd07f53efc026a4aad2c3cb7294937c6384d9
+      path: packages/video_player/video_player
   video_trimmer:
     git:
       url: https://github.com/KyleKun/video_trimmer
-      ref: main
+      ref: ea9ae9328806199fabea0b9f0c87ddd7240df8b3
   wechat_assets_picker:
     git:
       url: https://github.com/KyleKun/flutter_wechat_assets_picker/
-      ref: 8b3e8f20f47b1eb3acb4365fabad907d74dafe61
+      ref: 330836c83f9f96efab46d3567400b1cfd3db6256
 
 dev_dependencies:
   flutter_test:
