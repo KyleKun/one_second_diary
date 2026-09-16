@@ -1305,19 +1305,21 @@ packages:
   video_player:
     dependency: "direct main"
     description:
-      name: video_player
-      sha256: "8c837b570dccb9ae6ff73d2e0b03c7e708bfefd3bd1194faa7f3e7f200dfc399"
-      url: "https://pub.dev"
-    source: hosted
+      path: "packages/video_player/video_player"
+      ref: "336bd07f53efc026a4aad2c3cb7294937c6384d9"
+      resolved-ref: "336bd07f53efc026a4aad2c3cb7294937c6384d9"
+      url: "https://github.com/KyleKun/packages/"
+    source: git
     version: "2.14.0"
   video_player_android:
     dependency: transitive
     description:
-      name: video_player_android
-      sha256: "39cf6b79ead3e5b339a8a27651359bde5ed47f753b4c3d0c0942db033591f5ba"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.12.1"
+      path: "packages/video_player/video_player_android"
+      ref: "336bd07f53efc026a4aad2c3cb7294937c6384d9"
+      resolved-ref: "336bd07f53efc026a4aad2c3cb7294937c6384d9"
+      url: "https://github.com/KyleKun/packages/"
+    source: git
+    version: "2.12.2"
   video_player_avfoundation:
     dependency: transitive
     description:
@@ -1346,8 +1348,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: main
-      resolved-ref: ac2c73ded98a2ec1ed62c55f1d73cbcb9f85a56e
+      ref: ea9ae9328806199fabea0b9f0c87ddd7240df8b3
+      resolved-ref: ea9ae9328806199fabea0b9f0c87ddd7240df8b3
       url: "https://github.com/KyleKun/video_trimmer"
     source: git
     version: "5.0.0"
@@ -1395,8 +1397,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: "8b3e8f20f47b1eb3acb4365fabad907d74dafe61"
-      resolved-ref: "8b3e8f20f47b1eb3acb4365fabad907d74dafe61"
+      ref: "330836c83f9f96efab46d3567400b1cfd3db6256"
+      resolved-ref: "330836c83f9f96efab46d3567400b1cfd3db6256"
       url: "https://github.com/KyleKun/flutter_wechat_assets_picker/"
     source: git
     version: "10.1.2"
