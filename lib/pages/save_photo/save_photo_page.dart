@@ -56,7 +56,7 @@ class _SavePhotoPageState extends State<SavePhotoPage> {
   bool isGeotaggingEnabled =
       SharedPrefsUtil.getBool('enableGeotagging') ?? false;
   String? _subtitles;
-  int photoDurationInSeconds = 1;
+  double photoDurationInSeconds = 1;
   bool _isLocationProcessing = false;
 
   late final bool isDarkTheme = ThemeService().isDarkTheme();
@@ -410,7 +410,7 @@ class _SavePhotoPageState extends State<SavePhotoPage> {
   }
 
   Widget _durationSelectionButtons() {
-    final List<int> options = [1, 2, 3, 4, 5, 10];
+    final List<double> options = [1, 1.5, 2, 3, 5, 10];
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 4.0),
       child: Row(
@@ -454,7 +454,7 @@ class _SavePhotoPageState extends State<SavePhotoPage> {
                         ),
                       ),
                       child: Text(
-                        '${sec}s',
+                        '${sec == sec.roundToDouble() ? sec.toInt() : sec}s',
                         style: TextStyle(
                           color: isSelected
                               ? Colors.white
