@@ -222,6 +222,9 @@ const Map<String, String> cs = {
   'useAlternativeCalendarColors': 'Použijte alternativní barvy kalendáře',
   'useAlternativeCalendarColorsDescription':
       'Změní zelenou a červenou v kalendáři na modrou a žlutou. Užitečné pro barvoslepé.',
+  'strictClipLength': 'Přesná délka klipu',
+  'strictClipLengthDescription':
+      'Ve výchozím nastavení se k uloženému klipu přidá navíc půl sekundy nad rámec vašeho výběru oříznutí (např. výběr 1 sekundy se uloží jako 1,5 sekundy). Povolte tuto možnost, pokud chcete uložit přesně vybranou délku.',
   'verboseLogging': 'Podrobné protokolování',
   'verboseLoggingDescription':
       'Zaznamenává další diagnostické podrobnosti, které pomáhají při řešení chyb. Upozorňujeme, že tyto další záznamy mohou obsahovat osobní údaje.',

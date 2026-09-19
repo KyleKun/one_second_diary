@@ -191,6 +191,9 @@ const Map<String, String> zh = {
       '启用后，选择过去的日期将按该日期过滤视频。禁用后，将显示所有视频。仅适用于实验性文件选择器。',
   'useAlternativeCalendarColors': '使用备用日历颜色',
   'useAlternativeCalendarColorsDescription': '将日历中的绿色和红色更改为蓝色和黄色。对色盲者有用。',
+  'strictClipLength': '严格片段长度',
+  'strictClipLengthDescription':
+      '默认情况下,保存的片段会在你选择的剪辑范围基础上额外增加半秒(例如,选择1秒会保存为1.5秒)。启用此选项可精确保存你所选择的时长。',
   'verboseLogging': '详细日志',
   'verboseLoggingDescription': '记录额外的诊断细节以帮助排查错误。请注意,这些额外的日志可能包含个人身份信息。',
 };
