@@ -33,10 +33,7 @@ class Themes {
       selectionColor: AppColors.green,
       selectionHandleColor: AppColors.green,
     ),
-    switchTheme: SwitchThemeData(
-      thumbColor: WidgetStateProperty.all(AppColors.mainColor),
-      trackColor: WidgetStateProperty.all(AppColors.rose),
-    ),
+    switchTheme: _switchTheme(isDark: false),
   );
 
   static final dark = ThemeData.dark().copyWith(
@@ -64,13 +61,34 @@ class Themes {
       selectionColor: AppColors.green,
       selectionHandleColor: AppColors.green,
     ),
-    switchTheme: SwitchThemeData(
-      thumbColor: WidgetStateProperty.all(AppColors.mainColor),
-      trackColor: WidgetStateProperty.all(
-        AppColors.dark.withValues(alpha: 0.5),
-      ),
-    ),
+    switchTheme: _switchTheme(isDark: true),
   );
+
+  /// On: white thumb on a coral track. Off: grey thumb on an outlined,
+  /// nearly transparent track — the previous theme painted the thumb coral
+  /// in both states, so on and off were hard to tell apart.
+  static SwitchThemeData _switchTheme({required bool isDark}) {
+    bool on(Set<WidgetState> states) => states.contains(WidgetState.selected);
+    return SwitchThemeData(
+      thumbColor: WidgetStateProperty.resolveWith(
+        (states) => on(states)
+            ? Colors.white
+            : (isDark ? Colors.white70 : Colors.black45),
+      ),
+      trackColor: WidgetStateProperty.resolveWith(
+        (states) => on(states)
+            ? AppColors.mainColor
+            : (isDark
+                  ? Colors.white.withValues(alpha: 0.06)
+                  : Colors.black.withValues(alpha: 0.04)),
+      ),
+      trackOutlineColor: WidgetStateProperty.resolveWith(
+        (states) => on(states)
+            ? Colors.transparent
+            : (isDark ? Colors.white30 : Colors.black26),
+      ),
+    );
+  }
 }
 
 class ThemeService {

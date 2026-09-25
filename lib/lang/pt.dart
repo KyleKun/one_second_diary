@@ -7,7 +7,7 @@ const Map<String, String> pt = {
       'Muito obrigado por usar o app!\n\nSe desejar apoiar o desenvolvimento, sinta-se livre para fazer uma doação ^^',
   'donationPageTitle': 'Apoiar o desenvolvimento',
   'about': 'Sobre',
-  'appVersion': 'Versão 1.6.0',
+  'appVersion': 'Versão 1.7.0',
   'record': 'Gravar',
   'createMovie': 'Criar filme',
   'settings': 'Configurações',
@@ -71,9 +71,15 @@ const Map<String, String> pt = {
   'recordingSettings': 'Configurações de Gravação',
   'seconds': 'Segundos: ',
   'timer': 'Temporizador: ',
+  'clipLength': 'Duração do clipe',
+  'countdown': 'Contagem regressiva',
+  'countdownHint': 'Espera 3 segundos antes de começar a gravar',
   'dateFormat': 'Formato de Data:',
   'dateColor': 'Cor de Data:',
   'selectColor': 'Selecione uma cor',
+  'textOutline': 'Contorno de contraste',
+  'textOutlineHint':
+      'Adiciona uma borda na cor oposta para o texto continuar legível (recomendado)',
   'enableGeotagging': 'Incluir localização (opcional)',
   'setCustomLocation': 'Definir local personalizado (opcional)',
   'ok': 'OK',
@@ -118,6 +124,19 @@ const Map<String, String> pt = {
   'profileOrientationRequired':
       'Selecione uma orientação de vídeo para este perfil',
   'onboardingOrientationTitle': 'Selecione sua orientação de vídeo',
+  'landscapeHint': 'Ideal para TVs e computadores',
+  'portraitHint': 'Ideal para celulares e stories',
+  'cameraMicPermissionTitle': 'Acesso à câmera e ao microfone',
+  'cameraMicPermissionDesc':
+      'O One Second Diary precisa da sua câmera e do seu microfone para gravar o seu momento do dia.',
+  'cameraPermissionTitle': 'Acesso à câmera',
+  'cameraPermissionDesc':
+      'O One Second Diary precisa da sua câmera para gravar o seu momento do dia.',
+  'permissionSettingsHint':
+      'O acesso está desativado para este app. Você pode reativá-lo nas configurações do dispositivo.',
+  'allowAccess': 'Permitir acesso',
+  'openSettings': 'Abrir configurações',
+  'notNow': 'Agora não',
   'onboardingOrientationDesc':
       'Isso define o formato dos vídeos salvos com seu perfil padrão — paisagem (16:9) ou retrato (9:16). Você sempre pode criar outro perfil com a outra orientação mais tarde.',
   'creatingMovie':
@@ -204,28 +223,15 @@ const Map<String, String> pt = {
   'sendLogs': 'Enviar logs?',
   'sendLogsDescription':
       'Se você está enfrentando um problema, por favor toque em "Sim" para incluir os logs que me ajudarão a encontrar o problema. Se for uma sugestão ou outro tópico, por favor toque em "Não".',
-  'whatsNewDescv152':
-      'A versão 1.5.2 trouxe várias correções e melhorias!\n\nConfira nas próximas páginas 😊',
-  'feat1v152': 'Processamento Mais Rápido',
-  'featDesc1v152': 'Editar vídeos grandes ficou muito mais rápido 🚀',
-  'feat2v152': 'Melhoria na Edição de Vídeos',
-  'featDesc2v152':
-      'Escolha o seu momento com mais precisão com os novos botões de corte rápido e uma barra de edição aprimorada 🎞️',
-  'feat3v152': 'Novo Seletor de Arquivos Experimental',
-  'featDesc3v152':
-      'O novo seletor de arquivos experimental permite pré-visualizar e filtrar seus vídeos por data, facilitando adicionar vídeos antigos 📅 (Você pode desativá-lo nas Preferências se tiver problemas)',
-  'feat4v152': 'Bloqueio de Orientação',
-  'featDesc4v152':
-      'Ao gravar no aplicativo, toque no novo botão após posicionar seu telefone para bloquear a orientação e evitar resultados inesperados 📱',
-  'feat5v152': 'E mais...',
-  'featDesc5v152':
-      'Você também encontrará algumas pequenas melhorias visuais e correções de erros 🐛',
   'useFilterInExperimentalPicker': 'Filtrar data para escolher vídeos',
   'useFilterInExperimentalPickerDescription':
       'Quando ativado, selecionar datas passadas filtrará os vídeos por essa data. Quando desativado, todos os vídeos serão mostrados. Funciona apenas com o seletor de arquivos experimental.',
   'useAlternativeCalendarColors': 'Usar cores alternativas para o calendário',
   'useAlternativeCalendarColorsDescription':
       'Muda as cores verde e vermelho no calendário para azul e amarelo. Útil para pessoas daltônicas.',
+  'strictClipLength': 'Duração exata do clipe',
+  'strictClipLengthDescription':
+      'Por padrão, um clipe salvo recebe meio segundo extra além da sua seleção de corte (por exemplo, uma seleção de 1 segundo é salva como 1,5 segundos). Ative esta opção para salvar exatamente a duração que você selecionar.',
   'verboseLogging': 'Registro detalhado',
   'verboseLoggingDescription':
       'Registra detalhes de diagnóstico extras para ajudar a solucionar problemas. Observe que esse registro adicional pode conter informações de identificação pessoal.',

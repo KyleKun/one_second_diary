@@ -7,7 +7,7 @@ const Map<String, String> en = {
       'Thank you so much for using the app!\n\nIf you wish to support the development,\nfeel free to make a donation ^^',
   'donationPageTitle': 'Support app development',
   'about': 'About',
-  'appVersion': 'Version 1.6.0',
+  'appVersion': 'Version 1.7.0',
   'record': 'Record',
   'createMovie': 'Create movie',
   'settings': 'Settings',
@@ -74,9 +74,15 @@ const Map<String, String> en = {
   'recordingSettings': 'Recording Settings',
   'seconds': 'Seconds: ',
   'timer': 'Timer: ',
+  'clipLength': 'Clip length',
+  'countdown': 'Countdown',
+  'countdownHint': 'Wait 3 seconds before recording starts',
   'dateFormat': 'Date Format:',
   'dateColor': 'Date Color:',
   'selectColor': 'Select a color',
+  'textOutline': 'Contrast outline',
+  'textOutlineHint':
+      'Adds a border in the opposite color so the text stays readable (recommended)',
   'enableGeotagging': 'Enable Geotagging (optional)',
   'setCustomLocation': 'Set custom location (optional)',
   'ok': 'OK',
@@ -120,6 +126,19 @@ const Map<String, String> en = {
   'reservedProfileName': 'This is a reserved profile name',
   'profileOrientationRequired': 'Select a video orientation for this profile',
   'onboardingOrientationTitle': 'Choose your video orientation',
+  'landscapeHint': 'Great on TVs and computers',
+  'portraitHint': 'Great on phones and stories',
+  'cameraMicPermissionTitle': 'Camera and microphone access',
+  'cameraMicPermissionDesc':
+      'One Second Diary needs your camera and microphone to record your daily moment.',
+  'cameraPermissionTitle': 'Camera access',
+  'cameraPermissionDesc':
+      'One Second Diary needs your camera to record your daily moment.',
+  'permissionSettingsHint':
+      'Access is turned off for this app. You can turn it back on in your device settings.',
+  'allowAccess': 'Allow access',
+  'openSettings': 'Open settings',
+  'notNow': 'Not now',
   'onboardingOrientationDesc':
       'This sets the shape of the videos you save with your default profile — landscape (16:9) or portrait (9:16). You can always create another profile with the other orientation later.',
   'creatingMovie': 'Processing... Please wait.\nThis can take several minutes.',
@@ -204,28 +223,15 @@ const Map<String, String> en = {
   'sendLogs': 'Send logs?',
   'sendLogsDescription':
       'If you are facing an issue, please tap "Yes" to include the logs that will help me find the problem. If it\'s a feature suggestion or other topic, please tap "No".',
-  'whatsNewDescv152':
-      'Version 1.5.2 brought several fixes and improvements!\n\nCheck it out in the next pages 😊',
-  'feat1v152': 'Faster Video Processing',
-  'featDesc1v152': 'Editing large videos is now much faster 🚀',
-  'feat2v152': 'Improved Video Trimming',
-  'featDesc2v152':
-      'Choose your moment more precisely with the new quick trim buttons and an improved trimming bar 🎞️',
-  'feat3v152': 'New Experimental File Picker',
-  'featDesc3v152':
-      'The new experimental file picker allows previewing and filtering your videos by date, no more scrolling through when adding past videos 📅 (You can disable it in Preferences if you experience any issues)',
-  'feat4v152': 'Lock Orientation',
-  'featDesc4v152':
-      'When recording in the app, tap the new button after positioning your phone to lock the orientation and avoid unexpected results 📱',
-  'feat5v152': 'And more...',
-  'featDesc5v152':
-      'You will also find some small visual improvements and bug fixes 🐛',
   'useFilterInExperimentalPicker': 'Use date filter to pick videos',
   'useFilterInExperimentalPickerDescription':
       'When enabled, selecting past dates will filter the videos by that date. When disabled, all videos will be shown. Works only with the experimental file picker.',
   'useAlternativeCalendarColors': 'Use alternative calendar colors',
   'useAlternativeCalendarColorsDescription':
       'Changes green and red in calendar to blue and yellow. Useful for colorblind people.',
+  'strictClipLength': 'Strict clip length',
+  'strictClipLengthDescription':
+      'By default, a saved clip gets an extra half second added on top of your trim selection (e.g. a 1 second selection saves as 1.5 seconds). Enable this to save exactly the length you select instead.',
   'verboseLogging': 'Verbose logging',
   'verboseLoggingDescription':
       'Logs extra diagnostic detail to help troubleshoot bugs. Note that the additional logging may contain personally identifiable information.',

@@ -77,6 +77,21 @@ class Constants {
     'novembre',
     'desembre',
   ];
+
+  static const huMonths = [
+    'január',
+    'február',
+    'március',
+    'április',
+    'május',
+    'június',
+    'július',
+    'augusztus',
+    'szeptember',
+    'október',
+    'november',
+    'december',
+  ];
 }
 
 class AppColors {

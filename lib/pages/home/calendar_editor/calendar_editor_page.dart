@@ -19,6 +19,7 @@ import '../../../routes/app_pages.dart';
 import '../../../utils/app_paths.dart';
 import '../../../utils/constants.dart';
 import '../../../utils/date_format_utils.dart';
+import '../../../utils/delete_confirmation_dialog.dart';
 import '../../../utils/ffmpeg_api_wrapper.dart';
 import '../../../utils/media_gallery.dart';
 import '../../../utils/orientation_filter.dart';
@@ -26,7 +27,7 @@ import '../../../utils/shared_preferences_util.dart';
 import '../../../utils/storage_utils.dart';
 import '../../../utils/theme.dart';
 import '../../../utils/utils.dart';
-import 'video_subtitles_editor_page.dart';
+import 'video_subtitles_editor_sheet.dart';
 
 // TODO(KyleKun): surprise, surprise -> refactor :)
 class CalendarEditorPage extends StatefulWidget {
@@ -390,55 +391,30 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
   }
 
   Future<void> deleteVideoDialog() async {
-    return await showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        title: Text('discardVideoTitle'.tr),
-        content: Text('deleteVideoWarning'.tr),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            style: TextButton.styleFrom(
-              foregroundColor: ThemeService().isDarkTheme()
-                  ? AppColors.light
-                  : AppColors.dark,
-            ),
-            child: Text('no'.tr, style: const TextStyle(color: Colors.white)),
-          ),
-          TextButton(
-            onPressed: () async {
-              // Delete current video from storage
-              await StorageUtils.deleteVideo(currentVideo);
+    if (!await DeleteConfirmationDialog.show(context)) return;
 
-              Utils.logInfo(
-                '[CALENDAR] - Deleted video from $_currentDateStr: $currentVideo',
-              );
+    // Delete current video from storage
+    await StorageUtils.deleteVideo(currentVideo);
 
-              // Reduce the video count recorded by the app
-              _videoCountController.reduceVideoCount();
-
-              // If deleted video was today, reset daily recording status
-              if (currentVideo.contains(_currentDateStr)) {
-                _dailyEntryController.updateDaily(value: false);
-              }
-
-              // Refresh the UI
-              setState(() {
-                allVideos = Utils.getAllVideos(fullPath: true);
-                wasDateRecorded = false;
-              });
-
-              Navigator.pop(context);
-            },
-            style: TextButton.styleFrom(foregroundColor: Colors.red),
-            child: Text('yes'.tr, style: const TextStyle(color: Colors.white)),
-          ),
-        ],
-      ),
+    Utils.logInfo(
+      '[CALENDAR] - Deleted video from $_currentDateStr: $currentVideo',
     );
+
+    // Reduce the video count recorded by the app
+    _videoCountController.reduceVideoCount();
+
+    // If deleted video was today, reset daily recording status
+    if (currentVideo.contains(_currentDateStr)) {
+      _dailyEntryController.updateDaily(value: false);
+    }
+
+    // Refresh the UI
+    if (mounted) {
+      setState(() {
+        allVideos = Utils.getAllVideos(fullPath: true);
+        wasDateRecorded = false;
+      });
+    }
   }
 
   @override
@@ -724,20 +700,22 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
                                       );
                                     } catch (e) {}
                                     // Avoid route not being pushed: '!_debugLocked': is not true.
-                                    WidgetsBinding.instance
-                                        .addPostFrameCallback((_) async {
-                                          final bool edited = await Get.to(
-                                            VideoSubtitlesEditorPage(
-                                              videoPath: currentVideo,
-                                              subtitles: subtitles ?? '',
-                                            ),
+                                    WidgetsBinding.instance.addPostFrameCallback((
+                                      _,
+                                    ) async {
+                                      if (!mounted) return;
+                                      final bool edited =
+                                          await VideoSubtitlesEditorSheet.show(
+                                            context,
+                                            videoPath: currentVideo,
+                                            subtitles: subtitles ?? '',
                                           );
 
-                                          // Update UI
-                                          if (edited) {
-                                            await getSubtitlesForSelectedDate();
-                                          }
-                                        });
+                                      // Update UI
+                                      if (edited) {
+                                        await getSubtitlesForSelectedDate();
+                                      }
+                                    });
                                   },
                                   child: Padding(
                                     padding: const EdgeInsets.all(4.0),
@@ -765,58 +743,43 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
                           if (!_selectedDate.isAfter(DateTime.now()))
                             Padding(
                               padding: const EdgeInsets.symmetric(
-                                horizontal: 8.0,
-                                vertical: 2.0,
+                                horizontal: 32.0,
+                                vertical: 6.0,
                               ),
-                              child: ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: AppColors.green,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(30.0),
-                                  ),
+                              child: ConstrainedBox(
+                                constraints: const BoxConstraints(
+                                  maxWidth: 360,
                                 ),
-                                onPressed: () async {
-                                  Utils.logInfo(
-                                    '[CALENDAR] add video button pressed for date $_currentSelectedDateStr',
-                                  );
-                                  await selectVideoFromGallery();
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Text(
-                                    'addVideo'.tr,
-                                    textAlign: TextAlign.center,
-                                    style: const TextStyle(color: Colors.white),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          if (!_selectedDate.isAfter(DateTime.now()))
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 8.0,
-                                vertical: 2.0,
-                              ),
-                              child: ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: AppColors.green,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(30.0),
-                                  ),
-                                ),
-                                onPressed: () async {
-                                  Utils.logInfo(
-                                    '[CALENDAR] add photo as video button pressed for date $_currentSelectedDateStr',
-                                  );
-                                  await selectPhotoFromGallery();
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Text(
-                                    'addPhotoAsVideo'.tr,
-                                    textAlign: TextAlign.center,
-                                    style: const TextStyle(color: Colors.white),
-                                  ),
+                                child: Column(
+                                  children: [
+                                    _AddMediaButton(
+                                      icon: Icons.video_library_rounded,
+                                      label: 'addVideo'.tr,
+                                      foreground: Colors.white,
+                                      background: AppColors.mainColor,
+                                      onPressed: () async {
+                                        Utils.logInfo(
+                                          '[CALENDAR] add video button pressed for date $_currentSelectedDateStr',
+                                        );
+                                        await selectVideoFromGallery();
+                                      },
+                                    ),
+                                    const SizedBox(height: 10),
+                                    _AddMediaButton(
+                                      icon: Icons.image_rounded,
+                                      label: 'addPhotoAsVideo'.tr,
+                                      foreground: mainColor,
+                                      background: mainColor.withValues(
+                                        alpha: 0.08,
+                                      ),
+                                      onPressed: () async {
+                                        Utils.logInfo(
+                                          '[CALENDAR] add photo as video button pressed for date $_currentSelectedDateStr',
+                                        );
+                                        await selectPhotoFromGallery();
+                                      },
+                                    ),
+                                  ],
                                 ),
                               ),
                             ),
@@ -979,6 +942,61 @@ class _ControlsState extends State<Controls> {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+/// Full-width button with an icon, used for the "add video" / "add photo as
+/// video" choices on a day without a recording.
+class _AddMediaButton extends StatelessWidget {
+  const _AddMediaButton({
+    required this.icon,
+    required this.label,
+    required this.foreground,
+    required this.background,
+    required this.onPressed,
+  });
+
+  final IconData icon;
+  final String label;
+  final Color foreground;
+  final Color background;
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: double.infinity,
+      height: 50,
+      child: TextButton(
+        onPressed: onPressed,
+        style: TextButton.styleFrom(
+          backgroundColor: background,
+          foregroundColor: foreground,
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+        ),
+        child: FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(icon, size: 20, color: foreground),
+              const SizedBox(width: 10),
+              Text(
+                label,
+                style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w700,
+                  color: foreground,
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

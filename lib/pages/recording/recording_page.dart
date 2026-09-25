@@ -6,14 +6,15 @@ import 'package:flutter/services.dart';
 import 'package:flutter_android_volume_keydown/flutter_android_volume_keydown.dart';
 import 'package:get/get.dart';
 import 'package:native_device_orientation/native_device_orientation.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 import '../../controllers/recording_settings_controller.dart';
 import '../../routes/app_pages.dart';
+import '../../utils/camera_permission.dart';
 import '../../utils/constants.dart';
 import '../../utils/custom_dialog.dart';
 import '../../utils/platform_utils.dart';
 import '../../utils/shared_preferences_util.dart';
+import '../../utils/theme.dart';
 import '../../utils/utils.dart';
 
 // TODO(KyleKun): refactor this in the future ffs lol
@@ -26,6 +27,11 @@ class _RecordingPageState extends State<RecordingPage>
     with WidgetsBindingObserver, TickerProviderStateMixin {
   final logTag = '[CAMERA] - ';
   late CameraController _cameraController;
+  // _cameraController is only assigned once permissions are granted and a
+  // camera is picked; everything that can run before that (build, lifecycle
+  // changes such as the permission prompt pausing the app, the volume-button
+  // shortcut, dispose) checks this first instead of touching the late field.
+  bool _controllerCreated = false;
   late List<CameraDescription> _availableCameras;
   late CameraDescription _frontCamera;
   late CameraDescription _backCamera;
@@ -93,7 +99,7 @@ class _RecordingPageState extends State<RecordingPage>
     stopwatch.stop();
     stopwatch.reset();
     _timer?.cancel();
-    _cameraController.dispose();
+    if (_controllerCreated) _cameraController.dispose();
     super.dispose();
   }
 
@@ -120,7 +126,7 @@ class _RecordingPageState extends State<RecordingPage>
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (!_cameraController.value.isInitialized) {
+    if (!_controllerCreated || !_cameraController.value.isInitialized) {
       return;
     }
     if (state == AppLifecycleState.inactive ||
@@ -177,8 +183,13 @@ class _RecordingPageState extends State<RecordingPage>
 
   Future<void> _getAvailableCameras() async {
     WidgetsFlutterBinding.ensureInitialized();
-    await Utils.requestPermission(Permission.microphone);
-    await Utils.requestPermission(Permission.camera);
+    // The record buttons already check this before opening the page; this
+    // covers every other way in (e.g. "retake" from the save page) and
+    // permissions revoked while the app was in the background.
+    if (!await CameraPermission.ensureGranted()) {
+      if (mounted) Get.back();
+      return;
+    }
     final recordWithFrontCamera =
         SharedPrefsUtil.getBool('recordWithFrontCamera') ?? false;
     _availableCameras = await availableCameras();
@@ -198,6 +209,7 @@ class _RecordingPageState extends State<RecordingPage>
       _resolution,
       enableAudio: true,
     );
+    _controllerCreated = true;
     _cameraController.addListener(() {
       if (mounted) {
         setState(() {});
@@ -280,99 +292,298 @@ class _RecordingPageState extends State<RecordingPage>
   }
 
   void _openRecordingSettings(quarterTurns) {
+    final bool isDark = ThemeService().isDarkTheme();
+    final Color textColor = isDark ? Colors.white : AppColors.dark;
+    final Color mutedTextColor = isDark ? Colors.white60 : Colors.black54;
+    final Color sectionColor = isDark
+        ? Colors.white.withValues(alpha: 0.06)
+        : Colors.black.withValues(alpha: 0.04);
+
     showDialog(
-      barrierDismissible: false,
       context: context,
       builder: (context) => RotatedBox(
         quarterTurns: quarterTurns,
-        child: AlertDialog(
-          title: Text('recordingSettings'.tr),
-          content: StatefulBuilder(
-            builder: (BuildContext context, StateSetter setState) {
-              return Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+        child: Dialog(
+          backgroundColor: isDark ? AppColors.dark : Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(28),
+          ),
+          insetPadding: const EdgeInsets.symmetric(
+            horizontal: 24,
+            vertical: 24,
+          ),
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 380),
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(20, 24, 20, 20),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
+                  /// Header
                   Row(
                     children: [
-                      Text('seconds'.tr),
-                      Obx(
-                        () => Text(
-                          '~ ${_recordingSettingsController.recordingSeconds}',
+                      Container(
+                        width: 44,
+                        height: 44,
+                        decoration: BoxDecoration(
+                          color: AppColors.mainColor.withValues(alpha: 0.14),
+                          borderRadius: BorderRadius.circular(14),
+                        ),
+                        child: const Icon(
+                          Icons.tune_rounded,
+                          color: AppColors.mainColor,
                         ),
                       ),
-                      Obx(
-                        () => SizedBox(
-                          width: 150,
-                          child: Slider(
-                            value: _recordingSettingsController
-                                .recordingSeconds
-                                .value
-                                .toDouble(),
-                            min: 2,
-                            max: 10,
-                            activeColor: AppColors.mainColor.withValues(
-                              alpha: 0.9,
-                            ),
-                            inactiveColor: AppColors.mainColor.withValues(
-                              alpha: 0.2,
-                            ),
-                            onChanged: (double value) {
-                              _recordingSeconds = value.round();
-
-                              /// Save on SharedPrefs
-                              _recordingSettingsController.setRecordingSeconds(
-                                value.round(),
-                              );
-                            },
+                      const SizedBox(width: 14),
+                      Expanded(
+                        child: Text(
+                          'recordingSettings'.tr,
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w700,
+                            color: textColor,
                           ),
                         ),
                       ),
                     ],
                   ),
-                  Row(
-                    children: [
-                      Text('timer'.tr),
-                      Obx(
-                        () => Switch(
-                          activeThumbColor: AppColors.mainColor,
-                          activeTrackColor: AppColors.mainColor.withValues(
-                            alpha: 0.5,
+                  const SizedBox(height: 20),
+
+                  /// Clip length
+                  Container(
+                    padding: const EdgeInsets.fromLTRB(16, 14, 16, 8),
+                    decoration: BoxDecoration(
+                      color: sectionColor,
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Obx(() {
+                      final int seconds =
+                          _recordingSettingsController.recordingSeconds.value;
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.hourglass_bottom_rounded,
+                                size: 20,
+                                color: mutedTextColor,
+                              ),
+                              const SizedBox(width: 10),
+                              Expanded(
+                                child: Text(
+                                  'clipLength'.tr,
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                    color: textColor,
+                                  ),
+                                ),
+                              ),
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 12,
+                                  vertical: 4,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: AppColors.mainColor,
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Text(
+                                  '${seconds}s',
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
-                          value:
-                              _recordingSettingsController.isTimerEnable.value,
-                          onChanged: (value) {
-                            _recordingSettingsController.isTimerEnable.value
-                                ? _disableTimer()
-                                : _enableTimer();
-                          },
+                          SliderTheme(
+                            data: SliderTheme.of(context).copyWith(
+                              trackHeight: 6,
+                              activeTrackColor: AppColors.mainColor,
+                              inactiveTrackColor: AppColors.mainColor
+                                  .withValues(alpha: 0.18),
+                              thumbColor: AppColors.mainColor,
+                              overlayColor: AppColors.mainColor.withValues(
+                                alpha: 0.12,
+                              ),
+                              activeTickMarkColor: Colors.white.withValues(
+                                alpha: 0.6,
+                              ),
+                              inactiveTickMarkColor: AppColors.mainColor
+                                  .withValues(alpha: 0.4),
+                              showValueIndicator: ShowValueIndicator.never,
+                            ),
+                            child: Slider(
+                              value: seconds.toDouble(),
+                              min: 2,
+                              max: 10,
+                              divisions: 8,
+                              onChanged: (double value) {
+                                if (value.round() != seconds) {
+                                  HapticFeedback.selectionClick();
+                                }
+                                _recordingSeconds = value.round();
+
+                                /// Save on SharedPrefs
+                                _recordingSettingsController
+                                    .setRecordingSeconds(value.round());
+                              },
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 8),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  '2s',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: mutedTextColor,
+                                  ),
+                                ),
+                                Text(
+                                  '10s',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: mutedTextColor,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      );
+                    }),
+                  ),
+                  const SizedBox(height: 12),
+
+                  /// Countdown timer
+                  Material(
+                    color: sectionColor,
+                    borderRadius: BorderRadius.circular(20),
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(20),
+                      onTap: () =>
+                          _recordingSettingsController.isTimerEnable.value
+                          ? _disableTimer()
+                          : _enableTimer(),
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(16, 12, 12, 12),
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.timer_outlined,
+                              size: 20,
+                              color: mutedTextColor,
+                            ),
+                            const SizedBox(width: 10),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'countdown'.tr,
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                      color: textColor,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 2),
+                                  Text(
+                                    'countdownHint'.tr,
+                                    style: TextStyle(
+                                      fontSize: 13,
+                                      color: mutedTextColor,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            Obx(
+                              () => Switch(
+                                value: _recordingSettingsController
+                                    .isTimerEnable
+                                    .value,
+                                thumbColor: WidgetStateProperty.resolveWith(
+                                  (states) =>
+                                      states.contains(WidgetState.selected)
+                                      ? Colors.white
+                                      : (isDark
+                                            ? Colors.white70
+                                            : Colors.black45),
+                                ),
+                                trackColor: WidgetStateProperty.resolveWith(
+                                  (states) =>
+                                      states.contains(WidgetState.selected)
+                                      ? AppColors.mainColor
+                                      : sectionColor,
+                                ),
+                                trackOutlineColor:
+                                    WidgetStateProperty.resolveWith(
+                                      (states) =>
+                                          states.contains(WidgetState.selected)
+                                          ? Colors.transparent
+                                          : (isDark
+                                                ? Colors.white30
+                                                : Colors.black26),
+                                    ),
+                                onChanged: (value) =>
+                                    value ? _enableTimer() : _disableTimer(),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                    ],
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+
+                  /// Done
+                  SizedBox(
+                    height: 48,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.mainColor,
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                      ),
+                      onPressed: () => Get.back(),
+                      child: Text(
+                        'done'.tr,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
                   ),
                 ],
-              );
-            },
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                setState(() {});
-                Get.back();
-              },
-              child: const Text(
-                'OK',
-                style: TextStyle(color: AppColors.mainColor),
               ),
             ),
-          ],
+          ),
         ),
       ),
-    );
+    ).then((_) {
+      // Refresh the remaining-time label with the new clip length, however
+      // the dialog was closed (Done, back button or tapping outside).
+      if (mounted) setState(() {});
+    });
   }
 
   Future<void> startVideoRecording() async {
     Utils.logInfo('${logTag}Started recording video');
-    if (!_cameraController.value.isInitialized) {
+    if (!_controllerCreated || !_cameraController.value.isInitialized) {
       Utils.logWarning('${logTag}Controller is not initialized');
       return null;
     }
@@ -493,6 +704,9 @@ class _RecordingPageState extends State<RecordingPage>
 
   @override
   Widget build(BuildContext context) {
+    if (!_controllerCreated) {
+      return const Scaffold(backgroundColor: AppColors.dark);
+    }
     return Scaffold(
       backgroundColor: AppColors.dark,
       body: Stack(

@@ -58,6 +58,11 @@ class DateFormatUtils {
       }
       return '$day de $month de $year';
     }
+    if (lang == 'hu') {
+      month = Constants.huMonths[monthNumber - 1];
+      // Hungarian writes the day without a leading 0: 2024. február 6.
+      return '$year. $month ${int.parse(day)}.';
+    }
     // Default format for English and other languages
     month = Constants.enMonths[monthNumber - 1];
     // Used to remove leading 0

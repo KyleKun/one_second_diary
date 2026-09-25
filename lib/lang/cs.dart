@@ -7,7 +7,7 @@ const Map<String, String> cs = {
       'Děkuji moc za používání aplikace!\n\nPokud chcete podpořit vývoj,\nneváhejte přispět ^^',
   'donationPageTitle': 'Podpořte vývoj aplikace',
   'about': 'O aplikaci',
-  'appVersion': 'Verze 1.6.0',
+  'appVersion': 'Verze 1.7.0',
   'record': 'Record',
   'createMovie': 'Vytvoření videa',
   'settings': 'Nastavení',
@@ -70,9 +70,15 @@ const Map<String, String> cs = {
   'recordingSettings': 'Nastavení nahrávání',
   'seconds': 'Sekund: ',
   'timer': 'Časovač: ',
+  'clipLength': 'Délka klipu',
+  'countdown': 'Odpočet',
+  'countdownHint': 'Počká 3 sekundy, než začne nahrávání',
   'dateFormat': 'Datový Format:',
   'dateColor': 'Barva datumu:',
   'selectColor': 'Vyberte barvu',
+  'textOutline': 'Kontrastní obrys',
+  'textOutlineHint':
+      'Přidá okraj v opačné barvě, aby text zůstal čitelný (doporučeno)',
   'enableGeotagging': 'Povolit přidávání zeměpisných značek (volitelné)',
   'setCustomLocation': 'Nastavení vlastního umístění (volitelné)',
   'ok': 'OK',
@@ -116,6 +122,19 @@ const Map<String, String> cs = {
   'reservedProfileName': 'Toto je vyhrazený název profilu',
   'profileOrientationRequired': 'Vyberte orientaci videa pro tento profil',
   'onboardingOrientationTitle': 'Vyberte orientaci videa',
+  'landscapeHint': 'Ideální pro TV a počítače',
+  'portraitHint': 'Ideální pro telefony a stories',
+  'cameraMicPermissionTitle': 'Přístup ke kameře a mikrofonu',
+  'cameraMicPermissionDesc':
+      'One Second Diary potřebuje kameru a mikrofon, aby mohl nahrát váš denní okamžik.',
+  'cameraPermissionTitle': 'Přístup ke kameře',
+  'cameraPermissionDesc':
+      'One Second Diary potřebuje kameru, aby mohl nahrát váš denní okamžik.',
+  'permissionSettingsHint':
+      'Přístup je pro tuto aplikaci vypnutý. Můžete ho znovu zapnout v nastavení zařízení.',
+  'allowAccess': 'Povolit přístup',
+  'openSettings': 'Otevřít nastavení',
+  'notNow': 'Teď ne',
   'onboardingOrientationDesc':
       'Toto určuje tvar videí uložených ve vašem výchozím profilu — na šířku (16:9) nebo na výšku (9:16). Později můžete vždy vytvořit další profil s opačnou orientací.',
   'creatingMovie':
@@ -200,28 +219,15 @@ const Map<String, String> cs = {
   'sendLogs': 'Odeslat záznamy?',
   'sendLogsDescription':
       'Pokud se potýkáte s problémem, klepněte prosím na "Ano", abyste zahrnuli záznamy, které mi pomohou problém najít. Pokud jde o návrh funkce nebo jiné téma, klepněte prosím na "Ne".',
-  'whatsNewDescv152':
-      'Verze 1.5.2 přinesla několik oprav a vylepšení!\n\nPodívejte se na následujících stránkách 😊',
-  'feat1v152': 'Rychlejší zpracování videa',
-  'featDesc1v152': 'Úprava velkých videí je nyní mnohem rychlejší 🚀',
-  'feat2v152': 'Vylepšené zastřihávání videa',
-  'featDesc2v152':
-      'Vyberte svůj okamžik přesněji s novými tlačítky pro rychlý zástřih a vylepšeným lištou pro zastřihávání 🎞️',
-  'feat3v152': 'Nový experimentální výběr souborů',
-  'featDesc3v152':
-      'Nový experimentální výběr souborů umožňuje náhled a filtrování vašich videí podle data, žádné další procházení při přidávání starých videí 📅 (Můžete jej vypnout v Nastavení, pokud narazíte na problémy)',
-  'feat4v152': 'Zamknutí orientace',
-  'featDesc4v152':
-      'Při nahrávání v aplikaci klepněte po nastavení telefonu na nové tlačítko, abyste zamkli orientaci a předešli neočekávaným výsledkům 📱',
-  'feat5v152': 'A mnohem více...',
-  'featDesc5v152':
-      'Najdete zde také některá drobná vizuální vylepšení a opravy chyb 🐛',
   'useFilterInExperimentalPicker': 'Použijte filtr datumu pro výběr videí',
   'useFilterInExperimentalPickerDescription':
       'Pokud je aktivní, výběr minulých dat filtruje videa podle toho data. Pokud je deaktivováno, zobrazí se všechna videa. Funguje pouze s experimentálním výběrem souborů.',
   'useAlternativeCalendarColors': 'Použijte alternativní barvy kalendáře',
   'useAlternativeCalendarColorsDescription':
       'Změní zelenou a červenou v kalendáři na modrou a žlutou. Užitečné pro barvoslepé.',
+  'strictClipLength': 'Přesná délka klipu',
+  'strictClipLengthDescription':
+      'Ve výchozím nastavení se k uloženému klipu přidá navíc půl sekundy nad rámec vašeho výběru oříznutí (např. výběr 1 sekundy se uloží jako 1,5 sekundy). Povolte tuto možnost, pokud chcete uložit přesně vybranou délku.',
   'verboseLogging': 'Podrobné protokolování',
   'verboseLoggingDescription':
       'Zaznamenává další diagnostické podrobnosti, které pomáhají při řešení chyb. Upozorňujeme, že tyto další záznamy mohou obsahovat osobní údaje.',

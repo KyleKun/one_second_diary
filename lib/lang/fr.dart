@@ -7,7 +7,7 @@ const Map<String, String> fr = {
       "Merci beaucoup d'utiliser l'application !\n\nSi vous souhaitez soutenir le développement,\nn'hésitez pas à faire un don ^^",
   'donationPageTitle': 'Soutenir le développement',
   'about': 'À propos',
-  'appVersion': 'Version 1.6.0',
+  'appVersion': 'Version 1.7.0',
   'record': 'Enregistrement',
   'createMovie': 'Créer un film',
   'settings': 'Paramètres',
@@ -75,9 +75,15 @@ const Map<String, String> fr = {
   'recordingSettings': "Paramètres d'enregistrement",
   'seconds': 'Secondes: ',
   'timer': 'Minuteur : ',
+  'clipLength': 'Durée du clip',
+  'countdown': 'Compte à rebours',
+  'countdownHint': 'Attend 3 secondes avant de lancer l’enregistrement',
   'dateFormat': 'Format de date :',
   'dateColor': 'Couleur de la date :',
   'selectColor': 'Choisir une couleur',
+  'textOutline': 'Contour de contraste',
+  'textOutlineHint':
+      'Ajoute une bordure de la couleur opposée pour garder le texte lisible (recommandé)',
   'enableGeotagging': 'Activer la géotagging (facultative)',
   'setCustomLocation': 'Définir l\'emplacement personnalisé (facultative)',
   'ok': 'D\'accord',
@@ -122,6 +128,19 @@ const Map<String, String> fr = {
   'profileOrientationRequired':
       'Sélectionnez une orientation vidéo pour ce profil',
   'onboardingOrientationTitle': 'Choisissez votre orientation vidéo',
+  'landscapeHint': 'Idéal sur TV et ordinateur',
+  'portraitHint': 'Idéal sur mobile et en story',
+  'cameraMicPermissionTitle': 'Accès à la caméra et au micro',
+  'cameraMicPermissionDesc':
+      'One Second Diary a besoin de votre caméra et de votre micro pour enregistrer votre moment du jour.',
+  'cameraPermissionTitle': 'Accès à la caméra',
+  'cameraPermissionDesc':
+      'One Second Diary a besoin de votre caméra pour enregistrer votre moment du jour.',
+  'permissionSettingsHint':
+      'L’accès est désactivé pour cette app. Vous pouvez le réactiver dans les réglages de votre appareil.',
+  'allowAccess': 'Autoriser l’accès',
+  'openSettings': 'Ouvrir les réglages',
+  'notNow': 'Plus tard',
   'onboardingOrientationDesc':
       "Cela détermine la forme des vidéos enregistrées avec votre profil par défaut — paysage (16:9) ou portrait (9:16). Vous pourrez toujours créer un autre profil avec l'autre orientation plus tard.",
   'creatingMovie':
@@ -206,23 +225,6 @@ const Map<String, String> fr = {
   'sendLogs': 'Envoyer les journaux?',
   'sendLogsDescription':
       'Si vous rencontrez un problème, veuillez appuyer sur "Oui" pour inclure les journaux qui m\'aideront à trouver le problème. Si c\'est une suggestion de fonctionnalité ou un autre sujet, veuillez appuyer sur "Non".',
-  'whatsNewDescv152':
-      'La version 1.5.2 a apporté plusieurs corrections et améliorations!\n\nDécouvrez-le dans les pages suivantes 😊',
-  'feat1v152': 'Traitement vidéo plus rapide',
-  'featDesc1v152':
-      'L\'édition de grandes vidéos est maintenant beaucoup plus rapide 🚀',
-  'feat2v152': 'Amélioration de la découpe vidéo',
-  'featDesc2v152':
-      'Choisissez votre moment plus précisément avec les nouveaux boutons de découpe rapide et une barre de découpe améliorée 🎞️',
-  'feat3v152': 'Nouveau sélecteur de fichiers expérimental',
-  'featDesc3v152':
-      'Le nouveau sélecteur de fichiers expérimental permet de prévisualiser et de filtrer vos vidéos par date, fini le défilement lorsque vous ajoutez des vidéos antérieures 📅 (Vous pouvez le désactiver dans les Préférences si vous rencontrez des problèmes)',
-  'feat4v152': 'Verrouillage de l\'orientation',
-  'featDesc4v152':
-      'Lors de l\'enregistrement dans l\'application, appuyez sur le nouveau bouton après avoir positionné votre téléphone pour verrouiller l\'orientation et éviter des résultats inattendus 📱',
-  'feat5v152': 'Et plus encore...',
-  'featDesc5v152':
-      'Vous trouverez également quelques petites améliorations visuelles et corrections de bugs 🐛',
   'useFilterInExperimentalPicker':
       'Utilisez le filtre de date pour choisir des vidéos',
   'useFilterInExperimentalPickerDescription':
@@ -231,6 +233,9 @@ const Map<String, String> fr = {
       'Utilisez des couleurs de calendrier alternatives',
   'useAlternativeCalendarColorsDescription':
       'Change le vert et le rouge dans le calendrier en bleu et jaune. Utile pour les personnes daltoniennes.',
+  'strictClipLength': 'Durée de clip stricte',
+  'strictClipLengthDescription':
+      'Par défaut, un clip enregistré reçoit une demi-seconde supplémentaire en plus de votre sélection de découpage (par exemple, une sélection d\'une seconde est enregistrée comme 1,5 seconde). Activez cette option pour enregistrer exactement la durée que vous sélectionnez.',
   'verboseLogging': 'Journalisation détaillée',
   'verboseLoggingDescription':
       'Enregistre des détails de diagnostic supplémentaires pour aider à résoudre les problèmes. Notez que ces journaux supplémentaires peuvent contenir des informations personnelles identifiables.',

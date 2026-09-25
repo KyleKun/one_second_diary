@@ -7,7 +7,7 @@ const Map<String, String> id = {
       'Terima kasih sudah menggunakan aplikasi ini!\n\nJika Anda ingin mendukung pembuatan aplikasi ini, jangan sungkan untuk berdonasi^^.',
   'donationPageTitle': 'Dukung pembuatan aplikasi',
   'about': 'Tentang',
-  'appVersion': 'Versi 1.6.0',
+  'appVersion': 'Versi 1.7.0',
   'record': 'Rekam',
   'createMovie': 'Buat video',
   'settings': 'Pengaturan',
@@ -72,9 +72,15 @@ const Map<String, String> id = {
   'recordingSettings': 'Pengaturan Perekaman',
   'seconds': 'detik: ',
   'timer': 'Timer: ',
+  'clipLength': 'Durasi klip',
+  'countdown': 'Hitung mundur',
+  'countdownHint': 'Tunggu 3 detik sebelum perekaman dimulai',
   'dateFormat': 'Format Tanggal:',
   'dateColor': 'Warna Hari:',
   'selectColor': 'Pilih warna',
+  'textOutline': 'Garis tepi kontras',
+  'textOutlineHint':
+      'Menambahkan tepi dengan warna berlawanan agar teks tetap terbaca (disarankan)',
   'enableGeotagging': 'Aktifkan geotagging (opsional)',
   'setCustomLocation': 'Setel lokasi khusus (opsional)',
   'ok': 'Oke',
@@ -118,6 +124,19 @@ const Map<String, String> id = {
   'reservedProfileName': 'Ini adalah nama profil yang dipesan',
   'profileOrientationRequired': 'Pilih orientasi video untuk profil ini',
   'onboardingOrientationTitle': 'Pilih orientasi video Anda',
+  'landscapeHint': 'Cocok untuk TV dan komputer',
+  'portraitHint': 'Cocok untuk ponsel dan story',
+  'cameraMicPermissionTitle': 'Akses kamera dan mikrofon',
+  'cameraMicPermissionDesc':
+      'One Second Diary memerlukan kamera dan mikrofon Anda untuk merekam momen harian Anda.',
+  'cameraPermissionTitle': 'Akses kamera',
+  'cameraPermissionDesc':
+      'One Second Diary memerlukan kamera Anda untuk merekam momen harian Anda.',
+  'permissionSettingsHint':
+      'Akses dinonaktifkan untuk aplikasi ini. Anda dapat mengaktifkannya kembali di pengaturan perangkat.',
+  'allowAccess': 'Izinkan akses',
+  'openSettings': 'Buka pengaturan',
+  'notNow': 'Nanti saja',
   'onboardingOrientationDesc':
       'Ini menentukan bentuk video yang Anda simpan dengan profil default Anda — lanskap (16:9) atau potret (9:16). Anda selalu bisa membuat profil lain dengan orientasi yang berbeda nanti.',
   'creatingMovie':
@@ -201,28 +220,15 @@ const Map<String, String> id = {
   'sendLogs': 'Kirim log?',
   'sendLogsDescription':
       'Jika Anda menghadapi masalah, silakan tekan "Ya" untuk menyertakan log yang akan membantu saya menemukan masalahnya. Jika ini adalah saran fitur atau topik lain, silakan tekan "Tidak".',
-  'whatsNewDescv152':
-      'Versi 1.5.2 membawa berbagai perbaikan dan peningkatan!\n\nLihat di halaman berikutnya 😊',
-  'feat1v152': 'Pemrosesan Video Lebih Cepat',
-  'featDesc1v152': 'Mengedit video besar kini jauh lebih cepat 🚀',
-  'feat2v152': 'Pemotongan Video Ditingkatkan',
-  'featDesc2v152':
-      'Pilih momen Anda dengan lebih tepat dengan tombol potong cepat yang baru dan batang pemotongan yang ditingkatkan 🎞️',
-  'feat3v152': 'Pemilih Berkas Eksperimental Baru',
-  'featDesc3v152':
-      'Pemilih berkas eksperimental baru memungkinkan pratinjau dan penyaringan video Anda berdasarkan tanggal, tidak perlu menggulir saat menambahkan video lama 📅 (Anda dapat menonaktifkannya di Preferensi jika mengalami masalah)',
-  'feat4v152': 'Kunci Orientasi',
-  'featDesc4v152':
-      'Saat merekam di aplikasi, ketuk tombol baru setelah menempatkan ponsel Anda untuk mengunci orientasi dan menghindari hasil yang tidak diinginkan 📱',
-  'feat5v152': 'Dan lainnya...',
-  'featDesc5v152':
-      'Anda juga akan menemukan beberapa perbaikan visual kecil dan perbaikan bug 🐛',
   'useFilterInExperimentalPicker': 'Gunakan filter tanggal untuk memilih video',
   'useFilterInExperimentalPickerDescription':
       'Ketika diaktifkan, memilih tanggal sebelumnya akan memfilter video berdasarkan tanggal tersebut. Ketika dinonaktifkan, semua video akan ditampilkan. Hanya bekerja dengan pemilih file eksperimental.',
   'useAlternativeCalendarColors': 'Gunakan warna kalender alternatif',
   'useAlternativeCalendarColorsDescription':
       'Mengubah hijau dan merah di kalender menjadi biru dan kuning. Berguna untuk orang buta warna.',
+  'strictClipLength': 'Panjang klip ketat',
+  'strictClipLengthDescription':
+      'Secara default, klip yang disimpan mendapat tambahan setengah detik di atas pilihan pemangkasan Anda (misalnya, pilihan 1 detik disimpan sebagai 1,5 detik). Aktifkan ini untuk menyimpan persis panjang yang Anda pilih.',
   'verboseLogging': 'Pencatatan rinci',
   'verboseLoggingDescription':
       'Mencatat detail diagnostik tambahan untuk membantu mengatasi bug. Perlu diketahui bahwa pencatatan tambahan ini dapat berisi informasi identitas pribadi.',

@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../../../routes/app_pages.dart';
+import '../../../../utils/camera_permission.dart';
 import '../../../../utils/constants.dart';
 import '../../../../utils/shared_preferences_util.dart';
 
@@ -12,6 +13,9 @@ class EditDailyButton extends StatelessWidget {
     final forceNativeCamera =
         SharedPrefsUtil.getBool('forceNativeCamera') ?? false;
     if ((sdkVersion != null && sdkVersion < 29) || forceNativeCamera) {
+      if (!await CameraPermission.ensureGranted(requireMicrophone: false)) {
+        return;
+      }
       final videoFile = await ImagePicker().pickVideo(
         source: ImageSource.camera,
       );
@@ -26,6 +30,7 @@ class EditDailyButton extends StatelessWidget {
         );
       }
     } else {
+      if (!await CameraPermission.ensureGranted()) return;
       Get.toNamed(Routes.RECORDING);
     }
   }

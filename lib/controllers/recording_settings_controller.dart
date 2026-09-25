@@ -10,6 +10,10 @@ class RecordingSettingsController extends GetxController {
   // Edit video page properties
   Rx<String> dateColor = SharedPrefsUtil.getString('dateColor').obs;
   Rx<int> dateFormatId = SharedPrefsUtil.getInt('dateFormatId')?.obs ?? 0.obs;
+  // Outline in the inverted date color so the date/location text stays
+  // readable on any background. On unless the user turned it off.
+  Rx<bool> isDateOutlineEnabled =
+      (SharedPrefsUtil.getBool('dateOutline') ?? true).obs;
 
   void setDateColor(String colorString) {
     dateColor.value = colorString;
@@ -21,6 +25,12 @@ class RecordingSettingsController extends GetxController {
     dateFormatId.value = format;
     dateFormatId.refresh();
     SharedPrefsUtil.putInt('dateFormatId', format);
+  }
+
+  void setDateOutline(bool enabled) {
+    isDateOutlineEnabled.value = enabled;
+    isDateOutlineEnabled.refresh();
+    SharedPrefsUtil.putBool('dateOutline', enabled);
   }
 
   void enableTimer() {

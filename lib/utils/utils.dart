@@ -125,7 +125,10 @@ class Utils {
       // For android 12 and below devices
       permissionStatuses = await [Permission.storage].request();
     } else {
-      permissionStatuses = await [Permission.videos].request();
+      permissionStatuses = await [
+        Permission.photos,
+        Permission.videos,
+      ].request();
     }
 
     bool allAccepted = true;
