@@ -223,6 +223,9 @@ const Map<String, String> id = {
   'useAlternativeCalendarColors': 'Gunakan warna kalender alternatif',
   'useAlternativeCalendarColorsDescription':
       'Mengubah hijau dan merah di kalender menjadi biru dan kuning. Berguna untuk orang buta warna.',
+  'strictClipLength': 'Panjang klip ketat',
+  'strictClipLengthDescription':
+      'Secara default, klip yang disimpan mendapat tambahan setengah detik di atas pilihan pemangkasan Anda (misalnya, pilihan 1 detik disimpan sebagai 1,5 detik). Aktifkan ini untuk menyimpan persis panjang yang Anda pilih.',
   'verboseLogging': 'Pencatatan rinci',
   'verboseLoggingDescription':
       'Mencatat detail diagnostik tambahan untuk membantu mengatasi bug. Perlu diketahui bahwa pencatatan tambahan ini dapat berisi informasi identitas pribadi.',

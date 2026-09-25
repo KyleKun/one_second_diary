@@ -226,6 +226,9 @@ const Map<String, String> en = {
   'useAlternativeCalendarColors': 'Use alternative calendar colors',
   'useAlternativeCalendarColorsDescription':
       'Changes green and red in calendar to blue and yellow. Useful for colorblind people.',
+  'strictClipLength': 'Strict clip length',
+  'strictClipLengthDescription':
+      'By default, a saved clip gets an extra half second added on top of your trim selection (e.g. a 1 second selection saves as 1.5 seconds). Enable this to save exactly the length you select instead.',
   'verboseLogging': 'Verbose logging',
   'verboseLoggingDescription':
       'Logs extra diagnostic detail to help troubleshoot bugs. Note that the additional logging may contain personally identifiable information.',

@@ -225,6 +225,9 @@ const Map<String, String> es = {
   'useAlternativeCalendarColors': 'Use colores alternativos para el calendario',
   'useAlternativeCalendarColorsDescription':
       'Cambia el verde y el rojo en el calendario a azul y amarillo. Útil para personas con daltonismo.',
+  'strictClipLength': 'Duración exacta del clip',
+  'strictClipLengthDescription':
+      'De forma predeterminada, un clip guardado recibe medio segundo adicional además de tu selección de recorte (por ejemplo, una selección de 1 segundo se guarda como 1,5 segundos). Activa esta opción para guardar exactamente la duración que selecciones.',
   'verboseLogging': 'Registro detallado',
   'verboseLoggingDescription':
       'Registra detalles de diagnóstico adicionales para ayudar a solucionar errores. Ten en cuenta que este registro adicional puede contener información de identificación personal.',

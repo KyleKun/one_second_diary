@@ -13,6 +13,7 @@ import 'package:video_trimmer/video_trimmer.dart';
 import '../../controllers/recording_settings_controller.dart';
 import '../../enums/video_orientation.dart';
 import '../../routes/app_pages.dart';
+import '../../utils/clip_trim_policy.dart';
 import '../../utils/constants.dart';
 import '../../utils/custom_checkbox_list_tile.dart';
 import '../../utils/custom_dialog.dart';
@@ -1084,12 +1085,13 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
   }
 
   double getVideoEndInMilliseconds() {
-    final double defaultEnd = _videoEndValue + 500;
-    final int videoDuration =
-        _trimmer.videoPlayerController!.value.duration.inMilliseconds;
-    if (defaultEnd > videoDuration) {
-      return videoDuration.toDouble();
-    }
-    return defaultEnd;
+    final bool strictClipLength =
+        SharedPrefsUtil.getBool('strictClipLength') ?? false;
+    return ClipTrimPolicy.resolveEndMilliseconds(
+      selectedEndMilliseconds: _videoEndValue,
+      videoDurationMilliseconds:
+          _trimmer.videoPlayerController!.value.duration.inMilliseconds,
+      strictClipLength: strictClipLength,
+    );
   }
 }

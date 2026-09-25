@@ -234,6 +234,9 @@ const Map<String, String> ca = {
   'useAlternativeCalendarColors': 'Fes servir colors del calendari alternatius',
   'useAlternativeCalendarColorsDescription':
       'Canvia el verd i el vermell del calendari per blau i groc. Útil per a persones daltòniques.',
+  'strictClipLength': 'Durada exacta del clip',
+  'strictClipLengthDescription':
+      "Per defecte, un clip desat rep mig segon addicional a més de la teva selecció de retallada (per exemple, una selecció d'1 segon es desa com a 1,5 segons). Activa-ho per desar exactament la durada que seleccionis.",
   'verboseLogging': 'Registre detallat',
   'verboseLoggingDescription':
       "Registra detalls de diagnòstic addicionals per ajudar a solucionar errors. Tingues en compte que aquest registre addicional pot contenir informació d'identificació personal.",

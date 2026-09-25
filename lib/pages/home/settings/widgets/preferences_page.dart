@@ -17,6 +17,7 @@ class _PreferencesPageState extends State<PreferencesPage> {
   late bool isPickerFilterSwitchToggled;
   late bool isColorsSwitchToggled;
   late bool isVerboseLoggingSwitchToggled;
+  late bool isStrictClipLengthSwitchToggled;
 
   @override
   void initState() {
@@ -31,6 +32,8 @@ class _PreferencesPageState extends State<PreferencesPage> {
         SharedPrefsUtil.getBool('useAlternativeCalendarColors') ?? false;
     isVerboseLoggingSwitchToggled =
         SharedPrefsUtil.getBool('verboseLogging') ?? false;
+    isStrictClipLengthSwitchToggled =
+        SharedPrefsUtil.getBool('strictClipLength') ?? false;
   }
 
   @override
@@ -262,6 +265,53 @@ class _PreferencesPageState extends State<PreferencesPage> {
                 ),
                 const SizedBox(height: 5.0),
                 Text('useAlternativeCalendarColorsDescription'.tr),
+                const Divider(),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Flexible(
+                        child: Text(
+                          'strictClipLength'.tr,
+                          style: TextStyle(
+                            fontSize: MediaQuery.of(context).size.width * 0.045,
+                          ),
+                        ),
+                      ),
+                      Switch(
+                        value: isStrictClipLengthSwitchToggled,
+                        onChanged: (value) async {
+                          if (value) {
+                            Utils.logInfo(
+                              '[PREFERENCES] - Strict clip length was enabled',
+                            );
+
+                            SharedPrefsUtil.putBool('strictClipLength', true);
+                          } else {
+                            Utils.logInfo(
+                              '[PREFERENCES] - Strict clip length was disabled',
+                            );
+
+                            SharedPrefsUtil.putBool('strictClipLength', false);
+                          }
+
+                          /// Update switch value
+                          setState(() {
+                            isStrictClipLengthSwitchToggled =
+                                !isStrictClipLengthSwitchToggled;
+                          });
+                        },
+                        activeTrackColor: AppColors.mainColor.withValues(
+                          alpha: 0.4,
+                        ),
+                        activeThumbColor: AppColors.mainColor,
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 5.0),
+                Text('strictClipLengthDescription'.tr),
                 const Divider(),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 15.0),
