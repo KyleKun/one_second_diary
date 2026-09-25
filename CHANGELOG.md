@@ -1,13 +1,15 @@
-## vx.x.x - xx/202x
-- Updates Flutter and dependencies to what is avaiable in mid 2026
-- Dropping support for drops Android 7.0/7.1 for Flutter Upgrade
-- Increasing minimum iOS deployment target from 11.0 to 15.0 for Flutter Upgrade
-- iOS support: the app now resolves its folders, encodes and stores videos on iOS
-- The H.264 encoder is picked from what the ffmpeg build actually ships instead of being hardcoded
-- App folders are resolved on every launch instead of being read back from preferences
-- Add portrait/vertical videos support.
+## v1.7.0 - 10/2026
+- Updated Flutter and dependencies
+- Dropped support for Android 7.0/7.1
+- Increased minimum iOS deployment target from 11.0 to 15.0 for Flutter Upgrade
+- Initial iOS support (not released yet)
+- Encoder is now picked from the available ffmpeg build instead of being hardcoded
+- App folders are now resolved on every launch instead of being read back from preferences
+- Added ability to save picture as a video
+- Added portrait/vertical videos support
 - Added Belarusian localization
 - Added Hungarian localization
+- Improved UI/UX for some pages
 
 ## v1.6.0 - 12/2023
 - Added option to receive persistent notifications
