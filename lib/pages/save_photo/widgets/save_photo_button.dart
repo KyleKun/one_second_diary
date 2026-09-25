@@ -32,7 +32,7 @@ class SavePhotoButton extends StatefulWidget {
   });
 
   final String photoPath;
-  final int photoDurationInSeconds;
+  final double photoDurationInSeconds;
   final Color dateColor;
   final String dateFormat;
   final bool isTextDate;
@@ -262,7 +262,8 @@ class _SavePhotoButtonState extends State<SavePhotoButton> {
 
     String subtitlesPath = '';
     const int videoStartInMilliseconds = 0;
-    final int videoEndInMilliseconds = widget.photoDurationInSeconds * 1000;
+    final int videoEndInMilliseconds = (widget.photoDurationInSeconds * 1000)
+        .round();
     if (widget.subtitles?.isEmpty == false) {
       subtitlesPath = await Utils.writeSrt(
         widget.subtitles!,
