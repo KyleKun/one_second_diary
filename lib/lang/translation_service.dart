@@ -8,6 +8,7 @@ import 'de.dart';
 import 'en.dart';
 import 'es.dart';
 import 'fr.dart';
+import 'hu.dart';
 import 'id.dart';
 import 'pt.dart';
 import 'ru.dart';
@@ -35,6 +36,7 @@ class TranslationService extends Translations {
     LanguageModel('Čeština', 'cs'),
     LanguageModel('Català', 'ca'),
     LanguageModel('Беларуская', 'be'),
+    LanguageModel('Magyar', 'hu'),
   ];
 
   @override
@@ -50,5 +52,6 @@ class TranslationService extends Translations {
     'cs': cs,
     'ca': ca,
     'be': be,
+    'hu': hu,
   };
 }

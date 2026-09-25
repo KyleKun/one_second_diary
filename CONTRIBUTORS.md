@@ -30,6 +30,7 @@
 - Miloš Koliáš - Czech
 - Ander Romero - Catalan
 - Павел Мінютка - Belarusian
+- Bembee - Hungarian
 
 ## App Logo (Initial Version)
 - Victória Marques

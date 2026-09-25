@@ -7,6 +7,7 @@
 - App folders are resolved on every launch instead of being read back from preferences
 - Add portrait/vertical videos support.
 - Added Belarusian localization
+- Added Hungarian localization
 
 ## v1.6.0 - 12/2023
 - Added option to receive persistent notifications
