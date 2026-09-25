@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 import 'package:rive/rive.dart';
 
@@ -18,6 +19,8 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await RiveNative.init();
   await SharedPrefsUtil.getInstance();
+  // Month names and date patterns for every locale, used by DateFormatUtils.
+  await initializeDateFormatting();
 
   // Resolved before the first frame: on iOS the container path changes between
   // launches, so nothing may rely on a path persisted by a previous run.

@@ -231,6 +231,7 @@ class _SaveButtonState extends State<SaveButton> {
 
     // Copies text font for ffmpeg to storage if it was not copied yet
     final String fontPath = await Utils.copyFontToStorage();
+    final String dateTextFilePath = await Utils.writeDateTxt(widget.dateFormat);
     final String videoPath = widget.videoPath;
 
     // Parses the color code to a hex code format which can be read by ffmpeg
@@ -376,7 +377,7 @@ class _SaveButtonState extends State<SaveButton> {
 
     // Add date to the video
     final date =
-        ',drawtext="$fontPath:text=\'${widget.dateFormat}\':fontsize=$dateTextSize:fontcolor=\'$parsedDateColor\':borderw=${widget.textOutlineWidth}:bordercolor=$parsedTextOutlineColor:x=$datePosX:y=$datePosY';
+        ',drawtext="fontfile=$fontPath:textfile=$dateTextFilePath:fontsize=$dateTextSize:fontcolor=\'$parsedDateColor\':borderw=${widget.textOutlineWidth}:bordercolor=$parsedTextOutlineColor:x=$datePosX:y=$datePosY';
 
     // Add subtitles to the video
     final String subtitles = widget.subtitles?.isEmpty == false

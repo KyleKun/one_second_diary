@@ -3,59 +3,62 @@ import 'package:get/get.dart';
 
 import '../../../../controllers/lang_controller.dart';
 import '../../../../lang/translation_service.dart';
-import '../../../../utils/utils.dart';
+import 'language_picker_sheet.dart';
 
-class LanguageChooser extends StatefulWidget {
+/// Settings row showing the current language (with its flag); tapping it
+/// opens [LanguagePickerSheet].
+class LanguageChooser extends StatelessWidget {
   const LanguageChooser({Key? key}) : super(key: key);
 
   @override
-  State<LanguageChooser> createState() => _LanguageChooserState();
-}
-
-class _LanguageChooserState extends State<LanguageChooser> {
-  final String title = 'language'.tr;
-  final LanguageController _languageController = Get.find();
-
-  @override
   Widget build(BuildContext context) {
+    final LanguageController languageController = Get.find();
+
     return Column(
       children: [
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 15.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                title,
-                style: TextStyle(
-                  fontSize: MediaQuery.of(context).size.width * 0.045,
-                ),
-              ),
-              DropdownButton<String>(
-                iconSize: MediaQuery.of(context).size.width * 0.045,
-                isExpanded: false,
-                isDense: false,
-                alignment: Alignment.center,
-                value: _languageController.selectedLanguage.value,
-                onChanged: (symbol) {
-                  _languageController.changeLanguage = symbol!;
-                  Utils.logInfo('[SETTINGS] - App language changed to $symbol');
-                },
-                items: TranslationService.languages.map((
-                  LanguageModel _language,
-                ) {
-                  return DropdownMenuItem<String>(
-                    child: Text(
-                      _language.language,
-                      style: TextStyle(
-                        fontSize: MediaQuery.of(context).size.width * 0.04,
-                      ),
+        InkWell(
+          onTap: () => LanguagePickerSheet.show(context),
+          child: Ink(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 15.0,
+              vertical: 10.0,
+            ),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    'language'.tr,
+                    style: TextStyle(
+                      fontSize: MediaQuery.of(context).size.width * 0.045,
                     ),
-                    value: _language.symbol,
+                  ),
+                ),
+                Obx(() {
+                  final LanguageModel? language =
+                      LanguagePickerSheet.languageFor(
+                        languageController.selectedLanguage.value,
+                      );
+                  if (language == null) return const Icon(Icons.translate);
+                  return Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      LanguageFlag(
+                        countryCode: language.flagCountryCode,
+                        width: 22,
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        language.language,
+                        style: TextStyle(
+                          fontSize: MediaQuery.of(context).size.width * 0.04,
+                        ),
+                      ),
+                      const Icon(Icons.chevron_right_rounded),
+                    ],
                   );
-                }).toList(),
-              ),
-            ],
+                }),
+              ],
+            ),
           ),
         ),
         const Divider(),

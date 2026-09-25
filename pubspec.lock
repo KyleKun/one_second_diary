@@ -121,6 +121,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.19.1"
+  convert:
+    dependency: transitive
+    description:
+      name: convert
+      sha256: b30acd5944035672bc15c6b7a8b47d773e41e2f17de064350988c5d02adb1c68
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.1.2"
+  country_flags:
+    dependency: "direct main"
+    description:
+      name: country_flags
+      sha256: f022d18337f3861f1f4e319b936cb53920de9259f38cb09e169eace9942e2b79
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.1.2"
   cross_file:
     dependency: transitive
     description:
@@ -221,10 +237,10 @@ packages:
     dependency: "direct main"
     description:
       name: ffmpeg_kit_flutter_new
-      sha256: "213ca74666ce8aa01fdaa77adc40444e9ef39e140b264747787bb0555da06783"
+      sha256: "112ca70a36babc2951cddc879990aad98956b75acb69cdc3fbd2d16bfc941753"
       url: "https://pub.dev"
     source: hosted
-    version: "4.2.1"
+    version: "4.6.2"
   ffmpeg_kit_flutter_platform_interface:
     dependency: transitive
     description:
@@ -720,6 +736,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.1"
+  jovial_misc:
+    dependency: transitive
+    description:
+      name: jovial_misc
+      sha256: "065b5240badae6b13472efdea28fffe8baf914a7831361469a95c6456d9b8dc8"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.10.0"
+  jovial_svg:
+    dependency: transitive
+    description:
+      name: jovial_svg
+      sha256: "99e9c3afcf7371ae38083ad52de23677d6d751f46150c3c6ae842e009e84d9f0"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.29"
   js:
     dependency: transitive
     description:

@@ -64,6 +64,21 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
   // profile switcher, so it can't go stale while this page is open.
   final VideoOrientation _previewOrientation = Utils.getCurrentOrientation();
 
+  /// The loaded clip's own aspect ratio once it's initialized, falling back
+  /// to the profile's canvas only while it loads. A profile's clips aren't
+  /// guaranteed to match its canvas — e.g. landscape clips recorded before
+  /// the profile's orientation was chosen — and forcing them into the
+  /// profile's frame would stretch them.
+  double get _previewAspectRatio {
+    final VideoPlayerController? controller = _controller;
+    if (controller != null &&
+        controller.value.isInitialized &&
+        controller.value.aspectRatio > 0) {
+      return controller.value.aspectRatio;
+    }
+    return OrientationFilter.aspectRatioFor(_previewOrientation);
+  }
+
   @override
   void initState() {
     setGalleryAlbum();
@@ -452,12 +467,7 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
                             allVideos!.first.split('/').last.split('.').first,
                           );
                           final hasVideo = allVideos!.any(
-                            (a) => a.contains(
-                              DateFormatUtils.getDate(
-                                date,
-                                allowCheckFormattingDayFirst: false,
-                              ),
-                            ),
+                            (a) => a.contains(DateFormatUtils.getDate(date)),
                           );
                           // Do not colorize days before first recording date or future dates
                           if (DateTime.now().compareTo(date) != -1 &&
@@ -558,14 +568,7 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
                                         Constants.previewMaxHeightFraction,
                                   ),
                                   child: AspectRatio(
-                                    // Derived from the active profile's
-                                    // orientation, not the loaded video's own
-                                    // aspect ratio, so there's no layout shift
-                                    // while it's still initializing.
-                                    aspectRatio:
-                                        OrientationFilter.aspectRatioFor(
-                                          _previewOrientation,
-                                        ),
+                                    aspectRatio: _previewAspectRatio,
                                     child: Container(
                                       decoration: BoxDecoration(
                                         border: Border.all(color: mainColor),
@@ -798,17 +801,13 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
     });
 
     final currentVideoExists = allVideos!.any(
-      (a) => a.contains(
-        DateFormatUtils.getDate(date, allowCheckFormattingDayFirst: false),
-      ),
+      (a) => a.contains(DateFormatUtils.getDate(date)),
     );
     if (currentVideoExists) {
       setState(() {
         wasDateRecorded = true;
         currentVideo = allVideos!.firstWhere(
-          (a) => a.contains(
-            DateFormatUtils.getDate(date, allowCheckFormattingDayFirst: false),
-          ),
+          (a) => a.contains(DateFormatUtils.getDate(date)),
         );
       });
       await getSubtitlesForSelectedDate();

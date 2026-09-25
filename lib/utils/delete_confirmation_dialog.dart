@@ -4,16 +4,30 @@ import 'package:get/get.dart';
 import 'constants.dart';
 import 'theme.dart';
 
-/// "Are you sure?" before deleting a video or movie. Pops with true when the
-/// user confirms, false (or null, if dismissed) otherwise — the caller does
-/// the actual deleting.
+/// "Are you sure?" before deleting something — a video or movie by default,
+/// or whatever [titleKey]/[messageKey] describe. Pops with true when the user
+/// confirms, false (or null, if dismissed) otherwise — the caller does the
+/// actual deleting.
 class DeleteConfirmationDialog extends StatelessWidget {
-  const DeleteConfirmationDialog({super.key});
+  const DeleteConfirmationDialog({
+    super.key,
+    this.titleKey = 'discardVideoTitle',
+    this.messageKey = 'deleteVideoWarning',
+  });
 
-  static Future<bool> show(BuildContext context) async {
+  /// Translation keys for the dialog's title and body.
+  final String titleKey;
+  final String messageKey;
+
+  static Future<bool> show(
+    BuildContext context, {
+    String titleKey = 'discardVideoTitle',
+    String messageKey = 'deleteVideoWarning',
+  }) async {
     final bool? confirmed = await showDialog<bool>(
       context: context,
-      builder: (_) => const DeleteConfirmationDialog(),
+      builder: (_) =>
+          DeleteConfirmationDialog(titleKey: titleKey, messageKey: messageKey),
     );
     return confirmed == true;
   }
@@ -48,7 +62,7 @@ class DeleteConfirmationDialog extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             Text(
-              'discardVideoTitle'.tr,
+              titleKey.tr,
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 20,
@@ -58,7 +72,7 @@ class DeleteConfirmationDialog extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             Text(
-              'deleteVideoWarning'.tr,
+              messageKey.tr,
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 15,

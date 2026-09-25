@@ -44,12 +44,14 @@ class StorageUtils {
     }
   }
 
-  static Future<void> _requestPermissions() async {
+  /// Whether the storage permissions needed to read the videos folder were
+  /// granted. Always true on iOS.
+  static Future<bool> _requestPermissions() async {
     if (!PlatformUtils.isAndroid) {
       // iOS grants the app its own container. Camera, microphone and photo
       // library prompts are raised by the plugins that need them, at the point
       // where they need them.
-      return;
+      return true;
     }
 
     final AndroidDeviceInfo androidDeviceInfo =
@@ -64,6 +66,34 @@ class StorageUtils {
       Utils.logError(
         '[StorageUtils] - Some storage permissions were not granted for sdk version $sdkVersion',
       );
+    }
+    return granted;
+  }
+
+  /// Whether the videos folder already holds clips from a previous install
+  /// (e.g. the app was reinstalled or its data cleared) — the case where
+  /// onboarding must not offer an orientation choice, since every clip
+  /// recorded before orientations existed is landscape.
+  ///
+  /// Asks for storage permissions first: on Android, files a previous
+  /// install wrote are hidden from listing without them. If they're denied,
+  /// the folder merely existing is used as the signal instead — nothing
+  /// creates it before HOME's StorageController runs, so on a fresh install
+  /// it isn't there yet at this point.
+  static Future<bool> hasExistingVideos() async {
+    await AppPaths.init();
+    final bool granted = await _requestPermissions();
+    final io.Directory videosDirectory = io.Directory(AppPaths.videos);
+
+    try {
+      if (!await videosDirectory.exists()) return false;
+      if (!granted) return true;
+      return await videosDirectory
+          .list(recursive: true)
+          .any((file) => file is io.File && file.path.endsWith('.mp4'));
+    } catch (e) {
+      Utils.logError('[StorageUtils] - $e');
+      return false;
     }
   }
 

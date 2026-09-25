@@ -1,150 +1,63 @@
+import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
-
-import 'constants.dart';
-import 'extensions.dart';
+import 'package:intl/intl.dart';
 
 class DateFormatUtils {
-  /// Add ['st', 'nd' or 'st'] for date in text format if it is in English
-  static String getEnglishDaySuffix(String day) {
-    switch (day) {
-      case '1':
-        return 'st';
-      case '21':
-        return 'st';
-      case '31':
-        return 'st';
-      case '2':
-        return 'nd';
-      case '22':
-        return 'nd';
-      case '3':
-        return 'rd';
-      case '23':
-        return 'rd';
-      default:
-        return 'th';
+  /// Today as `yyyy-MM-dd`, the format video file names use.
+  static String getToday() => getDate(DateTime.now());
+
+  /// [date] as `yyyy-MM-dd`, the format video file names use. Never
+  /// localized: the calendar, movie creation and video count all find
+  /// videos by this exact name.
+  static String getDate(DateTime date) => DateFormat('yyyy-MM-dd').format(date);
+
+  /// The `intl` locale dates are shown in: the app language, plus the
+  /// device's region when the device uses that same language — so English
+  /// is month-first in the US but day-first in the UK, and Portuguese
+  /// follows Brazil or Portugal.
+  static String _displayLocale() {
+    final String language = Get.locale?.languageCode ?? 'en';
+    final Locale? device = Get.deviceLocale;
+    final String? region = device?.countryCode;
+    if (device?.languageCode == language && region != null) {
+      final String withRegion = '${language}_$region';
+      if (DateFormat.localeExists(withRegion)) return withRegion;
     }
+    return DateFormat.localeExists(language) ? language : 'en';
   }
 
-  /// Get current date for editting video with date in text format
-  static String getWrittenToday({DateTime? customDate, String lang = ''}) {
-    List<String> date = [];
-    if (customDate == null) {
-      date = getToday().split('-');
-    } else {
-      date = getDate(customDate).split('-');
-    }
+  /// [date] in the numeric form burned into videos, e.g. `02/06/2024` in
+  /// the US, `06.02.2024` in German, `2024. 02. 06.` in Hungarian.
+  static String getNumericDate(DateTime date) =>
+      formatNumericDate(date, _displayLocale());
 
-    final String year = date.first;
-    // Used to get month index in list
-    final int monthNumber = int.parse(date[1]);
+  /// [date] written out as burned into videos, e.g. `February 6, 2024` in
+  /// the US, `6. Februar 2024` in German, `2024年2月6日` in Chinese.
+  static String getWrittenDate(DateTime date) =>
+      formatWrittenDate(date, _displayLocale());
 
-    String day = date.last;
-    String month = '';
-
-    if (lang == 'es') {
-      month = Constants.esMonths[monthNumber - 1];
-      return '$day de $month de $year';
-    }
-    if (lang == 'pt') {
-      month = Constants.ptMonths[monthNumber - 1];
-      return '$day de $month de $year';
-    }
-    if (lang == 'ca') {
-      month = Constants.caMonths[monthNumber - 1];
-      //Add custom article for the months that start with a vowel
-      if (monthNumber == 4 || monthNumber == 8 || monthNumber == 10) {
-        return "$day d'$month de $year";
-      }
-      return '$day de $month de $year';
-    }
-    if (lang == 'hu') {
-      month = Constants.huMonths[monthNumber - 1];
-      // Hungarian writes the day without a leading 0: 2024. február 6.
-      return '$year. $month ${int.parse(day)}.';
-    }
-    // Default format for English and other languages
-    month = Constants.enMonths[monthNumber - 1];
-    // Used to remove leading 0
-    day = int.parse(day).toString();
-    // Day suffix
-    final String suffix = getEnglishDaySuffix(day);
-    return '$month $day$suffix, $year';
+  /// A video's `yyyy-MM-dd` file name (without extension) shown as
+  /// [getNumericDate]. Returned unchanged if it isn't a valid date.
+  static String displayDateFromFileName(String fileName) {
+    final DateTime? date = DateTime.tryParse(fileName);
+    return date == null ? fileName : getNumericDate(date);
   }
 
-  /// Applied if language is ['pt', 'es' or 'ca']
-  static bool isDayFirstPattern() {
-    final String languageCode = Get.locale!.languageCode;
-    if (languageCode == 'pt' || languageCode == 'es' || languageCode == 'ca') {
-      return true;
-    }
-    return false;
+  /// [locale]'s own short date order and separators, zero-padded so the
+  /// stamp keeps the same width every day (`d/M/y` becomes `dd/MM/yyyy`).
+  @visibleForTesting
+  static String formatNumericDate(DateTime date, String locale) {
+    final String pattern = DateFormat.yMd(locale).pattern!.replaceAllMapped(
+      RegExp('d+|M+|y+'),
+      (match) => match[0]!.startsWith('y') ? 'yyyy' : match[0]![0] * 2,
+    );
+    return _stampSafe(DateFormat(pattern, locale).format(date));
   }
 
-  /// Get the current date and format it properly
-  static String getToday({bool allowCheckFormattingDayFirst = false}) {
-    final now = DateTime.now();
-
-    // Adding a leading zero on Days and Months <= 9
-    final String day = now.day <= 9 ? '0${now.day}' : '${now.day}';
-    final String month = now.month <= 9 ? '0${now.month}' : '${now.month}';
-    final String year = '${now.year}';
-
-    // Brazilian pattern
-    if (allowCheckFormattingDayFirst) {
-      if (isDayFirstPattern()) {
-        return '$day-$month-$year';
-      }
-    }
-
-    return '$year-$month-$day';
-  }
-
-  /// Get the given date and format it properly
-  static String getDate(
-    DateTime date, {
-    bool allowCheckFormattingDayFirst = false,
-  }) {
-    // Adding a leading zero on Days and Months <= 9
-    final String day = date.day <= 9 ? '0${date.day}' : '${date.day}';
-    final String month = date.month <= 9 ? '0${date.month}' : '${date.month}';
-    final String year = '${date.year}';
-
-    // Brazilian pattern
-    if (allowCheckFormattingDayFirst) {
-      if (isDayFirstPattern()) {
-        return '$day-$month-$year';
-      }
-    }
-
-    return '$year-$month-$day';
-  }
-
-  static String parseDateStringAccordingLocale(String date) {
-    if (isDayFirstPattern()) {
-      final String year = date.split('-').first;
-      final String month = date.split('-')[1];
-      final String day = date.split('-').last;
-      return '$day-$month-$year';
-    }
-
-    return date;
-  }
-
-  /// Convert the given date from the app's ffmpeg friendly format to DateTime
-  static DateTime parseToDateTime(String date, {bool? isDayFirst}) {
-    isDayFirst ??= isDayFirstPattern();
-
-    final String day = isDayFirst
-        ? date.split('-').first
-        : date.split('-').last;
-    final String month = date.split('-')[1];
-    final String year = isDayFirst
-        ? date.split('-').last
-        : date.split('-').first;
-
-    return DateTime(year.toInt(), month.toInt(), day.toInt());
-  }
+  /// [locale]'s own long date, month name included.
+  @visibleForTesting
+  static String formatWrittenDate(DateTime date, String locale) =>
+      _stampSafe(DateFormat.yMMMMd(locale).format(date));
 
   /// Order the dates before writing the txt file for generating movie
   static List<DateTime> orderDates(List<DateTime> dates) {
@@ -153,4 +66,11 @@ class DateFormatUtils {
     });
     return dates;
   }
+
+  /// Swaps characters the stamp fonts draw badly for plain ones: no-break
+  /// spaces (e.g. Russian's `2024 г.`), which the trimmed Noto Sans lacks
+  /// and a stamp never wraps on anyway, and Catalan's typographic
+  /// apostrophe (`d’abril`), which YuseiMagic draws as a full-width glyph.
+  static String _stampSafe(String text) =>
+      text.replaceAll(RegExp('[\u00a0\u202f]'), ' ').replaceAll('\u2019', "'");
 }

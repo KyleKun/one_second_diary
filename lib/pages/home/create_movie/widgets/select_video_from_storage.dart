@@ -119,7 +119,7 @@ class _SelectVideoFromStorageState extends State<SelectVideoFromStorage> {
                       return Column(
                         children: [
                           Text(
-                            DateFormatUtils.parseDateStringAccordingLocale(
+                            DateFormatUtils.displayDateFromFileName(
                               allVideos![index]
                                   .split('/')
                                   .last

@@ -55,8 +55,8 @@ class _SaveVideoPageState extends State<SaveVideoPage>
   late String _dateWrittenValueForVideoEdit;
 
   List<String> _dateFormatsForVideoEdit = [
-    DateFormatUtils.getToday(allowCheckFormattingDayFirst: true),
-    DateFormatUtils.getWrittenToday(lang: Get.locale!.languageCode),
+    DateFormatUtils.getNumericDate(DateTime.now()),
+    DateFormatUtils.getWrittenDate(DateTime.now()),
   ];
 
   late bool isTextDate;
@@ -77,14 +77,10 @@ class _SaveVideoPageState extends State<SaveVideoPage>
   void _initCorrectDates() {
     final DateTime selectedDate = routeArguments['currentDate'];
 
-    final String dateCommonValue = DateFormatUtils.getDate(
-      selectedDate,
-      allowCheckFormattingDayFirst: true,
-    );
+    final String dateCommonValue = DateFormatUtils.getNumericDate(selectedDate);
 
-    _dateWrittenValueForVideoEdit = DateFormatUtils.getWrittenToday(
-      customDate: selectedDate,
-      lang: Get.locale!.languageCode,
+    _dateWrittenValueForVideoEdit = DateFormatUtils.getWrittenDate(
+      selectedDate,
     );
 
     _recordingSettingsController.dateFormatId.value == 0
@@ -330,6 +326,7 @@ class _SaveVideoPageState extends State<SaveVideoPage>
                       Text(
                         _dateFinalFormatValueForVideoEdit,
                         style: TextStyle(
+                          fontFamily: Utils.stampFontFamily,
                           fontSize: 20,
                           foreground: Paint()
                             ..style = PaintingStyle.stroke
@@ -339,7 +336,11 @@ class _SaveVideoPageState extends State<SaveVideoPage>
                       ),
                     Text(
                       _dateFinalFormatValueForVideoEdit,
-                      style: TextStyle(fontSize: 20, color: pickerColor),
+                      style: TextStyle(
+                        fontFamily: Utils.stampFontFamily,
+                        fontSize: 20,
+                        color: pickerColor,
+                      ),
                     ),
                   ],
                 ),

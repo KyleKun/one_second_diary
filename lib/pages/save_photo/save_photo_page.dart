@@ -45,8 +45,8 @@ class _SavePhotoPageState extends State<SavePhotoPage> {
   late String _dateWrittenValueForVideoEdit;
 
   List<String> _dateFormatsForVideoEdit = [
-    DateFormatUtils.getToday(allowCheckFormattingDayFirst: true),
-    DateFormatUtils.getWrittenToday(lang: Get.locale!.languageCode),
+    DateFormatUtils.getNumericDate(DateTime.now()),
+    DateFormatUtils.getWrittenDate(DateTime.now()),
   ];
 
   late bool isTextDate;
@@ -65,14 +65,10 @@ class _SavePhotoPageState extends State<SavePhotoPage> {
   void _initCorrectDates() {
     final DateTime selectedDate = routeArguments['currentDate'];
 
-    final String dateCommonValue = DateFormatUtils.getDate(
-      selectedDate,
-      allowCheckFormattingDayFirst: true,
-    );
+    final String dateCommonValue = DateFormatUtils.getNumericDate(selectedDate);
 
-    _dateWrittenValueForVideoEdit = DateFormatUtils.getWrittenToday(
-      customDate: selectedDate,
-      lang: Get.locale!.languageCode,
+    _dateWrittenValueForVideoEdit = DateFormatUtils.getWrittenDate(
+      selectedDate,
     );
 
     _recordingSettingsController.dateFormatId.value == 0

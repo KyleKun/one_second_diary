@@ -15,28 +15,32 @@ import 'ru.dart';
 import 'zh.dart';
 
 class LanguageModel {
-  LanguageModel(this.language, this.symbol);
+  LanguageModel(this.language, this.symbol, this.flagCountryCode);
 
   String language;
   String symbol;
+
+  /// ISO 3166 country code of the flag shown next to [language] in the
+  /// language picker.
+  String flagCountryCode;
 }
 
 class TranslationService extends Translations {
   static const fallbackLocale = Locale('en', 'US');
 
   static final List<LanguageModel> languages = [
-    LanguageModel('Deutsch', 'de'),
-    LanguageModel('English', 'en'),
-    LanguageModel('Português', 'pt'),
-    LanguageModel('Español', 'es'),
-    LanguageModel('Indonesia', 'id'),
-    LanguageModel('中文', 'zh'),
-    LanguageModel('Français', 'fr'),
-    LanguageModel('Русский', 'ru'),
-    LanguageModel('Čeština', 'cs'),
-    LanguageModel('Català', 'ca'),
-    LanguageModel('Беларуская', 'be'),
-    LanguageModel('Magyar', 'hu'),
+    LanguageModel('Deutsch', 'de', 'DE'),
+    LanguageModel('English', 'en', 'US'),
+    LanguageModel('Português', 'pt', 'BR'),
+    LanguageModel('Español', 'es', 'ES'),
+    LanguageModel('Indonesia', 'id', 'ID'),
+    LanguageModel('中文', 'zh', 'CN'),
+    LanguageModel('Français', 'fr', 'FR'),
+    LanguageModel('Русский', 'ru', 'RU'),
+    LanguageModel('Čeština', 'cs', 'CZ'),
+    LanguageModel('Català', 'ca', 'AD'),
+    LanguageModel('Беларуская', 'be', 'BY'),
+    LanguageModel('Magyar', 'hu', 'HU'),
   ];
 
   @override

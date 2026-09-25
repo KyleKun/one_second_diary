@@ -171,6 +171,21 @@ class Utils {
     return txtPath;
   }
 
+  /// Writes the date stamp to a txt file for drawtext's `textfile=`, which
+  /// sidesteps escaping the filtergraph's special characters (' : ,).
+  ///
+  /// Non-ASCII dates need ffmpeg-kit 4.6.0+ (FFmpeg 8.1): FFmpeg 8.0's
+  /// drawtext passed HarfBuzz each line's length in characters instead of
+  /// bytes, so "25 сентября 2026 г." was drawn as just "25 сентября".
+  static Future<String> writeDateTxt(String date) async {
+    final String txtPath = '${AppPaths.internal}/date.txt';
+    // No trailing newline: drawtext would draw it as an empty second line,
+    // shifting the bottom-anchored written date up.
+    await io.File(txtPath).writeAsString(date, flush: true);
+    logInfo('[Utils.writeDateTxt()] - Wrote "$date" to $txtPath');
+    return txtPath;
+  }
+
   /// Write txt used by ffmpeg to concatenate videos when generating movie
   static Future<String> writeTxt(List<String> files) async {
     final String txtPath = '${AppPaths.internal}/videos.txt';
@@ -588,14 +603,35 @@ class Utils {
     return allVideos;
   }
 
+  /// App languages whose dates (and usually place names) need letters
+  /// YuseiMagic doesn't have: Cyrillic, and Czech's č/ě/ř. Their date and
+  /// location stamps use a trimmed Noto Sans instead, since ffmpeg has no
+  /// per-glyph font fallback and would draw empty boxes.
+  static const Set<String> _fallbackStampFontLanguages = {'ru', 'be', 'cs'};
+
+  static bool get _usesFallbackStampFont =>
+      _fallbackStampFontLanguages.contains(Get.locale?.languageCode);
+
+  /// The Flutter font family matching the font [copyFontToStorage] hands
+  /// ffmpeg, for previews of the date stamp.
+  static String get stampFontFamily =>
+      _usesFallbackStampFont ? 'NotoSansDateStamp' : 'Magic';
+
+  /// Copies the font ffmpeg burns the date and location in with to storage
+  /// (once) and returns its path.
   static Future<String> copyFontToStorage() async {
-    final String fontPath = '${AppPaths.internal}/magic.ttf';
+    final bool useFallback = _usesFallbackStampFont;
+    final String fontPath = useFallback
+        ? '${AppPaths.internal}/datestamp_fallback.ttf'
+        : '${AppPaths.internal}/magic.ttf';
     try {
       if (StorageUtils.checkFileExists(fontPath)) {
         logInfo('Text font for ffmpeg already exists, not copying it.');
       } else {
         final ByteData data = await rootBundle.load(
-          'assets/fonts/YuseiMagic-Regular.ttf',
+          useFallback
+              ? 'assets/fonts/NotoSans-DateStamp.ttf'
+              : 'assets/fonts/YuseiMagic-Regular.ttf',
         );
         final List<int> bytes = data.buffer.asUint8List(
           data.offsetInBytes,

@@ -17,7 +17,10 @@ import '../../utils/theme.dart';
 /// has showIntro == false persisted from whatever version it first
 /// installed, so it never reaches this page; its profile(s) stay
 /// grandfathered as landscape exactly as before (StorageUtils.getOrientation's
-/// default for a profile with no stored value).
+/// default for a profile with no stored value). A reinstall or cleared app
+/// data does go back through IntroPage, but IntroPage skips this page when
+/// the videos folder already has clips (StorageUtils.hasExistingVideos) and
+/// creates the Default profile as landscape itself.
 ///
 /// Creates the Default profile with the chosen orientation before
 /// continuing on to the rest of the launch flow — the one profile in the
