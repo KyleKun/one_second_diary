@@ -7,7 +7,7 @@ const Map<String, String> hu = {
       'Köszönjük szépen, hogy használod az alkalmazást!\n\nHa szeretnéd támogatni a fejlesztést,\nadományozz bátran ^^',
   'donationPageTitle': 'Támogasd az alkalmazás fejlesztését',
   'about': 'Névjegy',
-  'appVersion': 'Verzió: 1.6.0',
+  'appVersion': 'Verzió: 1.7.0',
   'record': 'Felvétel',
   'createMovie': 'Film készítése',
   'settings': 'Beállítások',
@@ -73,9 +73,15 @@ const Map<String, String> hu = {
   'recordingSettings': 'Felvételi beállítások',
   'seconds': 'Másodperc: ',
   'timer': 'Időzítő: ',
+  'clipLength': 'Klip hossza',
+  'countdown': 'Visszaszámlálás',
+  'countdownHint': 'Vár 3 másodpercet a felvétel indítása előtt',
   'dateFormat': 'Dátumformátum:',
   'dateColor': 'Dátum színe:',
   'selectColor': 'Válassz színt',
+  'textOutline': 'Kontrasztos körvonal',
+  'textOutlineHint':
+      'Ellentétes színű keretet ad a szöveghez, hogy olvasható maradjon (ajánlott)',
   'enableGeotagging': 'Helyadatok hozzáadása (opcionális)',
   'setCustomLocation': 'Egyéni helyszín megadása (opcionális)',
   'ok': 'OK',
@@ -119,6 +125,19 @@ const Map<String, String> hu = {
   'reservedProfileName': 'Ez egy foglalt profilnév',
   'profileOrientationRequired': 'Válassz videótájolást ehhez a profilhoz',
   'onboardingOrientationTitle': 'Válaszd ki a videók tájolását',
+  'landscapeHint': 'Tévén és számítógépen mutat jól',
+  'portraitHint': 'Telefonon és storyban mutat jól',
+  'cameraMicPermissionTitle': 'Hozzáférés a kamerához és a mikrofonhoz',
+  'cameraMicPermissionDesc':
+      'A One Second Diary-nek szüksége van a kamerádra és a mikrofonodra, hogy rögzíthesse a napi pillanatodat.',
+  'cameraPermissionTitle': 'Hozzáférés a kamerához',
+  'cameraPermissionDesc':
+      'A One Second Diary-nek szüksége van a kamerádra, hogy rögzíthesse a napi pillanatodat.',
+  'permissionSettingsHint':
+      'A hozzáférés ki van kapcsolva ennél az alkalmazásnál. Az eszköz beállításaiban újra bekapcsolhatod.',
+  'allowAccess': 'Hozzáférés engedélyezése',
+  'openSettings': 'Beállítások megnyitása',
+  'notNow': 'Most nem',
   'onboardingOrientationDesc':
       'Ez határozza meg az alapértelmezett profilodba mentett videók formáját: fekvő (16:9) vagy álló (9:16). Később bármikor létrehozhatsz egy másik profilt a másik tájolással.',
   'creatingMovie': 'Feldolgozás... Kérlek, várj.\nEz több percig is eltarthat.',
@@ -204,22 +223,6 @@ const Map<String, String> hu = {
   'sendLogs': 'Naplók küldése?',
   'sendLogsDescription':
       'Ha problémád van, kérlek, koppints az „Igen” gombra, hogy a naplófájlok is bekerüljenek, ezek segítenek megtalálni a hibát. Ha funkciójavaslatod vagy más témájú üzeneted van, koppints a „Nem” gombra.',
-  'whatsNewDescv152':
-      'Az 1.5.2-es verzió számos javítást és fejlesztést hozott!\n\nNézd meg őket a következő oldalakon 😊',
-  'feat1v152': 'Gyorsabb videófeldolgozás',
-  'featDesc1v152': 'A nagy videók szerkesztése mostantól sokkal gyorsabb 🚀',
-  'feat2v152': 'Továbbfejlesztett videóvágás',
-  'featDesc2v152':
-      'Az új gyorsvágó gombokkal és a továbbfejlesztett vágósávval pontosabban választhatod ki a pillanatot 🎞️',
-  'feat3v152': 'Új kísérleti fájlválasztó',
-  'featDesc3v152':
-      'Az új kísérleti fájlválasztóval dátum szerint előnézheted és szűrheted a videóidat, így nem kell többé görgetned, amikor korábbi videókat adsz hozzá 📅 (A Preferenciákban kikapcsolhatod, ha problémát tapasztalsz)',
-  'feat4v152': 'Tájolás zárolása',
-  'featDesc4v152':
-      'Az alkalmazásban történő felvételkor a telefon elhelyezése után koppints az új gombra, hogy zárold a tájolást, és elkerüld a váratlan eredményeket 📱',
-  'feat5v152': 'És még sok más...',
-  'featDesc5v152':
-      'Emellett néhány kisebb vizuális fejlesztést és hibajavítást is találsz 🐛',
   'useFilterInExperimentalPicker':
       'Dátumszűrő használata a videók kiválasztásához',
   'useFilterInExperimentalPickerDescription':

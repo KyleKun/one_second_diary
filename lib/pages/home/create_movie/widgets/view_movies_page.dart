@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get_thumbnail_video/index.dart';
@@ -11,6 +10,7 @@ import 'package:share_plus/share_plus.dart';
 
 import '../../../../utils/app_paths.dart';
 import '../../../../utils/constants.dart';
+import '../../../../utils/delete_confirmation_dialog.dart';
 import '../../../../utils/media_gallery.dart';
 import '../../../../utils/storage_utils.dart';
 import '../../../../utils/theme.dart';
@@ -26,10 +26,33 @@ class ViewMovies extends StatefulWidget {
 class _ViewMoviesState extends State<ViewMovies> {
   List<String>? allMovies;
 
+  // One thumbnail request per movie, started the first time its card is
+  // built and reused afterwards — so scrolling back, or deleting another
+  // movie, never regenerates thumbnails that already exist.
+  final Map<String, Future<Uint8List?>> _thumbnails = {};
+
+  late final bool isDarkTheme = ThemeService().isDarkTheme();
+
   @override
   void initState() {
     super.initState();
     allMovies = Utils.getAllMovies(fullPath: true);
+  }
+
+  Future<Uint8List?> _thumbnailFor(String movie) {
+    return _thumbnails.putIfAbsent(movie, () async {
+      try {
+        return await VideoThumbnail.thumbnailData(
+          video: File(movie).path,
+          imageFormat: ImageFormat.JPEG,
+          maxWidth: 720,
+          quality: 60,
+        );
+      } catch (e) {
+        Utils.logError('[MOVIES VIEWER] - Thumbnail failed for $movie: $e');
+        return null;
+      }
+    });
   }
 
   @override
@@ -40,289 +63,350 @@ class _ViewMoviesState extends State<ViewMovies> {
         title: Text('myMovies'.tr, style: const TextStyle(color: Colors.white)),
       ),
       body: allMovies == null
-          ? const Center(child: Icon(Icons.hourglass_bottom, size: 32.0))
+          ? const Center(
+              child: CircularProgressIndicator(color: AppColors.mainColor),
+            )
           : allMovies!.isEmpty
-          ? Center(child: Text('noMoviesFound'.tr, textAlign: TextAlign.center))
-          : Column(
-              children: [
-                const SizedBox(height: 10),
-                Expanded(
-                  child: FutureBuilder(
-                    future: getThumbnails(),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const Center(
-                          child: SizedBox(
-                            height: 30,
-                            width: 30,
-                            child: Padding(
-                              padding: EdgeInsets.all(4.0),
-                              child: CircularProgressIndicator(),
-                            ),
-                          ),
-                        );
-                      }
-
-                      if (snapshot.hasError) {
-                        return Text('${snapshot.error}');
-                      }
-                      return GridView.builder(
-                        physics: const BouncingScrollPhysics(),
-                        addAutomaticKeepAlives: true,
-                        scrollCacheExtent: const ScrollCacheExtent.pixels(
-                          99999,
-                        ),
-                        shrinkWrap: true,
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 1,
-                            ),
-                        itemCount: allMovies!.length,
-                        itemBuilder: (context, index) {
-                          final movie = allMovies![index];
-                          return Padding(
-                            padding: const EdgeInsets.all(15.0),
-                            child: Column(
-                              children: [
-                                Stack(
-                                  children: [
-                                    Align(
-                                      alignment: Alignment.center,
-                                      // Uncapped, this thumbnail's height
-                                      // is unbounded (it sits under a
-                                      // non-flex Column child, same as
-                                      // every other unbounded-preview bug
-                                      // this session), and it always
-                                      // fit only because every movie was
-                                      // landscape (wide, short) until
-                                      // portrait profiles existed — a
-                                      // portrait movie's thumbnail is
-                                      // tall and pushes the play/share
-                                      // row below it past this grid
-                                      // cell's fixed (square) height.
-                                      // Capping lets it pillarbox
-                                      // (narrower, centered) instead.
-                                      child: ConstrainedBox(
-                                        constraints: BoxConstraints(
-                                          maxHeight:
-                                              MediaQuery.of(
-                                                context,
-                                              ).size.width -
-                                              100,
-                                        ),
-                                        child: Image.memory(
-                                          snapshot.data![index] as Uint8List,
-                                        ),
-                                      ),
-                                    ),
-                                    Align(
-                                      alignment: Alignment.topCenter,
-                                      child: Container(
-                                        height: 200,
-                                        width: double.infinity,
-                                        decoration: const BoxDecoration(
-                                          gradient: LinearGradient(
-                                            end: Alignment(0.0, 0.6),
-                                            begin: Alignment(0.0, -1),
-                                            colors: <Color>[
-                                              Colors.black87,
-                                              Colors.transparent,
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    Align(
-                                      alignment: Alignment.topLeft,
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Text(
-                                          allMovies![index].split('/').last,
-                                          style: const TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 11.0,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    Align(
-                                      alignment: Alignment.topRight,
-                                      child: IconButton(
-                                        icon: const Icon(
-                                          Icons.delete,
-                                          color: Colors.red,
-                                          size: 22.0,
-                                        ),
-                                        onPressed: () {
-                                          deleteVideoDialog(movie);
-                                        },
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 5.0),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
-                                  children: [
-                                    _ViewMoviesPlayButton(filePath: movie),
-                                    _ViewMoviesShareButton(filePath: movie),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          );
-                        },
-                      );
-                    },
-                  ),
-                ),
-              ],
+          ? _EmptyMovies(isDarkTheme: isDarkTheme)
+          : ListView.separated(
+              physics: const BouncingScrollPhysics(),
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
+              itemCount: allMovies!.length,
+              separatorBuilder: (_, __) => const SizedBox(height: 16),
+              itemBuilder: (context, index) {
+                final String movie = allMovies![index];
+                return _MovieCard(
+                  key: ValueKey(movie),
+                  filePath: movie,
+                  thumbnail: _thumbnailFor(movie),
+                  isDarkTheme: isDarkTheme,
+                  onDelete: () => deleteVideoDialog(movie),
+                );
+              },
             ),
     );
   }
 
   Future<void> deleteVideoDialog(String videoFile) async {
     MediaGallery.instance.setAlbum('${AppPaths.folderName}/Movies');
-    return await showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        title: Text('discardVideoTitle'.tr),
-        content: Text('deleteVideoWarning'.tr),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            style: TextButton.styleFrom(
-              foregroundColor: ThemeService().isDarkTheme()
-                  ? AppColors.light
-                  : AppColors.dark,
+    if (!await DeleteConfirmationDialog.show(context)) return;
+
+    // Delete current video from storage
+    await StorageUtils.deleteVideo(videoFile);
+
+    Utils.logInfo('[MOVIES VIEWER] - Deleted movie $videoFile');
+
+    // Refresh the UI
+    if (mounted) {
+      setState(() {
+        allMovies!.removeWhere((element) => element == videoFile);
+        _thumbnails.remove(videoFile);
+      });
+    }
+  }
+}
+
+class _MovieCard extends StatelessWidget {
+  const _MovieCard({
+    super.key,
+    required this.filePath,
+    required this.thumbnail,
+    required this.isDarkTheme,
+    required this.onDelete,
+  });
+
+  final String filePath;
+  final Future<Uint8List?> thumbnail;
+  final bool isDarkTheme;
+  final VoidCallback onDelete;
+
+  String get _fileName => filePath.split('/').last;
+
+  String get _title {
+    final String name = _fileName;
+    final int dot = name.lastIndexOf('.');
+    return dot > 0 ? name.substring(0, dot) : name;
+  }
+
+  String? get _fileSize {
+    try {
+      final int bytes = File(filePath).lengthSync();
+      if (bytes >= 1024 * 1024 * 1024) {
+        return '${(bytes / (1024 * 1024 * 1024)).toStringAsFixed(1)} GB';
+      }
+      if (bytes >= 1024 * 1024) {
+        return '${(bytes / (1024 * 1024)).toStringAsFixed(1)} MB';
+      }
+      return '${(bytes / 1024).ceil()} KB';
+    } catch (_) {
+      return null;
+    }
+  }
+
+  Future<void> _play() async => await OpenFilex.open(filePath);
+
+  void _share() {
+    SharePlus.instance.share(ShareParams(files: [XFile(filePath)]));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final Color textColor = isDarkTheme ? Colors.white : AppColors.dark;
+    final Color mutedTextColor = isDarkTheme ? Colors.white60 : Colors.black54;
+    final Color cardColor = isDarkTheme
+        ? Colors.white.withValues(alpha: 0.06)
+        : Colors.black.withValues(alpha: 0.04);
+    final String? size = _fileSize;
+    final String extension = _fileName.contains('.')
+        ? _fileName.split('.').last.toUpperCase()
+        : '';
+
+    return Container(
+      clipBehavior: Clip.antiAlias,
+      decoration: BoxDecoration(
+        color: cardColor,
+        borderRadius: BorderRadius.circular(24),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          // Thumbnail — tap to play
+          GestureDetector(
+            onTap: _play,
+            child: AspectRatio(
+              aspectRatio: 16 / 10,
+              child: ColoredBox(
+                color: Colors.black,
+                child: Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    FutureBuilder<Uint8List?>(
+                      future: thumbnail,
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState != ConnectionState.done) {
+                          return const Center(
+                            child: SizedBox(
+                              width: 24,
+                              height: 24,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2.4,
+                                color: Colors.white54,
+                              ),
+                            ),
+                          );
+                        }
+                        final Uint8List? bytes = snapshot.data;
+                        if (bytes == null) {
+                          return const Center(
+                            child: Icon(
+                              Icons.movie_outlined,
+                              color: Colors.white38,
+                              size: 48,
+                            ),
+                          );
+                        }
+                        // Contain, not cover: portrait movies are shown
+                        // whole (pillarboxed) instead of cropped.
+                        return Image.memory(
+                          bytes,
+                          fit: BoxFit.contain,
+                          gaplessPlayback: true,
+                        );
+                      },
+                    ),
+                    Center(
+                      child: Container(
+                        width: 60,
+                        height: 60,
+                        decoration: BoxDecoration(
+                          color: Colors.black.withValues(alpha: 0.45),
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: Colors.white.withValues(alpha: 0.6),
+                            width: 1.5,
+                          ),
+                        ),
+                        child: const Icon(
+                          Icons.play_arrow_rounded,
+                          color: Colors.white,
+                          size: 38,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
-            child: Text('no'.tr, style: const TextStyle(color: Colors.white)),
           ),
-          TextButton(
-            onPressed: () async {
-              // Delete current video from storage
-              await StorageUtils.deleteVideo(videoFile);
 
-              Utils.logInfo('[MOVIES VIEWER] - Deleted movie $videoFile');
-
-              // Refresh the UI
-              setState(() {
-                allMovies!.removeWhere((element) => element == videoFile);
-              });
-
-              Navigator.pop(context);
-            },
-            style: TextButton.styleFrom(foregroundColor: Colors.red),
-            child: Text('yes'.tr, style: const TextStyle(color: Colors.white)),
+          // Info + actions
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 14, 12, 14),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Text(
+                  _title,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                    color: textColor,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  [
+                    extension,
+                    if (size != null) size,
+                  ].where((part) => part.isNotEmpty).join(' · '),
+                  style: TextStyle(fontSize: 13, color: mutedTextColor),
+                ),
+                const SizedBox(height: 14),
+                Row(
+                  children: [
+                    Expanded(
+                      child: _ActionButton(
+                        icon: Icons.play_arrow_rounded,
+                        label: 'play'.tr,
+                        foreground: Colors.white,
+                        background: AppColors.mainColor,
+                        onPressed: _play,
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: _ActionButton(
+                        icon: Icons.share_rounded,
+                        label: 'share'.tr,
+                        foreground: textColor,
+                        background: isDarkTheme
+                            ? Colors.white.withValues(alpha: 0.10)
+                            : Colors.black.withValues(alpha: 0.06),
+                        onPressed: _share,
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    SizedBox(
+                      width: 46,
+                      height: 46,
+                      child: IconButton(
+                        onPressed: onDelete,
+                        style: IconButton.styleFrom(
+                          backgroundColor: Colors.red.withValues(alpha: 0.12),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(14),
+                          ),
+                        ),
+                        icon: const Icon(
+                          Icons.delete_outline_rounded,
+                          color: Colors.redAccent,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ],
       ),
     );
   }
-
-  Future<List<Uint8List?>> getThumbnails() async {
-    final thumbnails = <Uint8List?>[];
-    for (final video in allMovies!) {
-      final thumbnail = await VideoThumbnail.thumbnailData(
-        video: File(video).path,
-        imageFormat: ImageFormat.JPEG,
-        quality: 14,
-      );
-      thumbnails.add(thumbnail);
-    }
-    return thumbnails;
-  }
 }
 
-class _ViewMoviesShareButton extends StatelessWidget {
-  const _ViewMoviesShareButton({required this.filePath});
-  final String filePath;
+class _ActionButton extends StatelessWidget {
+  const _ActionButton({
+    required this.icon,
+    required this.label,
+    required this.foreground,
+    required this.background,
+    required this.onPressed,
+  });
+
+  final IconData icon;
+  final String label;
+  final Color foreground;
+  final Color background;
+  final VoidCallback onPressed;
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      alignment: Alignment.center,
-      children: [
-        Container(
-          constraints: BoxConstraints(
-            minHeight: MediaQuery.of(context).size.height * 0.055,
-            minWidth: MediaQuery.of(context).size.width * 0.28,
-          ),
-          child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.green,
-              elevation: 5.0,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(80.0),
-              ),
-            ),
-            onPressed: () {
-              SharePlus.instance.share(ShareParams(files: [XFile(filePath)]));
-            },
-            child: Text(
-              'share'.tr,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: MediaQuery.of(context).size.height * 0.022,
-              ),
-            ),
+    return SizedBox(
+      height: 46,
+      child: TextButton(
+        onPressed: onPressed,
+        style: TextButton.styleFrom(
+          backgroundColor: background,
+          foregroundColor: foreground,
+          padding: const EdgeInsets.symmetric(horizontal: 12),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(14),
           ),
         ),
-        const Positioned(
-          top: 0.0,
-          left: 0.0,
-          child: Icon(Icons.share_rounded, size: 20.0),
+        child: FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(icon, size: 20, color: foreground),
+              const SizedBox(width: 6),
+              Text(
+                label,
+                style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w700,
+                  color: foreground,
+                ),
+              ),
+            ],
+          ),
         ),
-      ],
+      ),
     );
   }
 }
 
-class _ViewMoviesPlayButton extends StatelessWidget {
-  const _ViewMoviesPlayButton({required this.filePath});
-  final String filePath;
+class _EmptyMovies extends StatelessWidget {
+  const _EmptyMovies({required this.isDarkTheme});
+
+  final bool isDarkTheme;
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      alignment: Alignment.center,
-      children: [
-        Container(
-          constraints: BoxConstraints(
-            minHeight: MediaQuery.of(context).size.height * 0.055,
-            minWidth: MediaQuery.of(context).size.width * 0.40,
-          ),
-          child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.purple,
-              elevation: 5.0,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(80.0),
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(32),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 72,
+              height: 72,
+              decoration: BoxDecoration(
+                color: AppColors.mainColor.withValues(alpha: 0.14),
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(
+                Icons.movie_outlined,
+                color: AppColors.mainColor,
+                size: 36,
               ),
             ),
-            onPressed: () async => await OpenFilex.open(filePath),
-            child: Text(
-              'play'.tr,
+            const SizedBox(height: 16),
+            Text(
+              'noMoviesFound'.tr,
               textAlign: TextAlign.center,
               style: TextStyle(
-                color: Colors.white,
-                fontSize: MediaQuery.of(context).size.height * 0.022,
+                fontSize: 17,
+                fontWeight: FontWeight.w600,
+                color: isDarkTheme ? Colors.white70 : Colors.black54,
               ),
             ),
-          ),
+          ],
         ),
-        const Positioned(
-          top: 0.0,
-          left: 0.0,
-          child: Icon(Icons.play_circle, size: 20.0),
-        ),
-      ],
+      ),
     );
   }
 }

@@ -34,6 +34,7 @@ class SaveButton extends StatefulWidget {
     required this.videoEndInMilliseconds,
     required this.determinedDate,
     required this.isFromRecordingPage,
+    this.isLoading = false,
   });
 
   // Finding controllers
@@ -53,6 +54,10 @@ class SaveButton extends StatefulWidget {
   final double videoEndInMilliseconds;
   final DateTime determinedDate;
   final bool isFromRecordingPage;
+
+  /// Shows a spinner and ignores taps, e.g. while the location is still
+  /// being fetched so it can be burned into the video.
+  final bool isLoading;
 
   @override
   _SaveButtonState createState() => _SaveButtonState();
@@ -91,21 +96,57 @@ class _SaveButtonState extends State<SaveButton> {
     }
   }
 
+  // Prevents user from clicking it twice
+  bool _pressedSave = false;
+
   @override
   Widget build(BuildContext context) {
-    bool _pressedSave = false;
-
-    return FloatingActionButton(
-      backgroundColor: AppColors.green,
-      child: const Icon(Icons.save, color: Colors.white),
-      onPressed: () {
-        // Prevents user from clicking it twice
-        if (!_pressedSave) {
-          _pressedSave = true;
-          showProgressDialog();
-          _saveVideo();
-        }
-      },
+    return SizedBox(
+      width: double.infinity,
+      height: 54,
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: AppColors.green,
+          disabledBackgroundColor: AppColors.green.withValues(alpha: 0.6),
+          elevation: 0,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(18),
+          ),
+        ),
+        onPressed: widget.isLoading
+            ? null
+            : () {
+                if (!_pressedSave) {
+                  _pressedSave = true;
+                  showProgressDialog();
+                  _saveVideo();
+                }
+              },
+        child: widget.isLoading
+            ? const SizedBox(
+                width: 22,
+                height: 22,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2.4,
+                  color: Colors.white,
+                ),
+              )
+            : Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Icon(Icons.save_rounded, color: Colors.white),
+                  const SizedBox(width: 10),
+                  Text(
+                    'save'.tr,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 17,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ],
+              ),
+      ),
     );
   }
 

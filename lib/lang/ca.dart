@@ -7,7 +7,7 @@ const Map<String, String> ca = {
       'Moltes gràcies per fer servir l’app!\n\nSi us agradaria donar suport al desenvolupament,\nno dubteu en fer una donació ^^',
   'donationPageTitle': 'Doneu suport al desenvolupament',
   'about': 'Quant a',
-  'appVersion': 'Versió 1.6.0',
+  'appVersion': 'Versió 1.7.0',
   'record': 'Enregistra',
   'createMovie': 'Crea pel·lícula',
   'settings': 'Configuració',
@@ -74,9 +74,15 @@ const Map<String, String> ca = {
   'recordingSettings': 'Configuració de l’enregistrament',
   'seconds': 'Segons: ',
   'timer': 'Temporitzador: ',
+  'clipLength': 'Durada del clip',
+  'countdown': 'Compte enrere',
+  'countdownHint': 'Espera 3 segons abans de començar a gravar',
   'dateFormat': 'Format de la data:',
   'dateColor': 'Color de la data:',
   'selectColor': 'Seleccioneu un color',
+  'textOutline': 'Contorn de contrast',
+  'textOutlineHint':
+      'Afegeix una vora del color oposat perquè el text es llegeixi bé (recomanat)',
   'enableGeotagging': 'Activa el geoetiquetatge (opcional)',
   'setCustomLocation': 'Defineix una ubicació personalitzada (opcional)',
   'ok': 'D’acord',
@@ -121,6 +127,19 @@ const Map<String, String> ca = {
   'profileOrientationRequired':
       'Selecciona una orientació de vídeo per a aquest perfil',
   'onboardingOrientationTitle': 'Selecciona la teva orientació de vídeo',
+  'landscapeHint': 'Ideal per a TV i ordinadors',
+  'portraitHint': 'Ideal per a mòbils i stories',
+  'cameraMicPermissionTitle': 'Accés a la càmera i al micròfon',
+  'cameraMicPermissionDesc':
+      'One Second Diary necessita la teva càmera i el teu micròfon per gravar el teu moment del dia.',
+  'cameraPermissionTitle': 'Accés a la càmera',
+  'cameraPermissionDesc':
+      'One Second Diary necessita la teva càmera per gravar el teu moment del dia.',
+  'permissionSettingsHint':
+      'L’accés està desactivat per a aquesta app. Pots tornar-lo a activar a la configuració del dispositiu.',
+  'allowAccess': 'Permet l’accés',
+  'openSettings': 'Obre la configuració',
+  'notNow': 'Ara no',
   'onboardingOrientationDesc':
       "Això defineix la forma dels vídeos que desis amb el teu perfil per defecte: horitzontal (16:9) o vertical (9:16). Sempre pots crear un altre perfil amb l'altra orientació més endavant.",
   'creatingMovie':
@@ -210,23 +229,6 @@ const Map<String, String> ca = {
   'sendLogs': 'Voleu enviar els registres?',
   'sendLogsDescription':
       'Si us trobeu davant d’un problema, premeu «Sí» per incloure els registres que m’ajudaran a trobar el problema. Si voleu suggerir una característica o qualsevol altra cosa, premeu «No».',
-  'whatsNewDescv152':
-      'La versió 1.5.2 porta diverses correccions i millores!\n\nFeu-hi una ullada a les següents pàgines 😊',
-  'feat1v152': 'Processament de vídeo més ràpid',
-  'featDesc1v152':
-      'El procés d’edició de vídeos llargs ara és molt més ràpid 🚀',
-  'feat2v152': 'Millora en la retallada dels vídeos',
-  'featDesc2v152':
-      'Trieu l’instant d’una forma més precisa amb els nous ràpids botons de tall i una barra de retall millorada 🎞️',
-  'feat3v152': 'Nou selector de fitxers experimental',
-  'featDesc3v152':
-      'El nou selector de fitxers experimental permet previsualitzar i filtrar els vídeos per data, prou de baixar cap avall quan voleu afegir vídeos antics 📅 (Desactiveu-lo des de la configuració si experimenteu qualsevol problema)',
-  'feat4v152': 'Bloqueig de l’orientació',
-  'featDesc4v152':
-      'Quan enregistreu dins l’aplicació, premeu el botó després de posicionar el telèfon per bloquejar l’orientació i prevenir resultats inesperats 📱',
-  'feat5v152': 'I més...',
-  'featDesc5v152':
-      'També trobareu algunes petites millores visuals i correccions d’errors 🐛',
   'useFilterInExperimentalPicker':
       'Fes servir el filtre de data per seleccionar vídeos',
   'useFilterInExperimentalPickerDescription':

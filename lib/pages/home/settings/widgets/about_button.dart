@@ -13,7 +13,7 @@ class AboutButton extends StatelessWidget {
       title: Text('about'.tr, style: const TextStyle(color: Colors.white)),
       context: context,
       applicationVersion: 'appVersion'.tr,
-      applicationLegalese: 'Copyright © Caio Pedroso, 2024',
+      applicationLegalese: 'Copyright © Caio Pedroso, 2026',
       children: <Widget>[
         MarkdownPageListTile(
           icon: const Icon(Icons.history, color: AppColors.green),

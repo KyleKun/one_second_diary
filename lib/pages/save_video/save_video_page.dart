@@ -1,11 +1,10 @@
 import 'dart:io';
 
-import 'package:flutter/material.dart' hide RadioGroup;
+import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
-import 'package:group_radio_button/group_radio_button.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:video_player/video_player.dart';
 import 'package:video_trimmer/video_trimmer.dart';
@@ -15,7 +14,6 @@ import '../../enums/video_orientation.dart';
 import '../../routes/app_pages.dart';
 import '../../utils/clip_trim_policy.dart';
 import '../../utils/constants.dart';
-import '../../utils/custom_checkbox_list_tile.dart';
 import '../../utils/custom_dialog.dart';
 import '../../utils/date_format_utils.dart';
 import '../../utils/orientation_filter.dart';
@@ -25,19 +23,20 @@ import '../../utils/theme.dart';
 import '../../utils/utils.dart';
 import '../home/profiles/profiles_page.dart';
 import 'widgets/save_button.dart';
-import 'widgets/tab_item.dart';
 
 class SaveVideoPage extends StatefulWidget {
   @override
   _SaveVideoPageState createState() => _SaveVideoPageState();
 }
 
-class _SaveVideoPageState extends State<SaveVideoPage> {
+class _SaveVideoPageState extends State<SaveVideoPage>
+    with SingleTickerProviderStateMixin {
   final Map<String, dynamic> routeArguments = Get.arguments;
   final RecordingSettingsController _recordingSettingsController = Get.find();
 
   late String _tempVideoPath;
   final Trimmer _trimmer = Trimmer();
+  late final TabController _tabController;
 
   final TextEditingController customLocationTextController =
       TextEditingController();
@@ -47,6 +46,9 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
   late Color currentColor;
 
   final double textOutlineStrokeWidth = 1;
+
+  bool get _outlineEnabled =>
+      _recordingSettingsController.isDateOutlineEnabled.value;
 
   late String _dateFinalFormatValueForVideoEdit;
 
@@ -234,40 +236,353 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
     }
   }
 
-  void changeColor(Color color) {
-    setState(() => pickerColor = color);
+  static const List<Color> _dateColorSwatches = [
+    Colors.white,
+    Color(0xff212121),
+    AppColors.mainColor,
+    Color(0xffE53935),
+    AppColors.orange,
+    AppColors.yellow,
+    Color(0xffFFEB3B),
+    AppColors.green,
+    Color(0xff26A69A),
+    Color(0xff29B6F6),
+    Color(0xff3F51B5),
+    AppColors.purple,
+    Color(0xffEC407A),
+    Color(0xff8D6E63),
+    Color(0xff9E9E9E),
+  ];
+
+  bool _sameColor(Color a, Color b) => a.toARGB32() == b.toARGB32();
+
+  Widget _colorSwatch({
+    required Color color,
+    required bool selected,
+    required VoidCallback onTap,
+    Widget? child,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 180),
+        width: 44,
+        height: 44,
+        padding: const EdgeInsets.all(3),
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          border: Border.all(
+            color: selected ? AppColors.mainColor : Colors.transparent,
+            width: 2.5,
+          ),
+        ),
+        child: Container(
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: color,
+            border: Border.all(
+              color: isDarkTheme ? Colors.white24 : Colors.black12,
+            ),
+          ),
+          child:
+              child ??
+              (selected
+                  ? Icon(Icons.check_rounded, color: invert(color), size: 20)
+                  : null),
+        ),
+      ),
+    );
   }
 
   Future colorPickerDialog() {
-    return showDialog(
-      barrierDismissible: false,
-      context: Get.context!,
-      builder: (context) => AlertDialog(
-        title: Text('selectColor'.tr),
-        content: ColorPicker(
-          pickerColor: pickerColor,
-          onColorChanged: changeColor,
-          portraitOnly: true,
-        ),
-        actions: <Widget>[
-          TextButton(
-            child: Text(
-              'done'.tr,
-              style: const TextStyle(color: AppColors.green),
-            ),
-            onPressed: () {
-              setState(() => currentColor = pickerColor);
-              final r = (pickerColor.r * 255.0).round().clamp(0, 255);
-              final g = (pickerColor.g * 255.0).round().clamp(0, 255);
-              final b = (pickerColor.b * 255.0).round().clamp(0, 255);
-              final a = (pickerColor.a * 255.0).round().clamp(0, 255);
-              final colorString = '$r,$g,$b,$a';
-              _recordingSettingsController.setDateColor(colorString);
-              Navigator.of(context).pop();
-            },
-          ),
-        ],
+    pickerColor = currentColor;
+    bool pickerOutline = _outlineEnabled;
+    // Colors saved by the old free-form picker may not be one of the
+    // swatches; open straight into the custom picker for those.
+    bool showCustomPicker = !_dateColorSwatches.any(
+      (c) => _sameColor(c, currentColor),
+    );
+
+    return _showOptionSheet(
+      icon: Icons.palette_rounded,
+      color: AppColors.yellow,
+      title: 'selectColor'.tr,
+      body: StatefulBuilder(
+        builder: (context, setSheetState) {
+          void pick(Color color) {
+            setSheetState(() => pickerColor = color);
+          }
+
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              // Preview of the date as it will be burned into the video
+              Container(
+                height: 64,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: AppColors.dark,
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Stack(
+                  children: [
+                    if (pickerOutline)
+                      Text(
+                        _dateFinalFormatValueForVideoEdit,
+                        style: TextStyle(
+                          fontSize: 20,
+                          foreground: Paint()
+                            ..style = PaintingStyle.stroke
+                            ..strokeWidth = textOutlineStrokeWidth
+                            ..color = invert(pickerColor),
+                        ),
+                      ),
+                    Text(
+                      _dateFinalFormatValueForVideoEdit,
+                      style: TextStyle(fontSize: 20, color: pickerColor),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 16),
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                alignment: WrapAlignment.center,
+                children: [
+                  for (final Color color in _dateColorSwatches)
+                    _colorSwatch(
+                      color: color,
+                      selected:
+                          !showCustomPicker && _sameColor(color, pickerColor),
+                      onTap: () => setSheetState(() {
+                        showCustomPicker = false;
+                        pickerColor = color;
+                      }),
+                    ),
+                  _colorSwatch(
+                    color: _sectionColor,
+                    selected: showCustomPicker,
+                    onTap: () => setSheetState(
+                      () => showCustomPicker = !showCustomPicker,
+                    ),
+                    child: Icon(
+                      Icons.colorize_rounded,
+                      size: 20,
+                      color: _textColor,
+                    ),
+                  ),
+                ],
+              ),
+              AnimatedSize(
+                duration: const Duration(milliseconds: 220),
+                curve: Curves.easeOutCubic,
+                child: showCustomPicker
+                    ? Padding(
+                        padding: const EdgeInsets.only(top: 16),
+                        child: ColorPicker(
+                          pickerColor: pickerColor,
+                          onColorChanged: pick,
+                          enableAlpha: false,
+                          labelTypes: const [],
+                          portraitOnly: true,
+                          colorPickerWidth: 260,
+                          pickerAreaHeightPercent: 0.6,
+                          pickerAreaBorderRadius: BorderRadius.circular(16),
+                        ),
+                      )
+                    : const SizedBox(width: double.infinity),
+              ),
+              const SizedBox(height: 16),
+              _section(
+                onTap: () =>
+                    setSheetState(() => pickerOutline = !pickerOutline),
+                padding: const EdgeInsets.fromLTRB(14, 10, 10, 10),
+                child: Row(
+                  children: [
+                    _iconBadge(Icons.contrast_rounded, AppColors.yellow),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _sectionTitle('textOutline'.tr),
+                          const SizedBox(height: 2),
+                          _sectionSubtitle(
+                            'textOutlineHint'.tr,
+                            maxLines: null,
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    _styledSwitch(
+                      value: pickerOutline,
+                      onChanged: (value) =>
+                          setSheetState(() => pickerOutline = value),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          );
+        },
       ),
+      primaryLabel: 'done'.tr,
+      onPrimary: () {
+        setState(() {
+          currentColor = pickerColor;
+          _recordingSettingsController.setDateOutline(pickerOutline);
+        });
+        final r = (pickerColor.r * 255.0).round().clamp(0, 255);
+        final g = (pickerColor.g * 255.0).round().clamp(0, 255);
+        final b = (pickerColor.b * 255.0).round().clamp(0, 255);
+        final a = (pickerColor.a * 255.0).round().clamp(0, 255);
+        final colorString = '$r,$g,$b,$a';
+        _recordingSettingsController.setDateColor(colorString);
+        Navigator.of(context).pop();
+      },
+    );
+  }
+
+  /// Shared look for the pop-ups opened from the tab options (date color,
+  /// custom location, subtitles): a bottom sheet that rises with the
+  /// keyboard, with a header, a body and a full-width primary action.
+  Future<void> _showOptionSheet({
+    required IconData icon,
+    required Color color,
+    required String title,
+    required Widget body,
+    required String primaryLabel,
+    required VoidCallback onPrimary,
+    String? secondaryLabel,
+    VoidCallback? onSecondary,
+  }) {
+    return showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      useSafeArea: true,
+      backgroundColor: isDarkTheme ? AppColors.dark : Colors.white,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+      ),
+      builder: (sheetContext) => Padding(
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.of(sheetContext).viewInsets.bottom,
+        ),
+        child: SafeArea(
+          top: false,
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.fromLTRB(20, 12, 20, 16),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Center(
+                  child: Container(
+                    width: 40,
+                    height: 4,
+                    decoration: BoxDecoration(
+                      color: isDarkTheme ? Colors.white24 : Colors.black12,
+                      borderRadius: BorderRadius.circular(2),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Row(
+                  children: [
+                    _iconBadge(icon, color),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Text(
+                        title,
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w700,
+                          color: _textColor,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 20),
+                body,
+                const SizedBox(height: 20),
+                Row(
+                  children: [
+                    if (secondaryLabel != null) ...[
+                      Expanded(
+                        child: SizedBox(
+                          height: 50,
+                          child: TextButton(
+                            style: TextButton.styleFrom(
+                              foregroundColor: _textColor,
+                              backgroundColor: _sectionColor,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                            ),
+                            onPressed: onSecondary,
+                            child: Text(
+                              secondaryLabel,
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                    ],
+                    Expanded(
+                      flex: secondaryLabel != null ? 2 : 1,
+                      child: SizedBox(
+                        height: 50,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.mainColor,
+                            elevation: 0,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                          ),
+                          onPressed: onPrimary,
+                          child: Text(
+                            primaryLabel,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  InputDecoration _sheetInputDecoration(String hint) {
+    OutlineInputBorder border(Color color, double width) => OutlineInputBorder(
+      borderRadius: BorderRadius.circular(16),
+      borderSide: BorderSide(color: color, width: width),
+    );
+
+    return InputDecoration(
+      hintText: hint,
+      hintStyle: TextStyle(color: _mutedTextColor),
+      filled: true,
+      fillColor: _sectionColor,
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      enabledBorder: border(Colors.transparent, 1.5),
+      focusedBorder: border(AppColors.mainColor, 1.5),
     );
   }
 
@@ -281,6 +596,13 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
     isTextDate = _recordingSettingsController.dateFormatId.value == 1;
     _initCorrectDates();
     _initVideoPlayerController();
+    // No indicator animation: the selection (and the content below, see
+    // videoProperties) switches the instant a tab is tapped or swiped.
+    _tabController = TabController(
+      length: 3,
+      vsync: this,
+      animationDuration: Duration.zero,
+    )..addListener(() => setState(() {}));
     if (isGeotaggingEnabled) {
       setGeotagging();
     }
@@ -290,6 +612,7 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
   @override
   void dispose() {
     _trimmer.videoPlayerController?.dispose();
+    _tabController.dispose();
     customLocationTextController.dispose();
     subtitlesTextController.dispose();
     super.dispose();
@@ -448,19 +771,20 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
                       padding: const EdgeInsets.all(10.0),
                       child: Stack(
                         children: [
-                          Text(
-                            isTextDate
-                                ? _dateFormatsForVideoEdit.last
-                                : _dateFormatsForVideoEdit.first,
-                            style: TextStyle(
-                              fontSize:
-                                  MediaQuery.of(context).size.width * 0.03,
-                              foreground: Paint()
-                                ..style = PaintingStyle.stroke
-                                ..strokeWidth = textOutlineStrokeWidth
-                                ..color = invert(currentColor),
+                          if (_outlineEnabled)
+                            Text(
+                              isTextDate
+                                  ? _dateFormatsForVideoEdit.last
+                                  : _dateFormatsForVideoEdit.first,
+                              style: TextStyle(
+                                fontSize:
+                                    MediaQuery.of(context).size.width * 0.03,
+                                foreground: Paint()
+                                  ..style = PaintingStyle.stroke
+                                  ..strokeWidth = textOutlineStrokeWidth
+                                  ..color = invert(currentColor),
+                              ),
                             ),
-                          ),
                           Text(
                             isTextDate
                                 ? _dateFormatsForVideoEdit.last
@@ -483,20 +807,21 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
                         padding: const EdgeInsets.all(10.0),
                         child: Stack(
                           children: [
-                            Text(
-                              customLocationTextController.text.isEmpty
-                                  ? _currentAddress ??
-                                        customLocationTextController.text
-                                  : customLocationTextController.text,
-                              style: TextStyle(
-                                fontSize:
-                                    MediaQuery.of(context).size.width * 0.032,
-                                foreground: Paint()
-                                  ..style = PaintingStyle.stroke
-                                  ..strokeWidth = textOutlineStrokeWidth
-                                  ..color = invert(currentColor),
+                            if (_outlineEnabled)
+                              Text(
+                                customLocationTextController.text.isEmpty
+                                    ? _currentAddress ??
+                                          customLocationTextController.text
+                                    : customLocationTextController.text,
+                                style: TextStyle(
+                                  fontSize:
+                                      MediaQuery.of(context).size.width * 0.032,
+                                  foreground: Paint()
+                                    ..style = PaintingStyle.stroke
+                                    ..strokeWidth = textOutlineStrokeWidth
+                                    ..color = invert(currentColor),
+                                ),
                               ),
-                            ),
                             Text(
                               customLocationTextController.text.isEmpty
                                   ? _currentAddress ??
@@ -565,72 +890,227 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
             style: const TextStyle(color: Colors.white),
           ),
         ),
-        floatingActionButton: Visibility(
-          visible: !_isLocationProcessing,
-          replacement: const FloatingActionButton(
-            onPressed: null,
-            child: CircularProgressIndicator(color: Colors.white),
-            backgroundColor: AppColors.green,
-          ),
-          child: SaveButton(
-            videoPath: _tempVideoPath,
-            videoController: _trimmer.videoPlayerController!,
-            dateColor: currentColor,
-            dateFormat: _dateFinalFormatValueForVideoEdit,
-            isTextDate: isTextDate,
-            userPosition: _currentPosition,
-            userLocation: customLocationTextController.text.isEmpty
-                ? _currentAddress ?? ''
-                : customLocationTextController.text,
-            subtitles: _subtitles,
-            videoStartInMilliseconds: _videoStartValue,
-            videoEndInMilliseconds: getVideoEndInMilliseconds(),
-            videoDuration:
-                _trimmer.videoPlayerController!.value.duration.inSeconds,
-            isGeotaggingEnabled: isGeotaggingEnabled,
-            textOutlineColor: invert(currentColor),
-            textOutlineWidth: textOutlineStrokeWidth,
-            determinedDate: routeArguments['currentDate'],
-            isFromRecordingPage: routeArguments['isFromRecordingPage'],
+        // A full-width button pinned under the settings instead of a FAB
+        // floating over them (it used to cover the date format options).
+        bottomNavigationBar: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
+            child: SaveButton(
+              isLoading: _isLocationProcessing,
+              videoPath: _tempVideoPath,
+              videoController: _trimmer.videoPlayerController!,
+              dateColor: currentColor,
+              dateFormat: _dateFinalFormatValueForVideoEdit,
+              isTextDate: isTextDate,
+              userPosition: _currentPosition,
+              userLocation: customLocationTextController.text.isEmpty
+                  ? _currentAddress ?? ''
+                  : customLocationTextController.text,
+              subtitles: _subtitles,
+              videoStartInMilliseconds: _videoStartValue,
+              videoEndInMilliseconds: getVideoEndInMilliseconds(),
+              videoDuration:
+                  _trimmer.videoPlayerController!.value.duration.inSeconds,
+              isGeotaggingEnabled: isGeotaggingEnabled,
+              textOutlineColor: invert(currentColor),
+              textOutlineWidth: _outlineEnabled ? textOutlineStrokeWidth : 0,
+              determinedDate: routeArguments['currentDate'],
+              isFromRecordingPage: routeArguments['isFromRecordingPage'],
+            ),
           ),
         ),
-        body: Column(
-          children: [
-            _dailyVideoPlayer(),
-            const SizedBox(height: 8),
-            Center(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 6.0),
-                child: TrimViewer(
-                  trimmer: _trimmer,
-                  viewerHeight: 50.0,
-                  type: ViewerType.fixed,
-                  editorProperties: TrimEditorProperties(
-                    borderWidth: 2.5,
-                    circleSize: 6.0,
-                    circleSizeOnDrag: 9.0,
-                    circlePaintColor: isDarkTheme
-                        ? Colors.white
-                        : AppColors.mainColor,
-                    borderPaintColor: isDarkTheme
-                        ? AppColors.light
-                        : AppColors.mainColor.withValues(alpha: 0.75),
+        // The whole page scrolls (not just the tab content) so the options
+        // get the room they need instead of scrolling in a thin strip under
+        // the video and trimmer.
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              _dailyVideoPlayer(),
+              const SizedBox(height: 8),
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 6.0),
+                  child: TrimViewer(
+                    trimmer: _trimmer,
+                    viewerHeight: 50.0,
+                    type: ViewerType.fixed,
+                    editorProperties: TrimEditorProperties(
+                      borderWidth: 2.5,
+                      circleSize: 6.0,
+                      circleSizeOnDrag: 9.0,
+                      circlePaintColor: isDarkTheme
+                          ? Colors.white
+                          : AppColors.mainColor,
+                      borderPaintColor: isDarkTheme
+                          ? AppColors.light
+                          : AppColors.mainColor.withValues(alpha: 0.75),
+                      quickCutIcon: Icons.content_cut_rounded,
+                      quickCutIconSize: 18.0,
+                      quickCutBackgroundColor: _sectionColor,
+                      quickCutForegroundColor: _textColor,
+                      quickCutTextColor: _textColor,
+                    ),
+                    durationStyle: DurationStyle.FORMAT_SS_MS,
+                    durationTextStyle: isDarkTheme
+                        ? const TextStyle(color: Colors.white)
+                        : const TextStyle(color: Colors.black),
+                    maxVideoLength: const Duration(milliseconds: 10000),
+                    quickCutNumbers: const [1, 1.5, 2, 3, 5, 10],
+                    viewerWidth: MediaQuery.of(context).size.width,
+                    onChangeStart: (value) => _videoStartValue = value,
+                    onChangeEnd: (value) => _videoEndValue = value,
+                    onChangePlaybackState: (value) =>
+                        setState(() => _isVideoPlaying = value),
                   ),
-                  durationStyle: DurationStyle.FORMAT_SS_MS,
-                  durationTextStyle: isDarkTheme
-                      ? const TextStyle(color: Colors.white)
-                      : const TextStyle(color: Colors.black),
-                  maxVideoLength: const Duration(milliseconds: 10000),
-                  quickCutNumbers: const [1, 1.5, 2, 3, 5, 10],
-                  viewerWidth: MediaQuery.of(context).size.width,
-                  onChangeStart: (value) => _videoStartValue = value,
-                  onChangeEnd: (value) => _videoEndValue = value,
-                  onChangePlaybackState: (value) =>
-                      setState(() => _isVideoPlaying = value),
+                ),
+              ),
+              videoProperties(),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Color get _textColor => isDarkTheme ? Colors.white : AppColors.dark;
+  Color get _mutedTextColor => isDarkTheme ? Colors.white60 : Colors.black54;
+  Color get _sectionColor => isDarkTheme
+      ? Colors.white.withValues(alpha: 0.06)
+      : Colors.black.withValues(alpha: 0.04);
+
+  /// Labels like 'currentProfile' carry their own trailing colon for inline
+  /// use elsewhere; drop it where the label sits on its own line.
+  String _withoutTrailingColon(String label) =>
+      label.replaceFirst(RegExp(r'[\s:\uFF1A]+$'), '');
+
+  Widget _section({
+    required Widget child,
+    VoidCallback? onTap,
+    EdgeInsets padding = const EdgeInsets.all(14),
+  }) {
+    return Material(
+      color: _sectionColor,
+      borderRadius: BorderRadius.circular(20),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(20),
+        onTap: onTap,
+        child: Padding(padding: padding, child: child),
+      ),
+    );
+  }
+
+  Widget _iconBadge(IconData icon, Color color) {
+    return Container(
+      width: 40,
+      height: 40,
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.16),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Icon(icon, color: color, size: 22),
+    );
+  }
+
+  Widget _sectionTitle(String text) {
+    return Text(
+      text,
+      style: TextStyle(
+        fontSize: 16,
+        fontWeight: FontWeight.w600,
+        color: _textColor,
+      ),
+    );
+  }
+
+  /// [maxLines] null lets the text wrap as far as it needs (for fixed hints
+  /// rather than user-entered values).
+  Widget _sectionSubtitle(String text, {int? maxLines = 2}) {
+    return Text(
+      text,
+      maxLines: maxLines,
+      overflow: maxLines == null ? null : TextOverflow.ellipsis,
+      style: TextStyle(fontSize: 13, height: 1.3, color: _mutedTextColor),
+    );
+  }
+
+  Switch _styledSwitch({
+    required bool value,
+    required ValueChanged<bool>? onChanged,
+  }) {
+    return Switch(
+      value: value,
+      onChanged: onChanged,
+      thumbColor: WidgetStateProperty.resolveWith(
+        (states) => states.contains(WidgetState.selected)
+            ? Colors.white
+            : (isDarkTheme ? Colors.white70 : Colors.black45),
+      ),
+      trackColor: WidgetStateProperty.resolveWith(
+        (states) => states.contains(WidgetState.selected)
+            ? AppColors.mainColor
+            : _sectionColor,
+      ),
+      trackOutlineColor: WidgetStateProperty.resolveWith(
+        (states) => states.contains(WidgetState.selected)
+            ? Colors.transparent
+            : (isDarkTheme ? Colors.white30 : Colors.black26),
+      ),
+    );
+  }
+
+  void _selectDateFormat(String value) {
+    setState(() {
+      _dateFinalFormatValueForVideoEdit = value;
+      // Place date in the bottom if it is text format
+      isTextDate = value != _dateFormatsForVideoEdit.first;
+
+      // Save the date format in shared preferences
+      _recordingSettingsController.setDateFormat(isTextDate ? 1 : 0);
+    });
+  }
+
+  Widget _dateFormatOption(String format, bool selected) {
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: () => _selectDateFormat(format),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        curve: Curves.easeOutCubic,
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+        decoration: BoxDecoration(
+          color: selected
+              ? AppColors.mainColor.withValues(alpha: 0.14)
+              : Colors.transparent,
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(
+            color: selected
+                ? AppColors.mainColor
+                : (isDarkTheme ? Colors.white24 : Colors.black12),
+            width: 1.5,
+          ),
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: Text(
+                format,
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: selected ? FontWeight.w700 : FontWeight.w400,
+                  color: selected ? AppColors.mainColor : _textColor,
                 ),
               ),
             ),
-            Expanded(child: videoProperties()),
+            AnimatedScale(
+              scale: selected ? 1.0 : 0.0,
+              duration: const Duration(milliseconds: 200),
+              curve: Curves.easeOutBack,
+              child: const Icon(
+                Icons.check_circle_rounded,
+                color: AppColors.mainColor,
+                size: 18,
+              ),
+            ),
           ],
         ),
       ),
@@ -638,451 +1118,449 @@ class _SaveVideoPageState extends State<SaveVideoPage> {
   }
 
   Widget generalTabContent() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const SizedBox(height: 8),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 22.0),
-          child: Row(
-            children: [
-              Text(
-                'currentProfile'.tr,
-                style: TextStyle(
-                  fontSize: MediaQuery.of(context).size.height * 0.019,
-                ),
-              ),
-              const SizedBox(width: 8),
-              Flexible(
-                child: Text(
-                  selectedProfileName.isEmpty
-                      ? 'default'.tr
-                      : selectedProfileName,
-                  style: TextStyle(
-                    fontSize: MediaQuery.of(context).size.height * 0.019,
-                  ),
-                ),
-              ),
-              const SizedBox(width: 20),
-              Flexible(
-                child: TextButton(
-                  style: ButtonStyle(
-                    backgroundColor: WidgetStateProperty.all(
-                      AppColors.dark.withValues(
-                        alpha: isDarkTheme ? 1.0 : 0.55,
-                      ),
-                    ),
-                    shape: WidgetStateProperty.all(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(40),
-                      ),
-                    ),
-                  ),
-                  onPressed: () {
-                    Get.to(const ProfilesPage())?.then(
-                      (_) => setState(() {
-                        selectedProfileName = Utils.getCurrentProfile();
-                      }),
-                    );
-                  },
-                  child: Text(
-                    'change'.tr,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: MediaQuery.of(context).size.height * 0.017,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
+    final int selectedFormat = _recordingSettingsController.dateFormatId.value;
 
-        const SizedBox(height: 8),
-
-        // Date color
-        GestureDetector(
-          onTap: () => colorPickerDialog(),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 22.0, right: 11.0),
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.only(
-                        bottom: MediaQuery.of(context).size.height * 0.02,
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 4, 16, 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          // Profile
+          _section(
+            onTap: () {
+              Get.to(const ProfilesPage())?.then(
+                (_) => setState(() {
+                  selectedProfileName = Utils.getCurrentProfile();
+                }),
+              );
+            },
+            child: Row(
+              children: [
+                _iconBadge(Icons.person_rounded, AppColors.mainColor),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _sectionSubtitle(
+                        _withoutTrailingColon('currentProfile'.tr),
+                        maxLines: 1,
                       ),
-                      child: Text(
-                        'dateColorAndFormat'.tr,
+                      const SizedBox(height: 2),
+                      Text(
+                        selectedProfileName.isEmpty
+                            ? 'default'.tr
+                            : selectedProfileName,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                         style: TextStyle(
-                          fontSize: MediaQuery.of(context).size.height * 0.019,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700,
+                          color: _textColor,
                         ),
                       ),
-                    ),
-                    Container(
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: currentColor,
-                      ),
-                      width: MediaQuery.of(context).size.width * 0.09,
-                      height: MediaQuery.of(context).size.width * 0.09,
-                      child: Icon(Icons.edit, color: invert(currentColor)),
-                    ),
-                    const SizedBox(height: 5.0),
-                  ],
-                ),
-              ),
-              Expanded(
-                child: RadioGroup<String>.builder(
-                  direction: Axis.vertical,
-                  horizontalAlignment: MainAxisAlignment.start,
-                  groupValue:
-                      _recordingSettingsController.dateFormatId.value == 0
-                      ? _dateFormatsForVideoEdit.first
-                      : _dateFormatsForVideoEdit.last,
-                  fillColor: AppColors.yellow,
-                  onChanged: (value) => setState(() {
-                    _dateFinalFormatValueForVideoEdit = value!;
-                    // Place date in the bottom if it is text format
-                    _dateFinalFormatValueForVideoEdit ==
-                            _dateFormatsForVideoEdit.first
-                        ? isTextDate = false
-                        : isTextDate = true;
-
-                    // Save the date format in shared preferences
-                    _recordingSettingsController.setDateFormat(
-                      _dateFinalFormatValueForVideoEdit ==
-                              _dateFormatsForVideoEdit.first
-                          ? 0
-                          : 1,
-                    );
-                  }),
-                  items: _dateFormatsForVideoEdit,
-                  itemBuilder: (item) => RadioButtonBuilder(item),
-                ),
-              ),
-              const SizedBox(width: 10),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget locationTabContent() {
-    return Column(
-      children: [
-        const SizedBox(height: 8),
-
-        // Geotagging
-        Container(
-          margin: EdgeInsets.symmetric(
-            horizontal: MediaQuery.of(context).size.width * 0.03,
-          ),
-          child: Column(
-            children: [
-              CustomCheckboxListTile(
-                isChecked: isGeotaggingEnabled,
-                onChanged: (_) async {
-                  if (!_isLocationProcessing) {
-                    toggleGeotaggingStatus();
-                    if (isGeotaggingEnabled) {
-                      await setGeotagging();
-                    }
-                    setState(() {});
-                  }
-                },
-                padding: EdgeInsets.symmetric(
-                  horizontal: MediaQuery.of(context).size.width * 0.04,
-                ),
-                title: Text(
-                  'enableGeotagging'.tr,
-                  style: TextStyle(
-                    fontSize: MediaQuery.of(context).size.height * 0.019,
+                    ],
                   ),
                 ),
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: MediaQuery.of(context).size.width * 0.04,
+                const SizedBox(width: 8),
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 14,
+                    vertical: 8,
+                  ),
+                  decoration: BoxDecoration(
+                    color: AppColors.mainColor.withValues(alpha: 0.14),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Text(
+                    'change'.tr,
+                    style: const TextStyle(
+                      color: AppColors.mainColor,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
                 ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              ],
+            ),
+          ),
+          const SizedBox(height: 12),
+
+          // Date color & format
+          _section(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Row(
                   children: [
-                    Flexible(
+                    _iconBadge(Icons.event_rounded, AppColors.yellow),
+                    const SizedBox(width: 12),
+                    Expanded(child: _sectionTitle('dateColorAndFormat'.tr)),
+                  ],
+                ),
+                const SizedBox(height: 14),
+                Row(
+                  children: [
+                    Tooltip(
+                      message: 'selectColor'.tr,
                       child: GestureDetector(
-                        onTap: () async {
-                          await showCustomLocationDialog();
-                        },
-                        child: Text(
-                          'setCustomLocation'.tr,
-                          style: TextStyle(
-                            fontSize:
-                                MediaQuery.of(context).size.height * 0.019,
+                        onTap: () => colorPickerDialog(),
+                        child: Container(
+                          width: 56,
+                          height: 56,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: currentColor,
+                            border: Border.all(
+                              color: isDarkTheme
+                                  ? Colors.white24
+                                  : Colors.black12,
+                              width: 3,
+                            ),
+                          ),
+                          child: Icon(
+                            Icons.colorize_rounded,
+                            color: invert(currentColor),
+                            size: 22,
                           ),
                         ),
                       ),
                     ),
-                    IconButton(
-                      onPressed: () async {
-                        await showCustomLocationDialog();
-                      },
-                      icon: const Icon(Icons.edit_location_alt),
+                    const SizedBox(width: 14),
+                    Expanded(
+                      child: Column(
+                        children: [
+                          _dateFormatOption(
+                            _dateFormatsForVideoEdit.first,
+                            selectedFormat == 0,
+                          ),
+                          const SizedBox(height: 8),
+                          _dateFormatOption(
+                            _dateFormatsForVideoEdit.last,
+                            selectedFormat != 0,
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),
-              ),
-              const SizedBox(height: 5.0),
-            ],
+              ],
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
+    );
+  }
+
+  Future<void> _toggleGeotagging() async {
+    if (_isLocationProcessing) return;
+    toggleGeotaggingStatus();
+    if (isGeotaggingEnabled) {
+      await setGeotagging();
+    }
+    setState(() {});
+  }
+
+  Widget locationTabContent() {
+    final String? detectedLocation = isGeotaggingEnabled
+        ? _currentAddress
+        : null;
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 4, 16, 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          // Geotagging
+          _section(
+            onTap: _toggleGeotagging,
+            padding: const EdgeInsets.fromLTRB(14, 12, 10, 12),
+            child: Row(
+              children: [
+                _iconBadge(Icons.my_location_rounded, AppColors.purple),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _sectionTitle('enableGeotagging'.tr),
+                      if (detectedLocation != null &&
+                          detectedLocation.isNotEmpty) ...[
+                        const SizedBox(height: 2),
+                        _sectionSubtitle(detectedLocation),
+                      ],
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 8),
+                if (_isLocationProcessing)
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 14),
+                    child: SizedBox(
+                      width: 22,
+                      height: 22,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2.4,
+                        color: AppColors.mainColor,
+                      ),
+                    ),
+                  )
+                else
+                  _styledSwitch(
+                    value: isGeotaggingEnabled,
+                    onChanged: (_) => _toggleGeotagging(),
+                  ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 12),
+
+          // Custom location
+          _section(
+            onTap: () async {
+              await showCustomLocationDialog();
+            },
+            child: Row(
+              children: [
+                _iconBadge(Icons.edit_location_alt_rounded, AppColors.purple),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _sectionTitle('setCustomLocation'.tr),
+                      if (customLocationTextController.text.isNotEmpty) ...[
+                        const SizedBox(height: 2),
+                        _sectionSubtitle(customLocationTextController.text),
+                      ],
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Icon(Icons.chevron_right_rounded, color: _mutedTextColor),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 
   Widget subtitlesTabContent() {
+    final String subtitles = subtitlesTextController.text.trim();
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 4, 16, 16),
+      child: _section(
+        onTap: () async => await showSubtitlesDialog(),
+        child: Row(
+          children: [
+            _iconBadge(Icons.subtitles_rounded, AppColors.yellow),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _sectionTitle('subtitles'.tr),
+                  const SizedBox(height: 4),
+                  Text(
+                    subtitles.isEmpty ? 'enterSubtitles'.tr : subtitles,
+                    maxLines: 4,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontSize: 14,
+                      height: 1.35,
+                      color: subtitles.isEmpty ? _mutedTextColor : _textColor,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: 8),
+            Icon(Icons.edit_rounded, color: _mutedTextColor, size: 26),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Tab _tab(IconData icon, Color color, String label) {
+    return Tab(
+      height: 40,
+      child: FittedBox(
+        fit: BoxFit.scaleDown,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, size: 18, color: color),
+            const SizedBox(width: 6),
+            Text(label),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget videoProperties() {
+    final List<Widget> tabContents = [
+      generalTabContent(),
+      locationTabContent(),
+      subtitlesTabContent(),
+    ];
+
     return Column(
       children: [
-        const SizedBox(height: 8),
-
-        // Subtitles
+        // Segmented control: all three tabs always fit on screen (the old
+        // scrollable tab bar cut "Subtitles" off on narrower phones).
         Container(
-          margin: EdgeInsets.symmetric(
-            horizontal: MediaQuery.of(context).size.width * 0.03,
+          margin: const EdgeInsets.fromLTRB(16, 12, 16, 12),
+          padding: const EdgeInsets.all(4),
+          decoration: BoxDecoration(
+            color: _sectionColor,
+            borderRadius: BorderRadius.circular(16),
           ),
-          child: Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: MediaQuery.of(context).size.width * 0.04,
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 10.0),
-                Text(
-                  'subtitles'.tr,
-                  style: TextStyle(
-                    fontSize: MediaQuery.of(context).size.height * 0.019,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                TextField(
-                  controller: subtitlesTextController,
-                  style: TextStyle(
-                    fontFamily: DefaultTextStyle.of(context).style.fontFamily,
-                    color: Colors.white,
-                  ),
-                  maxLines: 6,
-                  readOnly: true,
-                  onTap: () async => await showSubtitlesDialog(),
-                  decoration: InputDecoration(
-                    fillColor: AppColors.dark,
-                    hintText: 'enterSubtitles'.tr,
-                    hintStyle: const TextStyle(color: Colors.white),
-                    filled: true,
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        color: isDarkTheme ? Colors.white : Colors.black,
+          child: TabBar(
+            controller: _tabController,
+            indicatorSize: TabBarIndicatorSize.tab,
+            dividerColor: Colors.transparent,
+            splashBorderRadius: BorderRadius.circular(12),
+            indicator: BoxDecoration(
+              color: isDarkTheme
+                  ? Colors.white.withValues(alpha: 0.12)
+                  : Colors.white,
+              borderRadius: BorderRadius.circular(12),
+              boxShadow: isDarkTheme
+                  ? null
+                  : [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.08),
+                        blurRadius: 8,
+                        offset: const Offset(0, 2),
                       ),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        color: isDarkTheme ? Colors.white : Colors.black,
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 10.0),
-              ],
+                    ],
             ),
+            labelColor: _textColor,
+            unselectedLabelColor: _mutedTextColor,
+            labelStyle: const TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w700,
+            ),
+            unselectedLabelStyle: const TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+            ),
+            labelPadding: const EdgeInsets.symmetric(horizontal: 6),
+            tabs: [
+              _tab(
+                Icons.tune_rounded,
+                AppColors.mainColor,
+                'saveVideoTabOne'.tr,
+              ),
+              _tab(Icons.place_rounded, AppColors.purple, 'saveVideoTabTwo'.tr),
+              _tab(
+                Icons.subtitles_rounded,
+                AppColors.yellow,
+                'saveVideoTabThree'.tr,
+              ),
+            ],
+          ),
+        ),
+        // Swipe left/right on the options to move between tabs, like the
+        // TabBarView this replaced.
+        GestureDetector(
+          behavior: HitTestBehavior.translucent,
+          onHorizontalDragEnd: (details) {
+            final double velocity = details.primaryVelocity ?? 0;
+            final int index = _tabController.index;
+            if (velocity < -300 && index < _tabController.length - 1) {
+              _tabController.animateTo(index + 1);
+            } else if (velocity > 300 && index > 0) {
+              _tabController.animateTo(index - 1);
+            }
+          },
+          // All three tabs stay built and the stack is as tall as the
+          // tallest one, so switching is instant and never changes the
+          // page's height (a TabBarView would need a hard-coded height here).
+          child: IndexedStack(
+            index: _tabController.index,
+            alignment: Alignment.topCenter,
+            children: tabContents,
           ),
         ),
       ],
     );
   }
 
-  Widget videoProperties() {
-    return DefaultTabController(
-      initialIndex: 0,
-      length: 3,
-      child: Column(
-        children: [
-          SizedBox(
-            height: 42,
-            child: TabBar(
-              labelPadding: const EdgeInsets.all(10),
-              indicator: UnderlineTabIndicator(
-                borderSide: BorderSide(
-                  color: ThemeService().isDarkTheme()
-                      ? Colors.white
-                      : Colors.black,
-                  width: 4,
-                ), // Indicator height
-                // insets: EdgeInsets.only(left: 60, right: 40), // Indicator width
-              ),
-              isScrollable: true,
-              tabs: [
-                TabItem(
-                  id: '1',
-                  title: 'saveVideoTabOne'.tr,
-                  color: AppColors.mainColor,
-                  isDarkTheme: isDarkTheme,
-                ),
-                TabItem(
-                  id: '2',
-                  title: 'saveVideoTabTwo'.tr,
-                  color: AppColors.purple,
-                  isDarkTheme: isDarkTheme,
-                ),
-                TabItem(
-                  id: '3',
-                  title: 'saveVideoTabThree'.tr,
-                  color: AppColors.yellow,
-                  isDarkTheme: isDarkTheme,
-                ),
-              ],
-            ),
-          ),
-          Flexible(
-            child: TabBarView(
-              physics: const BouncingScrollPhysics(),
-              children: <Widget>[
-                generalTabContent(),
-                locationTabContent(),
-                subtitlesTabContent(),
-              ],
-            ),
-          ),
-          //const SizedBox(height: 50.0),
-        ],
-      ),
-    );
-  }
-
   Future<void> showSubtitlesDialog() async {
-    await showDialog(
-      context: context,
-      useSafeArea: false,
-      builder: (context) => AlertDialog(
-        title: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 5.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text('subtitles'.tr),
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                style: TextButton.styleFrom(
-                  backgroundColor: AppColors.green.withValues(alpha: 0.8),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                ),
-                child: Text(
-                  'save'.tr,
-                  style: const TextStyle(color: Colors.white, fontSize: 15.0),
-                ),
-              ),
-            ],
-          ),
+    await _showOptionSheet(
+      icon: Icons.subtitles_rounded,
+      color: AppColors.yellow,
+      title: 'subtitles'.tr,
+      body: TextField(
+        autofocus: true,
+        controller: subtitlesTextController,
+        textCapitalization: TextCapitalization.sentences,
+        minLines: 3,
+        maxLines: 8,
+        style: TextStyle(
+          fontFamily: DefaultTextStyle.of(context).style.fontFamily,
+          fontSize: 16,
+          height: 1.4,
+          color: _textColor,
         ),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(
-              autofocus: true,
-              controller: subtitlesTextController,
-              textCapitalization: TextCapitalization.sentences,
-              maxLines: 10,
-              style: TextStyle(
-                fontFamily: DefaultTextStyle.of(context).style.fontFamily,
-                color: Colors.white,
-              ),
-              decoration: InputDecoration(
-                filled: true,
-                fillColor: AppColors.dark,
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
-                    color: isDarkTheme ? Colors.white : Colors.black,
-                  ),
-                ),
-                focusedBorder: const OutlineInputBorder(
-                  borderSide: BorderSide(color: AppColors.green),
-                ),
-              ),
-              onTapOutside: (_) => setState(() {
-                _subtitles = subtitlesTextController.text.trim();
-              }),
-            ),
-          ],
-        ),
+        cursorColor: AppColors.mainColor,
+        decoration: _sheetInputDecoration('enterSubtitles'.tr),
       ),
+      secondaryLabel: subtitlesTextController.text.isEmpty ? null : 'reset'.tr,
+      onSecondary: () {
+        subtitlesTextController.clear();
+        Navigator.pop(context);
+      },
+      primaryLabel: 'save'.tr,
+      onPrimary: () => Navigator.pop(context),
     );
+    // Commit however the sheet was closed (Save, Reset, back or swipe down)
+    // and refresh the subtitles card.
+    if (mounted) {
+      setState(() {
+        _subtitles = subtitlesTextController.text.trim();
+      });
+    }
   }
 
   Future<void> showCustomLocationDialog() async {
-    await showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Center(child: Text('setCustomLocation'.tr.split('(').first)),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(
-              autofocus: true,
-              controller: customLocationTextController,
-              textCapitalization: TextCapitalization.sentences,
-              style: TextStyle(
-                color: ThemeService().isDarkTheme()
-                    ? Colors.white
-                    : Colors.black,
-              ),
-              decoration: InputDecoration(
-                hintText: 'enterLocation'.tr,
-                hintStyle: const TextStyle(color: Colors.white),
-                filled: true,
-                fillColor: AppColors.dark,
-                border: const OutlineInputBorder(
-                  borderSide: BorderSide(color: AppColors.green),
-                ),
-                enabledBorder: InputBorder.none,
-                focusedBorder: const OutlineInputBorder(
-                  borderSide: BorderSide(color: AppColors.green),
-                ),
-              ),
-            ),
-          ],
+    await _showOptionSheet(
+      icon: Icons.edit_location_alt_rounded,
+      color: AppColors.purple,
+      title: 'setCustomLocation'.tr.split('(').first.trim(),
+      body: TextField(
+        autofocus: true,
+        controller: customLocationTextController,
+        textCapitalization: TextCapitalization.sentences,
+        textInputAction: TextInputAction.done,
+        style: TextStyle(fontSize: 16, color: _textColor),
+        cursorColor: AppColors.mainColor,
+        decoration: _sheetInputDecoration('enterLocation'.tr).copyWith(
+          prefixIcon: Icon(Icons.place_outlined, color: _mutedTextColor),
         ),
-        actions: [
-          TextButton(
-            onPressed: () async {
-              if (!isGeotaggingEnabled &&
-                  customLocationTextController.text.isNotEmpty) {
-                toggleGeotaggingStatus();
-              }
-              Navigator.pop(context);
-              setState(() {});
-            },
-            style: TextButton.styleFrom(foregroundColor: AppColors.green),
-            child: Text('ok'.tr),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-              customLocationTextController.clear();
-              setState(() {});
-            },
-            style: TextButton.styleFrom(foregroundColor: Colors.red),
-            child: Text('reset'.tr),
-          ),
-        ],
+        onSubmitted: (_) => _confirmCustomLocation(),
       ),
+      secondaryLabel: 'reset'.tr,
+      onSecondary: () {
+        Navigator.pop(context);
+        customLocationTextController.clear();
+      },
+      primaryLabel: 'ok'.tr,
+      onPrimary: _confirmCustomLocation,
     );
+    if (mounted) setState(() {});
+  }
+
+  void _confirmCustomLocation() {
+    if (!isGeotaggingEnabled && customLocationTextController.text.isNotEmpty) {
+      toggleGeotaggingStatus();
+    }
+    Navigator.pop(context);
   }
 
   double getVideoEndInMilliseconds() {

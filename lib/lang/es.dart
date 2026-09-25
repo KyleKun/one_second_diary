@@ -7,7 +7,7 @@ const Map<String, String> es = {
       '¡Muchas gracias por usar la aplicación!\n\Si deseas ayudar al desarrollo y contribuir para seguir mejorando nuestros servidores, \napóyanos con una donación ^^.',
   'donationPageTitle': '¡Apóyanos!',
   'about': 'Acerca de',
-  'appVersion': 'Versión 1.6.0',
+  'appVersion': 'Versión 1.7.0',
   'record': 'Grabar',
   'createMovie': 'Crear película',
   'settings': 'Ajustes',
@@ -72,9 +72,15 @@ const Map<String, String> es = {
   'recordingSettings': 'Ajustes de Grabación',
   'seconds': 'Segundos: ',
   'timer': 'Temporizador: ',
+  'clipLength': 'Duración del clip',
+  'countdown': 'Cuenta atrás',
+  'countdownHint': 'Espera 3 segundos antes de empezar a grabar',
   'dateFormat': 'Formato de la fecha:',
   'dateColor': 'Color de la fecha:',
   'selectColor': 'Selecciona un color',
+  'textOutline': 'Contorno de contraste',
+  'textOutlineHint':
+      'Añade un borde del color opuesto para que el texto se lea bien (recomendado)',
   'enableGeotagging': 'Habilitar localización (opcional)',
   'setCustomLocation': 'Establecer ubicación personalizada (opcional)',
   'ok': 'OK',
@@ -119,6 +125,19 @@ const Map<String, String> es = {
   'profileOrientationRequired':
       'Selecciona una orientación de vídeo para este perfil',
   'onboardingOrientationTitle': 'Selecciona tu orientación de vídeo',
+  'landscapeHint': 'Ideal para TVs y ordenadores',
+  'portraitHint': 'Ideal para móviles e historias',
+  'cameraMicPermissionTitle': 'Acceso a la cámara y al micrófono',
+  'cameraMicPermissionDesc':
+      'One Second Diary necesita tu cámara y tu micrófono para grabar tu momento del día.',
+  'cameraPermissionTitle': 'Acceso a la cámara',
+  'cameraPermissionDesc':
+      'One Second Diary necesita tu cámara para grabar tu momento del día.',
+  'permissionSettingsHint':
+      'El acceso está desactivado para esta app. Puedes volver a activarlo en los ajustes del dispositivo.',
+  'allowAccess': 'Permitir acceso',
+  'openSettings': 'Abrir ajustes',
+  'notNow': 'Ahora no',
   'onboardingOrientationDesc':
       'Esto define la forma de los videos que guardes con tu perfil predeterminado: horizontal (16:9) o vertical (9:16). Siempre puedes crear otro perfil con la otra orientación más adelante.',
   'creatingMovie':
@@ -202,22 +221,6 @@ const Map<String, String> es = {
   'sendLogs': '¿Enviar registros?',
   'sendLogsDescription':
       'Si te enfrentas a un problema, por favor toca "Sí" para incluir los registros que me ayudarán a encontrar el problema. Si es una sugerencia de función u otro tema, por favor toca "No".',
-  'whatsNewDescv152':
-      '¡La versión 1.5.2 trajo varias correcciones y mejoras!\n\n¡Échale un vistazo en las próximas páginas 😊!',
-  'feat1v152': 'Procesamiento de video más rápido',
-  'featDesc1v152': 'Editar videos grandes es ahora mucho más rápido 🚀',
-  'feat2v152': 'Mejora en el recorte de video',
-  'featDesc2v152':
-      'Elige tu momento con más precisión con los nuevos botones de recorte rápido y una barra de recorte mejorada 🎞️',
-  'feat3v152': 'Nuevo selector de archivos experimental',
-  'featDesc3v152':
-      'El nuevo selector de archivos experimental permite previsualizar y filtrar tus videos por fecha, no más desplazamientos al agregar videos pasados 📅 (Puedes desactivarlo en Preferencias si experimentas problemas)',
-  'feat4v152': 'Bloqueo de orientación',
-  'featDesc4v152':
-      'Al grabar en la aplicación, toca el nuevo botón después de posicionar tu teléfono para bloquear la orientación y evitar resultados inesperados 📱',
-  'feat5v152': 'Y más...',
-  'featDesc5v152':
-      'También encontrarás algunas pequeñas mejoras visuales y correcciones de errores 🐛',
   'useFilterInExperimentalPicker':
       'Use el filtro de fecha para seleccionar vídeos',
   'useFilterInExperimentalPickerDescription':
