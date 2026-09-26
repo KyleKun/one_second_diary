@@ -1,0 +1,116 @@
+name: release
+
+# Push a tag like v1.7.1 (matching `version:` in pubspec.yaml) to build the
+# signed APKs and publish them as a GitHub release, with the notes taken
+# from that version's section of CHANGELOG.md.
+#
+# Required repository secrets:
+#   ANDROID_KEYSTORE_BASE64  the upload keystore (.jks), base64 encoded
+#   ANDROID_KEYSTORE_PASSWORD, ANDROID_KEY_PASSWORD, ANDROID_KEY_ALIAS
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Check tag matches pubspec version
+        id: version
+        run: |
+          TAG="${GITHUB_REF_NAME}"
+          VERSION="$(grep -E '^version:' pubspec.yaml | sed -E 's/version: *([^+]+).*/\1/')"
+          if [ "$TAG" != "v$VERSION" ]; then
+            echo "::error::Tag $TAG does not match pubspec version $VERSION"
+            exit 1
+          fi
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.47.2'
+          channel: stable
+          cache: true
+
+      - name: Get dependencies
+        run: flutter pub get --enforce-lockfile
+
+      # build.gradle silently falls back to debug signing when key.properties
+      # is missing, so fail loudly instead of publishing debug-signed APKs.
+      - name: Set up signing
+        env:
+          KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+        run: |
+          if [ -z "$KEYSTORE_BASE64" ] || [ -z "$KEYSTORE_PASSWORD" ] || [ -z "$KEY_PASSWORD" ] || [ -z "$KEY_ALIAS" ]; then
+            echo "::error::Signing secrets are missing, see the top of release.yml"
+            exit 1
+          fi
+          # Strip whitespace so a secret pasted with line breaks still decodes.
+          echo "$KEYSTORE_BASE64" | tr -d '\r\n ' | base64 --decode > android/app/release.jks
+          cat > android/key.properties <<EOF
+          storePassword=$KEYSTORE_PASSWORD
+          keyPassword=$KEY_PASSWORD
+          keyAlias=$KEY_ALIAS
+          storeFile=release.jks
+          EOF
+
+      - name: Build APKs
+        run: |
+          flutter build apk --release --split-per-abi
+          flutter build apk --release
+
+      - name: Rename APKs
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          OUT=android-release
+          mkdir -p "$OUT"
+          cd build/app/outputs/flutter-apk
+          for abi in arm64-v8a armeabi-v7a x86_64; do
+            cp "app-$abi-release.apk" "../../../../$OUT/one-second-diary-v$VERSION-$abi-release.apk"
+          done
+          cp app-release.apk "../../../../$OUT/one-second-diary-v$VERSION-universal-release.apk"
+
+      - name: Write release notes
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          # This version's section of CHANGELOG.md: from its heading up to
+          # the next one.
+          CHANGES="$(awk -v v="## v$VERSION " 'index($0, v) == 1 {found=1; next} found && /^## / {exit} found' CHANGELOG.md)"
+          if [ -z "$(echo "$CHANGES" | tr -d '[:space:]')" ]; then
+            echo "::error::No CHANGELOG.md section found for v$VERSION"
+            exit 1
+          fi
+          {
+            echo "## Changes"
+            echo "$CHANGES"
+            echo
+            echo "Note: If you installed the app via PlayStore, please update it there. Don't install these APKs over the Play Store version. Otherwise, if your phone was made in 2017 or later, you most likely want \`one-second-diary-v$VERSION-arm64-v8a-release.apk\`. If it doesn't install, use \`one-second-diary-v$VERSION-universal-release.apk\`, which works on all devices but is larger."
+            echo
+          } > release-notes.md
+
+      - name: Publish GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" android-release/*.apk \
+            --title "One Second Diary - $GITHUB_REF_NAME" \
+            --notes-file release-notes.md \
+            --generate-notes
