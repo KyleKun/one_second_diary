@@ -7,7 +7,7 @@ const Map<String, String> cs = {
       'Děkuji moc za používání aplikace!\n\nPokud chcete podpořit vývoj,\nneváhejte přispět ^^',
   'donationPageTitle': 'Podpořte vývoj aplikace',
   'about': 'O aplikaci',
-  'appVersion': 'Verze 1.7.0',
+  'appVersion': 'Verze 1.7.1',
   'record': 'Record',
   'createMovie': 'Vytvoření videa',
   'settings': 'Nastavení',

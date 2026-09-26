@@ -6,7 +6,14 @@
     <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> 
+    <!-- No maxSdkVersion on purpose: installs that still run in legacy storage
+         mode (Android 10, or older installs kept legacy through
+         preserveLegacyExternalStorage on newer Android) need it for ffmpeg to
+         write straight into DCIM. camera_android_camerax declares it with
+         maxSdkVersion="28", which the manifest merger would otherwise inherit. -->
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        tools:remove="android:maxSdkVersion" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.VIBRATE" />

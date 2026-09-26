@@ -7,7 +7,7 @@ const Map<String, String> en = {
       'Thank you so much for using the app!\n\nIf you wish to support the development,\nfeel free to make a donation ^^',
   'donationPageTitle': 'Support app development',
   'about': 'About',
-  'appVersion': 'Version 1.7.0',
+  'appVersion': 'Version 1.7.1',
   'record': 'Record',
   'createMovie': 'Create movie',
   'settings': 'Settings',

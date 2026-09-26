@@ -8,6 +8,7 @@ import 'package:get/get.dart';
 import 'package:get_thumbnail_video/index.dart';
 import 'package:get_thumbnail_video/video_thumbnail.dart';
 
+import '../../../../enums/video_orientation.dart';
 import '../../../../utils/constants.dart';
 import '../../../../utils/date_format_utils.dart';
 import '../../../../utils/lazy_future_builder.dart';
@@ -29,6 +30,11 @@ class _SelectVideoFromStorageState extends State<SelectVideoFromStorage> {
   final ScrollController scrollController = ScrollController();
   IconData selectIcon = Icons.select_all;
   IconData navigationIcon = Icons.arrow_downward;
+
+  /// Every clip in a profile is encoded to the profile's canvas, so this is
+  /// the aspect ratio of all the thumbnails in the grid.
+  final bool isPortrait =
+      Utils.getCurrentOrientation() == VideoOrientation.portrait;
 
   @override
   void initState() {
@@ -109,11 +115,10 @@ class _SelectVideoFromStorageState extends State<SelectVideoFromStorage> {
                     scrollCacheExtent: const ScrollCacheExtent.pixels(99999),
                     shrinkWrap: true,
                     controller: scrollController,
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          childAspectRatio: 1.12,
-                        ),
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: isPortrait ? 3 : 2,
+                      childAspectRatio: isPortrait ? 0.55 : 1.12,
+                    ),
                     itemCount: allVideos!.length,
                     itemBuilder: (context, index) {
                       return Column(
@@ -128,55 +133,75 @@ class _SelectVideoFromStorageState extends State<SelectVideoFromStorage> {
                             ),
                             key: globalKeys![index],
                           ),
-                          GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                isSelected![index] = !isSelected![index];
-                              });
-                              if (isSelected![index] &&
-                                  index != allVideos!.length - 1) {
-                                scrollController.position.ensureVisible(
-                                  globalKeys![index + 1].currentContext!
-                                      .findRenderObject()!,
-                                  duration: const Duration(milliseconds: 750),
-                                );
-                              }
-                            },
-                            child: Container(
-                              margin: const EdgeInsets.all(15.0),
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                  color: isSelected![index]
-                                      ? AppColors.green
-                                      : Colors.white,
-                                  width: isSelected![index] ? 4 : 1,
-                                ),
-                                borderRadius: BorderRadius.circular(5),
-                              ),
-                              child: LazyFutureBuilder(
-                                future: () => getThumbnail(allVideos![index]),
-                                builder: (context, snapshot) {
-                                  if (snapshot.connectionState ==
-                                      ConnectionState.waiting) {
-                                    return const Center(
-                                      child: SizedBox(
-                                        height: 30,
-                                        width: 30,
-                                        child: Padding(
-                                          padding: EdgeInsets.all(4.0),
-                                          child: CircularProgressIndicator(),
+                          Expanded(
+                            child: Padding(
+                              padding: EdgeInsets.all(isPortrait ? 10.0 : 15.0),
+                              child: Align(
+                                alignment: Alignment.topCenter,
+                                child: AspectRatio(
+                                  aspectRatio: isPortrait ? 9 / 16 : 16 / 9,
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        isSelected![index] =
+                                            !isSelected![index];
+                                      });
+                                      if (isSelected![index] &&
+                                          index != allVideos!.length - 1) {
+                                        scrollController.position.ensureVisible(
+                                          globalKeys![index + 1].currentContext!
+                                              .findRenderObject()!,
+                                          duration: const Duration(
+                                            milliseconds: 750,
+                                          ),
+                                        );
+                                      }
+                                    },
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        border: Border.all(
+                                          color: isSelected![index]
+                                              ? AppColors.green
+                                              : Colors.white,
+                                          width: isSelected![index] ? 4 : 1,
                                         ),
+                                        borderRadius: BorderRadius.circular(5),
                                       ),
-                                    );
-                                  }
+                                      child: LazyFutureBuilder(
+                                        future: () =>
+                                            getThumbnail(allVideos![index]),
+                                        builder: (context, snapshot) {
+                                          if (snapshot.connectionState ==
+                                              ConnectionState.waiting) {
+                                            return const Center(
+                                              child: SizedBox(
+                                                height: 30,
+                                                width: 30,
+                                                child: Padding(
+                                                  padding: EdgeInsets.all(4.0),
+                                                  child:
+                                                      CircularProgressIndicator(),
+                                                ),
+                                              ),
+                                            );
+                                          }
 
-                                  if (snapshot.hasError) {
-                                    return Text('${snapshot.error}');
-                                  }
-                                  return Image.memory(
-                                    snapshot.data as Uint8List,
-                                  );
-                                },
+                                          if (snapshot.hasError) {
+                                            return Text('${snapshot.error}');
+                                          }
+                                          // Fill the box so the thumbnail
+                                          // can never grow past its cell.
+                                          return Image.memory(
+                                            snapshot.data as Uint8List,
+                                            fit: BoxFit.cover,
+                                            width: double.infinity,
+                                            height: double.infinity,
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                  ),
+                                ),
                               ),
                             ),
                           ),

@@ -1,4 +1,11 @@
-## v1.7.0 - 10/2026
+## v1.7.1 - 09/2026
+- Fixed "Permission denied" error when saving videos or creating movies on some devices after updating to v1.7.0
+- Fixed vertical video thumbnails overlapping each other when selecting videos for a movie
+- Fixed duration buttons overflowing the screen when saving a photo as a video
+- Save photo page now matches the save video page design
+- Save photo page now remembers the last selected duration
+
+## v1.7.0 - 09/2026
 - Updated Flutter and dependencies
 - Dropped support for Android 7.0/7.1
 - Increased minimum iOS deployment target from 11.0 to 15.0 for Flutter Upgrade

@@ -7,7 +7,7 @@ const Map<String, String> ca = {
       'Moltes gràcies per fer servir l’app!\n\nSi us agradaria donar suport al desenvolupament,\nno dubteu en fer una donació ^^',
   'donationPageTitle': 'Doneu suport al desenvolupament',
   'about': 'Quant a',
-  'appVersion': 'Versió 1.7.0',
+  'appVersion': 'Versió 1.7.1',
   'record': 'Enregistra',
   'createMovie': 'Crea pel·lícula',
   'settings': 'Configuració',
