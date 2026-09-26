@@ -7,7 +7,7 @@ const Map<String, String> hu = {
       'Köszönjük szépen, hogy használod az alkalmazást!\n\nHa szeretnéd támogatni a fejlesztést,\nadományozz bátran ^^',
   'donationPageTitle': 'Támogasd az alkalmazás fejlesztését',
   'about': 'Névjegy',
-  'appVersion': 'Verzió: 1.7.1',
+  'appVersion': 'Verzió: @version',
   'record': 'Felvétel',
   'createMovie': 'Film készítése',
   'settings': 'Beállítások',
@@ -145,7 +145,7 @@ const Map<String, String> hu = {
   'cancelMovieCreation': 'Filmkészítés megszakítása',
   'cancelMovieDesc': 'Biztosan megszakítod a film készítését?',
   'reportError': 'Hiba jelentése',
-  'errorMailSubject': '[One Second Diary - v1.6.0] App Error Report',
+  'errorMailSubject': '[One Second Diary - v@version] App Error Report',
   'errorMailBody':
       'Kérlek, írd le a tapasztalt hibát és a reprodukálás lépéseit. Köszönöm!',
   'oops': 'Hoppá!',

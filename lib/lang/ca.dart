@@ -7,7 +7,7 @@ const Map<String, String> ca = {
       'Moltes gràcies per fer servir l’app!\n\nSi us agradaria donar suport al desenvolupament,\nno dubteu en fer una donació ^^',
   'donationPageTitle': 'Doneu suport al desenvolupament',
   'about': 'Quant a',
-  'appVersion': 'Versió 1.7.1',
+  'appVersion': 'Versió @version',
   'record': 'Enregistra',
   'createMovie': 'Crea pel·lícula',
   'settings': 'Configuració',
@@ -150,7 +150,7 @@ const Map<String, String> ca = {
       'Esteu segur que voleu cancel·lar la creació de la pel·lícula?',
   'reportError': 'Informa d’un error',
   'errorMailSubject':
-      '[One Second Diary - v1.6.0] Informe d’error de l’aplicació',
+      '[One Second Diary - v@version] Informe d’error de l’aplicació',
   'errorMailBody':
       'Si us plau, descriviu l’error que heu trobat i les necessàries passes per reproduir-lo. Gràcies!',
   'oops': 'Ups!',

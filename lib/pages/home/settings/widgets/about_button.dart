@@ -12,7 +12,9 @@ class AboutButton extends StatelessWidget {
     showAboutPage(
       title: Text('about'.tr, style: const TextStyle(color: Colors.white)),
       context: context,
-      applicationVersion: 'appVersion'.tr,
+      applicationVersion: 'appVersion'.trParams({
+        'version': Constants.appVersion,
+      }),
       applicationLegalese: 'Copyright © Caio Pedroso, 2026',
       children: <Widget>[
         MarkdownPageListTile(

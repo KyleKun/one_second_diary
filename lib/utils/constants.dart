@@ -8,6 +8,10 @@ class Constants {
   static const String email = 'mailto:kylekundev@gmail.com';
   static const String githubUrl = 'https://github.com/KyleKun/one_second_diary';
 
+  /// Installed app version (e.g. "1.7.1"), read from the package in main()
+  /// so the About page and error report emails never show a stale one.
+  static String appVersion = '';
+
   /// Caps how tall a preview `AspectRatio` box (save-video, save-photo,
   /// calendar-editor, subtitle-editor) is allowed to grow relative to the
   /// screen height. Sized to full available width with no ceiling, a

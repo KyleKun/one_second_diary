@@ -7,7 +7,7 @@ const Map<String, String> pt = {
       'Muito obrigado por usar o app!\n\nSe desejar apoiar o desenvolvimento, sinta-se livre para fazer uma doação ^^',
   'donationPageTitle': 'Apoiar o desenvolvimento',
   'about': 'Sobre',
-  'appVersion': 'Versão 1.7.1',
+  'appVersion': 'Versão @version',
   'record': 'Gravar',
   'createMovie': 'Criar filme',
   'settings': 'Configurações',
@@ -145,7 +145,7 @@ const Map<String, String> pt = {
   'cancelMovieCreation': 'Cancelar criação de filme',
   'cancelMovieDesc': 'Você tem certeza que deseja cancelar a criação do filme?',
   'reportError': 'Relatar erro',
-  'errorMailSubject': '[One Second Diary - v1.6.0] Relatório de erro',
+  'errorMailSubject': '[One Second Diary - v@version] Relatório de erro',
   'errorMailBody':
       'Por favor descreva o erro e quais passos executar para reproduzir o mesmo. Obrigado!',
   'oops': 'Oops!',

@@ -4,13 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:intl/date_symbol_data_local.dart';
-
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:rive/rive.dart';
 
 import 'bindings/initial_binding.dart';
 import 'lang/translation_service.dart';
 import 'routes/app_pages.dart';
 import 'utils/app_paths.dart';
+import 'utils/constants.dart';
 import 'utils/shared_preferences_util.dart';
 import 'utils/theme.dart';
 import 'utils/video_encoder.dart';
@@ -25,6 +26,8 @@ Future<void> main() async {
   // Resolved before the first frame: on iOS the container path changes between
   // launches, so nothing may rely on a path persisted by a previous run.
   await AppPaths.init();
+
+  Constants.appVersion = (await PackageInfo.fromPlatform()).version;
 
   // Probing the ffmpeg build takes one short session, no need to block startup.
   unawaited(VideoEncoder.init());

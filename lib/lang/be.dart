@@ -7,7 +7,7 @@ const Map<String, String> be = {
       'Шчыра дзякую, што карыстаецеся маёй праграмай!\n\nКалі вы хочаце падтрымаць распрацоўку,\nзрабіце ахвяраванне ^^',
   'donationPageTitle': 'Падтрымка распрацоўкі праграмы',
   'about': 'Аб праграме',
-  'appVersion': 'Версія 1.7.1',
+  'appVersion': 'Версія @version',
   'record': 'Запіс',
   'createMovie': 'Стварыць фільм',
   'settings': 'Налады',
@@ -145,7 +145,7 @@ const Map<String, String> be = {
   'cancelMovieCreation': 'Скасаваць стварэнне фільма',
   'cancelMovieDesc': 'Вы ўпэўнены, што хочаце скасаваць стварэнне фільма?',
   'reportError': 'Паведаміць пра памылку',
-  'errorMailSubject': '[One Second Diary - v1.6.0] Справаздача пра памылку',
+  'errorMailSubject': '[One Second Diary - v@version] Справаздача пра памылку',
   'errorMailBody':
       'Апішыце памылку, з якой вы сутыкнуліся, і крокі па яе ўзнаўленні. дзякуй!',
   'oops': 'Авоечкі!',

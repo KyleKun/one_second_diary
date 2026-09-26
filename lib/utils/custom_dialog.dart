@@ -70,7 +70,7 @@ class _CustomDialogState extends State<CustomDialog> {
       );
       Utils.logInfo('${logTag}Zip file created: ${zipFile.path}');
       final Email email = Email(
-        subject: 'errorMailSubject'.tr,
+        subject: 'errorMailSubject'.trParams({'version': Constants.appVersion}),
         body: 'errorMailBody'.tr,
         recipients: ['kylekundev@gmail.com'],
         attachmentPaths: [zipFile.path],

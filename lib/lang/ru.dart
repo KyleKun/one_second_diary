@@ -7,7 +7,7 @@ const Map<String, String> ru = {
       'Благодарю тебя за те мгновения, которые ты разделил(а) с приложением! \n\nТы можешь поддержать разработку,\nотправив донат ^^',
   'donationPageTitle': 'Поддержать разработку приложения',
   'about': 'О приложении',
-  'appVersion': 'Версия 1.7.1',
+  'appVersion': 'Версия @version',
   'record': 'Записать',
   'createMovie': 'Создать фильм',
   'settings': 'Настройки',
@@ -142,7 +142,7 @@ const Map<String, String> ru = {
   'cancelMovieCreation': 'Отменить создание фильма',
   'cancelMovieDesc': 'Новый фильм будет удален, продолжить?',
   'reportError': 'Сообщить об ошибке',
-  'errorMailSubject': '[One Second Diary - v1.6.0] Сообщить об ошибке',
+  'errorMailSubject': '[One Second Diary - v@version] Сообщить об ошибке',
   'errorMailBody':
       'Пожалуйста, опиши ошибку, с которой ты столкнулся(лась), и шаги по её воспроизведению. Спасибо!',
   'oops': 'Упс!',
