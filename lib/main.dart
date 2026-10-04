@@ -37,7 +37,7 @@ Future<void> main() async {
 
   // Uncaught errors otherwise never reach the log file users send us, so a
   // broken screen leaves no trace in their reports.
-  final FlutterExceptionHandler? presentError = FlutterError.onError;
+  final presentError = FlutterError.onError;
   FlutterError.onError = (FlutterErrorDetails details) {
     Utils.logError('[Uncaught] - ${details.exceptionAsString()}');
     presentError?.call(details);
