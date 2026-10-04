@@ -18,6 +18,8 @@ const Map<String, String> id = {
   'movieCreatedDesc':
       'Video disimpan ke dalam penyimpanan di dalam folder DCIM/OneSecondDiary/Movies',
   'movieError': 'Gagal menyimpan video!',
+  'movieSkippedVideos':
+      '@count klip tidak dapat dibaca dan tidak dimasukkan ke dalam video gabungan.',
   'tryAgainMsg':
       'Coba beberapa saaat lagi. Jika masalah masih tetap ada, hubungi pengembang.',
   'create': 'Buat',
@@ -102,6 +104,7 @@ const Map<String, String> id = {
   'selectVideos': 'Pilih video',
   'editSubtitles': 'Ubah subjudul',
   'noVideoRecorded': 'Tidak ada video yang direkam',
+  'videoLoadError': 'Video ini tidak dapat dimuat.',
   'subtitles': 'Subjudul',
   'addVideo': 'Tambah video',
   'addPhotoAsVideo': 'Tambahkan foto sebagai video',

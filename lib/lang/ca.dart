@@ -18,6 +18,8 @@ const Map<String, String> ca = {
   'movieCreatedDesc':
       'La pel·lícula s’ha desat a l’emmagatzematge dins la carpeta DCIM/OneSecondDiary/Movies',
   'movieError': 'S’ha produït un error en desar la pel·lícula!',
+  'movieSkippedVideos':
+      '@count clips no s’han pogut llegir i s’han deixat fora de la pel·lícula.',
   'tryAgainMsg':
       'Torneu a provar-ho. Si el problema persisteix, contacteu amb el desenvolupador.',
   'create': 'Crea',
@@ -104,6 +106,7 @@ const Map<String, String> ca = {
   'selectVideos': 'Seleccioneu vídeos',
   'editSubtitles': 'Edita els subtítols',
   'noVideoRecorded': 'Cap vídeo enregistrat',
+  'videoLoadError': 'No s’ha pogut carregar aquest vídeo.',
   'subtitles': 'Subtítols',
   'addVideo': 'Afegeix vídeo',
   'addPhotoAsVideo': 'Afegir foto com a vídeo',

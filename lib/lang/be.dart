@@ -18,6 +18,8 @@ const Map<String, String> be = {
   'movieCreatedDesc':
       'Фільм захаваны ў сховішча ў папку DCIM/OneSecondDiary/Movies',
   'movieError': 'Памылка пры захаванні фільма!',
+  'movieSkippedVideos':
+      '@count відэа не ўдалося прачытаць, яны не ўвайшлі ў фільм.',
   'tryAgainMsg':
       'Паспрабуйце яшчэ раз. Калі праблема не знікне, звярніцеся да распрацоўшчыка.',
   'create': 'Стварыць',
@@ -102,6 +104,7 @@ const Map<String, String> be = {
   'selectVideos': 'Выберыце відэа',
   'editSubtitles': 'Рэдагаваць субцітры',
   'noVideoRecorded': 'Няма запісаных відэа',
+  'videoLoadError': 'Не ўдалося загрузіць гэта відэа.',
   'subtitles': 'Субцітры',
   'addVideo': 'Дадаць відэа',
   'addPhotoAsVideo': 'Дадаць фота як відэа',

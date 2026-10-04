@@ -18,6 +18,8 @@ const Map<String, String> hu = {
   'movieCreatedDesc':
       'A film a tárhely DCIM/OneSecondDiary/Movies mappájába lett mentve',
   'movieError': 'Hiba a film mentése közben!',
+  'movieSkippedVideos':
+      '@count klipet nem sikerült beolvasni, ezek kimaradtak a filmből.',
   'tryAgainMsg':
       'Kérlek, próbáld újra. Ha a probléma továbbra is fennáll, lépj kapcsolatba a fejlesztővel.',
   'create': 'Létrehozás',
@@ -103,6 +105,7 @@ const Map<String, String> hu = {
   'selectVideos': 'Videók kiválasztása',
   'editSubtitles': 'Feliratok szerkesztése',
   'noVideoRecorded': 'Nincs felvett videó',
+  'videoLoadError': 'Ezt a videót nem sikerült betölteni.',
   'subtitles': 'Feliratok',
   'addVideo': 'Videó hozzáadása',
   'addPhotoAsVideo': 'Fotó hozzáadása videóként',
