@@ -112,6 +112,9 @@ class _SaveVideoPageState extends State<SaveVideoPage>
     setState(() {
       isGeotaggingEnabled = !isGeotaggingEnabled;
     });
+    // Persist on every change, including when turning it off, so the stored
+    // preference always matches what the switch shows.
+    SharedPrefsUtil.putBool('enableGeotagging', isGeotaggingEnabled);
   }
 
   Future<bool> _handleLocationPermission() async {
@@ -130,6 +133,9 @@ class _SaveVideoPageState extends State<SaveVideoPage>
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
+        if (isGeotaggingEnabled) {
+          toggleGeotaggingStatus();
+        }
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(SnackBar(content: Text('locationPermissionDenied'.tr)));
@@ -137,6 +143,9 @@ class _SaveVideoPageState extends State<SaveVideoPage>
       }
     }
     if (permission == LocationPermission.deniedForever) {
+      if (isGeotaggingEnabled) {
+        toggleGeotaggingStatus();
+      }
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('locationPermissionPermanentlyDenied'.tr)),
       );
@@ -147,9 +156,7 @@ class _SaveVideoPageState extends State<SaveVideoPage>
 
   Future<void> setGeotagging() async {
     Utils.logInfo('[Geolocation] - Getting location...');
-    await _getCurrentPosition().then(
-      (_) => SharedPrefsUtil.putBool('enableGeotagging', isGeotaggingEnabled),
-    );
+    await _getCurrentPosition();
   }
 
   Future<void> _getCurrentPosition() async {
