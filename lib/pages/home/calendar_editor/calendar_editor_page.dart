@@ -53,6 +53,11 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
   final VideoCountController _videoCountController = Get.find();
   final DailyEntryController _dailyEntryController = Get.find();
   VideoPlayerController? _controller;
+
+  /// Set when [_controller] failed to initialize. Checked alongside
+  /// `value.hasError`, which stays false when the failure happens before the
+  /// player's event stream exists (e.g. the native player can't be created).
+  bool _videoLoadFailed = false;
   final UniqueKey _videoPlayerKey = UniqueKey();
   late final bool useCalendarAlternativeColors =
       SharedPrefsUtil.getBool('useAlternativeCalendarColors') ?? false;
@@ -160,6 +165,7 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
         );
         final controller = VideoPlayerController.file(File(currentVideo));
         _controller = controller;
+        _videoLoadFailed = false;
         controller
             .initialize()
             .then((_) async {
@@ -196,6 +202,7 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
         // Initing new controller
         final controller = VideoPlayerController.file(File(video));
         _controller = controller;
+        _videoLoadFailed = false;
         controller
             .initialize()
             .then((_) async {
@@ -223,7 +230,9 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
       '[CALENDAR] - Failed to load $currentVideo: '
       '${controller.value.errorDescription ?? error}',
     );
-    if (mounted && _controller == controller) setState(() {});
+    if (_controller != controller) return; // A newer clip replaced it.
+    _videoLoadFailed = true;
+    if (mounted) setState(() {});
   }
 
   bool shouldIgnoreExperimentalFilter() {
@@ -627,7 +636,8 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
                                               // that can't play looked like the
                                               // tap was ignored.
                                               if (_controller?.value.hasError ==
-                                                  true) {
+                                                      true ||
+                                                  _videoLoadFailed) {
                                                 // Covers the loading hourglass
                                                 // behind it.
                                                 return SizedBox.expand(

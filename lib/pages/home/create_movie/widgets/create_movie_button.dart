@@ -377,6 +377,28 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
             );
           }
 
+          // The same minimum as before processing: dropping unreadable clips
+          // may have left too few for a movie (or none, which concat rejects).
+          if (selectedVideos.length < 2) {
+            Utils.logWarning(
+              '${logTag}Insufficient videos left to create movie. Videos: $selectedVideos',
+            );
+            showDialog(
+              barrierDismissible: false,
+              context: Get.context!,
+              builder: (context) => CustomDialog(
+                isDoubleAction: false,
+                title: 'movieErrorTitle'.tr,
+                content:
+                    '${'movieInsufficientVideos'.tr}\n\n${'movieSkippedVideos'.trParams({'count': '${unreadableVideos.length}'})}',
+                actionText: 'Ok',
+                actionColor: AppColors.green,
+                action: () => Get.back(),
+              ),
+            );
+            return;
+          }
+
           final String today = DateFormatUtils.getToday();
 
           // Creating txt that will be used with ffmpeg to concatenate all videos
