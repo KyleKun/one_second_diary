@@ -3,6 +3,7 @@
 - Fixed the calendar jumping back to today when a day's video couldn't be played; it now shows an error for that day instead
 - Fixed saving a video failing with an ffmpeg error when the clip couldn't be loaded; the app now explains the clip couldn't be loaded instead
 - Movie creation now leaves out clips that can't be read instead of failing the whole movie
+- Fixed movies stopping partway through when a clip had no sound (e.g. a silent gallery video saved with v1.5.2); such clips now get a silent audio track
 - Logs now include the app version, device model and Android/iOS version, plus errors that were previously not recorded, to help diagnose reports
 
 ## v1.7.1 - 09/2026
