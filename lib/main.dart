@@ -42,13 +42,11 @@ Future<void> main() async {
     Utils.logError('[Uncaught] - ${details.exceptionAsString()}');
     presentError?.call(details);
   };
-  WidgetsBinding.instance.platformDispatcher.onError = (
-    Object error,
-    StackTrace stack,
-  ) {
-    Utils.logError('[Uncaught] - $error');
-    return false;
-  };
+  WidgetsBinding.instance.platformDispatcher.onError =
+      (Object error, StackTrace stack) {
+        Utils.logError('[Uncaught] - $error');
+        return false;
+      };
 
   runApp(MyApp());
 }

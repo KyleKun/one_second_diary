@@ -137,9 +137,9 @@ class _SaveButtonState extends State<SaveButton> {
             : () {
                 if (_pressedSave) return;
                 if (!_canTrimVideo()) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('videoLoadError'.tr)),
-                  );
+                  ScaffoldMessenger.of(
+                    context,
+                  ).showSnackBar(SnackBar(content: Text('videoLoadError'.tr)));
                   return;
                 }
                 _pressedSave = true;
