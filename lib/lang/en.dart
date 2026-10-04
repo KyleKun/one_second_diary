@@ -18,6 +18,8 @@ const Map<String, String> en = {
   'movieCreatedDesc':
       'Movie saved to storage inside DCIM/OneSecondDiary/Movies folder',
   'movieError': 'Error saving the movie!',
+  'movieSkippedVideos':
+      "@count clips couldn't be read and were left out of the movie.",
   'tryAgainMsg':
       'Please try again. If the problem persists, contact the developer.',
   'create': 'Create',
@@ -104,6 +106,7 @@ const Map<String, String> en = {
   'selectVideos': 'Select videos',
   'editSubtitles': 'Edit subtitles',
   'noVideoRecorded': 'No video recorded',
+  'videoLoadError': "Couldn't load this video.",
   'subtitles': 'Subtitles',
   'addVideo': 'Add video',
   'addPhotoAsVideo': 'Add photo as video',

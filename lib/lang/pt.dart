@@ -18,6 +18,8 @@ const Map<String, String> pt = {
   'movieCreatedDesc':
       'O filme foi salvo no Armazenamento Interno na pasta DCIM/OneSecondDiary/Movies',
   'movieError': 'Erro ao salvar o filme!',
+  'movieSkippedVideos':
+      '@count clipes não puderam ser lidos e ficaram de fora do filme.',
   'tryAgainMsg':
       'Por favor, tente novamente. Se o problemar persistir, contate o desenvolvedor.',
   'create': 'Criar',
@@ -101,6 +103,7 @@ const Map<String, String> pt = {
   'selectVideos': 'Escolha os vídeos',
   'editSubtitles': 'Editar legendas',
   'noVideoRecorded': 'Nenhum vídeo gravado',
+  'videoLoadError': 'Não foi possível carregar este vídeo.',
   'subtitles': 'Legendas',
   'addVideo': 'Adicionar vídeo',
   'addPhotoAsVideo': 'Adicionar foto como vídeo',

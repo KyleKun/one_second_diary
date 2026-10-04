@@ -120,6 +120,11 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
         // Create a dummy srt for adding subtitles stream if necessary
         final String dummySubtitles = await Utils.writeSrt('', 0, 1);
 
+        // Clips ffprobe can't open (e.g. truncated files with no moov atom).
+        // They're left out of the movie: one of them would otherwise make the
+        // whole concat fail.
+        final List<String> unreadableVideos = [];
+
         // Start checking all videos
         int currentIndex = 0;
         for (String video in selectedVideos) {
@@ -157,6 +162,7 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
                 '${logTag}Error checking if $currentVideo was recorded on v1.5',
               );
               Utils.logError('${logTag}Error: $sessionLog');
+              unreadableVideos.add(video);
             }
           });
 
@@ -335,6 +341,13 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
             '${logTag}Finished checking videos... creating movie...',
           );
 
+          if (unreadableVideos.isNotEmpty) {
+            selectedVideos.removeWhere(unreadableVideos.contains);
+            Utils.logWarning(
+              '${logTag}Leaving out ${unreadableVideos.length} unreadable videos: $unreadableVideos',
+            );
+          }
+
           final String today = DateFormatUtils.getToday();
 
           // Creating txt that will be used with ffmpeg to concatenate all videos
@@ -360,7 +373,9 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
                 builder: (context) => CustomDialog(
                   isDoubleAction: false,
                   title: 'movieCreatedTitle'.tr,
-                  content: 'movieCreatedDesc'.tr,
+                  content: unreadableVideos.isEmpty
+                      ? 'movieCreatedDesc'.tr
+                      : '${'movieCreatedDesc'.tr}\n\n${'movieSkippedVideos'.trParams({'count': '${unreadableVideos.length}'})}',
                   actionText: 'Ok',
                   actionColor: AppColors.green,
                   action: () {

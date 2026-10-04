@@ -27,6 +27,7 @@ class StorageUtils {
     await io.Directory('${AppPaths.internal}/Logs').create(recursive: true);
     SharedPrefsUtil.putString('currentLogFile', Utils.getNewLogFilename());
     Utils.logInfo('[App Started] - Log file created');
+    await _logDeviceInfo();
     Utils.logVerbose('[App Started] - Device date/time: ${DateTime.now()}');
 
     try {
@@ -42,6 +43,25 @@ class StorageUtils {
     } catch (e) {
       Utils.logError('[StorageUtils] - $e');
     }
+  }
+
+  /// App version and device, so a sent log says what it came from.
+  static Future<void> _logDeviceInfo() async {
+    String device = '';
+    try {
+      if (PlatformUtils.isAndroid) {
+        final AndroidDeviceInfo info = await DeviceInfoPlugin().androidInfo;
+        device =
+            'Android ${info.version.release} (SDK ${info.version.sdkInt}), '
+            '${info.manufacturer} ${info.model}';
+      } else if (PlatformUtils.isIOS) {
+        final IosDeviceInfo info = await DeviceInfoPlugin().iosInfo;
+        device = 'iOS ${info.systemVersion}, ${info.utsname.machine}';
+      }
+    } catch (e) {
+      device = 'unknown device ($e)';
+    }
+    Utils.logInfo('[App Started] - v${Constants.appVersion} on $device');
   }
 
   /// Whether the storage permissions needed to read the videos folder were
