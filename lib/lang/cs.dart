@@ -17,6 +17,8 @@ const Map<String, String> cs = {
   'movieCreatedTitle': 'Video vytvořeno!',
   'movieCreatedDesc': 'Film uložený do složky DCIM/OneSecondDiary/Movies',
   'movieError': 'Chyba při ukládání filmu!',
+  'movieSkippedVideos':
+      'Počet klipů, které se nepodařilo přečíst a byly z filmu vynechány: @count',
   'tryAgainMsg':
       'Zkuste to prosím znovu. Pokud problém přetrvává, obraťte se na vývojáře.',
   'create': 'Vytvořit',
@@ -100,6 +102,7 @@ const Map<String, String> cs = {
   'selectVideos': 'Výběr videí',
   'editSubtitles': 'Editace tittulků',
   'noVideoRecorded': 'Žádné video nebylo zaznamenáno',
+  'videoLoadError': 'Toto video se nepodařilo načíst.',
   'subtitles': 'Titulky',
   'addVideo': 'Přidat Video',
   'addPhotoAsVideo': 'Přidat fotku jako video',
