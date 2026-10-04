@@ -2,7 +2,10 @@ name: release
 
 # Push a tag like v1.7.1 (matching `version:` in pubspec.yaml) to build the
 # signed APKs and publish them as a GitHub release, with the notes taken
-# from that version's section of CHANGELOG.md.
+# from that version's section of CHANGELOG.md. The same run also builds the
+# signed app bundle for the Play Console and keeps it as a workflow artifact
+# (not on the public release, since an .aab can't be installed directly):
+# download it from the run's page under "Artifacts".
 #
 # Required repository secrets:
 #   ANDROID_KEYSTORE_BASE64  the upload keystore (.jks), base64 encoded
@@ -72,12 +75,13 @@ jobs:
           storeFile=release.jks
           EOF
 
-      - name: Build APKs
+      - name: Build APKs and app bundle
         run: |
           flutter build apk --release --split-per-abi
           flutter build apk --release
+          flutter build appbundle --release
 
-      - name: Rename APKs
+      - name: Rename outputs
         run: |
           VERSION="${{ steps.version.outputs.version }}"
           OUT=android-release
@@ -87,6 +91,18 @@ jobs:
             cp "app-$abi-release.apk" "../../../../$OUT/one-second-diary-v$VERSION-$abi-release.apk"
           done
           cp app-release.apk "../../../../$OUT/one-second-diary-v$VERSION-universal-release.apk"
+          cd ../bundle/release
+          cp app-release.aab "../../../../../$OUT/one-second-diary-v$VERSION-release.aab"
+
+      # For the Play Console. Signed with the upload key like the APKs, which
+      # is what Play App Signing expects.
+      - name: Upload app bundle artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: one-second-diary-v${{ steps.version.outputs.version }}-aab
+          path: android-release/*.aab
+          if-no-files-found: error
+          retention-days: 90
 
       - name: Write release notes
         run: |

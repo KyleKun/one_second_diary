@@ -53,6 +53,11 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
   final VideoCountController _videoCountController = Get.find();
   final DailyEntryController _dailyEntryController = Get.find();
   VideoPlayerController? _controller;
+
+  /// Set when [_controller] failed to initialize. Checked alongside
+  /// `value.hasError`, which stays false when the failure happens before the
+  /// player's event stream exists (e.g. the native player can't be created).
+  bool _videoLoadFailed = false;
   final UniqueKey _videoPlayerKey = UniqueKey();
   late final bool useCalendarAlternativeColors =
       SharedPrefsUtil.getBool('useAlternativeCalendarColors') ?? false;
@@ -160,15 +165,21 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
         );
         final controller = VideoPlayerController.file(File(currentVideo));
         _controller = controller;
-        controller.initialize().then((_) async {
-          if (!mounted || _controller != controller) return;
-          try {
-            await controller.setLooping(true);
-            await controller.setVolume(autoSound ? 1.0 : 0.0);
-            if (autoPlay) await controller.play();
-            if (mounted && _controller == controller) setState(() {});
-          } catch (_) {}
-        });
+        _videoLoadFailed = false;
+        controller
+            .initialize()
+            .then((_) async {
+              if (!mounted || _controller != controller) return;
+              try {
+                await controller.setLooping(true);
+                await controller.setVolume(autoSound ? 1.0 : 0.0);
+                if (autoPlay) await controller.play();
+                if (mounted && _controller == controller) setState(() {});
+              } catch (_) {}
+            })
+            .catchError((Object e) {
+              _onVideoLoadError(controller, e);
+            });
       }
     });
     await getSubtitlesForSelectedDate();
@@ -191,19 +202,37 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
         // Initing new controller
         final controller = VideoPlayerController.file(File(video));
         _controller = controller;
-        controller.initialize().then((_) async {
-          if (!mounted || _controller != controller) return;
-          try {
-            await controller.setLooping(true);
-            await controller.setVolume(autoSound ? 1.0 : 0.0);
-            if (autoPlay) await controller.play();
-            if (mounted && _controller == controller) {
-              setState(() {});
-            }
-          } catch (_) {}
-        });
+        _videoLoadFailed = false;
+        controller
+            .initialize()
+            .then((_) async {
+              if (!mounted || _controller != controller) return;
+              try {
+                await controller.setLooping(true);
+                await controller.setVolume(autoSound ? 1.0 : 0.0);
+                if (autoPlay) await controller.play();
+                if (mounted && _controller == controller) {
+                  setState(() {});
+                }
+              } catch (_) {}
+            })
+            .catchError((Object e) {
+              _onVideoLoadError(controller, e);
+            });
       });
     }
+  }
+
+  /// Logs why [controller] couldn't load [currentVideo] and rebuilds, so the
+  /// preview shows an error for that day instead of spinning forever.
+  void _onVideoLoadError(VideoPlayerController controller, Object error) {
+    Utils.logError(
+      '[CALENDAR] - Failed to load $currentVideo: '
+      '${controller.value.errorDescription ?? error}',
+    );
+    if (_controller != controller) return; // A newer clip replaced it.
+    _videoLoadFailed = true;
+    if (mounted) setState(() {});
   }
 
   bool shouldIgnoreExperimentalFilter() {
@@ -601,16 +630,39 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
                                                 );
                                               }
 
-                                              // Not sure if it works but if the videoController fails we try to restart the page
+                                              // Stay on the selected day: going
+                                              // back to HOME here used to reset
+                                              // the calendar to today, so a clip
+                                              // that can't play looked like the
+                                              // tap was ignored.
                                               if (_controller?.value.hasError ==
-                                                  true) {
-                                                WidgetsBinding.instance
-                                                    .addPostFrameCallback((_) {
-                                                      _controller?.dispose();
-                                                    });
-                                                Get.offAllNamed(
-                                                  Routes.HOME,
-                                                )?.then((_) => setState(() {}));
+                                                      true ||
+                                                  _videoLoadFailed) {
+                                                // Covers the loading hourglass
+                                                // behind it.
+                                                return SizedBox.expand(
+                                                  child: ColoredBox(
+                                                    color: Theme.of(
+                                                      context,
+                                                    ).scaffoldBackgroundColor,
+                                                    child: Center(
+                                                      child: Padding(
+                                                        padding:
+                                                            const EdgeInsets.all(
+                                                              12.0,
+                                                            ),
+                                                        child: Text(
+                                                          'videoLoadError'.tr,
+                                                          textAlign:
+                                                              TextAlign.center,
+                                                          style: TextStyle(
+                                                            color: mainColor,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                );
                                               }
 
                                               // VideoPlayer

@@ -120,6 +120,11 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
         // Create a dummy srt for adding subtitles stream if necessary
         final String dummySubtitles = await Utils.writeSrt('', 0, 1);
 
+        // Clips ffprobe can't open (e.g. truncated files with no moov atom).
+        // They're left out of the movie: one of them would otherwise make the
+        // whole concat fail.
+        final List<String> unreadableVideos = [];
+
         // Start checking all videos
         int currentIndex = 0;
         for (String video in selectedVideos) {
@@ -136,18 +141,37 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
               '${currentVideo.split('.mp4').first}_$randomNumber2.mp4';
 
           // TODO(KyleKun): this (in special) will need a good refactor for next version
-          // Check if video was recorded before v1.5 so we can process what is needed
+          // Check if video was recorded before v1.5 so we can process what is
+          // needed, and which streams it has. Prints one line per stream type
+          // and the artist tag, e.g. "video\naudio\nsubtitle\nOne Second Diary (v1.5)".
           await executeFFprobe(
-            '-v quiet -show_entries format_tags=artist -of default=nw=1:nk=1 "$currentVideo"',
+            '-v quiet -show_entries stream=codec_type:format_tags=artist -of default=nw=1:nk=1 "$currentVideo"',
           ).then((session) async {
             final returnCode = await session.getReturnCode();
             if (ReturnCode.isSuccess(returnCode)) {
-              final sessionLog = await session.getOutput();
-              if (sessionLog == null ||
-                  sessionLog.isEmpty ||
-                  !sessionLog.contains(Constants.artist)) {
+              final String sessionLog = await session.getOutput() ?? '';
+              final List<String> lines = sessionLog
+                  .split('\n')
+                  .map((line) => line.trim())
+                  .toList();
+              if (!lines.contains('video')) {
+                // Nothing to show, and concat would misplace every clip after it.
+                Utils.logWarning(
+                  '$logTag$currentVideo has no video stream. Leaving it out.',
+                );
+                unreadableVideos.add(video);
+              } else if (!sessionLog.contains(Constants.artist)) {
                 Utils.logWarning(
                   '$logTag$currentVideo was not recorded on v1.5. Processing it...',
+                );
+                isV1point5 = false;
+              } else if (!lines.contains('audio')) {
+                // Saved by v1.5.2 from a gallery video without sound: its
+                // silent track was never mapped. A clip without audio shifts
+                // the audio of every later clip in the concat, so the movie
+                // seems to stop here. Process it to add a silent track.
+                Utils.logWarning(
+                  '$logTag$currentVideo has no audio stream. Processing it...',
                 );
                 isV1point5 = false;
               }
@@ -157,6 +181,7 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
                 '${logTag}Error checking if $currentVideo was recorded on v1.5',
               );
               Utils.logError('${logTag}Error: $sessionLog');
+              unreadableVideos.add(video);
             }
           });
 
@@ -199,6 +224,7 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
             Utils.logInfo('${logTag}Checking streams for $tempVideo1');
             bool hasSubtitles = false;
             bool hasAudio = false;
+            String? clipDuration;
 
             // Streams check
             await executeFFprobe(
@@ -208,7 +234,9 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
               if (ReturnCode.isSuccess(returnCode)) {
                 final sessionLog = await session.getOutput();
                 if (sessionLog == null) return;
-                final List<dynamic> streams = jsonDecode(sessionLog)['streams'];
+                final Map<String, dynamic> info = jsonDecode(sessionLog);
+                final List<dynamic> streams = info['streams'];
+                clipDuration = info['format']?['duration']?.toString();
                 debugPrint(
                   '${logTag}Streams info for $tempVideo1 --> $sessionLog',
                 );
@@ -247,15 +275,22 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
             });
 
             // Add audio stream if necessary
-            if (!hasAudio) {
+            if (!hasAudio && clipDuration == null) {
+              Utils.logError(
+                '${logTag}No audio stream and unknown duration for $tempVideo1. Leaving $video out.',
+              );
+              unreadableVideos.add(copyVideoName);
+            } else if (!hasAudio) {
               Utils.logInfo(
                 '${logTag}No audio stream for $tempVideo1, adding one...',
               );
 
               // Creates an empty audio stream that matches video duration
               // Set the audio bitrate to 256k and sample rate to 48k (aac codec)
+              // Bounded with -t, not -shortest: -shortest also counts the
+              // clip's 1ms subtitle stream and would cut the video to nothing.
               final command =
-                  '-i "$tempVideo1" -f lavfi -i anullsrc=channel_layout=mono:sample_rate=48000 -shortest -b:a 256k -c:v copy -c:s copy -c:a aac "$tempVideo2" -y';
+                  '-i "$tempVideo1" -f lavfi -t $clipDuration -i anullsrc=channel_layout=mono:sample_rate=48000 -map 0 -map 1:a -b:a 256k -c:v copy -c:s copy -c:a aac "$tempVideo2" -y';
               await executeFFmpeg(command).then((session) async {
                 final returnCode = await session.getReturnCode();
                 if (ReturnCode.isSuccess(returnCode)) {
@@ -335,6 +370,35 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
             '${logTag}Finished checking videos... creating movie...',
           );
 
+          if (unreadableVideos.isNotEmpty) {
+            selectedVideos.removeWhere(unreadableVideos.contains);
+            Utils.logWarning(
+              '${logTag}Leaving out ${unreadableVideos.length} unreadable videos: $unreadableVideos',
+            );
+          }
+
+          // The same minimum as before processing: dropping unreadable clips
+          // may have left too few for a movie (or none, which concat rejects).
+          if (selectedVideos.length < 2) {
+            Utils.logWarning(
+              '${logTag}Insufficient videos left to create movie. Videos: $selectedVideos',
+            );
+            showDialog(
+              barrierDismissible: false,
+              context: Get.context!,
+              builder: (context) => CustomDialog(
+                isDoubleAction: false,
+                title: 'movieErrorTitle'.tr,
+                content:
+                    '${'movieInsufficientVideos'.tr}\n\n${'movieSkippedVideos'.trParams({'count': '${unreadableVideos.length}'})}',
+                actionText: 'Ok',
+                actionColor: AppColors.green,
+                action: () => Get.back(),
+              ),
+            );
+            return;
+          }
+
           final String today = DateFormatUtils.getToday();
 
           // Creating txt that will be used with ffmpeg to concatenate all videos
@@ -360,7 +424,9 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
                 builder: (context) => CustomDialog(
                   isDoubleAction: false,
                   title: 'movieCreatedTitle'.tr,
-                  content: 'movieCreatedDesc'.tr,
+                  content: unreadableVideos.isEmpty
+                      ? 'movieCreatedDesc'.tr
+                      : '${'movieCreatedDesc'.tr}\n\n${'movieSkippedVideos'.trParams({'count': '${unreadableVideos.length}'})}',
                   actionText: 'Ok',
                   actionColor: AppColors.green,
                   action: () {

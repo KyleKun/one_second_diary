@@ -14,6 +14,7 @@ import 'utils/app_paths.dart';
 import 'utils/constants.dart';
 import 'utils/shared_preferences_util.dart';
 import 'utils/theme.dart';
+import 'utils/utils.dart';
 import 'utils/video_encoder.dart';
 
 Future<void> main() async {
@@ -33,6 +34,19 @@ Future<void> main() async {
   unawaited(VideoEncoder.init());
 
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+
+  // Uncaught errors otherwise never reach the log file users send us, so a
+  // broken screen leaves no trace in their reports.
+  final presentError = FlutterError.onError;
+  FlutterError.onError = (FlutterErrorDetails details) {
+    Utils.logError('[Uncaught] - ${details.exceptionAsString()}');
+    presentError?.call(details);
+  };
+  WidgetsBinding.instance.platformDispatcher.onError =
+      (Object error, StackTrace stack) {
+        Utils.logError('[Uncaught] - $error');
+        return false;
+      };
 
   runApp(MyApp());
 }

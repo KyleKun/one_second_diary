@@ -627,10 +627,21 @@ class _SaveVideoPageState extends State<SaveVideoPage>
   }
 
   void _initVideoPlayerController() {
-    _trimmer.loadVideo(videoFile: File(routeArguments['videoPath'])).then((_) {
-      // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
-      setState(() {});
-    });
+    _trimmer
+        .loadVideo(videoFile: File(routeArguments['videoPath']))
+        .then((_) {
+          // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
+          setState(() {});
+        })
+        .catchError((Object e) {
+          // SaveButton refuses to save while the controller isn't
+          // initialized; this is the only trace of why it never was.
+          Utils.logError(
+            '[SAVE VIDEO] - Failed to load ${routeArguments['videoPath']}: '
+            '${_trimmer.videoPlayerController?.value.errorDescription ?? e}',
+          );
+          if (mounted) setState(() {});
+        });
   }
 
   void videoPlay() async {

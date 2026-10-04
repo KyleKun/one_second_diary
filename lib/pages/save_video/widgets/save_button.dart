@@ -99,6 +99,25 @@ class _SaveButtonState extends State<SaveButton> {
   // Prevents user from clicking it twice
   bool _pressedSave = false;
 
+  /// Whether the trim range is usable. If the video player never loaded the
+  /// clip, its duration (and so the trim end) is 0 and ffmpeg would abort
+  /// with "-to value smaller than -ss".
+  bool _canTrimVideo() {
+    final bool canTrim =
+        widget.videoController.value.isInitialized &&
+        widget.videoEndInMilliseconds > widget.videoStartInMilliseconds;
+    if (!canTrim) {
+      Utils.logError(
+        '${logTag}Not saving ${widget.videoPath}: video not loaded '
+        '(initialized: ${widget.videoController.value.isInitialized}, '
+        'error: ${widget.videoController.value.errorDescription}, '
+        'trim ${widget.videoStartInMilliseconds}-'
+        '${widget.videoEndInMilliseconds}ms)',
+      );
+    }
+    return canTrim;
+  }
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -116,11 +135,16 @@ class _SaveButtonState extends State<SaveButton> {
         onPressed: widget.isLoading
             ? null
             : () {
-                if (!_pressedSave) {
-                  _pressedSave = true;
-                  showProgressDialog();
-                  _saveVideo();
+                if (_pressedSave) return;
+                if (!_canTrimVideo()) {
+                  ScaffoldMessenger.of(
+                    context,
+                  ).showSnackBar(SnackBar(content: Text('videoLoadError'.tr)));
+                  return;
                 }
+                _pressedSave = true;
+                showProgressDialog();
+                _saveVideo();
               },
         child: widget.isLoading
             ? const SizedBox(
