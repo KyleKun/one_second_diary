@@ -78,6 +78,10 @@ class IntroPage extends StatelessWidget {
     return IntroductionScreen(
       key: introKey,
       globalBackgroundColor: Colors.white,
+      // The app is edge-to-edge on Android 15+ (targetSdk 35+), so without
+      // this the skip/next/done row is drawn under the system navigation bar
+      // and can't be tapped with 3-button navigation (issue #173).
+      safeAreaList: const [false, false, false, true],
       pages: [
         PageViewModel(
           title: 'introTitle1'.tr,
