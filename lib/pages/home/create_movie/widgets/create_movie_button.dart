@@ -584,8 +584,13 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
                       valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                     ),
                   ),
-                  Text(progress),
-                  Text('doNotCloseTheApp'.tr),
+                  // Explicit color: without one these inherit the theme's
+                  // button foreground, which is the purple main color.
+                  Text(progress, style: const TextStyle(color: Colors.white)),
+                  Text(
+                    'doNotCloseTheApp'.tr,
+                    style: const TextStyle(color: Colors.white),
+                  ),
                 ],
               ),
       ),
