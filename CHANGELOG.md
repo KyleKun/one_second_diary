@@ -1,3 +1,6 @@
+## Unreleased
+- Fixed "Permission denied" when creating a movie on devices where the Movies folder still holds files from a previous install; the movie is now assembled in app storage and published through the media library, under a name the folder doesn't already use
+
 ## v1.7.2 - 10/2026
 - Fixed the "Include location" option turning itself back on for every new clip after being disabled
 - Fixed the calendar jumping back to today when a day's video couldn't be played; it now shows an error for that day instead

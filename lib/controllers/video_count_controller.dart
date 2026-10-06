@@ -25,6 +25,14 @@ class VideoCountController extends GetxController {
     SharedPrefsUtil.putInt('movieCount', movieCount.value);
   }
 
+  /// Used when the Movies folder already holds files the counter never saw,
+  /// so the next movie doesn't try to take a name that is already in use.
+  void setMovieCount(int count) {
+    movieCount.value = count;
+    movieCount.refresh();
+    SharedPrefsUtil.putInt('movieCount', movieCount.value);
+  }
+
   // Used on refresh button
   void setVideoCount(int count) {
     videoCount.value = count;

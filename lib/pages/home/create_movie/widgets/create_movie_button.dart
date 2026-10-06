@@ -14,6 +14,8 @@ import '../../../../utils/constants.dart';
 import '../../../../utils/custom_dialog.dart';
 import '../../../../utils/date_format_utils.dart';
 import '../../../../utils/ffmpeg_api_wrapper.dart';
+import '../../../../utils/media_gallery.dart';
+import '../../../../utils/movie_file_name.dart';
 import '../../../../utils/orientation_filter.dart';
 import '../../../../utils/storage_utils.dart';
 import '../../../../utils/utils.dart';
@@ -403,8 +405,33 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
 
           // Creating txt that will be used with ffmpeg to concatenate all videos
           final String txtPath = await Utils.writeTxt(selectedVideos);
-          final String outputPath =
-              '${AppPaths.movies}OSD-Movie-${controller.movieCount.value}-$today.mp4';
+
+          // The Movies folder may hold movies the counter never saw (e.g.
+          // left behind by a previous install). On Android those belong to
+          // another app and can't be overwritten, so take the first free
+          // number and remember it for next time.
+          final int movieNumber = MovieFileName.firstFreeCount(
+            startCount: controller.movieCount.value,
+            date: today,
+            exists: (name) =>
+                StorageUtils.checkFileExists('${AppPaths.movies}$name'),
+          );
+          if (movieNumber != controller.movieCount.value) {
+            Utils.logWarning(
+              '${logTag}Movie number ${controller.movieCount.value} is taken, using $movieNumber',
+            );
+            controller.setMovieCount(movieNumber);
+          }
+          final String movieName = MovieFileName.build(movieNumber, today);
+          final String outputPath = '${AppPaths.movies}$movieName';
+
+          // ffmpeg writes to the app private folder: on Android it can't
+          // always write into DCIM directly ("Permission denied" on devices
+          // where the folder's files belong to a previous install), and only a
+          // file published through MediaStore is indexed anyway. Same name as
+          // the destination, because MediaStore names the entry after it.
+          final String tempOutputPath = '${AppPaths.internal}/$movieName';
+          copiesToDelete.add(tempOutputPath);
           Utils.logInfo('${logTag}Movie will be saved as: $outputPath');
 
           setState(() {
@@ -413,11 +440,33 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
 
           // Create movie by concatenating all videos
           await executeFFmpeg(
-            '-f concat -safe 0 -i $txtPath -r 30 -map 0 -c copy $outputPath -y',
+            '-f concat -safe 0 -i $txtPath -r 30 -map 0 -c copy "$tempOutputPath" -y',
           ).then((session) async {
             final returnCode = await session.getReturnCode();
             controller.increaseMovieCount();
+            bool published = false;
             if (ReturnCode.isSuccess(returnCode)) {
+              Utils.logInfo(
+                '${logTag}Movie concatenated, publishing it to $outputPath',
+              );
+              MediaGallery.instance.setAlbum('${AppPaths.folderName}/Movies');
+              published = await MediaGallery.instance.save(
+                tempFilePath: tempOutputPath,
+                destinationPath: outputPath,
+              );
+              if (!published) {
+                Utils.logError(
+                  '${logTag}Error publishing movie -> $outputPath',
+                );
+              } else if (!StorageUtils.checkFileExists(outputPath)) {
+                // MediaStore renamed the entry (a stale index row with the same
+                // name): the movie exists, just not at the path we expected.
+                Utils.logWarning(
+                  '${logTag}Movie published but not found at $outputPath',
+                );
+              }
+            }
+            if (published) {
               showDialog(
                 barrierDismissible: false,
                 context: Get.context!,
@@ -431,10 +480,12 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
                   actionColor: AppColors.green,
                   action: () {
                     Get.offAllNamed(Routes.HOME);
-                    Future.delayed(
-                      const Duration(milliseconds: 500),
-                      () => _openVideo(outputPath),
-                    );
+                    if (StorageUtils.checkFileExists(outputPath)) {
+                      Future.delayed(
+                        const Duration(milliseconds: 500),
+                        () => _openVideo(outputPath),
+                      );
+                    }
                   },
                 ),
               );
@@ -442,11 +493,15 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
             } else if (ReturnCode.isCancel(returnCode)) {
               Utils.logWarning('${logTag}Execution was cancelled');
             } else {
-              Utils.logError('${logTag}Error creating movie -> $outputPath');
-              final sessionLog = await session.getAllLogsAsString();
-              final failureStackTrace = await session.getFailStackTrace();
-              Utils.logError('${logTag}Session log is: $sessionLog');
-              Utils.logError('${logTag}Failure stacktrace: $failureStackTrace');
+              if (!ReturnCode.isSuccess(returnCode)) {
+                Utils.logError('${logTag}Error creating movie -> $outputPath');
+                final sessionLog = await session.getAllLogsAsString();
+                final failureStackTrace = await session.getFailStackTrace();
+                Utils.logError('${logTag}Session log is: $sessionLog');
+                Utils.logError(
+                  '${logTag}Failure stacktrace: $failureStackTrace',
+                );
+              }
 
               showDialog(
                 barrierDismissible: false,
