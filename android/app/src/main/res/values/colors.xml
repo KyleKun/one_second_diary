@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- The window before (and behind) the Flutter UI: the v3 BG token of
+         the light theme (lib/theme/osd_colors.dart). values-night has the
+         dark one. Pinned by test/app/native/android_launch_screen_test.dart. -->
+    <color name="osd_launch_background">#F4F1EA</color>
+
+    <!-- The launch window's navigation bar. Android 8.0 cannot draw dark
+         navigation bar icons (windowLightNavigationBar is API 27), so there
+         it stays black; values-v27 and values-night give it the launch
+         colour. -->
+    <color name="osd_launch_navigation_bar">#000000</color>
+</resources>

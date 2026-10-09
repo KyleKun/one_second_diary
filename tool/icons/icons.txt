@@ -1,0 +1,98 @@
+# Material Symbols Rounded glyphs the app ships.
+#
+# One Material Symbols name per line, as on fonts.google.com/icons. Add " rtl" after a name
+# when the glyph must mirror in right-to-left layouts. Lines starting with "#" are comments.
+# After editing, run tool/icons/subset_icons.py (see README.md).
+accessibility_new
+add
+add_a_photo
+arrow_back rtl
+arrow_forward rtl
+auto_stories
+backup
+badge
+block
+broken_image
+bug_report
+calendar_month
+calendar_view_month
+cameraswitch
+check
+check_circle
+checklist
+chevron_left rtl
+chevron_right rtl
+close
+close_fullscreen
+colorize
+content_cut
+crop
+dark_mode
+delete
+drive_file_rename_outline
+edit
+edit_location_alt
+emoji_events
+error
+event
+expand_more
+favorite
+filter_list
+gavel
+help
+history
+hourglass_top
+image
+info
+label
+landscape
+language
+lightbulb
+local_cafe
+local_fire_department
+lock
+mail
+mic
+mic_off
+movie
+my_location
+no_photography
+notifications
+notifications_off
+open_in_full
+open_in_new rtl
+palette
+person
+person_off
+photo_camera
+photo_library
+place
+play_arrow
+radio_button_checked
+radio_button_unchecked
+replay
+save
+schedule
+screen_lock_landscape
+screen_lock_portrait
+screen_rotation
+search
+sell
+settings
+share
+speed
+stay_current_landscape
+stay_current_portrait
+subtitles
+timer
+touch_app
+translate
+tune
+video_library
+videocam
+videocam_off
+view_agenda
+volume_off
+volume_up
+warning
+wifi_off

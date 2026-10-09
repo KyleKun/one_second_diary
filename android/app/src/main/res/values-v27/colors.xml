@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Dark navigation bar icons exist from API 27 (values/bools.xml). -->
+    <color name="osd_launch_navigation_bar">@color/osd_launch_background</color>
+</resources>

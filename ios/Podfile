@@ -37,5 +37,23 @@ end
 post_install do |installer|
   installer.pods_project.targets.each do |target|
     flutter_additional_ios_build_settings(target)
+
+    # permission_handler compiles an iOS permission in only when its macro is
+    # set; without it, every request answers "permanently denied". The
+    # project builds through CocoaPods only (pubspec.yaml turns Swift Package
+    # Manager off, docs/ios.md), so the macros come from here. Keep this list
+    # in step with the usage descriptions in Runner/Info.plist
+    # (test/app/native/ios_permissions_test.dart).
+    next unless target.name == 'permission_handler_apple'
+    target.build_configurations.each do |config|
+      config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] ||= ['$(inherited)']
+      config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] += [
+        'PERMISSION_CAMERA=1',
+        'PERMISSION_MICROPHONE=1',
+        'PERMISSION_PHOTOS=1',
+        'PERMISSION_LOCATION_WHENINUSE=1',
+        'PERMISSION_NOTIFICATIONS=1',
+      ]
+    end
   end
 end

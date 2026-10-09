@@ -1,0 +1,4 @@
+- test with lots of videos (android and iOS)
+- improve home UI (today page)
+- improve edit clip UI (save video page)
+- add local llm (nobodywho maybe?) to character

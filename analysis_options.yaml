@@ -1,19 +1,25 @@
+# One strict rule set for the whole app: lib/, test/ and tool/.
+#
+# flutter_lints, plus style rules, package: imports (never relative), and
+# stricter async, resource and widget rules.
+include: package:flutter_lints/flutter.yaml
+
 analyzer:
-  errors:
-    missing_required_param: warning
-    missing_return: warning
   exclude:
     - build/**
     - android/**
     - ios/**
+    # standalone packages, not part of the app
+    - docs/**
+    # agent worktrees and tooling
+    - .claude/**
 
 linter:
   rules:
-    - prefer_relative_imports
+    # Style and correctness
     - always_declare_return_types
     - annotate_overrides
     - avoid_empty_else
-    - avoid_slow_async_io
     - avoid_types_as_parameter_names
     - avoid_unused_constructor_parameters
     - await_only_futures
@@ -61,3 +67,15 @@ linter:
     - unnecessary_this
     - unnecessary_raw_strings
     - valid_regexps
+
+    # Imports, async, resources and widgets
+    - always_use_package_imports
+    - unawaited_futures
+    - discarded_futures
+    - close_sinks
+    - avoid_dynamic_calls
+    - use_colored_box
+    - use_decorated_box
+    - sort_child_properties_last
+    - use_build_context_synchronously
+    - avoid_print

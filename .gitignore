@@ -58,3 +58,10 @@ app.*.symbols
 .antigravitycli/
 AGENTS.md
 docs/agents/
+docs/v2/
+
+# macOS AppleDouble files (the repo lives on an exFAT drive)
+._*
+
+# Agent worktrees and tooling
+.claude/

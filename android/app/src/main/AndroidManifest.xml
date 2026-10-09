@@ -2,8 +2,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.kylekun.one_second_diary">
 
-    <uses-permission android:name="android.permission.INTERNET" />
+    <!-- No INTERNET in release builds: the app makes no network calls of
+         its own. Geocoding goes through the system Geocoder, which runs in
+         another process. The debug and profile manifests add INTERNET for
+         the Flutter tool. -->
     <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
+    <!-- Photos (added as a clip, profile photos). Android 13+ grants the
+         `photos` permission only when this is in the merged manifest. -->
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <!-- No maxSdkVersion on purpose: installs that still run in legacy storage
@@ -17,8 +23,13 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <!-- No FOREGROUND_SERVICE and no foreground service: a movie renders
+         while the app is open, and the persistent reminder is an ongoing
+         notification. -->
+    <!-- Geotagging (opt-in). Android 12+ ignores a FINE request that comes
+         without COARSE, and lets the user pick "approximate". -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_MEDIA_LOCATION"/>
 
     <application
@@ -26,7 +37,6 @@
         android:icon="@mipmap/ic_launcher"
         android:requestLegacyExternalStorage="true"
         android:preserveLegacyExternalStorage="true"
-        android:usesCleartextTraffic="true"
         android:label="One Second Diary">
         <activity
             android:name=".MainActivity"
@@ -62,11 +72,25 @@
             android:name="flutterEmbedding"
             android:value="2" />
 
-        <service
-            android:name="com.dexterous.flutterlocalnotifications.ForegroundService"
-            android:exported="false"
-            android:stopWithTask="false"
-            tools:targetApi="ice_cream_sandwich" />
+        <!-- Daily reminders (flutter_local_notifications): without this
+             receiver a scheduled reminder cannot show. Reminders are
+             inexact: no SCHEDULE_EXACT_ALARM or USE_EXACT_ALARM, on
+             purpose. -->
+        <receiver
+            android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationReceiver"
+            android:exported="false" />
+        <!-- Re-arms the pending reminders after a reboot or an app update
+             (uses RECEIVE_BOOT_COMPLETED, declared above). -->
+        <receiver
+            android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationBootReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+                <action android:name="com.htc.intent.action.QUICKBOOT_POWERON" />
+            </intent-filter>
+        </receiver>
 
     </application>
     

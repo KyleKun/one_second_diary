@@ -1,6 +1,6 @@
 name: release
 
-# Push a tag like v1.7.1 (matching `version:` in pubspec.yaml) to build the
+# Push a tag like v2.0.0 (matching `version:` in pubspec.yaml) to build the
 # signed APKs and publish them as a GitHub release, with the notes taken
 # from that version's section of CHANGELOG.md. The same run also builds the
 # signed app bundle for the Play Console and keeps it as a workflow artifact
@@ -46,7 +46,7 @@ jobs:
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.47.2'
+          flutter-version: '3.47.4'
           channel: stable
           cache: true
 

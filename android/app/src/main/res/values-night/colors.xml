@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- The dark theme's BG token (lib/theme/osd_colors.dart). -->
+    <color name="osd_launch_background">#151414</color>
+
+    <!-- Light icons read on it at every API level. values-night outranks
+         values-v27, so it names the colour itself. -->
+    <color name="osd_launch_navigation_bar">@color/osd_launch_background</color>
+</resources>

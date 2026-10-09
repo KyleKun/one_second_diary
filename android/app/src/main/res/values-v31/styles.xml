@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Android 12+ shows the system splash screen instead of the launch
+         drawable: the app icon on the launch colour of the phone's theme
+         (values / values-night), with no circle of another colour behind
+         the icon. -->
+    <style name="LaunchTheme" parent="OsdLaunchBase">
+        <item name="android:windowSplashScreenBackground">@color/osd_launch_background</item>
+        <item name="android:windowSplashScreenIconBackgroundColor">@color/osd_launch_background</item>
+    </style>
+</resources>

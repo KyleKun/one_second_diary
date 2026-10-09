@@ -5,15 +5,14 @@ on:
     branches: [ main ]
   pull_request:
     branches: [ main ]
-  workflow_dispatch: # Allows you to manually trigger the build from the GitHub UI
+  workflow_dispatch:
 
 jobs:
   build_ios:
     name: Build Flutter iOS
-    runs-on: macos-latest # Tells GitHub to spin up the latest Mac VM
+    runs-on: macos-latest
 
     steps:
-      # 1. Pull down the repository code
       - name: Checkout Repository
         uses: actions/checkout@v4
 
@@ -31,24 +30,21 @@ jobs:
           echo "Selecting Xcode $LATEST_XCODE"
           sudo xcode-select -s "/Applications/Xcode_${LATEST_XCODE}.app/Contents/Developer"
 
-      # 2. Install Flutter on the Mac VM
       - name: Setup Flutter SDK
         uses: subosito/flutter-action@v2
         with:
+          flutter-version: '3.47.4'
           channel: 'stable'
-          cache: true # Caches Flutter packages to speed up future runs
+          cache: true
 
-      # 3. Get Dart/Flutter dependencies
-      - name: Install Flutter Dependencies
-        run: flutter pub get
+      - name: Install Flutter Dependencies (fail if pubspec.lock is out of date)
+        run: flutter pub get --enforce-lockfile
 
-      # 4. Install iOS specific dependencies (CocoaPods)
       - name: Install Pods
         run: |
           cd ios
           pod install
           cd ..
 
-      # 5. Compile the application framework
       - name: Compile iOS Binary
         run: flutter build ios --release --no-codesign

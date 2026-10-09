@@ -1,3 +1,116 @@
+## v2.0.0 - 10/2026
+- One Second Diary 2.0 is rebuilt from the ground up, and your videos, profiles, movies and settings carry over as they are
+- A new design for every screen, in light and dark
+    - Four tabs: Today, Diary, Journey and Settings
+    - On a new install, the app starts in your phone's light or dark theme
+- Several clips per day
+    - Add another clip to any day and swipe between them
+    - Movies include every clip of a day, in order
+- Today
+    - A greeting for the time of day, with your name if you like (optional)
+    - Record, add a video or add a photo in one tap
+    - Undo right after saving, even when the save replaced a clip
+    - Edit a saved clip: record again, replace it from the gallery or change its subtitles
+    - Switch profiles from the chip at the top
+- Diary
+    - A new calendar with a picture of every day and a small player
+    - Add a clip to a day you missed
+    - Memories: scroll through all your days, month by month
+    - Watch clips full screen and step through the days
+    - Share or delete a single clip
+- Journey
+    - Your stats at a glance: days recorded, current and longest streak, this month, total time recorded and movies made
+- Movies
+    - Choose the days: a preset, a month, or clips you pick yourself, with live counts
+    - Make a movie of a month straight from the Diary
+    - Watch the movie being made, cancel at any time, then watch it in the app
+    - The app checks there is enough free space before it starts
+    - My movies: rename, share and delete several movies at once
+    - Filter My movies by profile, and see each movie's length next to its clip count
+    - Movies from every profile in one list, titled with the profile's name
+    - Transitions: choose Crossfade, Fade through black or Fade through white when you make a movie (None by default). Clips saved from now on are ready for it; older clips join with a hard cut unless you ask to re-encode them
+    - Music: add audio files from your phone to a movie; they play in order and repeat, over the videos' sound or alone, at the volume you choose. Turn the music off or on later from My movies, in seconds
+    - Mute a video whose sound came out wrong, from Today, the Diary, the viewer or Memories (it asks first: the sound is removed for good), or save a recording without sound from the editor
+    - Every clip is a chapter in the movie, titled with its day, place and subtitle, so players can jump between days
+- Tags
+    - Add tags to a video from the viewer, the Diary, Memories, Today's Edit sheet or when saving a new one
+    - Filter the Diary and Memories by tag, find videos without tags, and search your tags, subtitles and places
+    - Make a movie of only the videos with a tag, or leave a tag out; the movie remembers the filter
+    - Rename, merge or remove a tag from every video, and pick its colour, in Settings › Tags
+    - Tags are stored in the video file, so they survive a reinstall and moving your videos to another phone
+- Movies by exact dates: pick a first and a last day on a calendar, next to "Choose a month"
+- Places
+    - Save the places you use and pick one in a tap when adding a video, next to the places of your latest videos; manage them in Settings › Places
+    - A saved place can carry the coordinates of where you added it, so the video is geotagged without looking it up again
+- New videos note your phone model, the app version and the time in their metadata (turn it off in Preferences)
+- Onboarding ends with one screen to allow everything the app uses (photos and videos, camera, microphone, notifications, location), each with its own button and state
+- Private videos
+    - Mark a video as private from the viewer, the Diary, Memories or Today's Edit sheet
+    - Private videos are left out of movies unless you include them when you create one; a movie that includes them wears a lock
+    - Their pictures and captions are hidden wherever you browse, and they play only when you tap them
+    - The mark is stored in the video file, so it survives a reinstall and moving your videos to another phone
+- Photos as clips
+    - Add a photo from Today or the Diary and choose how long it shows
+    - One editor for videos and photos: trim, date stamp, place and subtitles
+- Profiles
+    - Add a photo to a profile and rename it
+    - See how many videos each profile has
+    - Profile folders already on your phone show up, ready to add
+    - Profile names in any language, emoji included
+    - A new profile becomes the active one
+- Recording
+    - A clearer camera: a countdown, a progress ring and early stop
+    - The orientation lock explains what it does
+    - Clip length from 2 to 10 seconds
+- Reminders
+    - Reminders come back after the phone restarts
+    - The app asks for notification permission only when you turn reminders on
+- Languages
+    - System buttons and dialogs, like the time picker, now speak your language
+    - If your phone's language isn't one of the app's 12, the app runs in English
+    - New text shows in English until it is translated (translators welcome)
+- Accessibility
+    - Screen reader labels on every screen
+    - Works with large text, up to 200%
+    - Follows your phone's setting to reduce motion
+- Speed
+    - The calendar is instant: a day's clip shows and plays right away, even with thousands of clips
+    - Picking clips for a movie is instant
+    - The app starts faster
+- Privacy
+    - The app no longer uses the internet
+    - The Location tab says how the place name is looked up
+- Fixes
+    - Editing a clip or its subtitles can no longer lose the clip
+    - Adding a diary video back onto its own day no longer deletes it
+    - A failed or cancelled movie leaves no files behind and never overwrites another movie
+    - Subtitles no longer disappear from a movie whose first clip has none
+    - Movies keep your clips in date order and include clips in sub-folders
+    - "Last 7 days" and "Last 30 days" are right around clock changes
+    - One oddly named file no longer empties a movie
+    - Creating movies and editing subtitles now work on iPhone
+    - The countdown counts 3, 2, 1 on every take
+    - Videos record the way you hold the phone, also when you lay it flat
+    - Closing the camera while recording no longer crashes on iPhone
+    - Today moves on to the new day at midnight while the app is open
+    - A clip recorded just before midnight counts for its own day
+    - Reminders keep their time after a daylight-saving change
+    - Recording today skips today's reminder (#112)
+    - Saving a clip no longer turns reminders on
+    - Save waits until the video is ready
+    - Quick cuts work for short videos, and the save progress moves on short clips
+    - A typed place no longer adds a wrong location to the video
+    - Turning geotagging off is remembered
+    - The save error can be closed and reported
+    - Profiles with "Movies" in their name keep their videos
+    - A profile list from an older version no longer loses profiles
+    - Some phone languages no longer crash the calendar
+    - Subtitles with a very long first word or an empty line stay whole
+    - The Diary no longer stops your music
+    - A video from your phone's camera app is recovered if your phone closed the app meanwhile
+    - Errors now reach the log you can send with Report error
+    - The launch screen follows your phone's dark mode
+
 ## v1.7.3 - 10/2026
 - Fixed "Permission denied" when creating a movie on devices where the Movies folder still holds files from a previous install; the movie is now assembled in app storage and published through the media library, under a name the folder doesn't already use
 - Fixed the progress text on the "Create" button showing in purple instead of white while a movie is being created

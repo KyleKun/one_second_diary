@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Dark status and navigation bar icons on the light launch colour.
+         values-night turns them light on the dark one. -->
+    <bool name="osd_launch_light_bars">true</bool>
+</resources>

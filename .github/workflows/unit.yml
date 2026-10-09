@@ -12,15 +12,108 @@ jobs:
         os: [ubuntu-latest]
     steps:
     - name: Checkout code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
     - name: Set up Flutter
       uses: subosito/flutter-action@v2
       with:
-        flutter-version: "3.47.0"
+        flutter-version: "3.47.4"
         channel: 'stable'
     - name: Get dependencies (fail if pubspec.lock is out of date)
       run: flutter pub get --enforce-lockfile
+    # The app promises no telemetry: fail if any analytics, crash-reporting
+    # or ads SDK shows up among the resolved packages (direct or transitive).
+    # A deny-listed word must be a whole "_"-separated part of a package name,
+    # so firebase_core and google_mobile_ads match but firebaseish does not.
+    # This reads pubspec.lock only; native Gradle/CocoaPods dependencies that
+    # plugins pull in are not checked here.
+    - name: Check for telemetry packages
+      run: |
+        DENY='firebase|sentry|crashlytics|mixpanel|amplitude|appsflyer|google_mobile_ads|onesignal|posthog|datadog|bugsnag|analytics|telemetry|telemetrydecksdk|ads|admob|facebook|instabug|newrelic|segment|adjust|countly|matomo|aptabase|applovin|appcenter|embrace|usage'
+        NAMES="$(tr -d '\r' < pubspec.lock | sed -n -E 's/^  ([a-z0-9_]+):$/\1/p')"
+        if [ -z "$NAMES" ]; then
+          echo "::error::Could not read any package name from pubspec.lock"
+          exit 1
+        fi
+        FOUND="$(echo "$NAMES" | grep -E "(^|_)($DENY)(_|$)" || true)"
+        if [ -n "$FOUND" ]; then
+          echo "::error::pubspec.lock contains telemetry packages:"
+          echo "$FOUND"
+          exit 1
+        fi
+        echo "No telemetry packages among $(echo "$NAMES" | wc -l) packages in pubspec.lock."
+    # docs/ holds standalone lab packages, so only the app is checked.
     - name: Verify formatting
-      run: dart format --output=none --set-exit-if-changed .
+      run: dart format --output=none --set-exit-if-changed lib test
     - run: flutter analyze
+    # New strings ship in English, which the app shows per key until a
+    # translator adds them. This prints how many keys each language still
+    # lacks (a plural key counts once). It reports and never fails.
+    - name: Report untranslated keys
+      continue-on-error: true
+      run: dart run tool/l10n/untranslated_report.dart
+    # GitHub runners use UTC, which has no daylight saving. Date-sensitive
+    # tests must also hold in zones that have it, so the whole suite runs
+    # three more times: EU and US rules, and a southern-hemisphere zone
+    # whose spring-forward (2026-09-06) falls inside the tests' 30-day window.
     - run: flutter test
+    - name: Tests in Europe/Berlin
+      run: TZ=Europe/Berlin flutter test
+    - name: Tests in America/New_York
+      run: TZ=America/New_York flutter test
+    - name: Tests in America/Santiago
+      run: TZ=America/Santiago flutter test
+  android-build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    # Same JDK as release.yml, so this build exercises the release toolchain.
+    - name: Set up Java
+      uses: actions/setup-java@v4
+      with:
+        distribution: temurin
+        java-version: '21'
+    - name: Set up Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: "3.47.4"
+        channel: 'stable'
+    - name: Get dependencies (fail if pubspec.lock is out of date)
+      run: flutter pub get --enforce-lockfile
+    # Catches manifest and plugin regressions that unit tests can't see. The
+    # release build is what ships (R8, the release manifest). Without
+    # key.properties, build.gradle signs it with the debug key.
+    - name: Build release APK
+      run: flutter build apk --release
+    # The manifest inside the APK, with everything the plugins merged in:
+    # no INTERNET, no exact alarms, the permissions the app uses and nothing
+    # unreviewed, WRITE_EXTERNAL_STORAGE without maxSdkVersion and the
+    # legacy storage flags.
+    - name: Check the release manifest
+      run: |
+        APK=build/app/outputs/flutter-apk/app-release.apk
+        APKANALYZER="$ANDROID_HOME/cmdline-tools/latest/bin/apkanalyzer"
+        if [ -x "$APKANALYZER" ]; then
+          "$APKANALYZER" manifest print "$APK" > release-manifest.xml
+        else
+          MERGED="$(find build/app/intermediates -name AndroidManifest.xml -path '*merged_manifest*' -path '*release*' | head -n 1)"
+          if [ -z "$MERGED" ]; then
+            echo "::error::Found neither apkanalyzer nor the merged release manifest"
+            exit 1
+          fi
+          echo "apkanalyzer not found, checking $MERGED"
+          cp "$MERGED" release-manifest.xml
+        fi
+        dart run tool/android/check_release_manifest.dart release-manifest.xml
+    # APK-size budget: the universal release APK is expected to be about
+    # 276 MB, and the budget leaves about 3% on top. Raise it on purpose,
+    # with the reason, never to make a build pass.
+    - name: Check the APK size budget
+      run: |
+        BUDGET=285000000
+        SIZE="$(stat -c %s build/app/outputs/flutter-apk/app-release.apk)"
+        echo "Universal release APK: $SIZE bytes (budget $BUDGET)" | tee -a "$GITHUB_STEP_SUMMARY"
+        if [ "$SIZE" -gt "$BUDGET" ]; then
+          echo "::error::The release APK is $SIZE bytes, over the budget of $BUDGET bytes"
+          exit 1
+        fi
