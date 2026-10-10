@@ -1,4 +1,4 @@
-## Unreleased
+## v1.7.4 - 10/2026
 - Fixed daily reminder notifications never arriving on Android 12 and newer since v1.7.0 (the app asked for an exact alarm it had no permission for, so nothing was scheduled); reminders are now scheduled as inexact alarms and survive reboots and app updates again
 
 ## v1.7.3 - 10/2026
