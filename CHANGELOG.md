@@ -1,3 +1,6 @@
+## Unreleased
+- Fixed daily reminder notifications never arriving on Android 12 and newer since v1.7.0 (the app asked for an exact alarm it had no permission for, so nothing was scheduled); reminders are now scheduled as inexact alarms and survive reboots and app updates again
+
 ## v1.7.3 - 10/2026
 - Fixed "Permission denied" when creating a movie on devices where the Movies folder still holds files from a previous install; the movie is now assembled in app storage and published through the media library, under a name the folder doesn't already use
 - Fixed the progress text on the "Create" button showing in purple instead of white while a movie is being created

@@ -68,6 +68,27 @@
             android:stopWithTask="false"
             tools:targetApi="ice_cream_sandwich" />
 
+        <!-- Daily reminders (flutter_local_notifications). Up to 15.x the
+             plugin declared these receivers itself; since 17.0.0 the app
+             has to. Without the first one a scheduled reminder never shows;
+             the second re-arms it after a reboot or an app update (uses
+             RECEIVE_BOOT_COMPLETED, declared above). Reminders are scheduled
+             inexact, so no SCHEDULE_EXACT_ALARM or USE_EXACT_ALARM is
+             needed; see NotificationService. -->
+        <receiver
+            android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationReceiver"
+            android:exported="false" />
+        <receiver
+            android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationBootReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+                <action android:name="com.htc.intent.action.QUICKBOOT_POWERON" />
+            </intent-filter>
+        </receiver>
+
     </application>
     
      <!-- Send email query -->
