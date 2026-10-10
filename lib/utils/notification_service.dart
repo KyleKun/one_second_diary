@@ -152,7 +152,13 @@ class NotificationService {
       body: 'notificationBody'.tr,
       scheduledDate: tz.TZDateTime.parse(tz.local, setTime),
       notificationDetails: _platformNotificationDetails,
-      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+      // Inexact on purpose. Exact alarms need SCHEDULE_EXACT_ALARM (or
+      // USE_EXACT_ALARM), which flutter_local_notifications stopped declaring
+      // on the app's behalf in 17.0.0; without it Android 12+ throws
+      // `exact_alarms_not_permitted` and nothing gets scheduled at all. A
+      // daily reminder doesn't need to-the-minute delivery, and Android
+      // 14+ denies exact alarms by default anyway.
+      androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
       // Allow notification to be shown daily
       matchDateTimeComponents: DateTimeComponents.time,
     );
