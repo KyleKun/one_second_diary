@@ -106,6 +106,9 @@ const Map<String, String> hu = {
   'editSubtitles': 'Feliratok szerkesztése',
   'noVideoRecorded': 'Nincs felvett videó',
   'videoLoadError': 'Ezt a videót nem sikerült betölteni.',
+  'videoPreviewUnavailable':
+      'Ez a videó ezen az eszközön nem tekinthető meg előnézetben, de így is menthető.',
+  'fallbackClipLength': 'Mentendő hossz a videó elejétől:',
   'subtitles': 'Feliratok',
   'addVideo': 'Videó hozzáadása',
   'addPhotoAsVideo': 'Fotó hozzáadása videóként',

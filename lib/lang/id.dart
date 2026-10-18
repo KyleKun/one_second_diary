@@ -105,6 +105,9 @@ const Map<String, String> id = {
   'editSubtitles': 'Ubah subjudul',
   'noVideoRecorded': 'Tidak ada video yang direkam',
   'videoLoadError': 'Video ini tidak dapat dimuat.',
+  'videoPreviewUnavailable':
+      'Video ini tidak dapat dipratinjau di perangkat ini, tetapi masih dapat disimpan.',
+  'fallbackClipLength': 'Durasi yang disimpan dari awal video:',
   'subtitles': 'Subjudul',
   'addVideo': 'Tambah video',
   'addPhotoAsVideo': 'Tambahkan foto sebagai video',

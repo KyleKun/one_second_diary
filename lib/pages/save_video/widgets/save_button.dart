@@ -10,6 +10,7 @@ import '../../../utils/constants.dart';
 import '../../../utils/custom_dialog.dart';
 import '../../../utils/date_format_utils.dart';
 import '../../../utils/ffmpeg_api_wrapper.dart';
+import '../../../utils/ffmpeg_color.dart';
 import '../../../utils/orientation_filter.dart';
 import '../../../utils/shared_preferences_util.dart';
 import '../../../utils/storage_utils.dart';
@@ -34,6 +35,7 @@ class SaveButton extends StatefulWidget {
     required this.videoEndInMilliseconds,
     required this.determinedDate,
     required this.isFromRecordingPage,
+    this.canSaveWithoutPreview = false,
     this.isLoading = false,
   });
 
@@ -54,6 +56,10 @@ class SaveButton extends StatefulWidget {
   final double videoEndInMilliseconds;
   final DateTime determinedDate;
   final bool isFromRecordingPage;
+
+  /// The preview player couldn't load the clip, but its length is known
+  /// (from ffprobe), so the trim range is usable without the controller.
+  final bool canSaveWithoutPreview;
 
   /// Shows a spinner and ignores taps, e.g. while the location is still
   /// being fetched so it can be burned into the video.
@@ -99,17 +105,19 @@ class _SaveButtonState extends State<SaveButton> {
   // Prevents user from clicking it twice
   bool _pressedSave = false;
 
-  /// Whether the trim range is usable. If the video player never loaded the
-  /// clip, its duration (and so the trim end) is 0 and ffmpeg would abort
-  /// with "-to value smaller than -ss".
+  /// Whether the trim range is usable. If neither the video player nor
+  /// ffprobe could read the clip, its duration (and so the trim end) is 0
+  /// and ffmpeg would abort with "-to value smaller than -ss".
   bool _canTrimVideo() {
     final bool canTrim =
-        widget.videoController.value.isInitialized &&
+        (widget.videoController.value.isInitialized ||
+            widget.canSaveWithoutPreview) &&
         widget.videoEndInMilliseconds > widget.videoStartInMilliseconds;
     if (!canTrim) {
       Utils.logError(
         '${logTag}Not saving ${widget.videoPath}: video not loaded '
         '(initialized: ${widget.videoController.value.isInitialized}, '
+        'without preview: ${widget.canSaveWithoutPreview}, '
         'error: ${widget.videoController.value.errorDescription}, '
         'trim ${widget.videoStartInMilliseconds}-'
         '${widget.videoEndInMilliseconds}ms)',
@@ -259,20 +267,10 @@ class _SaveButtonState extends State<SaveButton> {
     final String videoPath = widget.videoPath;
 
     // Parses the color code to a hex code format which can be read by ffmpeg
-    String parsedDateColor = '';
-    String parsedTextOutlineColor = '';
-
-    try {
-      parsedDateColor =
-          '0x${widget.dateColor.toARGB32().toRadixString(16).substring(2)}';
-      parsedTextOutlineColor =
-          '0x${widget.textOutlineColor.toARGB32().toRadixString(16).substring(2)}';
-    } catch (e) {
-      Utils.logError(logTag + e.toString());
-      Utils.logInfo('Error parsing colors, applying default white.');
-      parsedDateColor = '0xffffff';
-      parsedTextOutlineColor = '0x000000';
-    }
+    final String parsedDateColor = FFmpegColor.hex(widget.dateColor);
+    final String parsedTextOutlineColor = FFmpegColor.hex(
+      widget.textOutlineColor,
+    );
 
     // Path to save the final video
     final String finalPath = getVideoOutputPath();

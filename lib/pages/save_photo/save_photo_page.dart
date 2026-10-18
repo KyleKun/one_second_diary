@@ -99,12 +99,15 @@ class _SavePhotoPageState extends State<SavePhotoPage>
     }
     final List<String> colorStringList = colorString.split(',');
     try {
-      return Color.fromARGB(
+      final Color color = Color.fromARGB(
         int.parse(colorStringList[3]),
         int.parse(colorStringList[0]),
         int.parse(colorStringList[1]),
         int.parse(colorStringList[2]),
       );
+      // A fully transparent stamp would be invisible in the preview, and
+      // saving ignores the alpha anyway, so treat it as unset.
+      return color.a == 0 ? Colors.white : color;
     } catch (e) {
       Utils.logError(e);
       return Colors.white;

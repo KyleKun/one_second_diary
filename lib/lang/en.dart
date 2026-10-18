@@ -107,6 +107,9 @@ const Map<String, String> en = {
   'editSubtitles': 'Edit subtitles',
   'noVideoRecorded': 'No video recorded',
   'videoLoadError': "Couldn't load this video.",
+  'videoPreviewUnavailable':
+      "This video can't be previewed on this device, but it can still be saved.",
+  'fallbackClipLength': 'Length to save from the start of the video:',
   'subtitles': 'Subtitles',
   'addVideo': 'Add video',
   'addPhotoAsVideo': 'Add photo as video',

@@ -1,3 +1,10 @@
+## v1.7.5 - 10/2026
+- Fixed "Add photo as video" always failing for HEIC photos (e.g. photos from iPhones or received in messages); they're now converted before being turned into a video
+- Videos can now be saved on devices where the preview can't play them: the page says the preview isn't available and lets you choose how many seconds to keep from the start
+- Fixed daily reminders arriving at the chosen time in UTC instead of your local time, and coming back after being turned off whenever a video was saved
+- The calendar no longer loads the selected day's video twice when it opens
+- Fixed errors logged after saving a video for a past day, and when saving with a fully transparent date color
+
 ## v1.7.4 - 10/2026
 - Fixed daily reminder notifications never arriving on Android 12 and newer since v1.7.0 (the app asked for an exact alarm it had no permission for, so nothing was scheduled); reminders are now scheduled as inexact alarms and survive reboots and app updates again
 

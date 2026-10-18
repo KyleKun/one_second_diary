@@ -105,6 +105,9 @@ const Map<String, String> be = {
   'editSubtitles': 'Рэдагаваць субцітры',
   'noVideoRecorded': 'Няма запісаных відэа',
   'videoLoadError': 'Не ўдалося загрузіць гэта відэа.',
+  'videoPreviewUnavailable':
+      'Гэта відэа немагчыма праглядзець на гэтай прыладзе, але яго ўсё роўна можна захаваць.',
+  'fallbackClipLength': 'Колькі захаваць ад пачатку відэа:',
   'subtitles': 'Субцітры',
   'addVideo': 'Дадаць відэа',
   'addPhotoAsVideo': 'Дадаць фота як відэа',

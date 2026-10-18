@@ -104,6 +104,9 @@ const Map<String, String> pt = {
   'editSubtitles': 'Editar legendas',
   'noVideoRecorded': 'Nenhum vídeo gravado',
   'videoLoadError': 'Não foi possível carregar este vídeo.',
+  'videoPreviewUnavailable':
+      'Não é possível pré-visualizar este vídeo neste dispositivo, mas ele ainda pode ser salvo.',
+  'fallbackClipLength': 'Duração a salvar a partir do início do vídeo:',
   'subtitles': 'Legendas',
   'addVideo': 'Adicionar vídeo',
   'addPhotoAsVideo': 'Adicionar foto como vídeo',

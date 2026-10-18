@@ -48,7 +48,7 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
   late Color mainColor;
   late String srtFilePath;
   late String _currentDateStr = DateFormatUtils.getToday();
-  DateTime lastSelectedDate = DateTime.now();
+  late DateTime lastSelectedDate;
   final LanguageController _languageController = Get.find();
   final VideoCountController _videoCountController = Get.find();
   final DailyEntryController _dailyEntryController = Get.find();
@@ -88,11 +88,19 @@ class _CalendarEditorPageState extends State<CalendarEditorPage> {
   void initState() {
     setGalleryAlbum();
     mainColor = ThemeService().isDarkTheme() ? Colors.white : Colors.black;
-    // Prevents UI from going back to current date after adding older videos
-    if (routeArguments?['forcedDate'] != null) {
-      _changeSelectedDate(routeArguments?['forcedDate']);
-      _currentDateStr = DateFormatUtils.getDate(routeArguments?['forcedDate']);
+    // Prevents UI from going back to current date after adding older videos.
+    // Not through _changeSelectedDate: allVideos isn't loaded yet, and
+    // initializeTodaysVideoPlayback below picks up the clip for this date.
+    final DateTime? forcedDate = routeArguments?['forcedDate'];
+    if (forcedDate != null) {
+      _selectedDate = forcedDate;
+      _currentSelectedDateStr = DateFormatUtils.getDate(forcedDate);
+      _currentDateStr = DateFormatUtils.getDate(forcedDate);
     }
+    // The same instant as _selectedDate: a separate DateTime.now() never
+    // compares equal, which made initializeVideoPlayback dispose the player
+    // initializeTodaysVideoPlayback had just created and load the clip again.
+    lastSelectedDate = _selectedDate;
     Future.delayed(const Duration(milliseconds: 500), () {
       allVideos = Utils.getAllVideos(fullPath: true);
       setSubtitlesPath();

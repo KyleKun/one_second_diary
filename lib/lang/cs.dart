@@ -103,6 +103,9 @@ const Map<String, String> cs = {
   'editSubtitles': 'Editace tittulků',
   'noVideoRecorded': 'Žádné video nebylo zaznamenáno',
   'videoLoadError': 'Toto video se nepodařilo načíst.',
+  'videoPreviewUnavailable':
+      'Náhled tohoto videa na tomto zařízení nelze zobrazit, ale video lze přesto uložit.',
+  'fallbackClipLength': 'Délka k uložení od začátku videa:',
   'subtitles': 'Titulky',
   'addVideo': 'Přidat Video',
   'addPhotoAsVideo': 'Přidat fotku jako video',
