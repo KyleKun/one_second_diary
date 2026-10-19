@@ -9,7 +9,9 @@ import '../../../utils/constants.dart';
 import '../../../utils/custom_dialog.dart';
 import '../../../utils/date_format_utils.dart';
 import '../../../utils/ffmpeg_api_wrapper.dart';
+import '../../../utils/ffmpeg_color.dart';
 import '../../../utils/orientation_filter.dart';
+import '../../../utils/photo_input.dart';
 import '../../../utils/shared_preferences_util.dart';
 import '../../../utils/storage_utils.dart';
 import '../../../utils/utils.dart';
@@ -226,23 +228,12 @@ class _SavePhotoButtonState extends State<SavePhotoButton> {
     // Copies text font for ffmpeg to storage if it was not copied yet
     final String fontPath = await Utils.copyFontToStorage();
     final String dateTextFilePath = await Utils.writeDateTxt(widget.dateFormat);
-    final String photoPath = widget.photoPath;
 
     // Parses the color code to a hex code format which can be read by ffmpeg
-    String parsedDateColor = '';
-    String parsedTextOutlineColor = '';
-
-    try {
-      parsedDateColor =
-          '0x${widget.dateColor.toARGB32().toRadixString(16).substring(2)}';
-      parsedTextOutlineColor =
-          '0x${widget.textOutlineColor.toARGB32().toRadixString(16).substring(2)}';
-    } catch (e) {
-      Utils.logError(logTag + e.toString());
-      Utils.logInfo('Error parsing colors, applying default white.');
-      parsedDateColor = '0xffffff';
-      parsedTextOutlineColor = '0x000000';
-    }
+    final String parsedDateColor = FFmpegColor.hex(widget.dateColor);
+    final String parsedTextOutlineColor = FFmpegColor.hex(
+      widget.textOutlineColor,
+    );
 
     // Path to save the final video
     final String finalPath = getVideoOutputPath();
@@ -283,6 +274,9 @@ class _SavePhotoButtonState extends State<SavePhotoButton> {
     }
 
     if (!shouldContinue) return;
+
+    // HEIC and other photos ffmpeg can't loop are converted to a PNG first.
+    final String photoPath = await PhotoInput.prepare(widget.photoPath);
 
     // The font name map must not be omitted: a null map reaches the iOS side
     // of ffmpeg-kit as NSNull, which crashes on [NSNull allKeys].
@@ -366,6 +360,7 @@ class _SavePhotoButtonState extends State<SavePhotoButton> {
     await executeAsyncFFmpeg(
       command,
       completeCallback: (session) async {
+        if (photoPath != widget.photoPath) StorageUtils.deleteFile(photoPath);
         final returnCode = await session.getReturnCode();
         if (ReturnCode.isSuccess(returnCode)) {
           Utils.logInfo('${logTag}Video edited successfully');

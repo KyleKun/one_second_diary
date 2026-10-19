@@ -8,6 +8,7 @@ import 'package:ffmpeg_kit_flutter_new/ffprobe_session.dart';
 import 'package:ffmpeg_kit_flutter_new/log.dart';
 import 'package:ffmpeg_kit_flutter_new/log_callback.dart';
 import 'package:ffmpeg_kit_flutter_new/media_information_session.dart';
+import 'package:ffmpeg_kit_flutter_new/return_code.dart';
 import 'package:ffmpeg_kit_flutter_new/session.dart';
 import 'package:ffmpeg_kit_flutter_new/statistics.dart';
 import 'package:ffmpeg_kit_flutter_new/statistics_callback.dart';
@@ -76,6 +77,20 @@ Future<FFprobeSession> executeFFprobeWithArguments(
 Future<FFprobeSession> executeFFprobe(String command) async {
   Utils.logInfo('[ffprobe] - Executing FFprobe command: $command');
   return await FFprobeKit.execute(command);
+}
+
+/// The duration of the media at [path] in milliseconds as ffprobe reads it,
+/// or null if it can't tell.
+Future<int?> probeDurationMilliseconds(String path) async {
+  final FFprobeSession session = await executeFFprobe(
+    '-v error -show_entries format=duration -of default=nw=1:nk=1 "$path"',
+  );
+  if (!ReturnCode.isSuccess(await session.getReturnCode())) return null;
+  final double? seconds = double.tryParse(
+    (await session.getOutput() ?? '').trim(),
+  );
+  if (seconds == null || seconds <= 0) return null;
+  return (seconds * 1000).floor();
 }
 
 Future<void> cancel() async {

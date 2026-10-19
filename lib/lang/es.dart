@@ -105,6 +105,9 @@ const Map<String, String> es = {
   'editSubtitles': 'Editar subtítulos',
   'noVideoRecorded': 'No se ha grabado ningún video',
   'videoLoadError': 'No se pudo cargar este video.',
+  'videoPreviewUnavailable':
+      'Este video no se puede previsualizar en este dispositivo, pero aún se puede guardar.',
+  'fallbackClipLength': 'Duración a guardar desde el inicio del video:',
   'subtitles': 'Subtítulos',
   'addVideo': 'Agregar video',
   'addPhotoAsVideo': 'Añadir foto como vídeo',

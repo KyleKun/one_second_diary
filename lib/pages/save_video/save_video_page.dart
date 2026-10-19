@@ -16,6 +16,7 @@ import '../../utils/clip_trim_policy.dart';
 import '../../utils/constants.dart';
 import '../../utils/custom_dialog.dart';
 import '../../utils/date_format_utils.dart';
+import '../../utils/ffmpeg_api_wrapper.dart';
 import '../../utils/orientation_filter.dart';
 import '../../utils/shared_preferences_util.dart';
 import '../../utils/storage_utils.dart';
@@ -71,6 +72,17 @@ class _SaveVideoPageState extends State<SaveVideoPage>
   bool _isVideoPlaying = false;
   bool _isLocationProcessing = false;
 
+  static const List<double> _quickCutNumbers = [1, 1.5, 2, 3, 5, 10];
+
+  /// Set when the preview player couldn't open the clip. Some devices'
+  /// video decoders reject every clip, even ones ffmpeg reads fine, so the
+  /// video can still be saved without a preview: its length then comes from
+  /// ffprobe ([_probedDurationMilliseconds]) and the trimmer is replaced by
+  /// a choice of how much to keep from the start ([_fallbackClipSeconds]).
+  bool _previewFailed = false;
+  int? _probedDurationMilliseconds;
+  double _fallbackClipSeconds = _quickCutNumbers.first;
+
   late final bool isDarkTheme = ThemeService().isDarkTheme();
   String selectedProfileName = Utils.getCurrentProfile();
 
@@ -96,12 +108,15 @@ class _SaveVideoPageState extends State<SaveVideoPage>
     }
     final List<String> colorStringList = colorString.split(',');
     try {
-      return Color.fromARGB(
+      final Color color = Color.fromARGB(
         int.parse(colorStringList[3]),
         int.parse(colorStringList[0]),
         int.parse(colorStringList[1]),
         int.parse(colorStringList[2]),
       );
+      // A fully transparent stamp would be invisible in the preview, and
+      // saving ignores the alpha anyway, so treat it as unset.
+      return color.a == 0 ? Colors.white : color;
     } catch (e) {
       Utils.logError(e);
       return Colors.white;
@@ -633,18 +648,37 @@ class _SaveVideoPageState extends State<SaveVideoPage>
           // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
           setState(() {});
         })
-        .catchError((Object e) {
-          // SaveButton refuses to save while the controller isn't
-          // initialized; this is the only trace of why it never was.
+        .catchError((Object e) async {
           Utils.logError(
             '[SAVE VIDEO] - Failed to load ${routeArguments['videoPath']}: '
             '${_trimmer.videoPlayerController?.value.errorDescription ?? e}',
           );
-          if (mounted) setState(() {});
+          // Saving only needs the clip's length, which ffmpeg can usually
+          // still read. Without it SaveButton refuses to save.
+          final int? duration = await probeDurationMilliseconds(_tempVideoPath);
+          Utils.logInfo(
+            '[SAVE VIDEO] - Continuing without a preview, ffprobe duration: '
+            '${duration}ms',
+          );
+          if (!mounted) return;
+          setState(() {
+            _previewFailed = true;
+            _probedDurationMilliseconds = duration;
+          });
         });
   }
 
+  /// The clip's length: from the player once it loaded, else from ffprobe.
+  int get _sourceDurationMilliseconds {
+    final VideoPlayerController? controller = _trimmer.videoPlayerController;
+    if (controller != null && controller.value.isInitialized) {
+      return controller.value.duration.inMilliseconds;
+    }
+    return _probedDurationMilliseconds ?? 0;
+  }
+
   void videoPlay() async {
+    if (_previewFailed) return;
     final bool playbackState = await _trimmer.videoPlaybackControl(
       startValue: _videoStartValue,
       endValue: _videoEndValue,
@@ -729,6 +763,68 @@ class _SaveVideoPageState extends State<SaveVideoPage>
     );
   }
 
+  /// Shown in place of the video when the preview player couldn't open it.
+  Widget _previewUnavailableMessage() {
+    return Positioned.fill(
+      child: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: Text(
+            _probedDurationMilliseconds == null
+                ? 'videoLoadError'.tr
+                : 'videoPreviewUnavailable'.tr,
+            textAlign: TextAlign.center,
+            style: const TextStyle(color: Colors.white),
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// Stands in for the trimmer when the preview couldn't load the clip:
+  /// there are no frames to trim on, but the clip can still be saved from
+  /// its start, for one of the trimmer's quick cut lengths that fits.
+  Widget _fallbackClipLengthPicker() {
+    final int? duration = _probedDurationMilliseconds;
+    if (duration == null) return const SizedBox.shrink();
+    final List<double> lengths = _quickCutNumbers
+        .where((seconds) => seconds * 1000 <= duration)
+        .toList();
+    // Shorter than the shortest length: it's saved whole.
+    if (lengths.isEmpty) return const SizedBox.shrink();
+    return SizedBox(
+      width: double.infinity,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 4.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'fallbackClipLength'.tr,
+              style: TextStyle(color: _mutedTextColor),
+            ),
+            const SizedBox(height: 8),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                for (final double seconds in lengths)
+                  ChoiceChip(
+                    label: Text(
+                      '${seconds % 1 == 0 ? seconds.toInt() : seconds}s',
+                    ),
+                    selected: _fallbackClipSeconds == seconds,
+                    onSelected: (_) =>
+                        setState(() => _fallbackClipSeconds = seconds),
+                  ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _dailyVideoPlayer() {
     final VideoOrientation orientation = StorageUtils.getOrientation(
       selectedProfileName,
@@ -758,13 +854,15 @@ class _SaveVideoPageState extends State<SaveVideoPage>
               aspectRatio: OrientationFilter.aspectRatioFor(orientation),
               child: Stack(
                 children: [
-                  if (orientation == VideoOrientation.portrait)
+                  if (_previewFailed)
+                    _previewUnavailableMessage()
+                  else if (orientation == VideoOrientation.portrait)
                     _croppedVideoPreview(_trimmer.videoPlayerController!)
                   else
                     VideoViewer(trimmer: _trimmer),
                   Center(
                     child: Opacity(
-                      opacity: _isVideoPlaying ? 0.0 : 1.0,
+                      opacity: _isVideoPlaying || _previewFailed ? 0.0 : 1.0,
                       child: Container(
                         width: MediaQuery.of(context).size.width * 0.25,
                         height: MediaQuery.of(context).size.width * 0.25,
@@ -926,10 +1024,12 @@ class _SaveVideoPageState extends State<SaveVideoPage>
                   ? _currentAddress ?? ''
                   : customLocationTextController.text,
               subtitles: _subtitles,
-              videoStartInMilliseconds: _videoStartValue,
+              // The fallback trim always starts at the beginning.
+              videoStartInMilliseconds: _previewFailed ? 0 : _videoStartValue,
               videoEndInMilliseconds: getVideoEndInMilliseconds(),
-              videoDuration:
-                  _trimmer.videoPlayerController!.value.duration.inSeconds,
+              videoDuration: _sourceDurationMilliseconds ~/ 1000,
+              canSaveWithoutPreview:
+                  _previewFailed && _probedDurationMilliseconds != null,
               isGeotaggingEnabled: isGeotaggingEnabled,
               textOutlineColor: invert(currentColor),
               textOutlineWidth: _outlineEnabled ? textOutlineStrokeWidth : 0,
@@ -946,43 +1046,46 @@ class _SaveVideoPageState extends State<SaveVideoPage>
             children: [
               _dailyVideoPlayer(),
               const SizedBox(height: 8),
-              Center(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 6.0),
-                  child: TrimViewer(
-                    trimmer: _trimmer,
-                    viewerHeight: 50.0,
-                    type: ViewerType.fixed,
-                    editorProperties: TrimEditorProperties(
-                      borderWidth: 2.5,
-                      circleSize: 6.0,
-                      circleSizeOnDrag: 9.0,
-                      circlePaintColor: isDarkTheme
-                          ? Colors.white
-                          : AppColors.mainColor,
-                      borderPaintColor: isDarkTheme
-                          ? AppColors.light
-                          : AppColors.mainColor.withValues(alpha: 0.75),
-                      quickCutIcon: Icons.content_cut_rounded,
-                      quickCutIconSize: 18.0,
-                      quickCutBackgroundColor: _sectionColor,
-                      quickCutForegroundColor: _textColor,
-                      quickCutTextColor: _textColor,
+              if (_previewFailed)
+                _fallbackClipLengthPicker()
+              else
+                Center(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 6.0),
+                    child: TrimViewer(
+                      trimmer: _trimmer,
+                      viewerHeight: 50.0,
+                      type: ViewerType.fixed,
+                      editorProperties: TrimEditorProperties(
+                        borderWidth: 2.5,
+                        circleSize: 6.0,
+                        circleSizeOnDrag: 9.0,
+                        circlePaintColor: isDarkTheme
+                            ? Colors.white
+                            : AppColors.mainColor,
+                        borderPaintColor: isDarkTheme
+                            ? AppColors.light
+                            : AppColors.mainColor.withValues(alpha: 0.75),
+                        quickCutIcon: Icons.content_cut_rounded,
+                        quickCutIconSize: 18.0,
+                        quickCutBackgroundColor: _sectionColor,
+                        quickCutForegroundColor: _textColor,
+                        quickCutTextColor: _textColor,
+                      ),
+                      durationStyle: DurationStyle.FORMAT_SS_MS,
+                      durationTextStyle: isDarkTheme
+                          ? const TextStyle(color: Colors.white)
+                          : const TextStyle(color: Colors.black),
+                      maxVideoLength: const Duration(milliseconds: 10000),
+                      quickCutNumbers: _quickCutNumbers,
+                      viewerWidth: MediaQuery.of(context).size.width,
+                      onChangeStart: (value) => _videoStartValue = value,
+                      onChangeEnd: (value) => _videoEndValue = value,
+                      onChangePlaybackState: (value) =>
+                          setState(() => _isVideoPlaying = value),
                     ),
-                    durationStyle: DurationStyle.FORMAT_SS_MS,
-                    durationTextStyle: isDarkTheme
-                        ? const TextStyle(color: Colors.white)
-                        : const TextStyle(color: Colors.black),
-                    maxVideoLength: const Duration(milliseconds: 10000),
-                    quickCutNumbers: const [1, 1.5, 2, 3, 5, 10],
-                    viewerWidth: MediaQuery.of(context).size.width,
-                    onChangeStart: (value) => _videoStartValue = value,
-                    onChangeEnd: (value) => _videoEndValue = value,
-                    onChangePlaybackState: (value) =>
-                        setState(() => _isVideoPlaying = value),
                   ),
                 ),
-              ),
               videoProperties(),
             ],
           ),
@@ -1586,9 +1689,10 @@ class _SaveVideoPageState extends State<SaveVideoPage>
     final bool strictClipLength =
         SharedPrefsUtil.getBool('strictClipLength') ?? false;
     return ClipTrimPolicy.resolveEndMilliseconds(
-      selectedEndMilliseconds: _videoEndValue,
-      videoDurationMilliseconds:
-          _trimmer.videoPlayerController!.value.duration.inMilliseconds,
+      selectedEndMilliseconds: _previewFailed
+          ? _fallbackClipSeconds * 1000
+          : _videoEndValue,
+      videoDurationMilliseconds: _sourceDurationMilliseconds,
       strictClipLength: strictClipLength,
     );
   }

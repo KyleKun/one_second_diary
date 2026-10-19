@@ -107,6 +107,9 @@ const Map<String, String> ca = {
   'editSubtitles': 'Edita els subtítols',
   'noVideoRecorded': 'Cap vídeo enregistrat',
   'videoLoadError': 'No s’ha pogut carregar aquest vídeo.',
+  'videoPreviewUnavailable':
+      'Aquest vídeo no es pot previsualitzar en aquest dispositiu, però encara es pot desar.',
+  'fallbackClipLength': 'Durada a desar des de l’inici del vídeo:',
   'subtitles': 'Subtítols',
   'addVideo': 'Afegeix vídeo',
   'addPhotoAsVideo': 'Afegir foto com a vídeo',

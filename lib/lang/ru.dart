@@ -102,6 +102,9 @@ const Map<String, String> ru = {
   'editSubtitles': 'Редактировать субтитры',
   'noVideoRecorded': 'Нет записанных видео',
   'videoLoadError': 'Не удалось загрузить это видео.',
+  'videoPreviewUnavailable':
+      'Это видео нельзя просмотреть на этом устройстве, но его всё равно можно сохранить.',
+  'fallbackClipLength': 'Сколько сохранить от начала видео:',
   'subtitles': 'Субтитры',
   'addVideo': 'Добавить видео',
   'addPhotoAsVideo': 'Добавить фото как видео',

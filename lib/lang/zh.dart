@@ -96,6 +96,8 @@ const Map<String, String> zh = {
   'editSubtitles': '编辑字幕',
   'noVideoRecorded': '没有视频被记录',
   'videoLoadError': '无法加载此视频。',
+  'videoPreviewUnavailable': '此设备无法预览该视频，但仍可以保存。',
+  'fallbackClipLength': '从视频开头保存的时长：',
   'subtitles': '字幕',
   'addVideo': '添加视频',
   'addPhotoAsVideo': '添加照片为视频',

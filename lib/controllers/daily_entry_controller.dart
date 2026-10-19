@@ -34,8 +34,9 @@ class DailyEntryController extends GetxController {
       dailyEntry.refresh();
     }
 
-    // Remove the existing notification and schedule it again if there is a daily entry
-    if (dailyEntry.value)
-      notificationService.rescheduleNotification(DateTime.now());
+    // Remove the existing notification and schedule it again. Done on every
+    // launch, not only once today's video is in, so reminders scheduled by an
+    // older version (in UTC, or not at all) get fixed as soon as the app opens.
+    notificationService.rescheduleNotification(DateTime.now());
   }
 }

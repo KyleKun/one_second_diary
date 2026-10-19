@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -19,6 +20,12 @@ class NotificationService {
   final _flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
   late NotificationDetails _platformNotificationDetails;
+
+  /// Completes once tz.local is the device's time zone. Until then it is
+  /// the timezone package's default, UTC, which made reminders fire at the
+  /// chosen time in UTC instead of local time (e.g. 3:00 instead of 9:00 in
+  /// UTC-6).
+  late final Future<void> _localTimezoneReady;
   final NotificationDetails _platformNonPersistentNotificationDetails =
       const NotificationDetails(
         android: AndroidNotificationDetails(
@@ -48,6 +55,7 @@ class NotificationService {
 
     /// Initializing notification settings
     tz.initializeTimeZones();
+    _localTimezoneReady = _setLocalTimezone();
 
     const AndroidInitializationSettings androidInitializationSettings =
         AndroidInitializationSettings('@mipmap/ic_launcher');
@@ -64,6 +72,17 @@ class NotificationService {
     _flutterLocalNotificationsPlugin.initialize(
       settings: initializationSettings,
     );
+  }
+
+  Future<void> _setLocalTimezone() async {
+    try {
+      final TimezoneInfo timezone = await FlutterTimezone.getLocalTimezone();
+      tz.setLocalLocation(tz.getLocation(timezone.identifier));
+    } catch (e) {
+      Utils.logError(
+        '[NOTIFICATIONS] - Could not get the local time zone, using UTC: $e',
+      );
+    }
   }
 
   // Notification is deactivated by default
@@ -133,6 +152,7 @@ class NotificationService {
 
   Future<void> scheduleNotification(int hour, int minute, DateTime day) async {
     _flutterLocalNotificationsPlugin.cancelAll();
+    await _localTimezoneReady;
 
     // sets the scheduled time in DateTime format
     final String setTime = DateTime(
@@ -143,7 +163,9 @@ class NotificationService {
       minute,
     ).toString();
 
-    Utils.logInfo('[NOTIFICATIONS] - Scheduled with setTime=$setTime');
+    Utils.logInfo(
+      '[NOTIFICATIONS] - Scheduled with setTime=$setTime (${tz.local.name})',
+    );
 
     /// Schedule notification
     await _flutterLocalNotificationsPlugin.zonedSchedule(
@@ -165,6 +187,9 @@ class NotificationService {
   }
 
   Future<void> rescheduleNotification(DateTime day) async {
+    // Saving a video reschedules too; it mustn't bring back reminders the
+    // user turned off.
+    if (!isNotificationActivated()) return;
     final TimeOfDay timeOfDay = getScheduledTime();
     await scheduleNotification(timeOfDay.hour, timeOfDay.minute, day);
   }
