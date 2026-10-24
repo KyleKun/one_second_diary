@@ -438,9 +438,13 @@ class _CreateMovieButtonState extends State<CreateMovieButton> {
             progress = '${'creatingMovie'.tr.split('...')[0]}...';
           });
 
-          // Create movie by concatenating all videos
+          // Create movie by concatenating all videos. Only video, audio and
+          // subtitles are mapped: a clip cut from an edited video can carry a
+          // timecode (tmcd) data track, which concat reports as an unknown
+          // stream that "-map 0" refuses to map, failing the whole movie.
+          // -write_tmcd 0 keeps the movie from getting one of its own.
           await executeFFmpeg(
-            '-f concat -safe 0 -i $txtPath -r 30 -map 0 -c copy "$tempOutputPath" -y',
+            '-f concat -safe 0 -i $txtPath -r 30 -map 0:v -map 0:a? -map 0:s? -c copy -write_tmcd 0 "$tempOutputPath" -y',
           ).then((session) async {
             final returnCode = await session.getReturnCode();
             controller.increaseMovieCount();
