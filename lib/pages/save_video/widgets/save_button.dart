@@ -411,9 +411,11 @@ class _SaveButtonState extends State<SaveButton> {
     final String defaultEditSettings =
         '-r 30 -ac 1 -ar 48000 -c:a aac -b:a 256k ${VideoEncoder.arguments} -pix_fmt yuv420p';
 
-    // Full command to edit and save video
+    // Full command to edit and save video. -write_tmcd 0: videos exported
+    // from editors carry a timecode, which would otherwise add a tmcd data
+    // track to the clip.
     final command =
-        '-i "$subtitlesPath" $trim -i "$videoPath" $audioStream $metadata -vf [in]$scale$date$locale[out]" $defaultEditSettings $subtitles "$finalPath" -y';
+        '-i "$subtitlesPath" $trim -i "$videoPath" $audioStream $metadata -vf [in]$scale$date$locale[out]" $defaultEditSettings $subtitles -write_tmcd 0 "$finalPath" -y';
 
     Utils.logInfo('${logTag}FFmpeg full command: $command');
 
